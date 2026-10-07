@@ -12,9 +12,15 @@ public class GamePlayerNetworkData : NetworkBehaviour
     [SerializeField] private Renderer[] _bodyRenderers;
     [SerializeField] private WeaponDefinition _weaponDefinition;
     [SerializeField] private HitboxRoot _hitboxRoot;
+    [SerializeField] private Transform _viewModelRoot;
+    [SerializeField] private Transform _viewMuzzle;
+    [SerializeField] private Transform _worldMuzzle;
     public Transform CameraRoot => _cameraRoot;
     public WeaponDefinition WeaponDefinition => _weaponDefinition;
     public HitboxRoot HitboxRoot => _hitboxRoot;
+    public Transform ViewModelRoot => _viewModelRoot;
+    public Transform ViewMuzzle => _viewMuzzle;
+    public Transform WorldMuzzle => _worldMuzzle;
     public bool CombatConfigured => _weaponDefinition != null && _hitboxRoot != null && _weaponDefinition.TryValidate(out _);
     public bool MovementConfigured => _characterController != null && _movementController != null;
     public bool CanProvideInput => Object != null && Object.IsValid && Object.HasInputAuthority && Health > 0
@@ -23,6 +29,10 @@ public class GamePlayerNetworkData : NetworkBehaviour
     private PlayerInputSource _inputSource;
     private ShadowCastingMode[] _originalShadowModes;
     private bool _spawned;
+    private CombatPresentation _presentation;
+    private Vector3 _viewModelBasePosition;
+    private Quaternion _viewModelBaseRotation;
+    public CombatPresentation Presentation => _presentation;
     private readonly CombatShotQuery _shotQuery = new CombatShotQuery();
     public bool IsReloading => _spawned && Object != null && Object.IsValid && ReloadTimer.IsRunning;
     public int MagazineCapacity => _weaponDefinition != null ? _weaponDefinition.MagazineCapacity : 30;
@@ -53,6 +63,15 @@ public class GamePlayerNetworkData : NetworkBehaviour
     [Networked] public int LastHitShotSequence { get; set; }
     [Networked] public Vector3 LastHitPoint { get; set; }
     [Networked] public Vector3 LastHitNormal { get; set; }
+    // Prediction-only visual budget mirrors authoritative Ammo on the host.
+    // Actual Ammo and Health remain state-authority-only.
+    [Networked] public Vector2 RecoilOffset { get; set; }
+    [Networked] public int RecoilIndex { get; set; }
+    [Networked] public int RecoilPreviewAmmo { get; set; }
+    [Networked] public TickTimer RecoilShotTimer { get; set; }
+    [Networked] public TickTimer RecoilReloadTimer { get; set; }
+    [Networked] public int LastShotRecoilIndex { get; set; }
+    [Networked] public Vector2 LastShotRecoilOffset { get; set; }
 
     private void Awake()
     {
@@ -78,6 +97,11 @@ public class GamePlayerNetworkData : NetworkBehaviour
             if (_bodyRenderers[i] != null) _originalShadowModes[i] = _bodyRenderers[i].shadowCastingMode;
         foreach (var animator in GetComponentsInChildren<Animator>(true)) animator.applyRootMotion = false;
         if (_movementController != null) _movementController.rotationSpeed = 0f;
+        if (_viewModelRoot != null)
+        {
+            _viewModelBasePosition = _viewModelRoot.localPosition;
+            _viewModelBaseRotation = _viewModelRoot.localRotation;
+        }
         if (Object.HasStateAuthority)
         {
             Health = 100;
@@ -86,6 +110,11 @@ public class GamePlayerNetworkData : NetworkBehaviour
             Death = 0;
             AimYaw = transform.eulerAngles.y;
             AimPitch = 0f;
+            RecoilOffset = Vector2.zero;
+            RecoilIndex = 0;
+            RecoilPreviewAmmo = Ammo;
+            RecoilShotTimer = default;
+            RecoilReloadTimer = default;
         }
         if (Object.HasInputAuthority)
         {
@@ -94,6 +123,9 @@ public class GamePlayerNetworkData : NetworkBehaviour
             _inputSource.Bind(this, AimYaw, AimPitch);
         }
         ApplyLocalPresentation();
+        _presentation = GetComponent<CombatPresentation>();
+        if (_presentation == null) _presentation = gameObject.AddComponent<CombatPresentation>();
+        _presentation.Bind(this);
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -106,25 +138,43 @@ public class GamePlayerNetworkData : NetworkBehaviour
         bool local = _spawned && Object != null && Object.IsValid && Object.HasInputAuthority;
         if (_localCamera != null) _localCamera.enabled = local;
         if (_localAudioListener != null) _localAudioListener.enabled = local;
+        if (_viewModelRoot != null && _viewModelRoot.gameObject.activeSelf != local) _viewModelRoot.gameObject.SetActive(local);
         if (_bodyRenderers == null || _originalShadowModes == null) return;
         for (int i = 0; i < _bodyRenderers.Length; i++)
-            if (_bodyRenderers[i] != null)
+            if (_bodyRenderers[i] != null && (_viewModelRoot == null || !_bodyRenderers[i].transform.IsChildOf(_viewModelRoot)))
                 _bodyRenderers[i].shadowCastingMode = local ? ShadowCastingMode.ShadowsOnly : _originalShadowModes[i];
     }
 
     private void ReleaseLocalPresentation()
     {
         _spawned = false;
+        if (_presentation != null) _presentation.Unbind();
         if (_inputSource != null) _inputSource.Unbind();
         if (_localCamera != null) _localCamera.enabled = false;
         if (_localAudioListener != null) _localAudioListener.enabled = false;
+        if (_viewModelRoot != null) _viewModelRoot.gameObject.SetActive(false);
+        if (_bodyRenderers != null && _originalShadowModes != null)
+            for (int i = 0; i < _bodyRenderers.Length; i++)
+                if (_bodyRenderers[i] != null) _bodyRenderers[i].shadowCastingMode = _originalShadowModes[i];
     }
     private void OnDestroy() => ReleaseLocalPresentation();
 
     public override void Render()
     {
         ApplyLocalPresentation();
-        if (_cameraRoot != null) _cameraRoot.localRotation = Quaternion.Euler(AimPitch, 0f, 0f);
+        if (_cameraRoot != null) _cameraRoot.localRotation = CombatRecoil.ViewRotation(AimPitch, RecoilOffset);
+        if (_viewModelRoot != null && Object.HasInputAuthority)
+        {
+            // ViewModelRoot is a CameraRoot child and inherits its recoil rotation
+            // once. Only a small visual kickback is applied in local space.
+            _viewModelRoot.localRotation = _viewModelBaseRotation;
+            _viewModelRoot.localPosition = _viewModelBasePosition + Vector3.back * Mathf.Min(Mathf.Max(RecoilOffset.y, 0f) * 0.01f, 0.06f);
+        }
+        if (_presentation != null && _presentation.isActiveAndEnabled)
+        {
+            if (_presentation.Owner == null) _presentation.Bind(this);
+            _presentation.RenderState();
+        }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         LogCombatSnapshot();
 #endif
@@ -136,6 +186,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
         var move = Vector2.zero;
         bool sprint = false;
         bool hasInput = GetInput(out CustomPlayerInput input);
+        if (CombatConfigured)
+            RecoilOffset = CombatRecoil.Recover(RecoilOffset, _weaponDefinition.RecoilRecoveryDegreesPerSecond, Runner.DeltaTime);
         if (Health > 0 && hasInput)
         {
             if (PlayerInputSource.IsFinite(input.MoveX) && PlayerInputSource.IsFinite(input.MoveZ))
@@ -152,6 +204,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         {
             _movementController.Velocity = Vector3.zero;
             if (Object.HasStateAuthority) { PreviousButtons = default; ReloadTimer = default; }
+            ResetRecoilPreview();
             return;
         }
         transform.rotation = Quaternion.Euler(0f, AimYaw, 0f);
@@ -159,6 +212,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         _movementController.maxSpeed = (sprint ? 7.5f : 5f) * move.magnitude;
         _movementController.Move(transform.rotation * new Vector3(move.x, 0f, move.y));
         if (Object.HasStateAuthority) UpdateCombat(hasInput, input);
+        else if (Object.HasInputAuthority) PredictRecoil(hasInput, input);
     }
 
     private void UpdateCombat(bool hasInput, CustomPlayerInput input)
@@ -168,6 +222,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         {
             PreviousButtons = default;
             ReloadTimer = default;
+            ResetRecoilPreview();
             if (hasInput && input.Buttons.IsSet(PlayerInputButton.Fire)) LogCombatRejection("session-or-configuration");
             return;
         }
@@ -176,6 +231,9 @@ public class GamePlayerNetworkData : NetworkBehaviour
         {
             Ammo = _weaponDefinition.MagazineCapacity;
             ReloadTimer = default;
+            RecoilPreviewAmmo = Ammo;
+            RecoilReloadTimer = default;
+            RecoilIndex = 0;
         }
         bool valid = hasInput && input.HasAim && PlayerInputSource.IsFinite(input.AimYaw) && PlayerInputSource.IsFinite(input.AimPitch)
             && input.AimYaw >= 0f && input.AimYaw < 360f && input.AimPitch >= -85f && input.AimPitch <= 85f
@@ -193,7 +251,10 @@ public class GamePlayerNetworkData : NetworkBehaviour
         if (pressed.IsSet(PlayerInputButton.Reload))
         {
             if (!ReloadTimer.IsRunning && Ammo < _weaponDefinition.MagazineCapacity)
+            {
                 ReloadTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(_weaponDefinition.ReloadDuration, Runner.TickRate));
+                RecoilReloadTimer = ReloadTimer;
+            }
             // Reload wins over fire on the same tick, even when already full.
             return;
         }
@@ -205,8 +266,12 @@ public class GamePlayerNetworkData : NetworkBehaviour
         Ammo--;
         ShotSequence++;
         NextShotTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(_weaponDefinition.ShotInterval, Runner.TickRate));
+        ApplyRecoilShot();
+        RecoilPreviewAmmo = Ammo;
+        LastShotRecoilIndex = RecoilIndex;
+        LastShotRecoilOffset = RecoilOffset;
         LastShotOrigin = transform.position + Vector3.up * 1.75f;
-        LastShotDirection = Quaternion.Euler(AimPitch, AimYaw, 0f) * Vector3.forward;
+        LastShotDirection = CombatRecoil.ShotDirection(AimYaw, AimPitch, RecoilOffset);
         LastShotHit = _shotQuery.TryCast(Runner, Object.InputAuthority, LastShotOrigin, LastShotDirection, _weaponDefinition.Range, out var hit);
         LastShotHitPoint = LastShotHit ? hit.Point : LastShotOrigin + LastShotDirection * _weaponDefinition.Range;
         LastShotHitNormal = LastShotHit ? hit.Normal : Vector3.zero;
@@ -227,6 +292,54 @@ public class GamePlayerNetworkData : NetworkBehaviour
         LastHitShotSequence = ShotSequence;
         LastHitPoint = hit.Point;
         LastHitNormal = hit.Normal;
+    }
+
+    private void ApplyRecoilShot()
+    {
+        // Shared order: recover at tick start, then add pattern[index], advance
+        // index, calculate shot/view from the resulting offset with one clamp.
+        RecoilOffset += _weaponDefinition.GetRecoilDelta(RecoilIndex);
+        RecoilIndex++;
+        RecoilShotTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(_weaponDefinition.ShotInterval, Runner.TickRate));
+    }
+
+    private void ResetRecoilPreview()
+    {
+        RecoilOffset = Vector2.zero; RecoilIndex = 0; RecoilPreviewAmmo = 0;
+        RecoilShotTimer = default; RecoilReloadTimer = default;
+    }
+
+    private void PredictRecoil(bool hasInput, CustomPlayerInput input)
+    {
+        var manager = NetworkRunnerManager.Instance;
+        if (manager == null || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game || !CombatConfigured)
+        {
+            PreviousButtons = default; ResetRecoilPreview(); return;
+        }
+        if (RecoilReloadTimer.IsRunning && RecoilReloadTimer.Expired(Runner))
+        {
+            RecoilPreviewAmmo = _weaponDefinition.MagazineCapacity;
+            RecoilReloadTimer = default; RecoilIndex = 0;
+        }
+        if (!hasInput || !input.HasAim || !PlayerInputSource.IsFinite(input.AimYaw) || !PlayerInputSource.IsFinite(input.AimPitch)
+            || input.AimYaw < 0f || input.AimYaw >= 360f || input.AimPitch < -85f || input.AimPitch > 85f
+            || (Team != 0 && Team != 1) || RecoilPreviewAmmo < 0 || RecoilPreviewAmmo > _weaponDefinition.MagazineCapacity
+            || !CombatShotQuery.TryDurationTicks(_weaponDefinition.ShotInterval, Runner.TickRate, out _)
+            || !CombatShotQuery.TryDurationTicks(_weaponDefinition.ReloadDuration, Runner.TickRate, out _))
+        { PreviousButtons = default; return; }
+        var pressed = input.Buttons.GetPressed(PreviousButtons);
+        PreviousButtons = input.Buttons;
+        if (pressed.IsSet(PlayerInputButton.Reload))
+        {
+            if (!RecoilReloadTimer.IsRunning && RecoilPreviewAmmo < _weaponDefinition.MagazineCapacity)
+                RecoilReloadTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(_weaponDefinition.ReloadDuration, Runner.TickRate));
+            return;
+        }
+        if (!input.Buttons.IsSet(PlayerInputButton.Fire) || RecoilReloadTimer.IsRunning || RecoilPreviewAmmo <= 0
+            || !RecoilShotTimer.ExpiredOrNotRunning(Runner)) return;
+        RecoilPreviewAmmo--;
+        ApplyRecoilShot();
+        // No actual Ammo/HP/ShotSequence changes, hit query or effects here.
     }
 
     public bool TryGetCombatSnapshot(out CombatStateSnapshot snapshot)
@@ -260,7 +373,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
             || snapshot.ReloadTargetTick != _diagnosticSnapshot.ReloadTargetTick;
         if (!changed) return;
         string stage = _hasDiagnosticSnapshot ? "changed" : "initial";
-        Debug.Log($"[CombatState] {stage} id={snapshot.NetworkId} input={snapshot.InputAuthority} stateAuthority={snapshot.IsStateAuthority} tick={snapshot.Tick} hp={snapshot.Health} ammo={snapshot.Ammo} reloadEnd={snapshot.ReloadTargetTick} shot={snapshot.ShotSequence} hit={snapshot.HitSequence} part={snapshot.LastHitBodyPart} damage={snapshot.LastHitDamage} target={snapshot.LastHitTarget}");
+        Debug.Log($"[CombatState] {stage} id={snapshot.NetworkId} input={snapshot.InputAuthority} stateAuthority={snapshot.IsStateAuthority} tick={snapshot.Tick} hp={snapshot.Health} ammo={snapshot.Ammo} reloadEnd={snapshot.ReloadTargetTick} shot={snapshot.ShotSequence} hit={snapshot.HitSequence} part={snapshot.LastHitBodyPart} damage={snapshot.LastHitDamage} target={snapshot.LastHitTarget} recoilIndex={RecoilIndex} recoil={RecoilOffset} previewAmmo={RecoilPreviewAmmo}");
         _diagnosticSnapshot = snapshot;
         _hasDiagnosticSnapshot = true;
     }
