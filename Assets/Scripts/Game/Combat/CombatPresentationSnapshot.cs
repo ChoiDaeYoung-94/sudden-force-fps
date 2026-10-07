@@ -8,10 +8,16 @@ public readonly struct CombatPresentationSnapshot
     public readonly bool IsReloading;
     public readonly float ReloadRemaining;
     public readonly Vector2 RecoilOffset;
-    public CombatPresentationSnapshot(PlayerRef player, int health, int ammo, int capacity, bool reloading, float remaining, Vector2 recoil)
+    public readonly bool IsDead, RespawnPending;
+    public readonly float RespawnRemaining;
+    public readonly int RespawnVersion, Kill, Death;
+    public CombatPresentationSnapshot(PlayerRef player, int health, int ammo, int capacity, bool reloading, float remaining, Vector2 recoil,
+        bool dead = false, float respawnRemaining = 0f, bool respawnPending = false, int respawnVersion = 0, int kill = 0, int death = 0)
     {
         Player = player; Health = health; Ammo = ammo; Capacity = capacity; IsReloading = reloading;
         ReloadRemaining = remaining; RecoilOffset = recoil;
+        IsDead = dead; RespawnRemaining = respawnRemaining; RespawnPending = respawnPending;
+        RespawnVersion = respawnVersion; Kill = kill; Death = death;
     }
 }
 
@@ -35,6 +41,7 @@ public readonly struct ShotObservedSnapshot
 
 public readonly struct ConfirmedHitSnapshot
 {
+    public readonly bool Killed;
     public readonly PlayerRef Shooter, Target;
     public readonly int Sequence, SequenceDelta, ShotSequence, Damage;
     public readonly CombatBodyPart BodyPart;
@@ -45,6 +52,7 @@ public readonly struct ConfirmedHitSnapshot
         Sequence = player.HitSequence; SequenceDelta = delta; ShotSequence = player.LastHitShotSequence;
         Damage = player.LastHitDamage; BodyPart = player.LastHitBodyPart;
         Point = player.LastHitPoint; Normal = player.LastHitNormal;
+        Killed = player.LastHitKilled;
     }
 }
 

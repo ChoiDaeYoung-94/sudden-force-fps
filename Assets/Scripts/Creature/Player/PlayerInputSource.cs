@@ -11,6 +11,9 @@ public sealed class PlayerInputSource : MonoBehaviour
     private Vector2 _move;
     private bool _sprint;
     private bool _fire;
+    private bool _physicalFireHeld;
+    private bool _fireReleaseRequired;
+    private int _respawnVersion;
     private bool _reloadRequested;
     private int _reloadSubmittedFrame = -1;
     private float _yaw;
@@ -27,6 +30,9 @@ public sealed class PlayerInputSource : MonoBehaviour
         if (Instance != null && Instance != this) Instance.Unbind();
         Instance = this;
         _owner = owner;
+        _respawnVersion = owner.RespawnVersion;
+        _physicalFireHeld = false;
+        _fireReleaseRequired = false;
         _yaw = Mathf.Repeat(yaw, 360f);
         _pitch = Mathf.Clamp(pitch, -85f, 85f);
         ResetInput();
@@ -46,7 +52,28 @@ public sealed class PlayerInputSource : MonoBehaviour
     }
 
     public void SetSprint(bool sprint) => _sprint = sprint;
-    public void SetFire(bool fire) => _fire = fire;
+    public void SetFire(bool fire)
+    {
+        _physicalFireHeld = fire;
+        if (!fire) _fireReleaseRequired = false;
+        _fire = fire && !_fireReleaseRequired;
+    }
+
+    public void SeedAim(float yaw, float pitch)
+    {
+        bool held = Application.isMobilePlatform ? _physicalFireHeld : Input.GetMouseButton(0);
+        ResetInput();
+        _yaw = Mathf.Repeat(yaw, 360f);
+        _pitch = Mathf.Clamp(pitch, -85f, 85f);
+        _fireReleaseRequired = held;
+    }
+
+    public void SynchronizeRespawn()
+    {
+        if (_owner == null || _owner.Object == null || !_owner.Object.IsValid || _owner.RespawnVersion <= _respawnVersion) return;
+        _respawnVersion = _owner.RespawnVersion;
+        SeedAim(_owner.AimYaw, _owner.AimPitch);
+    }
     public void RequestReload()
     {
         _reloadRequested = true;
@@ -74,11 +101,13 @@ public sealed class PlayerInputSource : MonoBehaviour
 
     public CustomPlayerInput Snapshot()
     {
+        SynchronizeRespawn();
         var data = new CustomPlayerInput();
         if (_owner == null || !_owner.CanProvideInput || _paused || !Application.isFocused) return data;
         data.MoveX = _move.x;
         data.MoveZ = _move.y;
         data.HasAim = true;
+        data.RespawnVersion = _respawnVersion;
         data.AimYaw = _yaw;
         data.AimPitch = _pitch;
         data.Buttons.Set(PlayerInputButton.Sprint, _sprint);
@@ -91,6 +120,7 @@ public sealed class PlayerInputSource : MonoBehaviour
 
     private void Update()
     {
+        SynchronizeRespawn();
         // Retain an edge until Fusion polls it. Multiple polls in the same frame
         // see the same button, and PreviousButtons turns that into one request.
         if (_reloadSubmittedFrame >= 0 && _reloadSubmittedFrame < Time.frameCount)

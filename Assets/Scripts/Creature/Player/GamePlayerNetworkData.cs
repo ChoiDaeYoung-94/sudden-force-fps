@@ -23,7 +23,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
     public Transform WorldMuzzle => _worldMuzzle;
     public bool CombatConfigured => _weaponDefinition != null && _hitboxRoot != null && _weaponDefinition.TryValidate(out _);
     public bool MovementConfigured => _characterController != null && _movementController != null;
-    public bool CanProvideInput => Object != null && Object.IsValid && Object.HasInputAuthority && Health > 0
+    public bool CanProvideInput => Object != null && Object.IsValid && Object.HasInputAuthority && Health > 0 && !IsDead
         && NetworkRunnerManager.Instance != null && !NetworkRunnerManager.Instance.IsRetired
         && NetworkRunnerManager.Instance.SessionPhase == NetworkSessionPhase.Game;
     private PlayerInputSource _inputSource;
@@ -45,6 +45,16 @@ public class GamePlayerNetworkData : NetworkBehaviour
     [Networked] public int Ammo { get; set; }
     [Networked] public int Kill { get; set; }
     [Networked] public int Death { get; set; }
+    [Networked] public bool IsDead { get; set; }
+    [Networked] public TickTimer RespawnTimer { get; set; }
+    [Networked] public TickTimer RespawnRetryTimer { get; set; }
+    [Networked] public int RespawnVersion { get; set; }
+    [Networked] public int DeathSequence { get; set; }
+    [Networked] public PlayerRef LastKiller { get; set; }
+    [Networked] public bool LastHitKilled { get; set; }
+    public float RespawnRemaining => _spawned && Object != null && Object.IsValid && Runner != null && Runner.IsRunning
+        ? RespawnTimer.RemainingTime(Runner) ?? 0f : 0f;
+    public bool RespawnPending => _spawned && Object != null && Object.IsValid && IsDead && RespawnRemaining <= 0f;
     [Networked] public float AimYaw { get; set; }
     [Networked] public float AimPitch { get; set; }
     [Networked] public NetworkButtons PreviousButtons { get; set; }
@@ -108,6 +118,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
             Ammo = CombatConfigured ? _weaponDefinition.MagazineCapacity : 30;
             Kill = 0;
             Death = 0;
+            IsDead = false; RespawnVersion = 0; DeathSequence = 0; LastKiller = PlayerRef.None;
+            RespawnTimer = default; RespawnRetryTimer = default; LastHitKilled = false;
             AimYaw = transform.eulerAngles.y;
             AimPitch = 0f;
             RecoilOffset = Vector2.zero;
@@ -138,7 +150,9 @@ public class GamePlayerNetworkData : NetworkBehaviour
         bool local = _spawned && Object != null && Object.IsValid && Object.HasInputAuthority;
         if (_localCamera != null) _localCamera.enabled = local;
         if (_localAudioListener != null) _localAudioListener.enabled = local;
-        if (_viewModelRoot != null && _viewModelRoot.gameObject.activeSelf != local) _viewModelRoot.gameObject.SetActive(local);
+        bool showWeapon = local && !IsDead;
+        if (_viewModelRoot != null && _viewModelRoot.gameObject.activeSelf != showWeapon) _viewModelRoot.gameObject.SetActive(showWeapon);
+        ApplyLifeCollision();
         if (_bodyRenderers == null || _originalShadowModes == null) return;
         for (int i = 0; i < _bodyRenderers.Length; i++)
             if (_bodyRenderers[i] != null && (_viewModelRoot == null || !_bodyRenderers[i].transform.IsChildOf(_viewModelRoot)))
@@ -161,6 +175,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
 
     public override void Render()
     {
+        if (_inputSource != null) _inputSource.SynchronizeRespawn();
         ApplyLocalPresentation();
         if (_cameraRoot != null) _cameraRoot.localRotation = CombatRecoil.ViewRotation(AimPitch, RecoilOffset);
         if (_viewModelRoot != null && Object.HasInputAuthority)
@@ -186,6 +201,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
         var move = Vector2.zero;
         bool sprint = false;
         bool hasInput = GetInput(out CustomPlayerInput input);
+        hasInput = hasInput && InputMatchesLife(input.RespawnVersion, RespawnVersion);
+        ApplyLifeCollision();
         if (CombatConfigured)
             RecoilOffset = CombatRecoil.Recover(RecoilOffset, _weaponDefinition.RecoilRecoveryDegreesPerSecond, Runner.DeltaTime);
         if (Health > 0 && hasInput)
@@ -200,11 +217,12 @@ public class GamePlayerNetworkData : NetworkBehaviour
             }
             sprint = input.Buttons.IsSet(PlayerInputButton.Sprint);
         }
-        if (Health <= 0)
+        if (IsDead || Health <= 0)
         {
             _movementController.Velocity = Vector3.zero;
             if (Object.HasStateAuthority) { PreviousButtons = default; ReloadTimer = default; }
             ResetRecoilPreview();
+            if (Object.HasStateAuthority && IsDead) TryRespawn();
             return;
         }
         transform.rotation = Quaternion.Euler(0f, AimYaw, 0f);
@@ -292,6 +310,56 @@ public class GamePlayerNetworkData : NetworkBehaviour
         LastHitShotSequence = ShotSequence;
         LastHitPoint = hit.Point;
         LastHitNormal = hit.Normal;
+        LastHitKilled = IsLethalTransition(previousHealth, target.Health, target.IsDead)
+            && target.EnterDeath(this, metadata.BodyPart, ShotSequence);
+    }
+
+    public static bool IsLethalTransition(int previousHealth, int health, bool dead) => previousHealth > 0 && health <= 0 && !dead;
+    public static bool InputMatchesLife(int inputVersion, int serverVersion) => inputVersion == serverVersion;
+
+    private bool EnterDeath(GamePlayerNetworkData killer, CombatBodyPart part, int shotSequence)
+    {
+        if (!Object.HasStateAuthority || IsDead || Health > 0 || killer == null || killer == this
+            || !killer.Object.HasStateAuthority || killer.Runner != Runner) return false;
+        IsDead = true; Death++; DeathSequence++; LastKiller = killer.Object.InputAuthority;
+        killer.Kill++;
+        RespawnTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(3f, Runner.TickRate));
+        RespawnRetryTimer = default;
+        PreviousButtons = default; ReloadTimer = default; NextShotTimer = default;
+        ResetRecoilPreview();
+        if (_movementController != null) _movementController.Velocity = Vector3.zero;
+        ApplyLifeCollision();
+        var game = AD.Managers.Instance != null ? AD.Managers.GameM : null;
+        if (game != null) game.NotifyKillConfirmed(new KillConfirmedRecord(killer.Object.InputAuthority, Object.InputAuthority,
+            killer.Team, Team, part == CombatBodyPart.Head, DeathSequence, shotSequence));
+        return true;
+    }
+
+    private void ApplyLifeCollision()
+    {
+        if (!_spawned || Object == null || !Object.IsValid) return;
+        if (_hitboxRoot != null) _hitboxRoot.HitboxRootActive = !IsDead;
+        if (_characterController != null) _characterController.detectCollisions = !IsDead;
+    }
+
+    private void TryRespawn()
+    {
+        if (!RespawnTimer.Expired(Runner) || !RespawnRetryTimer.ExpiredOrNotRunning(Runner)) return;
+        var game = AD.Managers.Instance != null ? AD.Managers.GameM : null;
+        if (game == null || !game.TryGetSpawnPose(Team, out var pose, this))
+        {
+            RespawnRetryTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(0.25f, Runner.TickRate));
+            return;
+        }
+        _movementController.Teleport(pose.position, pose.rotation);
+        _movementController.Velocity = Vector3.zero;
+        AimYaw = Mathf.Repeat(pose.eulerAngles.y, 360f); AimPitch = 0f;
+        Health = 100; Ammo = MagazineCapacity;
+        PreviousButtons = default; ReloadTimer = default; NextShotTimer = default;
+        ResetRecoilPreview(); RecoilPreviewAmmo = Ammo;
+        RespawnTimer = default; RespawnRetryTimer = default;
+        RespawnVersion++; IsDead = false;
+        ApplyLifeCollision();
     }
 
     private void ApplyRecoilShot()
@@ -347,7 +415,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
         snapshot = default;
         if (!_spawned || Object == null || !Object.IsValid || Runner == null || !Runner.IsRunning) return false;
         snapshot = new CombatStateSnapshot(Object.Id.ToString(), Object.InputAuthority, Object.HasStateAuthority, Runner.Tick.Raw,
-            Health, Ammo, ShotSequence, HitSequence, ReloadTimer.TargetTick, LastHitBodyPart, LastHitDamage, LastHitTarget);
+            Health, Ammo, ShotSequence, HitSequence, ReloadTimer.TargetTick, LastHitBodyPart, LastHitDamage, LastHitTarget,
+            IsDead, RespawnRemaining, RespawnPending, RespawnVersion, Kill, Death, DeathSequence, LastKiller, LastHitKilled);
         return true;
     }
 
@@ -370,10 +439,12 @@ public class GamePlayerNetworkData : NetworkBehaviour
         if (!TryGetCombatSnapshot(out var snapshot)) return;
         bool changed = !_hasDiagnosticSnapshot || snapshot.Health != _diagnosticSnapshot.Health || snapshot.Ammo != _diagnosticSnapshot.Ammo
             || snapshot.ShotSequence != _diagnosticSnapshot.ShotSequence || snapshot.HitSequence != _diagnosticSnapshot.HitSequence
-            || snapshot.ReloadTargetTick != _diagnosticSnapshot.ReloadTargetTick;
+            || snapshot.ReloadTargetTick != _diagnosticSnapshot.ReloadTargetTick || snapshot.IsDead != _diagnosticSnapshot.IsDead
+            || snapshot.RespawnVersion != _diagnosticSnapshot.RespawnVersion || snapshot.Kill != _diagnosticSnapshot.Kill
+            || snapshot.Death != _diagnosticSnapshot.Death || snapshot.RespawnPending != _diagnosticSnapshot.RespawnPending;
         if (!changed) return;
         string stage = _hasDiagnosticSnapshot ? "changed" : "initial";
-        Debug.Log($"[CombatState] {stage} id={snapshot.NetworkId} input={snapshot.InputAuthority} stateAuthority={snapshot.IsStateAuthority} tick={snapshot.Tick} hp={snapshot.Health} ammo={snapshot.Ammo} reloadEnd={snapshot.ReloadTargetTick} shot={snapshot.ShotSequence} hit={snapshot.HitSequence} part={snapshot.LastHitBodyPart} damage={snapshot.LastHitDamage} target={snapshot.LastHitTarget} recoilIndex={RecoilIndex} recoil={RecoilOffset} previewAmmo={RecoilPreviewAmmo}");
+        Debug.Log($"[CombatState] {stage} id={snapshot.NetworkId} input={snapshot.InputAuthority} stateAuthority={snapshot.IsStateAuthority} tick={snapshot.Tick} hp={snapshot.Health} ammo={snapshot.Ammo} reloadEnd={snapshot.ReloadTargetTick} shot={snapshot.ShotSequence} hit={snapshot.HitSequence} part={snapshot.LastHitBodyPart} damage={snapshot.LastHitDamage} target={snapshot.LastHitTarget} recoilIndex={RecoilIndex} recoil={RecoilOffset} previewAmmo={RecoilPreviewAmmo} dead={IsDead} respawnVersion={RespawnVersion} respawnRemaining={RespawnRemaining} pending={RespawnPending} kd={Kill}/{Death} deathSeq={DeathSequence} killer={LastKiller} hitKilled={LastHitKilled}");
         _diagnosticSnapshot = snapshot;
         _hasDiagnosticSnapshot = true;
     }
@@ -392,11 +463,19 @@ public readonly struct CombatStateSnapshot
     public readonly CombatBodyPart LastHitBodyPart;
     public readonly int LastHitDamage;
     public readonly PlayerRef LastHitTarget;
+    public readonly bool IsDead, RespawnPending, LastHitKilled;
+    public readonly float RespawnRemaining;
+    public readonly int RespawnVersion, Kill, Death, DeathSequence;
+    public readonly PlayerRef LastKiller;
     public CombatStateSnapshot(string networkId, PlayerRef inputAuthority, bool isStateAuthority, int tick, int health, int ammo,
-        int shotSequence, int hitSequence, int? reloadTargetTick, CombatBodyPart part, int damage, PlayerRef target)
+        int shotSequence, int hitSequence, int? reloadTargetTick, CombatBodyPart part, int damage, PlayerRef target,
+        bool dead = false, float respawnRemaining = 0f, bool respawnPending = false, int respawnVersion = 0,
+        int kill = 0, int death = 0, int deathSequence = 0, PlayerRef lastKiller = default, bool killed = false)
     {
         NetworkId = networkId; InputAuthority = inputAuthority; IsStateAuthority = isStateAuthority; Tick = tick;
         Health = health; Ammo = ammo; ShotSequence = shotSequence; HitSequence = hitSequence; ReloadTargetTick = reloadTargetTick;
         LastHitBodyPart = part; LastHitDamage = damage; LastHitTarget = target;
+        IsDead = dead; RespawnRemaining = respawnRemaining; RespawnPending = respawnPending; RespawnVersion = respawnVersion;
+        Kill = kill; Death = death; DeathSequence = deathSequence; LastKiller = lastKiller; LastHitKilled = killed;
     }
 }

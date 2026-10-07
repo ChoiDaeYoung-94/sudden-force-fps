@@ -40,7 +40,8 @@ public sealed class CombatPresentation : MonoBehaviour
         snapshot = default;
         if (!_bound || Owner == null || !Owner.TryGetCombatSnapshot(out var state)) return false;
         snapshot = new CombatPresentationSnapshot(state.InputAuthority, state.Health, state.Ammo, Owner.MagazineCapacity,
-            Owner.IsReloading, Owner.ReloadRemaining, Owner.RecoilOffset);
+            Owner.IsReloading, Owner.ReloadRemaining, Owner.RecoilOffset, Owner.IsDead, Owner.RespawnRemaining,
+            Owner.RespawnPending, Owner.RespawnVersion, Owner.Kill, Owner.Death);
         return true;
     }
 
@@ -50,6 +51,9 @@ public sealed class CombatPresentation : MonoBehaviour
         bool local = Owner.Object.HasInputAuthority;
         if (local && (snapshot.Health != _lastVitals.Health || snapshot.Ammo != _lastVitals.Ammo
             || snapshot.Capacity != _lastVitals.Capacity || snapshot.IsReloading != _lastVitals.IsReloading
+            || snapshot.IsDead != _lastVitals.IsDead || snapshot.RespawnPending != _lastVitals.RespawnPending
+            || snapshot.RespawnVersion != _lastVitals.RespawnVersion || snapshot.Kill != _lastVitals.Kill || snapshot.Death != _lastVitals.Death
+            || Mathf.Abs(snapshot.RespawnRemaining - _lastVitals.RespawnRemaining) >= 0.01f
             || Mathf.Abs(snapshot.ReloadRemaining - _lastVitals.ReloadRemaining) >= 0.01f))
         {
             _lastVitals = snapshot;

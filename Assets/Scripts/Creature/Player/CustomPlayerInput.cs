@@ -13,6 +13,7 @@ public struct CustomPlayerInput : INetworkInput
     public float MoveZ;
     public bool Fire; // Compatibility mirror only. Server reads Buttons.Fire.
     public bool HasAim;
+    public int RespawnVersion;
     public float AimYaw;
     public float AimPitch;
     public NetworkButtons Buttons;

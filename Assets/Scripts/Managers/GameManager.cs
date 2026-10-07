@@ -18,6 +18,10 @@ public class GameManager : NetworkBehaviour
     private readonly PlayerSpawnSelector _spawnSelector = new PlayerSpawnSelector();
     private float _nextSpawnRetry;
     public int RosterCount => _roster.Count;
+    public event Action<KillConfirmedRecord> KillConfirmed;
+    private readonly Dictionary<PlayerRef, int> _deathHighWater = new Dictionary<PlayerRef, int>();
+    // C5 may additionally close this gate when a match ends.
+    public bool RespawnsEnabled { get; set; } = true;
 
     public void SetRoster(IEnumerable<GamePlayerRosterEntry> players)
     {
@@ -40,6 +44,8 @@ public class GameManager : NetworkBehaviour
         _roster.Clear();
         _spawned.Clear();
         _spawnSelector.Clear();
+        _deathHighWater.Clear();
+        RespawnsEnabled = true;
         _nextSpawnRetry = 0f;
         RefreshLegacyLists();
     }
@@ -83,14 +89,34 @@ public class GameManager : NetworkBehaviour
         SpawnGamePlayer();
     }
 
-    public bool TryGetSpawnPose(int team, out Transform pose)
+    public bool TryGetSpawnPose(int team, out Transform pose, GamePlayerNetworkData ignoredPlayer = null)
     {
         pose = null;
         var manager = NetworkRunnerManager.Instance;
         var runner = manager != null ? manager.GetNetworkRunner() : null;
         if (runner == null || !runner.IsServer || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game || (team != 0 && team != 1)) return false;
+        if (ignoredPlayer != null && (!RespawnsEnabled || ignoredPlayer.Runner != runner
+            || !_roster.ContainsKey(ignoredPlayer.Object.InputAuthority)
+            || !runner.ActivePlayers.Contains(ignoredPlayer.Object.InputAuthority))) return false;
         var points = SpawnPoints.Instance;
-        return points != null && _spawnSelector.TrySelect(team == 0 ? points.RedTeamSpawnPoints : points.BlueTeamSpawnPoints, runner.Tick.Raw, out pose);
+        return points != null && _spawnSelector.TrySelect(team == 0 ? points.RedTeamSpawnPoints : points.BlueTeamSpawnPoints, runner.Tick.Raw, out pose, ignoredPlayer);
+    }
+
+    public void NotifyKillConfirmed(KillConfirmedRecord record)
+    {
+        var manager = NetworkRunnerManager.Instance;
+        var runner = manager != null ? manager.GetNetworkRunner() : null;
+        if (runner == null || !runner.IsServer || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game
+            || record.DeathSequence <= 0 || record.Killer == record.Victim
+            || !_roster.ContainsKey(record.Killer) || !_roster.ContainsKey(record.Victim)) return;
+        if (_deathHighWater.TryGetValue(record.Victim, out int previous) && previous >= record.DeathSequence) return;
+        _deathHighWater[record.Victim] = record.DeathSequence;
+        if (KillConfirmed == null) return;
+        foreach (Action<KillConfirmedRecord> handler in KillConfirmed.GetInvocationList())
+        {
+            try { handler(record); }
+            catch (Exception exception) { Debug.LogException(exception); }
+        }
     }
 
     public void SpawnGamePlayer()
