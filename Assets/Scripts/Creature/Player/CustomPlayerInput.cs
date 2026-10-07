@@ -2,14 +2,16 @@ using Fusion;
 
 public enum PlayerInputButton
 {
-    Sprint
+    Sprint = 0,
+    Fire = 1,
+    Reload = 2
 }
 
 public struct CustomPlayerInput : INetworkInput
 {
     public float MoveX;
     public float MoveZ;
-    public bool Fire; // Retained for existing callers; combat is a later stage.
+    public bool Fire; // Compatibility mirror only. Server reads Buttons.Fire.
     public bool HasAim;
     public float AimYaw;
     public float AimPitch;

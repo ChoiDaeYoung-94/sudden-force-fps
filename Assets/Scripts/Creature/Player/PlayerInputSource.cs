@@ -10,6 +10,9 @@ public sealed class PlayerInputSource : MonoBehaviour
     private GamePlayerNetworkData _owner;
     private Vector2 _move;
     private bool _sprint;
+    private bool _fire;
+    private bool _reloadRequested;
+    private int _reloadSubmittedFrame = -1;
     private float _yaw;
     private float _pitch;
     private int _lookFinger = -1;
@@ -43,6 +46,12 @@ public sealed class PlayerInputSource : MonoBehaviour
     }
 
     public void SetSprint(bool sprint) => _sprint = sprint;
+    public void SetFire(bool fire) => _fire = fire;
+    public void RequestReload()
+    {
+        _reloadRequested = true;
+        _reloadSubmittedFrame = -1;
+    }
 
     // Degrees; positive Y raises the view. Mobile controls can call this too.
     public void AddLookDelta(Vector2 delta)
@@ -56,6 +65,9 @@ public sealed class PlayerInputSource : MonoBehaviour
     {
         _move = Vector2.zero;
         _sprint = false;
+        _fire = false;
+        _reloadRequested = false;
+        _reloadSubmittedFrame = -1;
         _lookFinger = -1;
         // Preserve the view when focus returns, particularly Blue's spawn yaw.
     }
@@ -70,11 +82,22 @@ public sealed class PlayerInputSource : MonoBehaviour
         data.AimYaw = _yaw;
         data.AimPitch = _pitch;
         data.Buttons.Set(PlayerInputButton.Sprint, _sprint);
+        data.Buttons.Set(PlayerInputButton.Fire, _fire);
+        data.Buttons.Set(PlayerInputButton.Reload, _reloadRequested);
+        data.Fire = _fire;
+        if (_reloadRequested) _reloadSubmittedFrame = Time.frameCount;
         return data;
     }
 
     private void Update()
     {
+        // Retain an edge until Fusion polls it. Multiple polls in the same frame
+        // see the same button, and PreviousButtons turns that into one request.
+        if (_reloadSubmittedFrame >= 0 && _reloadSubmittedFrame < Time.frameCount)
+        {
+            _reloadRequested = false;
+            _reloadSubmittedFrame = -1;
+        }
         if (_owner == null || !_owner.CanProvideInput || _paused || !Application.isFocused)
         {
             ResetInput();
@@ -96,6 +119,8 @@ public sealed class PlayerInputSource : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) ReleaseCursor();
         else if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !IsPointerOverControl(Input.mousePosition)) CaptureCursor();
         if (_capturedCursor) AddLookDelta(new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * 2f);
+        SetFire(_capturedCursor && Input.GetMouseButton(0));
+        if (Input.GetKeyDown(KeyCode.R)) RequestReload();
     }
 
     private void SampleTouchLook()

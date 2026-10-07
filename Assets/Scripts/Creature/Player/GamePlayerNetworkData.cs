@@ -23,6 +23,11 @@ public class GamePlayerNetworkData : NetworkBehaviour
     private PlayerInputSource _inputSource;
     private ShadowCastingMode[] _originalShadowModes;
     private bool _spawned;
+    private readonly CombatShotQuery _shotQuery = new CombatShotQuery();
+    public bool IsReloading => _spawned && Object != null && Object.IsValid && ReloadTimer.IsRunning;
+    public int MagazineCapacity => _weaponDefinition != null ? _weaponDefinition.MagazineCapacity : 30;
+    public float ReloadRemaining => _spawned && Object != null && Object.IsValid && Runner != null && Runner.IsRunning
+        ? ReloadTimer.RemainingTime(Runner) ?? 0f : 0f;
 
     [Networked] public string NickName { get; set; }
     [Networked] public int Team { get; set; }
@@ -32,6 +37,22 @@ public class GamePlayerNetworkData : NetworkBehaviour
     [Networked] public int Death { get; set; }
     [Networked] public float AimYaw { get; set; }
     [Networked] public float AimPitch { get; set; }
+    [Networked] public NetworkButtons PreviousButtons { get; set; }
+    [Networked] public TickTimer NextShotTimer { get; set; }
+    [Networked] public TickTimer ReloadTimer { get; set; }
+    [Networked] public int ShotSequence { get; set; }
+    [Networked] public int HitSequence { get; set; }
+    [Networked] public Vector3 LastShotOrigin { get; set; }
+    [Networked] public Vector3 LastShotDirection { get; set; }
+    [Networked] public bool LastShotHit { get; set; }
+    [Networked] public Vector3 LastShotHitPoint { get; set; }
+    [Networked] public Vector3 LastShotHitNormal { get; set; }
+    [Networked] public CombatBodyPart LastHitBodyPart { get; set; }
+    [Networked] public int LastHitDamage { get; set; }
+    [Networked] public PlayerRef LastHitTarget { get; set; }
+    [Networked] public int LastHitShotSequence { get; set; }
+    [Networked] public Vector3 LastHitPoint { get; set; }
+    [Networked] public Vector3 LastHitNormal { get; set; }
 
     private void Awake()
     {
@@ -42,6 +63,10 @@ public class GamePlayerNetworkData : NetworkBehaviour
     public override void Spawned()
     {
         _spawned = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        _hasDiagnosticSnapshot = false;
+        _nextRejectionLogTime = 0f;
+#endif
         if (_characterController == null) _characterController = GetComponent<CharacterController>();
         if (_movementController == null) _movementController = GetComponent<NetworkCharacterController>();
         if (_localCamera == null) _localCamera = GetComponentInChildren<Camera>(true);
@@ -56,7 +81,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             Health = 100;
-            Ammo = 30;
+            Ammo = CombatConfigured ? _weaponDefinition.MagazineCapacity : 30;
             Kill = 0;
             Death = 0;
             AimYaw = transform.eulerAngles.y;
@@ -100,6 +125,9 @@ public class GamePlayerNetworkData : NetworkBehaviour
     {
         ApplyLocalPresentation();
         if (_cameraRoot != null) _cameraRoot.localRotation = Quaternion.Euler(AimPitch, 0f, 0f);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        LogCombatSnapshot();
+#endif
     }
 
     public override void FixedUpdateNetwork()
@@ -107,7 +135,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
         if ((!Object.HasStateAuthority && !Object.HasInputAuthority) || !MovementConfigured) return;
         var move = Vector2.zero;
         bool sprint = false;
-        if (Health > 0 && GetInput(out CustomPlayerInput input))
+        bool hasInput = GetInput(out CustomPlayerInput input);
+        if (Health > 0 && hasInput)
         {
             if (PlayerInputSource.IsFinite(input.MoveX) && PlayerInputSource.IsFinite(input.MoveZ))
                 move = Vector2.ClampMagnitude(new Vector2(input.MoveX, input.MoveZ), 1f);
@@ -119,10 +148,142 @@ public class GamePlayerNetworkData : NetworkBehaviour
             }
             sprint = input.Buttons.IsSet(PlayerInputButton.Sprint);
         }
-        if (Health <= 0) { _movementController.Velocity = Vector3.zero; return; }
+        if (Health <= 0)
+        {
+            _movementController.Velocity = Vector3.zero;
+            if (Object.HasStateAuthority) { PreviousButtons = default; ReloadTimer = default; }
+            return;
+        }
         transform.rotation = Quaternion.Euler(0f, AimYaw, 0f);
         // SDK Move normalizes direction, so maxSpeed carries analog magnitude.
         _movementController.maxSpeed = (sprint ? 7.5f : 5f) * move.magnitude;
         _movementController.Move(transform.rotation * new Vector3(move.x, 0f, move.y));
+        if (Object.HasStateAuthority) UpdateCombat(hasInput, input);
+    }
+
+    private void UpdateCombat(bool hasInput, CustomPlayerInput input)
+    {
+        var manager = NetworkRunnerManager.Instance;
+        if (manager == null || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game || !CombatConfigured || Health <= 0)
+        {
+            PreviousButtons = default;
+            ReloadTimer = default;
+            if (hasInput && input.Buttons.IsSet(PlayerInputButton.Fire)) LogCombatRejection("session-or-configuration");
+            return;
+        }
+        // A started reload completes even when focus/input packets are missing.
+        if (ReloadTimer.IsRunning && ReloadTimer.Expired(Runner))
+        {
+            Ammo = _weaponDefinition.MagazineCapacity;
+            ReloadTimer = default;
+        }
+        bool valid = hasInput && input.HasAim && PlayerInputSource.IsFinite(input.AimYaw) && PlayerInputSource.IsFinite(input.AimPitch)
+            && input.AimYaw >= 0f && input.AimYaw < 360f && input.AimPitch >= -85f && input.AimPitch <= 85f
+            && (Team == 0 || Team == 1) && Ammo >= 0 && Ammo <= _weaponDefinition.MagazineCapacity
+            && CombatShotQuery.TryDurationTicks(_weaponDefinition.ShotInterval, Runner.TickRate, out _)
+            && CombatShotQuery.TryDurationTicks(_weaponDefinition.ReloadDuration, Runner.TickRate, out _);
+        if (!valid)
+        {
+            PreviousButtons = default;
+            if (hasInput && input.Buttons.IsSet(PlayerInputButton.Fire)) LogCombatRejection("input-or-ammo-or-timing");
+            return;
+        }
+        var pressed = input.Buttons.GetPressed(PreviousButtons);
+        PreviousButtons = input.Buttons;
+        if (pressed.IsSet(PlayerInputButton.Reload))
+        {
+            if (!ReloadTimer.IsRunning && Ammo < _weaponDefinition.MagazineCapacity)
+                ReloadTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(_weaponDefinition.ReloadDuration, Runner.TickRate));
+            // Reload wins over fire on the same tick, even when already full.
+            return;
+        }
+        if (!input.Buttons.IsSet(PlayerInputButton.Fire)) return;
+        if (ReloadTimer.IsRunning) { LogCombatRejection("reloading"); return; }
+        if (Ammo <= 0) { LogCombatRejection("empty-magazine"); return; }
+        if (!NextShotTimer.ExpiredOrNotRunning(Runner)) { LogCombatRejection("shot-interval"); return; }
+        if (!CombatShotQuery.IsFinite(transform.position) || !PlayerInputSource.IsFinite(AimYaw) || !PlayerInputSource.IsFinite(AimPitch)) return;
+        Ammo--;
+        ShotSequence++;
+        NextShotTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(_weaponDefinition.ShotInterval, Runner.TickRate));
+        LastShotOrigin = transform.position + Vector3.up * 1.75f;
+        LastShotDirection = Quaternion.Euler(AimPitch, AimYaw, 0f) * Vector3.forward;
+        LastShotHit = _shotQuery.TryCast(Runner, Object.InputAuthority, LastShotOrigin, LastShotDirection, _weaponDefinition.Range, out var hit);
+        LastShotHitPoint = LastShotHit ? hit.Point : LastShotOrigin + LastShotDirection * _weaponDefinition.Range;
+        LastShotHitNormal = LastShotHit ? hit.Normal : Vector3.zero;
+        if (!LastShotHit || hit.Hitbox == null) return;
+        var metadata = hit.Hitbox.GetComponent<CombatHitbox>();
+        if (metadata == null || !metadata.IsConfigured) return;
+        var target = metadata.Owner;
+        if (target == this || target.Object == null || !target.Object.IsValid || !target.Object.HasStateAuthority
+            || target.Runner != Runner || target.Health <= 0 || target.Team == Team || (target.Team != 0 && target.Team != 1)) return;
+        int damage = _weaponDefinition.GetDamage(metadata.BodyPart);
+        if (damage <= 0) return;
+        int previousHealth = target.Health;
+        target.Health = Mathf.Max(0, previousHealth - damage);
+        HitSequence++;
+        LastHitBodyPart = metadata.BodyPart;
+        LastHitDamage = previousHealth - target.Health;
+        LastHitTarget = target.Object.InputAuthority;
+        LastHitShotSequence = ShotSequence;
+        LastHitPoint = hit.Point;
+        LastHitNormal = hit.Normal;
+    }
+
+    public bool TryGetCombatSnapshot(out CombatStateSnapshot snapshot)
+    {
+        snapshot = default;
+        if (!_spawned || Object == null || !Object.IsValid || Runner == null || !Runner.IsRunning) return false;
+        snapshot = new CombatStateSnapshot(Object.Id.ToString(), Object.InputAuthority, Object.HasStateAuthority, Runner.Tick.Raw,
+            Health, Ammo, ShotSequence, HitSequence, ReloadTimer.TargetTick, LastHitBodyPart, LastHitDamage, LastHitTarget);
+        return true;
+    }
+
+    private void LogCombatRejection(string reason)
+    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (!Runner.IsForward || Time.unscaledTime < _nextRejectionLogTime) return;
+        _nextRejectionLogTime = Time.unscaledTime + 1f;
+        Debug.Log($"[CombatReject] id={Object.Id} input={Object.InputAuthority} tick={Runner.Tick.Raw} reason={reason}");
+#endif
+    }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    private bool _hasDiagnosticSnapshot;
+    private CombatStateSnapshot _diagnosticSnapshot;
+    private float _nextRejectionLogTime;
+
+    private void LogCombatSnapshot()
+    {
+        if (!TryGetCombatSnapshot(out var snapshot)) return;
+        bool changed = !_hasDiagnosticSnapshot || snapshot.Health != _diagnosticSnapshot.Health || snapshot.Ammo != _diagnosticSnapshot.Ammo
+            || snapshot.ShotSequence != _diagnosticSnapshot.ShotSequence || snapshot.HitSequence != _diagnosticSnapshot.HitSequence
+            || snapshot.ReloadTargetTick != _diagnosticSnapshot.ReloadTargetTick;
+        if (!changed) return;
+        string stage = _hasDiagnosticSnapshot ? "changed" : "initial";
+        Debug.Log($"[CombatState] {stage} id={snapshot.NetworkId} input={snapshot.InputAuthority} stateAuthority={snapshot.IsStateAuthority} tick={snapshot.Tick} hp={snapshot.Health} ammo={snapshot.Ammo} reloadEnd={snapshot.ReloadTargetTick} shot={snapshot.ShotSequence} hit={snapshot.HitSequence} part={snapshot.LastHitBodyPart} damage={snapshot.LastHitDamage} target={snapshot.LastHitTarget}");
+        _diagnosticSnapshot = snapshot;
+        _hasDiagnosticSnapshot = true;
+    }
+#endif
+}
+
+// Read-only copied state for Editor/Development QA and C3 binding. No credentials
+// or nicknames, and no path from the snapshot back to mutating network state.
+public readonly struct CombatStateSnapshot
+{
+    public readonly string NetworkId;
+    public readonly PlayerRef InputAuthority;
+    public readonly bool IsStateAuthority;
+    public readonly int Tick, Health, Ammo, ShotSequence, HitSequence;
+    public readonly int? ReloadTargetTick;
+    public readonly CombatBodyPart LastHitBodyPart;
+    public readonly int LastHitDamage;
+    public readonly PlayerRef LastHitTarget;
+    public CombatStateSnapshot(string networkId, PlayerRef inputAuthority, bool isStateAuthority, int tick, int health, int ammo,
+        int shotSequence, int hitSequence, int? reloadTargetTick, CombatBodyPart part, int damage, PlayerRef target)
+    {
+        NetworkId = networkId; InputAuthority = inputAuthority; IsStateAuthority = isStateAuthority; Tick = tick;
+        Health = health; Ammo = ammo; ShotSequence = shotSequence; HitSequence = hitSequence; ReloadTargetTick = reloadTargetTick;
+        LastHitBodyPart = part; LastHitDamage = damage; LastHitTarget = target;
     }
 }
