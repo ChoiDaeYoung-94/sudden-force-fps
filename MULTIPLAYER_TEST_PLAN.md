@@ -2,7 +2,29 @@
 
 ## 현재 검증 상태와 후속 단계
 
-**현재 상태: Windows64 Development 빌드 및 Editor + 별도 Player 실제 2 peer 검증을 완료했습니다. 공개 목록·참가·3회 재참가·정상 Ready·Host 전용 Start·역할 교환·맵/각 1 spawn·Client/Host 이탈과 로비 복귀는 아래 범위에서 PASS입니다. 카메라 분리는 FAIL이며 전투/Android는 NOT RUN입니다.**
+**현재 상태: 단계 2 새 Windows64 빌드/실제 2 peer에서 로컬 Camera·AudioListener·몸체 표시 분리, Blue 초기 yaw/Aim seed, 이동·시점 입력과 복제, 지속 걷기/달리기 및 이탈 회귀를 아래 범위에서 확인했습니다. 단계 1 카메라 FAIL은 역사 결과이며 이번 연결 후 관측 범위에서는 PASS입니다. 벽·계단·경사/점유 스폰 회피/Android/전투는 별도 미검증으로 유지합니다.**
+
+### 단계 2 이동·로컬 카메라 실제 검증 (2026-10-07)
+
+Refs #33, #19, #35. 기준 HEAD `07cb3525bae273d525523345c4fed6b5c99fa751`의 전체 SHA는 증거 `head-before.txt`를 우선합니다(이동 코드 `999e1f0` + 프리팹 연결 `07cb352`). 신규 증거 루트는 `D:\meee\git\sudden-force-fps-validation\20261007-stage2-movement-01`입니다. 이전 exe는 사용하지 않았습니다. 새 Windows64 Development manifest: 성공/오류0/경고5, 268,076,937 bytes, 빌드 시간45.39초. Standalone URP_COMPATIBILITY_MODE는 승인된 임시 빌드 define이며 원복합니다.
+
+| 표준 | 실제 결과와 제한 |
+| --- | --- |
+| P01 Camera/Listener/몸체 | PASS(직접 관측 범위). Editor Host Red와 역할 교환 Editor Client Blue 모두 local Camera·AudioListener 각1 enabled, body renderer8개 ShadowsOnly. remote는 Camera·Listener0 enabled/body On. Player는 실제 맵/HUD·시점 화면으로 확인했으며 내부 enabled 목록을 직접 열람하지 못했습니다. |
+| P02 Blue seed | PASS. 첫 경기 remote Blue transform/AimYaw180, 역할 교환 local Blue transform/AimYaw180·stored input yaw180. 포커스 복귀 후 Snapshot HasAim=true/yaw180/pitch0/move0으로 첫 입력이 0도 방향을 덮지 않음을 확인했습니다. |
+| P03 실제 입력/포커스 | PASS(범위 제한). Player Blue W와 마우스 drag→Host 복제 위치/aim 변경, Red 불변. Editor Red 실제 유지 WASD/마우스·ShiftW, 역할 교환 Editor Blue Game view 클릭 후 W/drag 위치·aim 변경, remote Red 불변. 실제 창 전환은 focused=false·move0/sprintfalse·CursorNone 및 다음 경기 input owner 해제까지 확인. **키를 누른 채 focus를 잃는 경계는 NOT RUN**(관측된 focus 전환 직전 키가 이미 해제됨). Android pause/touch도 NOT RUN. |
+| P04 속도/아날로그/예측 | 지속 키 관측 PASS: 수동 실제 입력 90초 read-only frame observer에서 W524프레임, ShiftW160프레임. 10프레임 이상 동일 입력/상한 유지 구간은 walk402프레임/peak5.00054, sprint127프레임/peak7.50051. 전환 직후 이전 tick 값은 제외했습니다. 조이스틱 실제 drag와 후속 입력에서 moveX/Z가 비단위 값으로 유지되며 속도 변화 확인(23 active unique frames). **아날로그 고정 크기별 정상 속도비·대각선 과속·지연/손실 예측/보정 정량 비교는 NOT RUN**. Player 순간 W 변위 약0.055m는 속도 시험의 대체 근거로 쓰지 않습니다. |
+| P05 벽/ground/동선 | 부분 확인: 실제 Red가 spawn→중앙 통로→Blue 측 통로를 이동, 양쪽 grounded 및 해당 표본 capsule overlaps[] 확인. CC height1.8/radius0.3/stepOffset0.3/slopeLimit45. **벽 밀기·모서리·낮은 천장·벽 관통 재현시험은 NOT RUN**. 유지 W 중 정지 접촉을 확인할 샘플은 없었으므로 통로 이동을 벽 충돌 합격으로 확장하지 않습니다. 아트의 정적 capsule sweep은 별도 보조 증거입니다. |
+| P06 계단/경사 | NOT RUN. 이번 실제 이동 기록은 평면 통로이며 허용/초과 계단·경사 동선의 합격을 주장하지 않습니다. Jump는 이번 구현 범위 밖입니다. |
+| P07 각1 spawn | PASS(정상 경로). 두 경기 각각 Red/Blue Id1030/1031 각1, 이후 ActivePlayers2/roster2/spawn dictionary2 유지. 같은 NetworkId는 **새 Runner 경기에서 재사용**될 수 있으며 경기 사이의 식별자를 전역 고유로 간주하지 않습니다. 반복 callback/동시 Start 강제 호출은 하지 않았습니다. |
+| P08 안전 spawn | 부분 확인: 실제 1vs1 초기 pose 및 이동 표본에 static/player capsule 겹침 없음. **같은 팀 점유 spawn 회피는 NOT RUN**, 실제 추가 peer와 점유/fallback 정책 검증이 필요합니다. 소스는 현재 임의 후보 선택이며 점유 회피가 구현됐다고 단정하지 않습니다. |
+| P09 이탈 회귀 | PASS. 정상 Editor Host Game Exit→새 manager -138396/LobbyConnected/roster0/inputBoundfalse, Player 자동 kr 로비/빈 목록. Player Host 새 공개방 생성→Editor 실제 수신 목록 참가→Ready→다음 경기 성공. Editor Client Game Exit→manager -141560/LobbyConnected/receivedtrue/roster0/inputBoundfalse/manager1. Player 정상 CloseMainWindow 종료 확인. |
+
+입력은 실제 네이티브 키/클릭/drag 및 사용자 수동 입력을 관측했습니다. Ready/session/input 상태 직접 주입이나 HUD 숨김으로 합격을 만들지 않았습니다. 입력 observer는 transient Editor update callback으로 관측만 하고 종료 시 스스로 구독을 해제하며 증거 폴더에 JSONL을 남깁니다. 첫 observer 요청의 delegate 타입 오류와 초기 Login 전 manager=null 읽기 오류는 QA eval 오류이며 제품 컴파일/게임 예외와 구분합니다. 실제 제품 C# SHA256은 검증 전후 변경0입니다.
+
+주요 증거: `initial-two-peer-presentation.json`, `player-blue-w-after.json`, `player-blue-mouse-after.json`, `manual-held-input-samples.jsonl`, `analog-editor-samples.jsonl`, `two-peer-capsule-physics.json`, `after-movement-counts.json`, `role-exchange-blue-presentation.json`, `blue-focused-aim-seed.json`, `role-exchange-editor-mouse.json`, `host-leave-lobby.json`, `client-lobby-connected.json`, `player-A.log`, `editor-cleanup.json`. native 화면은 Computer Use 출력에 관측했습니다. 신규 경로 Player의 Windows 방화벽 알림은 사용자 직접 처리 후 닫힘을 재관측했고 에이전트가 보안 설정을 조작하지 않았습니다.
+
+후속 우선순위: PC 벽/계단/경사와 held-focuslost, 아날로그 고정 크기·대각선/예측 tick 비교, 추가 peer 점유 스폰 회피, Android 오른쪽 touch와 조이스틱 입력 분리. HUD 중앙 mouse drag는 실제 재현에서 회전이 가능했지만 다른 raycast 영역/touch 전체를 합격으로 확장하지 않습니다.
 
 ### 2026-10-07 실제 실행 결과
 
@@ -25,7 +47,7 @@ Host 종료 시 Player Fusion `Code 104 / Server has disconnected / Disconnected
 
 닉네임·방 이름의 TMP textComponent에서 trailing U+200B가 관측됐습니다. exact 문자열 매칭과 정규화 후보로 인계하며 이번에는 코드 수정하지 않았습니다. 빌드 시점 C# SHA256 inventory와 종료 후 비교: 변경 0개. 종료 정리: Player 정상 종료, Editor Play=false·컴파일/import=false·빈 단일 씬 dirty=false·autotick=false, target StandaloneWindows64 유지. 원 Standalone define은 live getter와 ProjectSettings 직렬화 양쪽에서 복원 확인합니다. 직접 변경 파일은 문서/신규 빌드 helper 및 자동 생성 meta입니다.
 
-- 다음 시험: 로컬 카메라·AudioListener·입력/전투 구현 후 C01 이후를 실제 두 peer로 검증합니다.
+- 다음 시험: PC 벽·계단·경사/held-focuslost·아날로그 고정 크기와 Android 실제 입력, 이후 전투 구현 단계의 C02 이후를 검증합니다.
 - 후속 선행 조건: 총괄 Editor 제어권 배정, 통합 snapshot 및 관측 가능한 전투 상태. Player 실제 AppVersion 직접 관측은 아직 필요합니다.
 - 실행 수단: 신규 `MultiplayerValidationBuild.BuildWindows64(root, output)` 또는 전용 batch의 `BuildFromCommandLine`. 정확한 사용법은 마지막 부록에 있습니다.
 - 이번 합격 범위: 공개 목록 발견·참가, roster 2명/서로 다른 PlayerRef, 퇴장·재참가 3회와 역할 교환, 양쪽 실제 로그·화면 증거.
@@ -235,7 +257,7 @@ $playerB = Start-Process -FilePath $playerExe -WorkingDirectory $playerDirectory
 
 전체 tracked diff block 비교 추가 확인: 빌드 전후 차이 파일은 ProjectSettings.asset, BurstAotSettings_StandaloneWindows.json, URP-Performant.asset, URP-Balanced.asset, URP-HighFidelity.asset, UniversalRenderPipelineGlobalSettings.asset 총 6개입니다. URP shader prefilter/일부 SSAO prefilter 값, global settings의 build list/resource 직렬화 및 Burst schema Version3→5가 Unity 빌드 과정에서 저장됐습니다. 직접 Renderer/RenderGraph 변경은 하지 않았지만 자동 asset 변경은 존재합니다. 기존 사용자 변경을 보존하며 이 자동차이들을 임의 덮어쓰기하지 않고 총괄에 인계합니다. 자세한 비교 파일: tracked-diff-block-changes.json/source-before.patch/source-after.patch.
 
-## 후속 이동·로컬 카메라 검증 표준 (준비, NOT RUN)
+## 이동·로컬 카메라 검증 표준 (실제 실행 범위는 문서 첫 부분 참고)
 
 Editor 제어권을 다시 배정받은 뒤 PC↔PC를 먼저 수행하고, PC↔Android에서 양쪽 Host 역할을 교환합니다. 같은 통합 소스 snapshot의 manifest·플랫폼 define·설정 차이를 기록합니다. 이번 helper/증거 inventory는 그대로 보존하며 제품 코드·씬·컴파일 영향 파일은 이 준비 단계에서 수정하지 않습니다. 각 항목은 실제 UI/입력으로 수행하고 로그·권한·위치/tick 관측과 양쪽 화면을 함께 남깁니다. Android 설치·실행과 생명주기 조작은 담당 배정 후 진행합니다.
 
@@ -262,3 +284,5 @@ Editor 제어권을 다시 배정받은 뒤 PC↔PC를 먼저 수행하고, PC�
 - ProjectSettings 추가차이는 Standalone batching 항목 직렬화이며 원 define의 임시 추가는 복원됐습니다. Burst 추가차이는 schema Version3→5와 신설/폐지 옵션 직렬화입니다. Burst 컴파일 결과 영향은 별도 담당 확인 대상이며 rendering/SSAO 설정 변경과 구분합니다.
 
 자동차이 rollback은 하지 않았습니다. 원 사용자 변경과 검증 빌드 증거를 보존하며 플랫폼별 다음 빌드에서 prefilter가 다시 계산될 수 있음을 후속 비교 기준으로 남깁니다.
+
+단계2 종료 정리 실제확인: Player PID2176 CloseMainWindow 정상 shutdown 후 프로세스/창 소멸(첫10초 wait는 timeout이었고 이후 정상종료확인, 강제kill없음). EditorPlayfalse/compilingfalse/updatingfalse/빈단일씬 path빈값 dirtyfalse/StandaloneWindows64/autotickfalse, 원Standalonedefine live+disk동일, recompile completed failedfalse errors[]. 실제게임 최종console groundTruth errors0/warnings2, 과거Pipeline timeout이력은 분리. 이번 빌드 자동저장추가차이는 URP-Balanced의 SSAO shader prefilter4값과 GlobalSettings runtime목록 rid4338206851167682583 제외입니다. RenderGraph/compatflag 직접변경없음. 기존importtrace 일부가Editor자동재생성/refresh후clean으로보이므로 시작status/patch와 종료patch를 함께 보존하며 임의rollback없음.
