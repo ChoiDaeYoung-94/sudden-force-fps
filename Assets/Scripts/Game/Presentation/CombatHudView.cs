@@ -13,7 +13,12 @@ public sealed class CombatHudView : MonoBehaviour
     [SerializeField] private GameObject[] _touchControls;
     [SerializeField] private TMP_Text _desktopHint;
     [SerializeField] private bool _previewTouchControls;
+    [SerializeField] private GameObject _deathOverlay;
+    [SerializeField] private TMP_Text _deathCountdown;
+    [SerializeField] private TMP_Text _kdText;
     private bool? _showTouch;
+    private bool _hasLifeSnapshot, _isDead;
+    private int _respawnVersion;
     private CombatPresentation _presentation;
     private float _hitUntil;
     public CombatPresentation BoundPresentation => _presentation;
@@ -38,22 +43,33 @@ public sealed class CombatHudView : MonoBehaviour
 
     private void ShowVitals(CombatPresentationSnapshot snapshot)
     {
+        bool lifeChanged = !_hasLifeSnapshot || snapshot.IsDead != _isDead || snapshot.RespawnVersion != _respawnVersion;
+        _hasLifeSnapshot = true;
+        _isDead = snapshot.IsDead;
+        _respawnVersion = snapshot.RespawnVersion;
+        if (lifeChanged) { ResetTouchOwnership(); ClearHit(); }
+        if (_deathOverlay != null) _deathOverlay.SetActive(snapshot.IsDead);
+        if (_deathCountdown != null) _deathCountdown.text = snapshot.RespawnPending
+            ? "WAITING FOR A SAFE SPAWN" : "RESPAWN IN " + Mathf.CeilToInt(Mathf.Max(0f, snapshot.RespawnRemaining)) + "s";
+        if (_kdText != null) _kdText.text = "K " + snapshot.Kill + "  /  D " + snapshot.Death;
+        ApplyControls();
         if (_healthBar != null) _healthBar.fillAmount = Mathf.Clamp01(snapshot.Health / 100f);
         if (_healthText != null) _healthText.text = "HP " + snapshot.Health;
         if (_ammoText != null) _ammoText.text = snapshot.Ammo + " / " + snapshot.Capacity;
-        if (_reloadText != null) _reloadText.text = snapshot.IsReloading
+        if (_reloadText != null) _reloadText.text = snapshot.IsReloading && !snapshot.IsDead
             ? "RELOADING " + snapshot.ReloadRemaining.ToString("0.0") + "s" : string.Empty;
     }
 
     private void ShowHit(ConfirmedHitSnapshot hit)
     {
+        if (_isDead) return;
         bool head = hit.BodyPart == CombatBodyPart.Head;
         var color = head ? new Color(1f, .8f, .2f) : Color.white;
         if (_hitMarker != null) { _hitMarker.color = color; _hitMarker.enabled = true; }
         if (_hitText != null)
         {
             _hitText.color = color;
-            _hitText.text = (head ? "HEADSHOT " : "HIT ") + hit.Damage;
+            _hitText.text = (hit.Killed ? "ELIMINATED " : head ? "HEADSHOT " : "HIT ") + hit.Damage;
             _hitText.enabled = true;
         }
         _hitUntil = Time.unscaledTime + .22f;
@@ -73,16 +89,36 @@ public sealed class CombatHudView : MonoBehaviour
 #if UNITY_EDITOR
         touch |= _previewTouchControls;
 #endif
-        if (_showTouch == touch) return;
-        _showTouch = touch;
-        if (_joystick != null) _joystick.ResetInput();
-        if (_touchControls != null)
-            foreach (var control in _touchControls) if (control != null) control.SetActive(touch);
+        bool visible = touch && _presentation != null && !_isDead;
+        if (_showTouch != visible)
+        {
+            _showTouch = visible;
+            ResetTouchOwnership();
+            if (_touchControls != null)
+                foreach (var control in _touchControls) if (control != null) control.SetActive(visible);
+        }
         if (_desktopHint != null)
         {
-            _desktopHint.enabled = !Application.isMobilePlatform;
+            _desktopHint.enabled = !Application.isMobilePlatform && _presentation != null && !_isDead;
             _desktopHint.text = touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CLICK AIM / FIRE   R RELOAD   ESC CURSOR";
         }
+    }
+
+    private void ResetTouchOwnership()
+    {
+        if (_touchControls != null)
+            foreach (var control in _touchControls)
+                if (control != null)
+                    foreach (var pointer in control.GetComponentsInChildren<CombatPointerControl>(true)) pointer.ResetOwnership();
+        if (PlayerInputSource.Instance != null) PlayerInputSource.Instance.ResetInput();
+        if (_joystick != null) _joystick.ResetInput();
+    }
+
+    private void ClearHit()
+    {
+        _hitUntil = 0f;
+        if (_hitMarker != null) _hitMarker.enabled = false;
+        if (_hitText != null) { _hitText.enabled = false; _hitText.text = string.Empty; }
     }
 
     private void Unbind(CombatPresentation presentation)
@@ -90,8 +126,8 @@ public sealed class CombatHudView : MonoBehaviour
         if (!ReferenceEquals(presentation, _presentation)) return;
         Detach();
         Clear();
-        if (PlayerInputSource.Instance != null) PlayerInputSource.Instance.ResetInput();
-        if (_joystick != null) _joystick.ResetInput();
+        ResetTouchOwnership();
+        ApplyControls();
     }
 
     private void Detach()
@@ -106,6 +142,12 @@ public sealed class CombatHudView : MonoBehaviour
 
     private void Clear()
     {
+        _hasLifeSnapshot = false;
+        _isDead = false;
+        if (_deathOverlay != null) _deathOverlay.SetActive(false);
+        if (_deathCountdown != null) _deathCountdown.text = string.Empty;
+        if (_kdText != null) _kdText.text = "K --  /  D --";
+        ClearHit();
         if (_healthBar != null) _healthBar.fillAmount = 0;
         if (_healthText != null) _healthText.text = "HP --";
         if (_ammoText != null) _ammoText.text = "-- / --";
@@ -120,7 +162,7 @@ public sealed class CombatHudView : MonoBehaviour
         CombatPresentation.LocalUnbound -= Unbind;
         Detach();
         Clear();
-        if (PlayerInputSource.Instance != null) PlayerInputSource.Instance.ResetInput();
-        if (_joystick != null) _joystick.ResetInput();
+        ResetTouchOwnership();
+        ApplyControls();
     }
 }

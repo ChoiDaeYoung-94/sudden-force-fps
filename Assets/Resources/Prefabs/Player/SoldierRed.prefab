@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 2607625636030323306}
   - component: {fileID: 300321543486801481}
   - component: {fileID: 5802611517665520341}
+  - component: {fileID: 5435738021270765983}
   m_Layer: 9
   m_Name: SoldierRed
   m_TagString: Untagged
@@ -178,6 +179,10 @@ MonoBehaviour:
   _Ammo: 0
   _Kill: 0
   _Death: 0
+  _IsDead: 0
+  _RespawnVersion: 0
+  _DeathSequence: 0
+  _LastHitKilled: 0
   _AimYaw: 0
   _AimPitch: 0
   _ShotSequence: 0
@@ -311,6 +316,20 @@ MonoBehaviour:
   _audioSource: {fileID: 6007276869148461587}
   _shotClip: {fileID: 8300000, guid: aa5c9b6aad3e434498fc7ed29740c6f2, type: 3}
   _reloadClip: {fileID: 8300000, guid: 67c5e1925e517e841b32daadf624c2f8, type: 3}
+--- !u!114 &5435738021270765983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237131049092180482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a721d1b627ef0244f91ed7a8d92f9794, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLifePresentation
+  _owner: {fileID: 1016590275866807403}
+  _animator: {fileID: 5472449699248465287}
 --- !u!1 &340533059628415021
 GameObject:
   m_ObjectHideFlags: 0

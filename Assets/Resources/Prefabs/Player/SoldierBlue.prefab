@@ -2216,6 +2216,7 @@ GameObject:
   - component: {fileID: 4543512034587832822}
   - component: {fileID: 4625268923571683474}
   - component: {fileID: 81616316238672860}
+  - component: {fileID: 8895120202030258409}
   m_Layer: 9
   m_Name: SoldierBlue
   m_TagString: Untagged
@@ -2315,6 +2316,10 @@ MonoBehaviour:
   _Ammo: 0
   _Kill: 0
   _Death: 0
+  _IsDead: 0
+  _RespawnVersion: 0
+  _DeathSequence: 0
+  _LastHitKilled: 0
   _AimYaw: 0
   _AimPitch: 0
   _ShotSequence: 0
@@ -2448,6 +2453,20 @@ MonoBehaviour:
   _audioSource: {fileID: 6457864817567519321}
   _shotClip: {fileID: 8300000, guid: aa5c9b6aad3e434498fc7ed29740c6f2, type: 3}
   _reloadClip: {fileID: 8300000, guid: 67c5e1925e517e841b32daadf624c2f8, type: 3}
+--- !u!114 &8895120202030258409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4219630284990525383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a721d1b627ef0244f91ed7a8d92f9794, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLifePresentation
+  _owner: {fileID: 878779400724752510}
+  _animator: {fileID: 8836430150297808867}
 --- !u!1 &4300730483838093069
 GameObject:
   m_ObjectHideFlags: 0

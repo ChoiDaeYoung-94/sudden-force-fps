@@ -12,26 +12,40 @@ public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, I
     private void OnEnable() => CombatPresentation.LocalUnbound += OnUnbound;
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (_pointer.HasValue || PlayerInputSource.Instance == null) return;
+        if (!isActiveAndEnabled || _pointer.HasValue || PlayerInputSource.Instance == null) return;
+        var presentation = CombatPresentation.LocalInstance;
+        if (presentation == null || !presentation.TryGetSnapshot(out var snapshot) || snapshot.IsDead) return;
         _pointer = eventData.pointerId;
         _source = PlayerInputSource.Instance;
-        if (_control == Control.Fire) _source.SetFire(true);
+        if (_control == Control.Fire)
+        {
+            // A real new Down proves a fresh press. Lifecycle resets never claim
+            // that a finger physically released, so they retain the core gate.
+            _source.SynchronizeRespawn();
+            _source.SetFire(false);
+            _source.SetFire(true);
+        }
         else if (_control == Control.Sprint) _source.SetSprint(true);
         else _source.RequestReload();
     }
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (_pointer == eventData.pointerId) Release();
+        if (_pointer == eventData.pointerId) Release(true);
     }
-    public void OnCancel(BaseEventData eventData) => Release();
-    private void OnUnbound(CombatPresentation presentation) => Release();
-    private void OnApplicationFocus(bool focused) { if (!focused) Release(); }
-    private void OnApplicationPause(bool paused) { if (paused) Release(); }
-    private void Release()
+    public void OnCancel(BaseEventData eventData) => Release(false);
+    private void OnUnbound(CombatPresentation presentation) => Release(false);
+    private void OnApplicationFocus(bool focused) { if (!focused) Release(false); }
+    private void OnApplicationPause(bool paused) { if (paused) Release(false); }
+    public void ResetOwnership() => Release(false);
+    private void Release(bool physicalRelease)
     {
         if (_source != null)
         {
-            if (_control == Control.Fire) _source.SetFire(false);
+            if (_control == Control.Fire)
+            {
+                if (physicalRelease) _source.SetFire(false);
+                else _source.ResetInput();
+            }
             if (_control == Control.Sprint) _source.SetSprint(false);
         }
         _pointer = null;
@@ -40,6 +54,6 @@ public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, I
     private void OnDisable()
     {
         CombatPresentation.LocalUnbound -= OnUnbound;
-        Release();
+        Release(false);
     }
 }
