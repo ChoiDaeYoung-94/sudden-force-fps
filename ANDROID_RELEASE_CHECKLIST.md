@@ -313,3 +313,19 @@ APK 내 14개 `.so`는 모두 압축 저장되어 있습니다. 따라서 압축
 경고 71개는 BuildReport 기록에 남습니다. 주로 GPGS/UniRx 등 기존 플러그인의 deprecated API 경고이며, 별도로 URP Compatibility Mode의 deprecation 경고가 있습니다. TMP Units Per EM160 직렬화 안내 로그가 발생했지만 최종 font Git 변경은 없습니다. 실기기 성능과 메모리 검증은 남아 있습니다.
 
 주요 증거: `apk-attempt-01/android-validation-build.json`, `apk-signature.txt`, `apk-badging.txt`, `apk-zipalign.txt`, `apk-native-inspection.json`, `generated-gradle-evidence/audit.json`, `settings-after-build.json`, `projectsettings-vs-handoff.patch`, `settings-delta-vs-qa.json`. APK나 `.utmp` Gradle scratch 파일을 소스 커밋에 포함하지 않습니다.
+
+
+## 최신 전투·로그인·복귀 포함 개발 APK (2026-10-07)
+
+기준 HEAD `ea29fe6406ecf82ff726861eea200a800200478c`에서 최신 전투/경기, 로그인 재시도 및 persistent 로비 복귀를 포함한 Android Development APK를 빌드했습니다. 첫 APK와 다른 산출물이며 Google Play 배포용 서명 AAB가 아닙니다.
+
+- 파일: `D:\meee\git\sudden-force-fps-backups\20261007-android-latest-ea29fe6-01\apk-attempt-01\SuddenForceFPS.DebugValidation.apk`
+- 크기 168,781,787 bytes, SHA256 `52852c6c2386ca4d3342eeeee39831d1c4c03dff0b464786cc450595f4637ada`.
+- Unity 6000.3.25f1/IL2CPP/Development/LZ4, BuildReport Succeeded/오류0/경고71/423.900초.
+- 패키지 `com.AeDeong.SuddenForceFPS`, 버전 1.0.0/code3, 최소 API25/대상·컴파일 API36, ARMv7+ARM64, 활성 씬4개.
+- apksigner verify/v2, merged manifest 및 UnityPlayerActivity exported=true, zipalign 검사 통과. Android Debug SHA1 `6A:6F:43:7F:04:6B:06:0D:E1:4F:A1:CF:3B:4B:FD:AB:47:16:42:C7`.
+- ARM64 라이브러리 7개의 ELF PT_LOAD 16KB 정렬 확인. 네이티브 라이브러리14개는 압축 저장되어 비압축 ZIP offset 정렬 조건과 구분합니다. 실제16KB 기기 실행은 미검증입니다.
+- 생성 Gradle AGP9.0.0/Gradle9.3.1/Java17/API36 확인. Force Resolve 없이 성공했고 구형 packagingOptions·미치환 placeholder·기존 PC 절대 maven 경로는 발견되지 않았습니다.
+- 종료 후 Win64/Play 종료/빈 깨끗한 씬/자동 tick 중지, 기존 ProjectSettings·defines·버전·서명 설정·ledger·URP 변경 및 루트 파일 정확 복원. 시작3895파일 SHA 변경/추가/누락0, 기존 dirty patch 동일.
+
+근거는 같은 외부 폴더의 `apk-verification.json`, `apk-native-inspection.json`, `generated-gradle-audit.json`, `preservation-final.json` 및 BuildReport에 보존했습니다. 전환 중 Pipeline 조회 timeout1건은 제품 컴파일/빌드 오류와 구분했습니다. 실기기 설치·Google 계정 인증·모바일 조작·한 판·백그라운드 및 실제 네트워크 종료 회귀는 미검증입니다. debug code3은 Play 업로드용 버전 코드 예약을 뜻하지 않습니다.
