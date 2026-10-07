@@ -2,7 +2,29 @@
 
 ## 현재 검증 상태와 후속 단계
 
-**현재 상태: 단계 2 새 Windows64 빌드/실제 2 peer에서 로컬 Camera·AudioListener·몸체 표시 분리, Blue 초기 yaw/Aim seed, 이동·시점 입력과 복제, 지속 걷기/달리기 및 이탈 회귀를 아래 범위에서 확인했습니다. 단계 1 카메라 FAIL은 역사 결과이며 이번 연결 후 관측 범위에서는 PASS입니다. 벽·계단·경사/점유 스폰 회피/Android/전투는 별도 미검증으로 유지합니다.**
+**현재 상태: 단계 2 이동 검증에 이어 C1 신규 Windows64 빌드/실제 Editor Host + Player Client에서 부위 등록·소유자·기본 query·자기 제외·벽 우선·명시 인접 tick 보간 및 수명 회귀를 아래 범위에서 확인했습니다. 실제 원격 입력의 중간 alpha/애니메이션 pose timing·역할 교환 query·C2 사격/피해/탄약과 Android는 미검증으로 유지합니다.**
+
+
+### C1 Hitbox 기반 실제 검증 (2026-10-07)
+
+Refs #33, #19, #35. 기준 HEAD `da43800b07db7281a18ec6d6483f40e4ef6e3e19`(코드 `d9a6713` + 아트 `da43800`). 증거 루트 `D:\meee\git\sudden-force-fps-validation\20261007-c1-hitbox-01`. 새 Windows64 Development 빌드는 오류0/경고2, 268,081,158 bytes, 32.894초입니다. 임시 Standalone URP_COMPATIBILITY_MODE를 사용했으며 종료 시 live/disk 원 define을 복원했습니다. Player PID71676의 실제 kr 로비→공개방 목록 참가→Ready→경기를 Editor Host와 수행했습니다.
+
+| 표준 | 실제 결과와 제한 |
+| --- | --- |
+| H01 등록/소유자 | 실제 두 player에 root각1/Hitboxes각12, 총24. 모든 metadata IsConfigured=true, index0~11/owner Player1·2/layer10 대응. 두 번째 새 Runner 경기에서도24/configured=true. prefab bake/등록표의 정적 근거는 C1 아트 인계와 구분합니다. |
+| H02 부위 계약 | 실제 각 Head1/Torso3/Arm4/Leg4, 좌우 arm/leg 이름·소유자 대응을 확인했습니다. WeaponDefinition/CombatConfigured=true. 설정의 피해값은 사격 적용 합격이 아닙니다. |
+| H03 animated broad bounds | QA의 실제 전 animation 상태 검증은 NOT RUN. 아트 담당의 broad radius2.3/offsetY.9 및 22상태×61표본 결과는 보조 인계 근거입니다. 이번 runtime child offset 실험을 정상 animation pose의 broad bounds 검증으로 확대하지 않습니다. |
+| H04 부위 query | Editor Host에서 양팀12개 각각6축, 총144개 실제 SDK ray를 수행했습니다. Head/Torso/좌우 Arm·Leg 명중 분류를 확인했고 nearest가 다른 부위인 ray도 숨기지 않고 보존했습니다. spine_03은 6축 모두 다른 nearer 부위였으므로 이 bone 단독 노출 합격을 주장하지 않습니다. Host/Client 역할 교환 query·경계/겹침 전수·양쪽 시각적 일치는 NOT RUN. |
+| H05 history/보간 | 실제 원격 PlayerRef2로 Host head query 정확한 hit, GetPlayerTickAndAlpha tick3123/tickTo=null/alpha=null. 원격 중간 alpha는 미관측. 별도 runtime-only child worldX .6m 변화 후 실제 저장된 인접 snapshot2472/2473의 head 위치를 RaycastAll로 확인하고 alpha.5/SubtickAccuracy 조회: head 반환 위치가 두 snapshot 중점과 오차0. 원 localPosition 복원true, callback해제. 이전 비인접 tick+수직 nearest 실험의 miss/torso 결과도 보존하며 제품 보간 오류로 판정하지 않습니다. 실제 네트워크 이동/animation capture timing·지연/손실 조건의 클라이언트 시각 보정은 NOT RUN. |
+| H06 자기/CC 제외 | Player1 자기 head 쿼리는 IgnoreInputAuthority 전true/후false. 원격 PlayerRef2+IgnoreInputAuthority로 Player1 head는 hit하므로 상대까지 제외하지 않음. Physics layer9 대조에서 SoldierBlue CC hit, shot mask layer8+10 실제 결과 Wall(layer8)로 CC 제외 확인. Fusion IncludePhysX의 layer9-only query0은 동적 CC를 직접 포함하는 대조로 해석하지 않습니다. |
+| H07 벽 우선 | layer8+10/IncludePhysX/IgnoreInputAuthority RaycastAll 결과를 거리 정렬하면 Wall_04 2.95755m가 enemy head27.89086m보다 앞선 실제 blocking geometry. SDK RaycastAll 배열 자체의 정렬을 가정하지 않았습니다. 벽 두께·모서리·관통 사격/피해 적용은 미검증입니다. |
+| H08 수명 | 첫 Host 정상 Game Exit→새 manager -163834/runner -163836/Lobby/player0/LagCompensation=null→새 공개방 실제 Client 재참가·Ready·경기24/configured=true. 다음 Client 정상 window close 후 ActivePlayers1/GamePlayer1/root1/현재 child12, 떠난 Blue head 위치 query는 miss. 이때 history debug TotalHitboxes24가 남았으므로 이 필드를 활성 child 수와 동일시하지 않습니다. 마지막 Host 정상 Exit 및 전체 Editor 정리 완료. |
+
+실험은 HP/Ammo/Ready/input 상태를 주입하지 않았습니다. query는 C1 진단이며 **C2 발사·피해·발사 권한·탄약/재장전·킬/사망·승패 합격이 아닙니다**. Animator나 RuntimeAnimatorController를 수정하지 않았고, 세 runtime child offset 진단은 각각 원 localPosition을 복원했습니다. 인접 pair 실험은 복원 여부를 JSON으로 직접 남겼습니다. 제품 C# 45개 SHA256 전후 변경0, 제품 prefab/scene/config을 직접 수정하지 않았습니다.
+
+주요 근거: `runtime-queries.json/.cs.txt`, `history-query.json`, `history-query-small-offset.json`, `history-adjacent-query.json/.cs.txt`, `body-mask-control.json`, `lifecycle-lobby.json`, `lifecycle-second-game-playerref.json`, `lifecycle-client-exit-query.json`, `player-A.log`, 새 build manifest. Player의 Host 종료 Code104/Server has disconnected 로그는 의도한 종료 경로이며 다음 로비/경기 성공과 함께 기록합니다. 초기 두 history 실험의 잘못된 중간 기대값을 head 보간 오차나 제품 FAIL로 귀속하지 않습니다.
+
+종료 정리: Player CloseMainWindow true/WaitForExit true 및 프로세스 소멸, Editor Play=false/autotick=false/빈 단일 씬 dirty=false/Win64, 원 Standalone define live+disk 복원. ProjectSettings 전체 텍스트는 시작 backup과 동일합니다. 빌드 자동 저장의 URP/GlobalSettings 등 차이는 `source-before.patch`와 `source-after.patch`로 보존하며 사용자 변경을 임의 rollback하지 않았습니다. 최종 compilation/import/console 결과는 `cleanup-final.json`, `recompile-final.json`, `console-final.json`을 우선합니다. recompile completed/failed=false/errors=[] 및 consoleErrors0이며, consoleWarnings17은 UniTask Editor TreeView API CS0618 등으로 별도 기록했습니다. 시작/종료 patch block 비교의 추가 tracked 차이는 이 문서뿐이며 설정/asset block은 동일합니다.
 
 ### 단계 2 이동·로컬 카메라 실제 검증 (2026-10-07)
 
