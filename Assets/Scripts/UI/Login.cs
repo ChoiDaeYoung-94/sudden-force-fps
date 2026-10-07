@@ -72,7 +72,8 @@ namespace AD
             _retry.SetActive(false);
             _loading.SetActive(true);
 
-#if UNITY_EDITOR
+            // Windows standalone is used only as a development/QA client.
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
             GoLobbyScene().Forget();
 #elif UNITY_ANDROID
             LoginWithGoogle();
@@ -81,6 +82,7 @@ namespace AD
 
         #region Login with google
 
+#if UNITY_ANDROID
         private void LoginWithGoogle()
         {
             PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
@@ -104,6 +106,7 @@ namespace AD
                 _loadingText.text = $"Failed LoginWithGoogle...";
             }
         }
+#endif
 
         #endregion
 
