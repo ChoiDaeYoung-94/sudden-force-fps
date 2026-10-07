@@ -10,7 +10,12 @@ public class GamePlayerNetworkData : NetworkBehaviour
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private NetworkCharacterController _movementController;
     [SerializeField] private Renderer[] _bodyRenderers;
+    [SerializeField] private WeaponDefinition _weaponDefinition;
+    [SerializeField] private HitboxRoot _hitboxRoot;
     public Transform CameraRoot => _cameraRoot;
+    public WeaponDefinition WeaponDefinition => _weaponDefinition;
+    public HitboxRoot HitboxRoot => _hitboxRoot;
+    public bool CombatConfigured => _weaponDefinition != null && _hitboxRoot != null && _weaponDefinition.TryValidate(out _);
     public bool MovementConfigured => _characterController != null && _movementController != null;
     public bool CanProvideInput => Object != null && Object.IsValid && Object.HasInputAuthority && Health > 0
         && NetworkRunnerManager.Instance != null && !NetworkRunnerManager.Instance.IsRetired
