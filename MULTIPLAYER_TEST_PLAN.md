@@ -119,6 +119,29 @@ Host 종료 시 Player Fusion `Code 104 / Server has disconnected / Disconnected
 
 ## 4. 흐름별 합격 기준과 증거
 
+### C1 Hitbox 기반 query 검증 준비 (NOT RUN)
+
+Refs #33, #19, #35. C1은 프리팹 등록·부위 식별·지연 보정 query의 기반만 검증합니다. C2 실제 사격/피해가 연결되기 전에는 HP 감소·헤드샷 피해·발사 권한·탄약 검증 완료를 주장하지 않습니다. 아래 준비에서는 제품 파일/씬/Editor/컴파일을 조작하지 않았습니다. C1 담당의 코드·프리팹·설정 통합 및 제어권 반환 후 새 snapshot과 신규 Player 빌드로 실행합니다.
+
+현재 읽기 snapshot의 NetworkProjectConfig는 LagCompensation.Enabled=false입니다. 담당이 history/query를 활성화하고 해당 플랫폼에서 실제 Runner가 history를 생성하는 것을 확인하기 전에는 animated history 시험을 BLOCKED/NOT RUN으로 유지합니다. 준비 중 파일은 담당 작업에 따라 바뀔 수 있으므로 실행 직전 적용값을 다시 읽습니다.
+
+| ID | 확인 절차 | 합격 기준 / 증거 |
+| --- | --- | --- |
+| H01 프리팹 등록/bake | Red/Blue의 실제 prefab GUID·Fusion prefab table ID·NetworkObject baked NetworkedBehaviours·HitboxRoot와 child Hitbox 등록 배열을 읽고 실제 spawn과 대응 | 각각 root1/부위12, null·중복 참조·등록 누락 없음. Hitbox.Root/HitboxIndex가 배열 항목과 일치하고 해당 player NetworkObject/PlayerRef로 연결. import/compile 또는 prefab table 숫자만으로 실제 등록 성공을 대신하지 않음. |
+| H02 Owner/분류 | 12개 각각 hierarchy/bone path·owner NetworkId/InputAuthority·부위 enum·좌우/상하 segment·shape/offset/size/layer를 inventory로 기록. 담당의 확정된 12개 구성 계약과 비교 | Head/Torso/Arm/Leg 및 좌우 구분이 명세와 일치, 원격 hitbox가 로컬 owner를 참조하지 않음. 12개 수만 맞고 모두 Torso로 매핑되는 경우 FAIL. 실제 12개 구성의 세부 부위 수는 계약 확인 전 임의 지정하지 않음. |
+| H03 broad bounds | idle·이동·회전 및 실제 연결된 애니메이션 pose에서 각 hitbox의 world geometry 최대 범위와 root broad sphere 중심/반경을 비교. 끝부분에 향한 query도 수행 | 모든 활성 부위가 broad sphere 안에 포함되어 narrow phase 후보에서 누락되지 않음. 한 idle pose의 자동 반경 계산만으로 동적 pose 전체를 PASS 처리하지 않음. 미연결 애니메이션은 NOT RUN. |
+| H04 부위 query | Host에서 표적과 ray pose/tick을 관측해 Head/Torso/좌우 Arm/Leg의 노출된 면을 각각 query. 각 결과의 HitboxIndex/Owner/부위/거리/point/normal을 기록. 두 팀 역할 교환 | 가까운 실제 부위가 올바른 분류로 반환되고 무관한 owner/부위가 선택되지 않음. 겹치는 팔·몸통/경계 ray는 nearest hit 또는 확정된 우선순위로 처리하며 배열 순서만으로 임의 선택하지 않음. ray는 실제 query API 경로를 사용하되 진단 query를 실제 발사로 표현하지 않음. |
+| H05 애니메이션 history | Runner tick/history 버퍼 범위를 기록한 뒤 움직이거나 애니메이션 중인 표적의 과거 pose와 현재 pose가 다른 ray를 query. shooter PlayerRef·선택된 tick/alpha와 현재 geometry 대조 query를 함께 기록 | rewind 대상 부위가 해당 과거 pose와 맞고 현재 Physics hit만 반환한 것을 history 성공으로 간주하지 않음. Subtick 옵션 유무도 구분. 버퍼 밖·생성 전·despawn 뒤 요청의 실패/제한 정책 확인. 지연·애니메이션 연결이 없으면 NOT RUN. |
+| H06 CC/자기 hitbox 제외 | query mask/layer와 IncludePhysX/IgnoreInputAuthority 실제 옵션을 기록. 표적 Head/Arm으로 향하는 ray, shooter 자기 capsule 통과 ray, CC만 포함하는 대조 query | 캐릭터 이동용 CC가 먼저 맞아 부위가 가려지거나 Torso로 대체되지 않음. shooter 자기 hitbox 제외는 실제 shooter PlayerRef 기준이며 원격 적군까지 제외하지 않음. IncludePhysX는 정적 월드 포함 범위와 분리해 평가. 일반 Physics.Raycast 성공으로 Fusion Hitbox 경로를 대신하지 않음. |
+| H07 월드 벽 차폐 | 같은 표적 부위에 대해 노출/벽 뒤, 표적 앞/뒤 벽, 벽 모서리 ray를 query하고 world collider·hitbox의 최단 거리를 비교 | 표적 앞 벽이 더 가까우면 벽 차폐 결과, 표적 뒤 벽은 표적 query를 가리지 않음. player 부위 layer 제외/월드 mask 누락을 따로 확인. 정적 PhysX world의 현재 pose와 rewind hitbox의 과거 pose 사용을 명시하며 움직이는 문/엄폐물은 별도 history 정책 시험으로 남김. |
+| H08 lifecycle/회귀 | actual2peer 정상 생성/Ready/Start→각12부위/root1 등록, Client/Host leave 및 새 Runner 경기 재참가에서 등록 수/owner/history 참조를 확인 | 현재 ActivePlayer별 등록 일치, 유령 root·despawn hitbox·중복 history 없음. 이동·로컬 카메라/Listener·Blue seed의 이전 gate 유지. query 수행 전후 HP/Ammo가 변하지 않으면 기반 query 상태로 기록하며 피해 완료라고 표현하지 않음. |
+
+증거 최소 필드: build manifest/HEAD/플랫폼·config, query 종류와 호출 권한, shooter/target PlayerRef/NetworkId, input/authority tick 및 history tick/alpha(관측 가능한 경우), origin/direction/range/mask/options, 결과 종류(Hitbox/월드/없음)·HitboxIndex/Owner/부위/거리/point/normal, root broad bounds, 실제 pose·활성 부위 수. 부위12 inventory와 query 표본을 분리 보존합니다. 관측값이 노출되지 않으면 단일 작성 담당에게 최소 진단을 요청하며 QA는 제품을 임의 패치하지 않습니다.
+
+SDK 근거는 설치된 Fusion.Runtime.xml의 Hitbox.Root/HitboxIndex, HitboxRoot.Hitboxes/BroadRadius/Offset 및 HitOptions.IncludePhysX/SubtickAccuracy/IgnoreInputAuthority입니다. BroadRadius 자동 계산은 현재 pose의 대략적인 범위이므로 animated bounds 전체 검증과 구분합니다.
+
+이동 잔여 항목(Android touch/실기기, 계단·경사, held-focuslost, 같은 팀 occupied spawn 회피)은 기존 NOT RUN 상태로 계속 추적하며 C1 합격으로 대체하지 않습니다.
+
 아래 표는 전체 시험의 합격 기준입니다. 이번에 실행한 범위의 실제 결과는 문서 첫 부분에 기록했습니다. 그 밖의 항목은 NOT RUN이며 코드 읽기·컴파일·단일 클라이언트 smoke를 PASS로 쓰지 않습니다.
 
 | ID | 실행 케이스 | 합격 기준 | 필수 증거 |
