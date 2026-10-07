@@ -39,8 +39,10 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     private CancellationTokenSource _connectionCancellation;
     private CancellationToken _connectionToken;
     private bool _applicationStopping;
-    // Retirement cancels connection/start operations, but normal lobby recovery
-    // remains valid until this owner or the application actually goes away.
+    private bool _shutdownObserved;
+    private bool _disconnectShutdownPending;
+    // These guards protect this Runner's operations. Lobby recovery has a
+    // separate application lifetime owned by persistent AD.Managers.
     private bool HasLiveOwner => this != null && _instance == this && Application.isPlaying && !_applicationStopping;
     private bool CanConnect => HasLiveOwner && !IsRetired && !_connectionToken.IsCancellationRequested;
     private bool IsCurrentCallback(NetworkRunner runner) => HasLiveOwner && runner != null && runner == _networkRunner;
@@ -52,7 +54,6 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     public ShutdownReason? LastRoomShutdownReason { get; private set; }
     public event Action<NetworkRunnerManager> RoomOperationChanged;
 
-    private const string LobbyScenePath = "Assets/Scenes/Lobby.unity";
     private const string RoomScenePath = "Assets/Scenes/Room.unity";
     private const string GameScenePath = "Assets/Scenes/Game/DesertHouse.unity";
 
@@ -60,6 +61,11 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (!Application.isPlaying) { _applicationStopping = true; return; }
         if (_instance != null && _instance != this && !_instance.IsRetired)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        if (AD.Managers.Instance != null && !AD.Managers.Instance.RegisterNetworkRunner(this))
         {
             Destroy(gameObject);
             return;
@@ -526,62 +532,30 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         SessionPhase = NetworkSessionPhase.ReturningToLobby;
         CancelConnectionOperations();
         AD.Managers.SavedNickName = _nickName ?? string.Empty;
-        _returnTask = ReturnToLobbyCoreAsync();
+        if (AD.Managers.Instance == null)
+        {
+            LastRoomError = "The persistent lobby recovery owner is missing.";
+            Debug.LogError($"[Network] Lobby recovery failed: {LastRoomError}");
+            return _returnTask = Task.CompletedTask;
+        }
+        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved || _disconnectShutdownPending);
         return _returnTask;
     }
 
-    private async Task ReturnToLobbyCoreAsync()
+    internal void PublishLobbyReturn()
     {
-        // Store the shared return task before Shutdown invokes callbacks.
-        await Task.Yield();
-        if (!HasLiveOwner) return;
-        var popup = AD.Managers.Instance != null ? AD.Managers.PopupM : null;
-        try
-        {
-            NotifyRoomOperationChanged();
-            if (!HasLiveOwner) return;
-            if (popup != null) popup.PopupLoading();
-            if (_networkRunner != null)
-            {
-                _networkRunner.ProvideInput = false;
-                try { await _networkRunner.Shutdown(destroyGameObject: false); }
-                catch (Exception exception)
-                {
-                    if (HasLiveOwner) Debug.LogError($"[Network] Shutdown exception: {exception.GetType().Name}");
-                }
-                if (!HasLiveOwner) return;
-                if (_networkRunner != null) _networkRunner.RemoveCallbacks(this);
-            }
-            if (AD.Managers.Instance != null && AD.Managers.GameM != null) AD.Managers.GameM.ClearSession();
-            _roomSpawnedPlayers.Clear();
-            ResolveScene(LobbyScenePath);
-            if (!HasLiveOwner) return;
-            // Reload even an existing additive Lobby to clear old room UI and network scenes.
-            var loading = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(LobbyScenePath, LoadSceneMode.Single);
-            if (loading == null) throw new InvalidOperationException("Unable to load the lobby scene.");
-            while (!loading.isDone)
-            {
-                await Task.Yield();
-                if (!HasLiveOwner) return;
-            }
-            if (!HasLiveOwner) return;
-            AD.Managers.CreateNetworkRunner();
-        }
-        catch (Exception exception)
-        {
-            if (HasLiveOwner)
-            {
-                LastRoomError = exception.Message;
-                Debug.LogError($"[Network] Lobby recovery failed: {exception.GetType().Name}");
-                NotifyRoomOperationChanged();
-            }
-        }
-        finally
-        {
-            // The new Runner owns its own connection loading indicator.
-            if (HasLiveOwner && popup != null) popup.ClosePopupLoading();
-            if (this != null && Application.isPlaying && !_applicationStopping) Destroy(gameObject);
-        }
+        NotifyRoomOperationChanged();
+    }
+
+    internal void ClearLobbyReturnState()
+    {
+        _roomSpawnedPlayers.Clear();
+    }
+
+    internal void ReportLobbyRecoveryFailure(string message)
+    {
+        LastRoomError = message;
+        NotifyRoomOperationChanged();
     }
 
     public void SaveNickName(string nickName)
@@ -676,6 +650,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         // Normal retired-runner shutdown remains logged during lobby recovery.
         if (!IsCurrentCallback(runner)) return;
+        _shutdownObserved = true;
         LastLobbyShutdownReason = shutdownReason;
         if (LobbyStatus != LobbyConnectionStatus.Connecting && LobbyStatus != LobbyConnectionStatus.Failed)
         {
@@ -686,13 +661,19 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         NotifyLobbyStatusChanged();
         LastRoomShutdownReason = shutdownReason;
         Debug.Log($"[Network] Runner shutdown: {shutdownReason}");
-        if (!IsRetired && SessionPhase != NetworkSessionPhase.Lobby) _ = ReturnToLobbyAsync();
+        if (SessionPhase != NetworkSessionPhase.Lobby)
+        {
+            if (!IsRetired) _ = ReturnToLobbyAsync();
+            else if (AD.Managers.Instance != null)
+                _ = AD.Managers.Instance.RecoverLobbyAsync(this, runner, automaticShutdown: true);
+        }
     }
 
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
         if (!IsCurrentCallback(runner) || !CanConnect) return;
+        _disconnectShutdownPending = true;
         LastLobbyError = reason.ToString();
         if (LobbyStatus != LobbyConnectionStatus.Connecting && LobbyStatus != LobbyConnectionStatus.Failed)
         {
@@ -701,8 +682,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         HasReceivedSessionList = false;
         _sessionList.Clear();
         NotifyLobbyStatusChanged();
-        if (SessionPhase == NetworkSessionPhase.Room || SessionPhase == NetworkSessionPhase.LoadingGame || SessionPhase == NetworkSessionPhase.Game)
-            _ = ReturnToLobbyAsync();
+        // Fusion owns the disconnect shutdown. OnShutdown hands recovery to
+        // persistent Managers before the SDK destroys this Runner's GameObject.
     }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
