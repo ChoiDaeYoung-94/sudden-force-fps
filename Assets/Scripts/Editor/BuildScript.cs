@@ -1,276 +1,152 @@
 using System;
+using System.Globalization;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 
-public class BuildScript : MonoBehaviour, IPostprocessBuildWithReport
+public static class BuildScript
 {
-    // AOS build시 필요한 data
-    private const string PRODUCT_NAME = "SuddenForceFPS";
-    private const string IDENTIFIER = "com.AeDeong.SuddenForceFPS";
-    private const string KEYSTORE_NAME = "src/AeDeong.keystore";
-    private const string KEYSTORE_PASS = "";
-    private const string KEYALIAS_NAME = "aedeong";
-    private const string KEYALIAS_PASS = "";
-    private static string[] DEFINESYMBOLS_APK = { "Debug" };
-    private static string[] DEFINESYMBOLS_AAB = { "" };
-
-    // version 자동화 관련
-    private const string VERSION = "1.0.";
-    private const string DAY_CALCULATEVERSION = "01/21/2023 00:00:00";
-    private const string BUILDINFO_PATH = "BuildInfo/buildinfo.txt";
-    private const string BUILDINFO_FINISHVERSIONSETTING = "BuildInfo/finishversionsetting.txt";
-    private static string[] _str_buildInfo = null;
-
-    // build 추출물 경로
-    private const string AOS_BUILD_PATH = "Build/AOS";
-
-    // build 구분
-    private const string CHECK_AOS_SETTING_APK = "Build/AOSSettingAPK.txt";
-    private const string CHECK_AOS_SETTING_AAB = "Build/AOSSettingAAB.txt";
-
-    // build 완료 후 에디터 종료 위함
-    private const string CHECK_BUILD = "Build/checkedBuilding.txt";
+    private const string ProductName = "SuddenForceFPS";
+    private const string Identifier = "com.AeDeong.SuddenForceFPS";
+    private const string KeystorePath = "src/AeDeong.keystore";
+    private const string KeyAlias = "aedeong";
+    private const string BuildInfoPath = "BuildInfo/buildinfo.txt";
+    private const string OutputDirectory = "Build/AOS";
+    private const int MaximumVersionCode = 2100000000;
 
     [MenuItem("Build/AOS/APK")]
-    static void BuildAOSAPK() => SetAOS(form: CHECK_AOS_SETTING_APK);
+    public static void BuildAOSAPK() => Run(false);
+
     [MenuItem("Build/AOS/AAB")]
-    static void BuildAOSAAB() => SetAOS(form: CHECK_AOS_SETTING_AAB);
+    public static void BuildAOSAAB() => Run(true);
 
-    #region AOS
-    /// <summary>
-    /// AOS build Setting
-    /// </summary>
-    /// <param name="form"></param>
-    static void SetAOS(string form)
+    private static void Run(bool appBundle)
     {
-        if (!Directory.Exists("Build"))
-            Directory.CreateDirectory("Build");
-
-        StreamWriter file = File.CreateText(form);
-        file.Close();
-
-        bool isAAB = form.Equals(CHECK_AOS_SETTING_AAB) ? true : false;
-
-        if (isAAB)
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, DEFINESYMBOLS_AAB);
-        else
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, DEFINESYMBOLS_APK);
-
-        CheckCI();
-    }
-
-    /// <summary>
-    /// AOS Build
-    /// </summary>
-    /// <param name="isAAB"></param>
-    static void BuildAOS(bool isAAB)
-    {
-        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
-
-        EditorUserBuildSettings.buildAppBundle = isAAB;
-        if (isAAB)
-            EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
-
-        // Github action에서 apk, aab를 모두 빌드 할 경우 apk와 aab의 version을 맞추기 위함
-        if (File.Exists(BUILDINFO_FINISHVERSIONSETTING))
-            _str_buildInfo = GetVersion();
-        else
-            _str_buildInfo = SetVersion(isAAB: isAAB);
-
-        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, IDENTIFIER);
-        PlayerSettings.bundleVersion = $"{VERSION}{_str_buildInfo[0]}";
-        PlayerSettings.productName = PRODUCT_NAME;
-
-        PlayerSettings.Android.bundleVersionCode = Convert.ToInt32(_str_buildInfo[2]);
-
-        PlayerSettings.Android.keystoreName = KEYSTORE_NAME;
-        PlayerSettings.Android.keystorePass = KEYSTORE_PASS;
-        PlayerSettings.Android.keyaliasName = KEYALIAS_NAME;
-        PlayerSettings.Android.keyaliasPass = KEYALIAS_PASS;
-
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
-        PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Android, ApiCompatibilityLevel.NET_4_6);
-
-        string filePath = CHECK_BUILD;
-        StreamWriter file = File.CreateText(filePath);
-        file.Close();
-
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-
-        string extension = isAAB == true ? ".aab" : ".apk";
-        buildPlayerOptions.locationPathName = AOS_BUILD_PATH + "/" + $"{VERSION}{_str_buildInfo[0]}.{_str_buildInfo[1]}" + extension;
-
-
-        if (isAAB)
+        bool success = false;
+        try
         {
-            buildPlayerOptions.options = BuildOptions.CompressWithLz4HC;
-            buildPlayerOptions.options &= ~BuildOptions.Development;
+            BuildAndroid(appBundle);
+            success = true;
         }
-        else
-            buildPlayerOptions.options = BuildOptions.CompressWithLz4 | BuildOptions.Development;
-
-        buildPlayerOptions.scenes = GetScenes();
-        buildPlayerOptions.target = BuildTarget.Android;
-        buildPlayerOptions.targetGroup = BuildTargetGroup.Android;
-
-        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-        BuildSummary summary = report.summary;
-
-        if (summary.result == BuildResult.Succeeded)
-            Debug.Log("AOSBuild succeeded: " + summary.totalSize + " bytes");
-
-        if (summary.result == BuildResult.Failed)
-            Debug.Log("AOSBuild failed");
-    }
-    #endregion
-
-    /// <summary>
-    /// version 자동화 관련
-    /// </summary>
-    /// <param name="form"></param>
-    /// <returns></returns>
-    static string[] SetVersion(bool isAAB)
-    {
-        if (!File.Exists(BUILDINFO_PATH))
-            Debug.LogError("빌드 버전 정보가 존재하지 않습니다.");
-
-        string[] buildInfo = File.ReadAllText(BUILDINFO_PATH).Split(',');
-        if (buildInfo.Length != 3)
-            Debug.LogError("빌드 버전 정보의 형식이 잘못되었습니다.\n" +
-                                "weekNumber,buildNumber,bundleVersionCode");
-
-        TimeSpan timeSpan = DateTime.Now - Convert.ToDateTime(DAY_CALCULATEVERSION);
-        int weekNumber = timeSpan.Days / 7;
-
-        int buildNumber = 0;
-        if (Convert.ToInt32(buildInfo[0]) == weekNumber)
-            buildNumber = Convert.ToInt32(buildInfo[1]) + 1;
-
-        int bundleVersionCode = Convert.ToInt32(buildInfo[2]);
-        if (isAAB)
-            ++bundleVersionCode;
-
-        File.WriteAllText(path: BUILDINFO_PATH, contents: string.Format("{0},{1},{2}", weekNumber, buildNumber, bundleVersionCode));
-        buildInfo = File.ReadAllText(BUILDINFO_PATH).Split(',');
-
-        if (isAAB)
+        catch (PreflightException exception)
         {
-            StreamWriter file = File.CreateText(BUILDINFO_FINISHVERSIONSETTING);
-            file.Close();
+            Debug.LogError("[AndroidBuild] " + exception.Message);
+        }
+        catch (Exception exception)
+        {
+            // Do not echo exception values that could contain signing credentials.
+            Debug.LogError("[AndroidBuild] Failed: " + exception.GetType().Name);
         }
 
-        return buildInfo;
+        // Only a dedicated batch build process owns its lifetime. Menu builds stay open.
+        if (Application.isBatchMode)
+            EditorApplication.Exit(success ? 0 : 1);
+        else if (!success)
+            throw new BuildFailedException("Android build failed. See the build log.");
     }
 
-    /// <summary>
-    /// version 자동화 관련
-    /// </summary>
-    /// <returns></returns>
-    static string[] GetVersion() => File.ReadAllText(BUILDINFO_PATH).Split(',');
-
-    /// <summary>
-    /// https://docs.unity3d.com/ScriptReference/EditorBuildSettingsScene.html
-    /// </summary>
-    /// <returns></returns>
-    private static string[] GetScenes()
+    private static void BuildAndroid(bool appBundle)
     {
-        EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
-        List<string> sceneList = new List<string>();
+        Require(!EditorApplication.isPlaying && !EditorApplication.isCompiling && !EditorApplication.isUpdating,
+            "Wait for a stable Editor outside PlayMode before building.");
+        Require(EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android,
+            "Select Android first, or launch the batch process with -buildTarget Android.");
+        Require(PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android) == Identifier,
+            "Android package differs from the existing app; confirm it before building.");
+        Require(File.Exists(KeystorePath), "The existing signing keystore is missing.");
+        Require(string.IsNullOrEmpty(PlayerSettings.Android.keyaliasName) || PlayerSettings.Android.keyaliasName == KeyAlias,
+            "The configured signing alias differs from the existing alias.");
 
-        foreach (EditorBuildSettingsScene scene in scenes)
+        var scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(scene => scene.path).ToArray();
+        Require(scenes.Length > 0 && scenes.All(File.Exists), "Enabled build scenes are missing or empty.");
+        var ledger = ReadLedger();
+        int knownCode = Math.Max(ledger[2], PlayerSettings.Android.bundleVersionCode);
+        string requestedCode = Environment.GetEnvironmentVariable("SUDDEN_FORCE_VERSION_CODE");
+        int versionCode;
+        if (!string.IsNullOrEmpty(requestedCode))
         {
-            if (scene.enabled)
-                sceneList.Add(scene.path);
+            Require(int.TryParse(requestedCode, NumberStyles.None, CultureInfo.InvariantCulture, out versionCode)
+                && versionCode > knownCode && versionCode <= MaximumVersionCode,
+                "SUDDEN_FORCE_VERSION_CODE must exceed the local ledger and PlayerSettings code, within Play's limit.");
+        }
+        else
+        {
+            Require(knownCode < MaximumVersionCode, "Android versionCode has reached Play's limit.");
+            versionCode = checked(knownCode + 1);
         }
 
-        return sceneList.ToArray();
-    }
+        string originalStorePassword = PlayerSettings.Android.keystorePass;
+        string originalAliasPassword = PlayerSettings.Android.keyaliasPass;
+        string storePassword = Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEYSTORE_PASSWORD") ?? originalStorePassword;
+        string aliasPassword = Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEYALIAS_PASSWORD") ?? originalAliasPassword;
+        Require(!string.IsNullOrEmpty(storePassword) && !string.IsNullOrEmpty(aliasPassword),
+            "Provide existing signing credentials through the Editor or the two signing environment variables.");
 
-    static IEnumerator CheckCompiling()
-    {
-        while (EditorApplication.isCompiling || EditorApplication.isUpdating)
-            yield return null;
+        int week = Math.Max(ledger[0], (int)((DateTime.UtcNow.Date - new DateTime(2023, 1, 21)).TotalDays / 7));
+        int build = week == ledger[0] ? checked(ledger[1] + 1) : 0;
+        string version = "1.0." + week.ToString(CultureInfo.InvariantCulture);
+        Directory.CreateDirectory(OutputDirectory);
+        // Reserve a new code before building; failed attempts may leave a harmless gap.
+        File.WriteAllText(BuildInfoPath, string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", week, build, versionCode));
+        PlayerSettings.bundleVersion = version;
+        PlayerSettings.productName = ProductName;
+        PlayerSettings.Android.bundleVersionCode = versionCode;
+        PlayerSettings.Android.useCustomKeystore = true;
+        PlayerSettings.Android.keystoreName = KeystorePath;
+        PlayerSettings.Android.keyaliasName = KeyAlias;
+        PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
+        EditorUserBuildSettings.buildAppBundle = appBundle;
 
-        EditorApplication.delayCall += () =>
+        try
         {
-            if (File.Exists(CHECK_AOS_SETTING_APK))
+            PlayerSettings.Android.keystorePass = storePassword;
+            PlayerSettings.Android.keyaliasPass = aliasPassword;
+            var options = new BuildPlayerOptions
             {
-                File.Delete(CHECK_AOS_SETTING_APK);
-                BuildAOS(isAAB: false);
-            }
-
-            if (File.Exists(CHECK_AOS_SETTING_AAB))
-            {
-                File.Delete(CHECK_AOS_SETTING_AAB);
-                BuildAOS(isAAB: true);
-            }
-        };
-    }
-
-    /// <summary>
-    /// https://docs.unity3d.com/ScriptReference/Callbacks.DidReloadScripts.html
-    /// Build setting 후 compile이 필요한 경우를 대비
-    /// 후 build
-    /// </summary>
-    [UnityEditor.Callbacks.DidReloadScripts]
-    private static void CheckCI()
-    {
-        if (File.Exists(CHECK_AOS_SETTING_APK) || File.Exists(CHECK_AOS_SETTING_AAB))
-            EditorCoroutine.StartCoroutine(CheckCompiling());
-    }
-
-    /// <summary>
-    /// https://docs.unity3d.com/ScriptReference/Build.IPostprocessBuildWithReport.OnPostprocessBuild.html
-    /// </summary>
-    public int callbackOrder { get { return 0; } }
-    public void OnPostprocessBuild(BuildReport report)
-    {
-        if (File.Exists(CHECK_BUILD))
+                scenes = scenes,
+                target = BuildTarget.Android,
+                targetGroup = BuildTargetGroup.Android,
+                locationPathName = Path.Combine(OutputDirectory, version + "." + build + (appBundle ? ".aab" : ".apk")),
+                options = appBundle ? BuildOptions.CompressWithLz4HC : BuildOptions.CompressWithLz4 | BuildOptions.Development,
+                // Adds only for this Player build; preserves all project defines such as DOTWEEN.
+                extraScriptingDefines = appBundle ? Array.Empty<string>() : new[] { "Debug" }
+            };
+            BuildReport report = BuildPipeline.BuildPlayer(options);
+            if (report == null || report.summary.result != BuildResult.Succeeded)
+                throw new BuildFailedException("Android BuildReport did not succeed.");
+            Debug.Log("[AndroidBuild] Succeeded: " + options.locationPathName + ", versionCode=" + versionCode);
+        }
+        finally
         {
-            File.Delete(CHECK_BUILD);
-
-            EditorApplication.delayCall += () => { EditorApplication.Exit(0); };
+            PlayerSettings.Android.keystorePass = originalStorePassword;
+            PlayerSettings.Android.keyaliasPass = originalAliasPassword;
         }
     }
-}
 
-/// <summary>
-/// https://docs.unity3d.com/kr/2022.2/Manual/com.unity.editorcoroutines.html
-/// </summary>
-class EditorCoroutine
-{
-    private IEnumerator iEnumerator = null;
-
-    private EditorCoroutine(IEnumerator iEnumerator)
+    private static int[] ReadLedger()
     {
-        this.iEnumerator = iEnumerator;
+        Require(File.Exists(BuildInfoPath), "BuildInfo/buildinfo.txt is missing.");
+        var fields = File.ReadAllText(BuildInfoPath).Trim().Split(',');
+        Require(fields.Length == 3, "Build ledger must contain week,build,versionCode.");
+        var ledger = new int[3];
+        for (int i = 0; i < ledger.Length; i++)
+            Require(int.TryParse(fields[i], NumberStyles.None, CultureInfo.InvariantCulture, out ledger[i]) && ledger[i] >= 0,
+                "Build ledger values must be nonnegative integers.");
+        Require(ledger[2] <= MaximumVersionCode, "Build ledger versionCode exceeds Play's limit.");
+        return ledger;
     }
 
-    public static EditorCoroutine StartCoroutine(IEnumerator iEnumerator)
+    private static void Require(bool condition, string message)
     {
-        EditorCoroutine editorCoroutine = new EditorCoroutine(iEnumerator);
-        editorCoroutine.Start();
-
-        return editorCoroutine;
+        if (!condition)
+            throw new PreflightException(message);
     }
 
-    private void Start()
+    private sealed class PreflightException : Exception
     {
-        EditorApplication.update -= Update;
-        EditorApplication.update += Update;
-    }
-
-    public void Stop() => EditorApplication.update -= Update;
-
-    private void Update()
-    {
-        if (!iEnumerator.MoveNext())
-            Stop();
+        public PreflightException(string message) : base(message) { }
     }
 }

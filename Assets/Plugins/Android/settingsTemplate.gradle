@@ -18,7 +18,17 @@ dependencyResolutionManagement {
         mavenCentral()
 // Android Resolver Repos Start
         maven {
-            url "file:///D:/Documents/01.Projects/01.Working/01.Unity_Projects/SuddenForce-FPS/Assets/GeneratedLocalRepo/GooglePlayGames/com.google.play.games/Editor/m2repository" // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
+            // Unity builds under Library/Bee; exported projects can supply the source root.
+            def sourceRoot = System.getenv('SUDDEN_FORCE_PROJECT_PATH')
+            def projectRoot = sourceRoot ? new File(sourceRoot) : settingsDir
+            def repositoryPath = 'Assets/GeneratedLocalRepo/GooglePlayGames/com.google.play.games/Editor/m2repository'
+            while (projectRoot != null && !new File(projectRoot, repositoryPath).isDirectory()) {
+                projectRoot = projectRoot.parentFile
+            }
+            if (projectRoot == null) {
+                throw new GradleException('GPGS local repository missing; resolve dependencies or set SUDDEN_FORCE_PROJECT_PATH.')
+            }
+            url new File(projectRoot, repositoryPath).toURI() // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
         }
         mavenLocal()
 // Android Resolver Repos End
