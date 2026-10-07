@@ -448,6 +448,73 @@ Transform:
   - {fileID: 9054344627076918346}
   m_Father: {fileID: 8660987716852312478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &775065195337716190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 870514473321269711}
+  - component: {fileID: 2651762759375310856}
+  - component: {fileID: 4328975434024555140}
+  m_Layer: 10
+  m_Name: Hitbox_spine_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &870514473321269711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775065195337716190}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.4668622, y: -0.53107417, z: 0.46686217, w: 0.53107417}
+  m_LocalPosition: {x: -0.21002744, y: 0.112058185, z: -0.0028495193}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6276385474847672083}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2651762759375310856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775065195337716190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.22958846, y: 0.17576496, z: 0.25716752}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &4328975434024555140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775065195337716190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 1
 --- !u!1 &1059608642353697423
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,6 +545,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1649059658783793621}
+  - {fileID: 870514473321269711}
   m_Father: {fileID: 3471138872482322844}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1132753579041577731
@@ -1042,6 +1110,7 @@ Transform:
   m_Children:
   - {fileID: 8660987716852312478}
   - {fileID: 3103103932906965423}
+  - {fileID: 8959416445802660481}
   m_Father: {fileID: 4250734347527995483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2247586855038029048
@@ -1229,6 +1298,73 @@ Transform:
   - {fileID: 3745497886214133992}
   m_Father: {fileID: 5156102663844063351}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2776916364799053070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6937799803140297734}
+  - component: {fileID: 6820042438703478737}
+  - component: {fileID: 6938721791241281887}
+  m_Layer: 10
+  m_Name: Hitbox_thigh_r
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6937799803140297734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776916364799053070}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.05149329, y: -0.7052294, z: 0.051493272, w: 0.7052294}
+  m_LocalPosition: {x: -0.22552502, y: 0.011844633, z: -0.002673274}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1591013526688296376}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6820042438703478737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776916364799053070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.10815983, y: 0.12708929, z: 0.21746387}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &6938721791241281887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776916364799053070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 3
 --- !u!1 &2781203163044690596
 GameObject:
   m_ObjectHideFlags: 0
@@ -1260,6 +1396,140 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8756672995401866117}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2908243739391096681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8959416445802660481}
+  - component: {fileID: 2272987537614174520}
+  - component: {fileID: 3104167927736741857}
+  m_Layer: 10
+  m_Name: Hitbox_lowerarm_l
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8959416445802660481
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2908243739391096681}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7041908, y: 0.064152144, z: -0.7041906, w: -0.06415212}
+  m_LocalPosition: {x: -0.24518521, y: -0.00021741726, z: -0.00036480278}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8328964048937360669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2272987537614174520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2908243739391096681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.09326872, y: 0.08683613, z: 0.25458574}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &3104167927736741857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2908243739391096681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 2
+--- !u!1 &3192192118793455532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6228352235100229161}
+  - component: {fileID: 441753141594884715}
+  - component: {fileID: 6990240835037069455}
+  m_Layer: 10
+  m_Name: Hitbox_lowerarm_r
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6228352235100229161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3192192118793455532}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.064151905, y: 0.7041906, z: 0.064152464, w: 0.70419073}
+  m_LocalPosition: {x: 0.23628673, y: 0.00048462301, z: -0.0011523366}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6048787098832756521}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &441753141594884715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3192192118793455532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.09480907, y: 0.086836554, z: 0.26347965}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &6990240835037069455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3192192118793455532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 2
 --- !u!1 &3258841870827570643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,6 +1841,7 @@ Transform:
   m_Children:
   - {fileID: 8328964048937360669}
   - {fileID: 3905376050229288267}
+  - {fileID: 4146561490956500163}
   m_Father: {fileID: 5786394970685291433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3574917875322100258
@@ -1636,6 +1907,7 @@ Transform:
   m_Children:
   - {fileID: 8621283140799669559}
   - {fileID: 871948200622871226}
+  - {fileID: 6937799803140297734}
   m_Father: {fileID: 3471138872482322844}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3714446427251210013
@@ -1763,6 +2035,73 @@ Transform:
   - {fileID: 4984420876787644245}
   m_Father: {fileID: 8660987716852312478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4118267496355086973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5831224089519947825}
+  - component: {fileID: 908648820113398541}
+  - component: {fileID: 1291832780654907669}
+  m_Layer: 10
+  m_Name: Hitbox_pelvis
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5831224089519947825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4118267496355086973}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.49908563, y: -0.50091267, z: 0.4990856, w: 0.50091267}
+  m_LocalPosition: {x: -0.037420478, y: -0.004180162, z: -0.00068528205}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3471138872482322844}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &908648820113398541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4118267496355086973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.2214634, y: 0.20272365, z: 0.18044384}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &1291832780654907669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4118267496355086973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 1
 --- !u!1 &4151005897424423793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1809,7 +2148,8 @@ GameObject:
   - component: {fileID: 5761583033705280628}
   - component: {fileID: 6613212980945231614}
   - component: {fileID: 4543512034587832822}
-  m_Layer: 0
+  - component: {fileID: 4625268923571683474}
+  m_Layer: 9
   m_Name: SoldierBlue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1889,6 +2229,8 @@ MonoBehaviour:
   - {fileID: 6967566499737228858}
   - {fileID: 8239649801876523433}
   - {fileID: 4022692083855377220}
+  _weaponDefinition: {fileID: 11400000, guid: e819c228f601e9e4aa4890be7229b488, type: 2}
+  _hitboxRoot: {fileID: 4625268923571683474}
   _NickName: 
   _Team: 0
   _Health: 0
@@ -1916,6 +2258,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 878779400724752510}
   - {fileID: 4543512034587832822}
+  - {fileID: 4625268923571683474}
   ForceRemoteRenderTimeframe: 0
 --- !u!143 &6613212980945231614
 CharacterController:
@@ -1961,6 +2304,35 @@ MonoBehaviour:
   braking: 20
   maxSpeed: 5
   rotationSpeed: 0
+--- !u!114 &4625268923571683474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4219630284990525383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1039544458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.HitboxRoot
+  Config: 3
+  BroadRadius: 2.3
+  Offset: {x: 0, y: 0.9, z: 0}
+  GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  Hitboxes:
+  - {fileID: 908648820113398541}
+  - {fileID: 2651762759375310856}
+  - {fileID: 5787390000799226146}
+  - {fileID: 6820042438703478737}
+  - {fileID: 1023416079200670530}
+  - {fileID: 8589398507995068176}
+  - {fileID: 1728090786940984570}
+  - {fileID: 896966568698753124}
+  - {fileID: 5947065808634179815}
+  - {fileID: 4390940382438888181}
+  - {fileID: 2272987537614174520}
+  - {fileID: 441753141594884715}
 --- !u!1 &4300730483838093069
 GameObject:
   m_ObjectHideFlags: 0
@@ -2024,6 +2396,73 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8328964048937360669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4579748500879655457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4778870049084372577}
+  - component: {fileID: 4390940382438888181}
+  - component: {fileID: 3462133085339468204}
+  m_Layer: 10
+  m_Name: Hitbox_head
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4778870049084372577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4579748500879655457}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.08801504, y: -0.036814384, z: 0.0010000467}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7504588140459668985}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4390940382438888181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4579748500879655457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 2
+  SphereRadius: 0.14
+  CapsuleRadius: 0
+  BoxExtents: {x: 0, y: 0, z: 0}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &3462133085339468204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4579748500879655457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 0
 --- !u!1 &4669424928362375879
 GameObject:
   m_ObjectHideFlags: 0
@@ -2398,6 +2837,7 @@ Transform:
   m_Children:
   - {fileID: 4462063075643214549}
   - {fileID: 6200908281664383564}
+  - {fileID: 4237450627157179915}
   m_Father: {fileID: 8756672995401866117}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5935373166830895057
@@ -2431,6 +2871,7 @@ Transform:
   m_Children:
   - {fileID: 5141917941271991006}
   - {fileID: 1424667700692988029}
+  - {fileID: 4284162384455780612}
   m_Father: {fileID: 1591013526688296376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5961721769375992614
@@ -2618,6 +3059,7 @@ Transform:
   - {fileID: 6276385474847672083}
   - {fileID: 8756672995401866117}
   - {fileID: 1591013526688296376}
+  - {fileID: 5831224089519947825}
   m_Father: {fileID: 2012391069782341101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6225608615571442537
@@ -2715,6 +3157,73 @@ Transform:
   - {fileID: 3793074603049783075}
   m_Father: {fileID: 6224247385835485006}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6527608932181418990
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4146561490956500163}
+  - component: {fileID: 896966568698753124}
+  - component: {fileID: 7134648683445208362}
+  m_Layer: 10
+  m_Name: Hitbox_upperarm_l
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4146561490956500163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6527608932181418990}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7070386, y: 0.009822765, z: -0.7070386, w: -0.009822815}
+  m_LocalPosition: {x: -0.16292067, y: -0.024560548, z: -0.0012369603}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4250734347527995483}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &896966568698753124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6527608932181418990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.091797754, y: 0.110998265, z: 0.15819557}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &7134648683445208362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6527608932181418990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 2
 --- !u!1 &6549965251200339374
 GameObject:
   m_ObjectHideFlags: 0
@@ -2743,7 +3252,8 @@ Transform:
   m_LocalPosition: {x: -0.09283613, y: 0.0036415686, z: 4.816873e-18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4778870049084372577}
   m_Father: {fileID: 618978943505292964}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6621624412967089345
@@ -2903,6 +3413,73 @@ Transform:
   - {fileID: 3471138872482322844}
   m_Father: {fileID: 1270408922917168641}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7466284001485955447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3974832102537644590}
+  - component: {fileID: 5947065808634179815}
+  - component: {fileID: 8057729988764576597}
+  m_Layer: 10
+  m_Name: Hitbox_upperarm_r
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3974832102537644590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7466284001485955447}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.009822837, y: 0.70703876, z: 0.009822699, w: 0.70703846}
+  m_LocalPosition: {x: 0.154684, y: 0.014515238, z: 0.010476943}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7256571690066455429}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5947065808634179815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7466284001485955447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.10766398, y: 0.108789474, z: 0.16617057}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &8057729988764576597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7466284001485955447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 2
 --- !u!1 &7585239305877077064
 GameObject:
   m_ObjectHideFlags: 0
@@ -2935,6 +3512,73 @@ Transform:
   - {fileID: 6723081998715598550}
   m_Father: {fileID: 7651219681259565618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7621197103848284099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4237450627157179915}
+  - component: {fileID: 1023416079200670530}
+  - component: {fileID: 4268804079367303739}
+  m_Layer: 10
+  m_Name: Hitbox_calf_l
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4237450627157179915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621197103848284099}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.70686346, y: 0.018550243, z: 0.7068634, w: 0.018550387}
+  m_LocalPosition: {x: 0.27267832, y: -0.06505707, z: 0.0053774333}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6383260880483073623}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1023416079200670530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621197103848284099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.09501584, y: 0.19049005, z: 0.28433985}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &4268804079367303739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621197103848284099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 3
 --- !u!1 &7651851037362436248
 GameObject:
   m_ObjectHideFlags: 0
@@ -3166,8 +3810,76 @@ Transform:
   - {fileID: 5786394970685291433}
   - {fileID: 346549742463197872}
   - {fileID: 618978943505292964}
+  - {fileID: 8966589746693096414}
   m_Father: {fileID: 1649059658783793621}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7956852216708885101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8966589746693096414}
+  - component: {fileID: 1728090786940984570}
+  - component: {fileID: 3899821005194724388}
+  m_Layer: 10
+  m_Name: Hitbox_spine_03
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8966589746693096414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7956852216708885101}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.53960615, y: -0.45697397, z: 0.53960615, w: 0.45697397}
+  m_LocalPosition: {x: -0.044216584, y: 0.039043162, z: -0.00015977085}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6390541468875584466}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1728090786940984570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7956852216708885101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.23515104, y: 0.16651922, z: 0.24259387}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &3899821005194724388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7956852216708885101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 1
 --- !u!1 &7971817255004042071
 GameObject:
   m_ObjectHideFlags: 0
@@ -3294,6 +4006,7 @@ Transform:
   m_Children:
   - {fileID: 6383260880483073623}
   - {fileID: 954545685364468929}
+  - {fileID: 3928676450567091819}
   m_Father: {fileID: 3471138872482322844}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8398642237925854392
@@ -3327,6 +4040,7 @@ Transform:
   m_Children:
   - {fileID: 1212937347044286515}
   - {fileID: 2324850909515931384}
+  - {fileID: 6228352235100229161}
   m_Father: {fileID: 7256571690066455429}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8538753807940649429
@@ -3392,6 +4106,7 @@ Transform:
   m_Children:
   - {fileID: 6048787098832756521}
   - {fileID: 9167621573850523966}
+  - {fileID: 3974832102537644590}
   m_Father: {fileID: 346549742463197872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9042980803095717619
@@ -3457,3 +4172,137 @@ Transform:
   - {fileID: 7462057454657394905}
   m_Father: {fileID: 8660987716852312478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9110369288007458431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4284162384455780612}
+  - component: {fileID: 8589398507995068176}
+  - component: {fileID: 3425898501940386709}
+  m_Layer: 10
+  m_Name: Hitbox_calf_r
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4284162384455780612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9110369288007458431}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.018550409, y: -0.7068636, z: 0.018550256, w: 0.70686334}
+  m_LocalPosition: {x: -0.2752094, y: 0.063923225, z: -0.007103647}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8621283140799669559}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8589398507995068176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9110369288007458431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.09, y: 0.19152813, z: 0.2818087}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &3425898501940386709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9110369288007458431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 3
+--- !u!1 &9183921084583947518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3928676450567091819}
+  - component: {fileID: 5787390000799226146}
+  - component: {fileID: 7773801913516947870}
+  m_Layer: 10
+  m_Name: Hitbox_thigh_l
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3928676450567091819
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9183921084583947518}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7052294, y: 0.051493283, z: 0.7052294, w: 0.051493283}
+  m_LocalPosition: {x: 0.24107109, y: -0.007533991, z: 0.004861648}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8756672995401866117}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5787390000799226146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9183921084583947518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 1
+  SphereRadius: 0
+  CapsuleRadius: 0
+  BoxExtents: {x: 0.114058636, y: 0.12813655, z: 0.21805246}
+  CapsuleExtents: 0
+  Offset: {x: 0, y: 0, z: 0}
+  Root: {fileID: 4625268923571683474}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &7773801913516947870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9183921084583947518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ddb5554d70fdc4bb1c08f91914e88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatHitbox
+  _owner: {fileID: 878779400724752510}
+  _bodyPart: 3

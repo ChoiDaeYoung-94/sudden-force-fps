@@ -13,10 +13,10 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - WorldGeometry
+  - PlayerBody
+  - PlayerHitbox
+  - ViewModel
   - 
   - 
   - 
