@@ -24,6 +24,8 @@ public class JoyStick : MonoBehaviour
     private float _handleAreaRadius = 0;
     private Vector3 _firstTouchPosition = Vector3.zero;
     private Vector3 _distanceVector = Vector3.zero;
+    private int? _pointerId;
+    public bool HasCapturedPointer => _pointerId.HasValue;
 
     private void Awake()
     {
@@ -45,6 +47,8 @@ public class JoyStick : MonoBehaviour
     public void PointDown(BaseEventData baseEventData)
     {
         PointerEventData pointerEventData = baseEventData as PointerEventData;
+        if (pointerEventData == null || _pointerId.HasValue) return;
+        _pointerId = pointerEventData.pointerId;
         Vector3 inputPos = pointerEventData.position;
 
         if (_mode == Mode.FreeArea)
@@ -62,6 +66,7 @@ public class JoyStick : MonoBehaviour
     public void Drag(BaseEventData baseEventData)
     {
         PointerEventData pointerEventData = baseEventData as PointerEventData;
+        if (pointerEventData == null || _pointerId != pointerEventData.pointerId) return;
         Vector3 dragPosition = pointerEventData.position;
         _joystickVector = (dragPosition - _firstTouchPosition).normalized;
         _joystickDistance = Vector3.Distance(dragPosition, _firstTouchPosition);
@@ -74,12 +79,10 @@ public class JoyStick : MonoBehaviour
 
     public void PointUp(BaseEventData baseEventData)
     {
+        if (!(baseEventData is PointerEventData pointer) || _pointerId != pointer.pointerId) return;
         ResetInput();
-        _handleTransform.anchoredPosition = Vector2.zero;
-
-        if (_mode == Mode.FreeArea)
-            _handleAreaTransform.gameObject.SetActive(false);
     }
+    public void Cancel(BaseEventData baseEventData) => ResetInput();
     #endregion
 
     private void OnDisable()
@@ -87,9 +90,15 @@ public class JoyStick : MonoBehaviour
         ResetInput();
     }
 
-    private void ResetInput()
+    private void OnApplicationFocus(bool focused) { if (!focused) ResetInput(); }
+    private void OnApplicationPause(bool paused) { if (paused) ResetInput(); }
+
+    public void ResetInput()
     {
+        _pointerId = null;
         _joystickVector = Vector3.zero;
         _joystickDistance = 0f;
+        if (_handleTransform != null) _handleTransform.anchoredPosition = Vector2.zero;
+        if (_mode == Mode.FreeArea && _handleAreaTransform != null) _handleAreaTransform.gameObject.SetActive(false);
     }
 }

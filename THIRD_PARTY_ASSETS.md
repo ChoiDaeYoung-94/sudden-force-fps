@@ -55,3 +55,13 @@
 파일과 폴더 이름으로 제작자·배포 사이트·상업 이용 조건을 추정하지 않습니다. 조사에서 이 파일들의 라이선스와 취득 출처를 증명하는 문서를 찾지 못했으며, **상업 이용·게임 배포·원본 재배포·출처 표기 조건은 모두 미확인**입니다. 신규 Kenney CC0 라이선스는 이 기존 오디오에 적용되지 않습니다.
 
 배포 전 각 팩의 공식 source URL, 취득 내역, 제공 라이선스, 크레딧 요구 사항을 복원해야 합니다. 출처를 복원할 수 없는 파일은 확인 가능한 자산으로 교체할 대상으로 분류합니다. 이번 단계에서는 기존 오디오를 수정·삭제·대체하지 않았습니다.
+
+
+## C3 전투 표시 적용 (2026-10-07)
+
+- 기존 `Low Poly Weapons LITE/Weapon_02`에서 프로젝트용 `Assets/Prefabs/Weapons/RiflePresentation.prefab`을 만들었습니다. 원본은 수정하지 않았으며, 시각 모델의 축과 총구/왼손 위치만 별도 프리팹에서 구성했습니다. 기존 패키지의 취득 이력과 배포 권한 증빙은 미확인입니다.
+- Kenney 총구/불꽃 PNG는 `Assets/Art/VFX/Combat/`의 URP Particles/Unlit 머티리얼과 입자 프리팹에 연결했습니다. 총구는 1개, 명중은 최대 6개 입자를 재사용하며, 새 발사 sequence에 대해서만 표시합니다. 기존 텍스처 원본은 수정하지 않았습니다.
+- `Assets/Audios/Authored/RifleShot.wav`와 `ReloadTick.wav`는 이 프로젝트용으로 수학적 노이즈·사인파·감쇠 포락선을 합성한 효과음입니다. 외부 음원이나 샘플을 사용하지 않았으며, 기존 출처 미확인 오디오와 구분합니다. 생성 시드 7301/7302, 22050 Hz, 16-bit PCM, mono이며, Unity는 PCM/DecompressOnLoad/PreserveSampleRate 설정을 사용합니다. SFX 믹서 그룹에 연결했습니다.
+- RifleShot: 0.16초, 7100 bytes, SHA-256 `d9c53a349d120543fa7ef1d8d7c3ad9395cf3532313a775c81475cf398ec5bcc`.
+- ReloadTick: 0.22초, 9746 bytes, SHA-256 `b23486b56265debdd3aab7c6c56b6a2551e0808eee79183104219d04f3128eb7`.
+- 생성 코드 및 검증 증거는 작업 백업 `sudden-force-fps-backups/20261007-c3-presentation-ui/`에 보관했습니다. 별도의 외부 라이선스 음원을 다운로드하지 않았습니다. Android 실기 비용 및 실제 다중 터치 검증은 별도 QA 대상입니다.
