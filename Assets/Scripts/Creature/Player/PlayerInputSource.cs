@@ -20,6 +20,7 @@ public sealed class PlayerInputSource : MonoBehaviour
     private float _pitch;
     private int _lookFinger = -1;
     private bool _paused;
+    private bool _menuInputBlocked;
     private bool _capturedCursor;
     private CursorLockMode _previousCursorLock;
     private bool _previousCursorVisible;
@@ -30,6 +31,7 @@ public sealed class PlayerInputSource : MonoBehaviour
         if (Instance != null && Instance != this) Instance.Unbind();
         Instance = this;
         _owner = owner;
+        _menuInputBlocked = false;
         _respawnVersion = owner.RespawnVersion;
         _physicalFireHeld = false;
         _fireReleaseRequired = false;
@@ -56,7 +58,16 @@ public sealed class PlayerInputSource : MonoBehaviour
     {
         _physicalFireHeld = fire;
         if (!fire) _fireReleaseRequired = false;
-        _fire = fire && !_fireReleaseRequired;
+        _fire = fire && !_fireReleaseRequired && !_menuInputBlocked;
+    }
+
+    // Local menu ownership only; authoritative match state is unchanged.
+    public void SetMenuInputBlocked(bool blocked)
+    {
+        if (_menuInputBlocked == blocked) return;
+        _menuInputBlocked = blocked;
+        if (blocked) { ResetInput(); ReleaseCursor(); }
+        else SeedAim(_yaw, _pitch);
     }
 
     public void SeedAim(float yaw, float pitch)
@@ -103,7 +114,7 @@ public sealed class PlayerInputSource : MonoBehaviour
     {
         SynchronizeRespawn();
         var data = new CustomPlayerInput();
-        if (_owner == null || !_owner.CanProvideInput || _paused || !Application.isFocused) return data;
+        if (_owner == null || !_owner.CanProvideInput || _paused || _menuInputBlocked || !Application.isFocused) return data;
         data.MoveX = _move.x;
         data.MoveZ = _move.y;
         data.HasAim = true;
@@ -128,7 +139,7 @@ public sealed class PlayerInputSource : MonoBehaviour
             _reloadRequested = false;
             _reloadSubmittedFrame = -1;
         }
-        if (_owner == null || !_owner.CanProvideInput || _paused || !Application.isFocused)
+        if (_owner == null || !_owner.CanProvideInput || _paused || _menuInputBlocked || !Application.isFocused)
         {
             ResetInput();
             return;
@@ -149,7 +160,10 @@ public sealed class PlayerInputSource : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) ReleaseCursor();
         else if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !IsPointerOverControl(Input.mousePosition)) CaptureCursor();
         if (_capturedCursor) AddLookDelta(new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * 2f);
-        SetFire(_capturedCursor && Input.GetMouseButton(0));
+        // Cursor/menu ownership is not evidence that the physical button was
+        // released. Keep the release gate while left is held and right recaptures.
+        SetFire(Input.GetMouseButton(0));
+        _fire = _fire && _capturedCursor;
         if (Input.GetKeyDown(KeyCode.R)) RequestReload();
     }
 

@@ -417,6 +417,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             var scene = ResolveScene(GameScenePath);
             RoomManager.Instance.RegisterPlayerInGame();
+            if (AD.Managers.GameM.RosterCount == 0 || AD.Managers.GameM.RosterCount > NetworkMatchState.RosterCapacity
+                || _networkRunner.SessionInfo.MaxPlayers > NetworkMatchState.RosterCapacity)
+                throw new InvalidOperationException("Match roster or room capacity exceeds the supported 16 participants.");
             _networkRunner.SessionInfo.IsVisible = false;
             _networkRunner.SessionInfo.IsOpen = false;
             SessionPhase = NetworkSessionPhase.LoadingGame;
@@ -645,7 +648,11 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
                 SessionPhase = NetworkSessionPhase.Game;
                 _roomSceneReady = false;
                 runner.ProvideInput = true;
-                if (runner.IsServer) AD.Managers.GameM.Init();
+                if (runner.IsServer)
+                {
+                    AD.Managers.GameM.EnsureMatchSpawn(runner);
+                    AD.Managers.GameM.Init();
+                }
             }
             else if (room.IsValid() && room.isLoaded)
             {

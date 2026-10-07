@@ -25,7 +25,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
     public bool MovementConfigured => _characterController != null && _movementController != null;
     public bool CanProvideInput => Object != null && Object.IsValid && Object.HasInputAuthority && Health > 0 && !IsDead
         && NetworkRunnerManager.Instance != null && !NetworkRunnerManager.Instance.IsRetired
-        && NetworkRunnerManager.Instance.SessionPhase == NetworkSessionPhase.Game;
+        && NetworkRunnerManager.Instance.SessionPhase == NetworkSessionPhase.Game && NetworkMatchState.AllowsCombatFor(Runner);
     private PlayerInputSource _inputSource;
     private ShadowCastingMode[] _originalShadowModes;
     private bool _spawned;
@@ -198,6 +198,15 @@ public class GamePlayerNetworkData : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         if ((!Object.HasStateAuthority && !Object.HasInputAuthority) || !MovementConfigured) return;
+        var match = NetworkMatchState.Instance;
+        if (Object.HasStateAuthority && match != null && match.IsCurrent && match.Runner == Runner) match.EvaluateBoundary();
+        if (!NetworkMatchState.AllowsCombatFor(Runner))
+        {
+            _movementController.Velocity = Vector3.zero;
+            PreviousButtons = default; ReloadTimer = default; NextShotTimer = default;
+            RecoilShotTimer = default; RecoilReloadTimer = default;
+            return;
+        }
         var move = Vector2.zero;
         bool sprint = false;
         bool hasInput = GetInput(out CustomPlayerInput input);
@@ -236,7 +245,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
     private void UpdateCombat(bool hasInput, CustomPlayerInput input)
     {
         var manager = NetworkRunnerManager.Instance;
-        if (manager == null || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game || !CombatConfigured || Health <= 0)
+        if (manager == null || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game
+            || !NetworkMatchState.AllowsCombatFor(Runner) || !CombatConfigured || Health <= 0)
         {
             PreviousButtons = default;
             ReloadTimer = default;
@@ -319,7 +329,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
 
     private bool EnterDeath(GamePlayerNetworkData killer, CombatBodyPart part, int shotSequence)
     {
-        if (!Object.HasStateAuthority || IsDead || Health > 0 || killer == null || killer == this
+        if (!Object.HasStateAuthority || !NetworkMatchState.AllowsCombatFor(Runner) || IsDead || Health > 0 || killer == null || killer == this
             || !killer.Object.HasStateAuthority || killer.Runner != Runner) return false;
         IsDead = true; Death++; DeathSequence++; LastKiller = killer.Object.InputAuthority;
         killer.Kill++;
@@ -380,7 +390,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
     private void PredictRecoil(bool hasInput, CustomPlayerInput input)
     {
         var manager = NetworkRunnerManager.Instance;
-        if (manager == null || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game || !CombatConfigured)
+        if (manager == null || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game
+            || !NetworkMatchState.AllowsCombatFor(Runner) || !CombatConfigured)
         {
             PreviousButtons = default; ResetRecoilPreview(); return;
         }
