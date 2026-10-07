@@ -19,6 +19,7 @@ public sealed class CombatHudView : MonoBehaviour
     private bool? _showTouch;
     private bool _hasLifeSnapshot, _isDead;
     private int _respawnVersion;
+    private bool _matchSuppressed;
     private CombatPresentation _presentation;
     private float _hitUntil;
     public CombatPresentation BoundPresentation => _presentation;
@@ -48,7 +49,7 @@ public sealed class CombatHudView : MonoBehaviour
         _isDead = snapshot.IsDead;
         _respawnVersion = snapshot.RespawnVersion;
         if (lifeChanged) { ResetTouchOwnership(); ClearHit(); }
-        if (_deathOverlay != null) _deathOverlay.SetActive(snapshot.IsDead);
+        if (_deathOverlay != null) _deathOverlay.SetActive(snapshot.IsDead && !_matchSuppressed);
         if (_deathCountdown != null) _deathCountdown.text = snapshot.RespawnPending
             ? "WAITING FOR A SAFE SPAWN" : "RESPAWN IN " + Mathf.CeilToInt(Mathf.Max(0f, snapshot.RespawnRemaining)) + "s";
         if (_kdText != null) _kdText.text = "K " + snapshot.Kill + "  /  D " + snapshot.Death;
@@ -56,13 +57,13 @@ public sealed class CombatHudView : MonoBehaviour
         if (_healthBar != null) _healthBar.fillAmount = Mathf.Clamp01(snapshot.Health / 100f);
         if (_healthText != null) _healthText.text = "HP " + snapshot.Health;
         if (_ammoText != null) _ammoText.text = snapshot.Ammo + " / " + snapshot.Capacity;
-        if (_reloadText != null) _reloadText.text = snapshot.IsReloading && !snapshot.IsDead
+        if (_reloadText != null) _reloadText.text = snapshot.IsReloading && !snapshot.IsDead && !_matchSuppressed
             ? "RELOADING " + snapshot.ReloadRemaining.ToString("0.0") + "s" : string.Empty;
     }
 
     private void ShowHit(ConfirmedHitSnapshot hit)
     {
-        if (_isDead) return;
+        if (_isDead || _matchSuppressed) return;
         bool head = hit.BodyPart == CombatBodyPart.Head;
         var color = head ? new Color(1f, .8f, .2f) : Color.white;
         if (_hitMarker != null) { _hitMarker.color = color; _hitMarker.enabled = true; }
@@ -89,7 +90,7 @@ public sealed class CombatHudView : MonoBehaviour
 #if UNITY_EDITOR
         touch |= _previewTouchControls;
 #endif
-        bool visible = touch && _presentation != null && !_isDead;
+        bool visible = touch && _presentation != null && !_isDead && !_matchSuppressed;
         if (_showTouch != visible)
         {
             _showTouch = visible;
@@ -99,9 +100,24 @@ public sealed class CombatHudView : MonoBehaviour
         }
         if (_desktopHint != null)
         {
-            _desktopHint.enabled = !Application.isMobilePlatform && _presentation != null && !_isDead;
+            _desktopHint.enabled = !Application.isMobilePlatform && _presentation != null && !_isDead && !_matchSuppressed;
             _desktopHint.text = touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CLICK AIM / FIRE   R RELOAD   ESC CURSOR";
         }
+    }
+
+    public void SetMatchSuppressed(bool suppressed)
+    {
+        if (_matchSuppressed == suppressed) return;
+        _matchSuppressed = suppressed;
+        if (suppressed)
+        {
+            ResetTouchOwnership();
+            ClearHit();
+            if (_deathOverlay != null) _deathOverlay.SetActive(false);
+            if (_reloadText != null) _reloadText.text = string.Empty;
+        }
+        else if (_presentation != null && _presentation.TryGetSnapshot(out var snapshot)) ShowVitals(snapshot);
+        ApplyControls();
     }
 
     private void ResetTouchOwnership()
