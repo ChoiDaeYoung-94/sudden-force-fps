@@ -15,6 +15,8 @@ public class GameManager : NetworkBehaviour
 
     private readonly Dictionary<PlayerRef, GamePlayerRosterEntry> _roster = new Dictionary<PlayerRef, GamePlayerRosterEntry>();
     private readonly Dictionary<PlayerRef, NetworkObject> _spawned = new Dictionary<PlayerRef, NetworkObject>();
+    private readonly PlayerSpawnSelector _spawnSelector = new PlayerSpawnSelector();
+    private float _nextSpawnRetry;
     public int RosterCount => _roster.Count;
 
     public void SetRoster(IEnumerable<GamePlayerRosterEntry> players)
@@ -37,6 +39,8 @@ public class GameManager : NetworkBehaviour
     {
         _roster.Clear();
         _spawned.Clear();
+        _spawnSelector.Clear();
+        _nextSpawnRetry = 0f;
         RefreshLegacyLists();
     }
 
@@ -72,6 +76,23 @@ public class GameManager : NetworkBehaviour
         SpawnGamePlayer();
     }
 
+    private void Update()
+    {
+        if (_spawned.Count >= _roster.Count || Time.unscaledTime < _nextSpawnRetry) return;
+        _nextSpawnRetry = Time.unscaledTime + 0.25f;
+        SpawnGamePlayer();
+    }
+
+    public bool TryGetSpawnPose(int team, out Transform pose)
+    {
+        pose = null;
+        var manager = NetworkRunnerManager.Instance;
+        var runner = manager != null ? manager.GetNetworkRunner() : null;
+        if (runner == null || !runner.IsServer || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Game || (team != 0 && team != 1)) return false;
+        var points = SpawnPoints.Instance;
+        return points != null && _spawnSelector.TrySelect(team == 0 ? points.RedTeamSpawnPoints : points.BlueTeamSpawnPoints, runner.Tick.Raw, out pose);
+    }
+
     public void SpawnGamePlayer()
     {
         var manager = NetworkRunnerManager.Instance;
@@ -91,8 +112,9 @@ public class GameManager : NetworkBehaviour
             {
                 throw new InvalidOperationException("A team player prefab is missing.");
             }
-            var spawned = manager.SpawnGamePlayer(_gamePlayerObject[entry.Team], entry.NickName, entry.Team, entry.Player);
-            _spawned.Add(entry.Player, spawned);
+            if (!TryGetSpawnPose(entry.Team, out var pose)) continue;
+            var spawned = manager.SpawnGamePlayer(_gamePlayerObject[entry.Team], entry.NickName, entry.Team, entry.Player, pose);
+            if (spawned != null) _spawned.Add(entry.Player, spawned);
         }
     }
 }

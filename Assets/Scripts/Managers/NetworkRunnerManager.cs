@@ -110,15 +110,14 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         SpawnGamePlayer(prefab, nickName, team, player);
     }
 
-    public NetworkObject SpawnGamePlayer(GameObject prefab, string nickName, int team, PlayerRef player)
+    public NetworkObject SpawnGamePlayer(GameObject prefab, string nickName, int team, PlayerRef player, Transform spawnPose = null)
     {
         if (IsRetired || !_networkRunner.IsServer || SessionPhase != NetworkSessionPhase.Game)
             throw new InvalidOperationException("Only the game server can spawn players.");
-        var points = SpawnPoints.Instance;
-        var teamPoints = points != null ? (team == 0 ? points.RedTeamSpawnPoints : points.BlueTeamSpawnPoints) : null;
-        var usable = teamPoints == null ? Array.Empty<Transform>() : teamPoints.Where(p => p != null).ToArray();
-        if (usable.Length == 0) throw new InvalidOperationException("The team has no game spawn points.");
-        var pose = usable[UnityEngine.Random.Range(0, usable.Length)];
+        if (team != 0 && team != 1) throw new ArgumentOutOfRangeException(nameof(team));
+        // Legacy callers also use safe selection; blocked candidates stay pending.
+        if (spawnPose == null && (AD.Managers.GameM == null || !AD.Managers.GameM.TryGetSpawnPose(team, out spawnPose))) return null;
+        var pose = spawnPose;
         var spawned = _networkRunner.Spawn(
             prefab,
             pose.position,
@@ -572,28 +571,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        CustomPlayerInput data = new CustomPlayerInput();
-        var gameUI = UIManager.Instance;
-        var joyStick = gameUI != null ? gameUI.JoyStick : null;
-
-        if (IsRetired || SessionPhase != NetworkSessionPhase.Game || runner.LocalPlayer == PlayerRef.None || gameUI == null || joyStick == null)
-        {
-            input.Set(data);
-            return;
-        }
-
-        var dir = joyStick.Direction;
-        data.MoveX = dir.x;
-        data.MoveZ = dir.y;
-
-        if (joyStick.Magnitude < 5f)
-        {
-            data.MoveX = 0f;
-            data.MoveZ = 0f;
-        }
-
-        //data.Fire = JoyStick.Instance.IsPointerDown;
-
+        var data = !IsRetired && SessionPhase == NetworkSessionPhase.Game && runner.LocalPlayer != PlayerRef.None && PlayerInputSource.Instance != null
+            ? PlayerInputSource.Instance.Snapshot()
+            : default;
         input.Set(data);
     }
 
@@ -710,11 +690,4 @@ public class RoomOptions
     public string MapName { get; set; }
     public string Players { get; set; }
     public int PlayerCount { get; set; }
-}
-
-public struct CustomPlayerInput : INetworkInput
-{
-    public float MoveX;
-    public float MoveZ;
-    public bool Fire;
 }

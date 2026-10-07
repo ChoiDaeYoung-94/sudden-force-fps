@@ -18,6 +18,9 @@ public class JoyStick : MonoBehaviour
     private float _joystickDistance = 0;
     public Vector2 Direction => new Vector2(_joystickVector.x, _joystickVector.y);
     public float Magnitude => _joystickDistance;
+    public Vector2 NormalizedMove => _handleAreaTransform == null || _handleAreaRadius <= 0f || _joystickDistance < 5f
+        ? Vector2.zero
+        : Direction * Mathf.Clamp01(_joystickDistance / _handleAreaRadius);
     private float _handleAreaRadius = 0;
     private Vector3 _firstTouchPosition = Vector3.zero;
     private Vector3 _distanceVector = Vector3.zero;
