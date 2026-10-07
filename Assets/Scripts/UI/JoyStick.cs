@@ -71,10 +71,22 @@ public class JoyStick : MonoBehaviour
 
     public void PointUp(BaseEventData baseEventData)
     {
+        ResetInput();
         _handleTransform.anchoredPosition = Vector2.zero;
 
         if (_mode == Mode.FreeArea)
             _handleAreaTransform.gameObject.SetActive(false);
     }
     #endregion
+
+    private void OnDisable()
+    {
+        ResetInput();
+    }
+
+    private void ResetInput()
+    {
+        _joystickVector = Vector3.zero;
+        _joystickDistance = 0f;
+    }
 }

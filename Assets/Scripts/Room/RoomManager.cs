@@ -22,11 +22,12 @@ public class RoomManager : NetworkBehaviour
 
     private void OnDestroy()
     {
-        _instance = null;
+        if (_instance == this) _instance = null;
     }
 
     public void SpawnRoomPlayer(PlayerRef player)
     {
+        if (RoomPlayers.Any(p => p != null && p.Object.InputAuthority == player)) return;
         NetworkRunnerManager.Instance.RoomSceneSpawn(_roomPlayer, player);
     }
 
@@ -49,7 +50,11 @@ public class RoomManager : NetworkBehaviour
     public void UnregisterPlayer(PlayerRef player)
     {
         RoomPlayerNetworkData roomPlayer = RoomPlayers.FirstOrDefault(p => p.Object.InputAuthority == player);
-        NetworkRunnerManager.Instance.DeSpawn(roomPlayer.Object);
+        if (roomPlayer != null)
+        {
+            NetworkRunnerManager.Instance.DeSpawn(roomPlayer.Object);
+            RemovePlayer(roomPlayer);
+        }
     }
 
     public void UnregisterAllPlayer()
@@ -57,23 +62,22 @@ public class RoomManager : NetworkBehaviour
         for (int i = RoomPlayers.Count - 1; i >= 0; i--)
         {
             RoomPlayerNetworkData player = RoomPlayers[i];
-            NetworkRunnerManager.Instance.DeSpawn(player.Object);
+            if (player != null) NetworkRunnerManager.Instance.DeSpawn(player.Object);
         }
+        RoomPlayers.Clear();
+        LocalPlayerData = null;
     }
 
     public void RegisterPlayerInGame()
     {
-        foreach (RoomPlayerNetworkData player in RoomPlayers)
-        {
-            AD.Managers.GameM.Players.Add(player.Object.InputAuthority);
-            AD.Managers.GameM.NickNames.Add(player.NickName);
-            AD.Managers.GameM.Teams.Add(player.Team);
-        }
+        AD.Managers.GameM.SetRoster(RoomPlayers.Where(p => p != null)
+            .Select(p => new GamePlayerRosterEntry(p.Object.InputAuthority, p.NickName, p.Team)).ToArray());
     }
 
     public void RemovePlayer(RoomPlayerNetworkData player)
     {
         RoomPlayers.Remove(player);
+        if (LocalPlayerData == player) LocalPlayerData = null;
     }
 
     public void OnReadyButtonClicked()
@@ -86,7 +90,8 @@ public class RoomManager : NetworkBehaviour
 
     public void OnStartButtonClicked()
     {
-        if (LocalPlayerData != null && LocalPlayerData.Object.HasStateAuthority)
+        var manager = NetworkRunnerManager.Instance;
+        if (manager != null && manager.GetNetworkRunner().IsServer && IsReady())
         {
             StartGame();
         }
@@ -94,36 +99,20 @@ public class RoomManager : NetworkBehaviour
 
     public bool IsReady()
     {
-        int readyCount = 0;
-
-        foreach (RoomPlayerNetworkData player in RoomPlayers)
-        {
-            if (player.IsReady)
-            {
-                ++readyCount;
-            }
-        }
-
-        if ((readyCount == (NetworkRunnerManager.Instance.GetRoomOptions().PlayerCount * 2) - 1) && readyCount != 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        var manager = NetworkRunnerManager.Instance;
+        if (manager == null || manager.SessionPhase != NetworkSessionPhase.Room) return false;
+        var runner = manager.GetNetworkRunner();
+        var active = new HashSet<PlayerRef>(runner.ActivePlayers);
+        var players = RoomPlayers.Where(p => p != null && active.Contains(p.Object.InputAuthority)).ToArray();
+        return players.Length >= 2 && players.Length == active.Count
+            && players.Any(p => p.Team == 0) && players.Any(p => p.Team == 1)
+            && players.All(p => (p.Team == 0 || p.Team == 1) && !string.IsNullOrWhiteSpace(p.NickName))
+            && players.All(p => p.Object.InputAuthority == runner.LocalPlayer || p.IsReady);
     }
 
     public void OnTeamSwitchButtonClicked(int teamId)
     {
-        int teamCount = NetworkRunnerManager.Instance.GetRoomOptions().PlayerCount;
-        (int, int) result = GetTeamCount();
-        int red = result.Item1, blue = result.Item2;
-
-        if ((teamId == 0 && teamCount == red) || (teamId == 1 && teamCount == blue))
-        {
-            return;
-        }
+        if (teamId != 0 && teamId != 1) return;
 
         if (LocalPlayerData != null && LocalPlayerData.Object.HasInputAuthority)
         {
@@ -133,10 +122,16 @@ public class RoomManager : NetworkBehaviour
 
     public Transform GetTeamPosition()
     {
-        (int, int) result = GetTeamCount();
-        int red = result.Item1;
+        (int red, int blue) = GetTeamCount();
+        return red <= blue ? RedTeam : BlueTeam;
+    }
 
-        return NetworkRunnerManager.Instance.GetRoomOptions().PlayerCount > red ? RedTeam : BlueTeam;
+    public bool CanChangeTeam(RoomPlayerNetworkData player, int team)
+    {
+        var manager = NetworkRunnerManager.Instance;
+        return manager != null && manager.SessionPhase == NetworkSessionPhase.Room
+            && (team == 0 || team == 1) && RoomPlayers.Contains(player)
+            && RoomPlayers.Count(p => p != null && p != player && p.Team == team) < manager.GetRoomOptions().PlayerCount;
     }
 
     private (int, int) GetTeamCount()
@@ -145,6 +140,7 @@ public class RoomManager : NetworkBehaviour
 
         foreach (RoomPlayerNetworkData player in RoomPlayers)
         {
+            if (player == null) continue;
             if (player.Team == 0)
             {
                 ++red;

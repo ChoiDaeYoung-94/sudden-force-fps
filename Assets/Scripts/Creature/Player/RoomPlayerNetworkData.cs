@@ -11,81 +11,98 @@ public class RoomPlayerNetworkData : NetworkBehaviour
 
     public override void Spawned()
     {
-        RoomManager.Instance.RegisterPlayer(this);
+        if (RoomManager.Instance != null) RoomManager.Instance.RegisterPlayer(this);
 
         if (Object.HasInputAuthority)
         {
             RpcSetNickName(NetworkRunnerManager.Instance._nickName);
         }
 
-        SetTeam(Team);
-        PlayerUI.UpdateTeamUI(Team);
+        UpdatePresentation();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         base.Despawned(runner, hasState);
 
-        if (!Object.HasInputAuthority)
-        {
-            RoomManager.Instance.RemovePlayer(this);
-        }
+        if (RoomManager.Instance != null) RoomManager.Instance.RemovePlayer(this);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RpcSetNickName(string nick, RpcInfo info = default)
     {
-        if (Object.HasStateAuthority)
+        if (Object.HasStateAuthority && IsValidSender(info))
         {
-            NickName = nick;
-        }
-
-        RpcBroadcastSetNickName(info.Source);
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RpcBroadcastSetNickName(PlayerRef who, RpcInfo info = default)
-    {
-        foreach (RoomPlayerNetworkData player in RoomManager.Instance.RoomPlayers)
-        {
-            player.PlayerUI.SetNickName(player.NickName);
+            nick = (nick ?? string.Empty).Trim();
+            NickName = nick.Length > 32 ? nick.Substring(0, 32) : nick;
         }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RpcChangeTeam(int newTeam, RpcInfo info = default)
     {
-        Team = newTeam;
-        if (PlayerUI != null)
+        var room = RoomManager.Instance;
+        if (Object.HasStateAuthority && IsValidSender(info) && room != null && room.CanChangeTeam(this, newTeam))
         {
-            PlayerUI.UpdateTeamUI(Team);
-            SetTeam(newTeam);
+            if (Team != newTeam)
+            {
+                Team = newTeam;
+                IsReady = false;
+            }
         }
     }
 
     private void SetTeam(int team)
     {
-        Transform teamPos = team == 0 ? RoomManager.Instance.RedTeam : RoomManager.Instance.BlueTeam;
-        transform.SetParent(teamPos, worldPositionStays: false);
+        var room = RoomManager.Instance;
+        if (room == null) return;
+        Transform teamPos = team == 0 ? room.RedTeam : room.BlueTeam;
+        if (teamPos != null && transform.parent != teamPos) transform.SetParent(teamPos, worldPositionStays: false);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RpcRequestToggleReady(RpcInfo info = default)
     {
-        IsReady = !IsReady;
-        PlayerUI.SetReadyState(IsReady);
-        RpcBroadcastReady(IsReady, info.Source);
+        if (Object.HasStateAuthority && IsValidSender(info) && NetworkRunnerManager.Instance != null
+            && NetworkRunnerManager.Instance.SessionPhase == NetworkSessionPhase.Room)
+        {
+            IsReady = !IsReady;
+        }
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RpcBroadcastReady(bool newState, PlayerRef who, RpcInfo info = default)
+    private bool IsValidSender(RpcInfo info)
     {
-        foreach (RoomPlayerNetworkData player in RoomManager.Instance.RoomPlayers)
+        // Default Host RPCs use PlayerRef.None; only the host's own object may accept that source.
+        return info.Source == Object.InputAuthority || (info.Source == PlayerRef.None && Object.HasInputAuthority);
+    }
+
+    public override void Render()
+    {
+        UpdatePresentation();
+    }
+
+    private string _shownNickName;
+    private int _shownTeam = -1;
+    private bool? _shownReady;
+
+    private void UpdatePresentation()
+    {
+        if (PlayerUI == null) return;
+        if (_shownNickName != NickName)
         {
-            if (player.Object.InputAuthority == who)
-            {
-                player.PlayerUI.SetReadyState(newState);
-            }
+            _shownNickName = NickName;
+            PlayerUI.SetNickName(NickName);
+        }
+        if (_shownTeam != Team)
+        {
+            _shownTeam = Team;
+            SetTeam(Team);
+            PlayerUI.UpdateTeamUI(Team);
+        }
+        if (_shownReady != IsReady)
+        {
+            _shownReady = IsReady;
+            PlayerUI.SetReadyState(IsReady);
         }
     }
 }

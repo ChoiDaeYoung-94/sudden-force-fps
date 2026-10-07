@@ -62,7 +62,21 @@ namespace AD
 
         public static void CreateNetworkRunner()
         {
+            if (_instance == null || _instance._networkRunnerObject == null)
+            {
+                Debug.LogError("[Network] NetworkRunner prefab is missing.");
+                return;
+            }
+
+            var current = NetworkRunnerManager.Instance;
+            if (current != null && !current.IsRetired)
+            {
+                return;
+            }
+
             Instantiate(_instance._networkRunnerObject);
         }
+
+        public static string SavedNickName { get; set; } = string.Empty;
     }
 }
