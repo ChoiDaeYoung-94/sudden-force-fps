@@ -2,7 +2,32 @@
 
 ## 현재 검증 상태와 후속 단계
 
-**현재 상태: 단계 2 이동 검증에 이어 C1 신규 Windows64 빌드/실제 Editor Host + Player Client에서 부위 등록·소유자·기본 query·자기 제외·벽 우선·명시 인접 tick 보간 및 수명 회귀를 아래 범위에서 확인했습니다. 실제 원격 입력의 중간 alpha/애니메이션 pose timing·역할 교환 query·C2 사격/피해/탄약과 Android는 미검증으로 유지합니다.**
+**현재 상태: 단계 2·C1에 이어 신규 Windows64 빌드의 실제 Editor Host + Player Client 3경기에서 C2 사격·탄약·재장전·부위 피해·HP0 입력 차단과 복제 일치를 아래 범위에서 확인했습니다. 같은 tick 입력 우선순위·비정상 aim은 별도 SDK 입력 경계 진단입니다. 아군 차단·권한 위조·네트워크 역할 교환·Android 및 C3–C5는 미검증으로 유지합니다.**
+
+### C2 사격·피해·탄약/재장전 실제 검증 (2026-10-07)
+
+Refs #33, #19, #35. 기준 HEAD `b13fe03b2eb12fd1e3057881b3f26450c0e25736`. 증거 루트 `D:\meee\git\sudden-force-fps-validation\20261007-c2-combat-01`. 새 Windows64 Development 빌드 성공/오류0/경고2, 268,096,463 bytes, 18.779초. 실제 Player PID59020과 Editor Host가 kr 공개방 `SFMP-C2-20261007-01`~`03`에 목록 참가·Ready·정상 Start로 3경기를 수행했습니다. Runner -179762/-182880/-185944는 서로 다른 경기이며 각 NetworkId1030/1031 재사용은 정상입니다. Host 로그 stateAuthority=true와 Player 복제 로그 false의 HP/탄약/Shot/Hit/부위/피해를 비교했습니다.
+
+| 표준 | 실제 결과와 제한 |
+| --- | --- |
+| C2-01 실제 사격/탄약 | 실제 Player 단발 클릭 Shot1/탄약30→29. 사용자 실제 입력으로 Shot2~31의 30발 소비, 탄약29→0을 관측했습니다. 인접 발사 간격은 7tick 27회, 36tick 1회, 637tick 1회(총862tick)입니다. 중단이 포함되므로 전체30발이 연속4초 hold였다고 주장하지 않습니다. 실제64Hz에서 최소 간격7tick이며 빈 탄창 시도5회는 empty-magazine 거절/Shot31·탄약0 유지. |
+| C2-02 정상 재장전 | 실제 Player R: tick30237→30365 및 빈 탄창36052→36180, 각각128tick/2초 뒤 탄약30. 실제 Editor R도10306→10434/128tick. Editor 후속 클릭10612는 완료 뒤였으므로 네이티브 장전 중 사격 시험으로 판정하지 않습니다. |
+| C2-03 몸통 피해 | runtime 위치/조준 fixture 후 Host 실제 클릭4회, Client HP100→75→50→25→0, Torso/피해25/Shot·Hit1~4/Host 탄약30→26. Player 복제 로그 동일. |
+| C2-04 양쪽 팔/다리 | 새 정상 경기에서 Host 실제 클릭: 왼팔18→HP82, 오른팔18→64, 왼다리18→46, 오른다리18→28, 오른다리18→10, 마지막 오른다리 실제 적용10→0. 마지막 LastHitDamage10은 남은 HP만큼 적용된 결과이며 설정18과 구분합니다. Shot·Hit6/탄약24 및 Player 복제 일치. |
+| C2-05 Client 머리 사격 | 세 번째 정상 경기에서 Client의 기존 실제 aim 방향에 Host를 배치한 fixture 후 Player 실제 클릭: Head/피해100, Host HP100→0, Client Shot3→4/탄약27→26/Hit1/TargetPlayer1. 양쪽 로그 일치. 모든 부위를 양쪽 역할에서3회 반복한 시험은 아닙니다. |
+| C2-06 HP0 차단 | 실제 Client 사망 후 클릭+R: HP0/탄약10/Shot51/reload0 유지(tick44372→45238). 실제 Host 사망 후 클릭+R도 HP0/탄약27/Shot4/reload0 유지(16374→17415). 다음 피해 시험의 HP 복원은 정상 Exit→새 방·새 Runner 경기로 수행했습니다. |
+| C2-07 입력 우선순위 진단 | 별도 승인된 SDK OnInput 경계의 focused181poll: 원 정상 입력0 뒤 진단 Buttons6(Fire+Reload)을 전달하고 다음 tick PreviousButtons6 소비 확인. 가득 찬 탄창의 동시R+Fire는 사격 없음, 부분 탄창의 동시 입력은 장전 시작9757/완료9885(128tick), 장전 중 Fire는 Shot1/탄약29 유지. 중복R에도 완료tick9885 유지, 정상 noFire 입력 중 완료 후 탄약30. 완료 후 동시R+Fire도 사격 없음, 다음 정상Fire 허용. **네이티브 PC 입력 시험과 구분합니다.** |
+| C2-08 비정상 aim 진단 | 같은 SDK 진단에서 cooldown 이후 NaN yaw/pitch99/HasAimfalse는 Shot2/탄약29 유지 및 PreviousButtons0, 다음 유효Fire는 Shot3/탄약28로 회복. legacy boolFiretrue/Buttons.Firefalse도 사격 없었으나 cooldown과 겹쳐 독립 거절 증거로 확대하지 않습니다. read-only helper의 tick 수·범위/벡터 거절은 악성 remote 권한 시험이 아닙니다. |
+| C2-09 벽/자기 제외 | 실제 diagnostic Shot3 hit 후 replay의 nearest는 PhysX Wall_04/layer8, HitSequence0/양쪽HP100으로 벽 차단 범위 확인. 자기 head/capsule 안의 발사 원점에서도 상대 피해와 자기HP100 유지, C1 자기 제외 대조를 함께 참조합니다. 벽 모서리/두께 전수 및 아군 첫 hit의 관통 차단은 미실행. |
+| C2-10 수명/정리 | 정상 경기 Exit→새 로비 manager -189012/runner -189014/player0/events0. 실제 Player 정상 CloseMainWindow/WaitForExit true, 종료 확인. Editor Play=false/빈 단일 씬 dirty=false/roots0/events0/QA callbacks[]/autotick=false/Win64. 원 Standalone define live+disk 및 ProjectSettings 전체 텍스트 시작 backup 동일. C#46개 SHA256 변경0, 최종 compile failed=false/errors[] 및 consoleErrors0. |
+
+피해 fixture는 공개 SDK NetworkCharacterController.Teleport와 PlayerInputSource.AddLookDelta로 runtime 위치·조준만 준비한 시험입니다. 실제 발사는 네이티브 클릭이며 정상 걷기/수동 조준 합격으로 확대하지 않습니다. HP/Ammo/Team/Authority를 직접 설정하지 않았고 prefab/scene을 저장하지 않았습니다. SDK 진단은 정상 input provider의 공개 SetFire/RequestReload→Snapshot→NetworkInput.Set 경로로 own LocalInputAuthority 입력을 전달했습니다. private combat 호출이나 임의 피해 주입 없이 실제 서버 소비 상태를 관측했으며 임시 NetworkEvents/callback을 모두 제거했습니다. 이후 정상 Host 네이티브 Shot4도 관측했습니다.
+
+미실행: 3인 이상 아군 첫 hit 차단·같은 팀 사격, 임의 remote 피해/권한 위조, 네트워크 Host/Client 프로세스 역할 교환, held-fire 중 focus 상실, 패킷 누락 중 장전 완료, Android, 모든 부위 양방향 반복 전수. 장전 진단의 대기 구간은 HasAim=true/noButtons의 유효 입력이므로 패킷 누락으로 해석하지 않습니다. HUD는 실제 HP/탄약 변화에도 초기 표시가 남아 C3 연결 검증이 필요하며 C2 상태값 합격과 분리합니다. Kill/Death0·HP0 몸체 잔존/리스폰 부재는 C4 범위, 승패는 C5 범위입니다.
+
+주요 증거: `editor-combat-observer.jsonl`, `player-visible.log`, `run-summary.json`, `torso-runtime-fixture.json`, 양쪽 팔/다리 fixture JSON, `client-head-runtime-fixture.json`, `client-head-after-shot.json`, 양쪽 `dead-*-input.json`, `poll-diagnostic-focused.json`, `readonly-contract.json`, `wall-after-poll-diag.json`, 새 build manifest. 정상 종료/복원은 `lifecycle-final-lobby.json`, `player-normal-close.json`, `cleanup-final.json`, `recompile-final.json`, `console-final.json`, `file-verification-final.json`을 우선합니다.
+
+실패한 QA 진단도 보존합니다. 초기 Editor.update 입력 hook은 정상 PC Update에 덮여 원하는 동시 입력 근거가 아니었고, 첫 SDK probe는 GameView 비포커스로181poll 모두0이었습니다. 임시 NetworkEvents UnityEvent 초기화 누락/QA eval 타입 오타는 진단 오류이며 수정 후 focused probe 성공과 제품 compile 오류0을 구분합니다. 최초 Hidden Player PID58180은 창이 없어 실제 시험에서 제외하고 정확한 본인 실행 경로 확인 후 종료했습니다. 새 exe 보안 알림은 사용자 직접 처리 이후 시험을 진행했습니다. 제품 코드 변경이나 OS 보안 설정 조작을 하지 않았습니다. 최종 경고17은 기존 UniTask Editor CS0618 등, 빌드 경고2는 ServicesCore project ID/Pipeline runtime config입니다. 자동 저장 asset 차이는 시작/종료 patch로 보존하고 기존 사용자 변경을 rollback하지 않습니다.
 
 
 ### C1 Hitbox 기반 실제 검증 (2026-10-07)
