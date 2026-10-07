@@ -2,6 +2,8 @@
 
 ## 현재 검증 상태와 후속 단계
 
+**최신 종료 복귀 상태: persistent 매니저 수정 후 새 빌드에서 양방향 호스트 종료→클라이언트 자동 로비 복귀와 다음 방 재접속을 통과했습니다. 문서 끝의 P01–P06을 기준으로 하며, 아래 N01–N08 실패 기록은 수정 전 결과로 보존합니다.**
+
 **현재 상태: C5 새 빌드의 실제 두피어 경기에서 20킬 TargetScore 종료, 실제300초 높은 점수 승리·Draw, 상대 정상 종료의 OpponentLeft 및 퇴장자 KD/이름 보존을 확인했습니다. 양쪽 결과·Finished 상태 고정·정상 로비 복귀·new Runner 초기화와 PC 짧은 Tab 입력을 아래 범위에서 검증했습니다. 런타임 pose/baseaim 보조와 사용자 추가 입력을 명시하고 순수 계산/아트 상태 주입 진단과 구분합니다. 제품 파일은 원상 복원했으며 문서만 변경합니다. Waiting blocked/취소·동tick 경합·진행중 reload 종료·실제held 입력·3peer/권한위조·Android·저FPS/재시뮬레이션 등은 미검증으로 유지합니다. C1–C4의 아래 기록과 미검증 항목은 각 당시 실행 범위입니다.**
 
 ### 접속 취소와 실제 두 피어 Host 종료 회귀 (2026-10-07)
@@ -450,3 +452,17 @@ Editor 제어권을 다시 배정받은 뒤 PC↔PC를 먼저 수행하고, PC�
 자동차이 rollback은 하지 않았습니다. 원 사용자 변경과 검증 빌드 증거를 보존하며 플랫폼별 다음 빌드에서 prefilter가 다시 계산될 수 있음을 후속 비교 기준으로 남깁니다.
 
 단계2 종료 정리 실제확인: Player PID2176 CloseMainWindow 정상 shutdown 후 프로세스/창 소멸(첫10초 wait는 timeout이었고 이후 정상종료확인, 강제kill없음). EditorPlayfalse/compilingfalse/updatingfalse/빈단일씬 path빈값 dirtyfalse/StandaloneWindows64/autotickfalse, 원Standalonedefine live+disk동일, recompile completed failedfalse errors[]. 실제게임 최종console groundTruth errors0/warnings2, 과거Pipeline timeout이력은 분리. 이번 빌드 자동저장추가차이는 URP-Balanced의 SSAO shader prefilter4값과 GlobalSettings runtime목록 rid4338206851167682583 제외입니다. RenderGraph/compatflag 직접변경없음. 기존importtrace 일부가Editor자동재생성/refresh후clean으로보이므로 시작status/patch와 종료patch를 함께 보존하며 임의rollback없음.
+
+
+### persistent 복귀 수정 후 실제 두 피어 재검증 (2026-10-07)
+
+이전 N01–N08 실패 기록은 당시 HEAD의 실제 결과로 보존합니다. 아래는 수정 HEAD 1b967a0ea19afe4e7dc0e06b1fd4b58a28d3b378에서 새로 실행한 후기이며, 이전 결과를 소급 변경하지 않습니다. 증거 경로: D:\meee\git\sudden-force-fps-validation\20261007-persistent-actual-01.
+
+| 항목 | 결과 | 실제 관측과 한계 |
+|---|---|---|
+| P01 새 Windows 실행본 | PASS | Unity6000.3.25f1/Win64 Development build_81b26ae949b8 Succeeded/25.975초/398743220bytes/errors0/warnings2. 전체380파일 staged=active, 기존active380파일 전체백업 SHA동일. build-all-files.json SHA256 9D02CF99085C165AD15C3E34CAE18B5E948530BF3BD7FEFE1D8369AB6A354FE9. 빌드 전 임시Standalone URP_COMPATIBILITY_MODE는 빌드 후 원래define로 복원했습니다. 경고는 Unity projectID 미연결 및 Player Pipeline config없음이며 Player 내부 객체 관측 대신 실제화면·로그/Editor 복제를 사용했습니다. |
+| P02 Editor Host 공개 복귀 → Player Client 자동 로비 | PASS | 공개방 PR-Editor-0944에서 두 피어 Running/connected2를 확인한 뒤 Editor public ReturnToLobbyAsync 1회. 같은 Player PID86640(재실행 없이) DisconnectedByPluginLogic→ClearingSession/LoadingLobby/CreatingRunner→generation2 Completed→fresh Lobby Connected Region kr/sessionlist0 로그와 'No public rooms available.' 실제화면 확인. Editor persistent -55090/gen1→2, oldNRM-58034/Runner-58036 callbacks1→0/둘다destroyed, fresh-61528/-61530 Runner1/Connected, static input/match/presentation/local null/player0. |
+| P03 Player Host native Alt+F4 → Editor Client 자동 로비 | PASS | P02로 복귀한 같은 Player가 새 공개방 PR-PlayerHost-0945 생성(실제 SessionName은 TMP U+200B 포함), fresh Editor가 Join/Ready, Player nativeStart로 두피어 Running. PID86640 nativeAltF4 종료/gone true. 프레임8662까지 oldNRM/Runner 생존, 8663(09:45:48.188Z) old-61528/-61530 둘다destroyed/callback0/current0/Runner0/Managers1/persistent-55090 유지, gen2/LoadingLobby/RecoveryTask WaitingForActivation/input&matchnull/player0. 8665 fresh-65322/-65324/Runner1/gen3/Completed/taskRanToCompletion, 8666 Connecting/loadingtrue→8701 Connected/loadingfalse. 실제 Lobby화면 확인. WaitingForSdkRunnerDestruction은 프레임 샘플에 포착되지 않았고 동일프레임 내부 callback/파괴/await 순서는 직접 계측하지 않았습니다. old의 파괴 후 persistent task 지속과 후속 신규세션 완료를 구분합니다. |
+| P04 복귀 후 다음 공개방/경기 초기화/기본 사격 | PASS(기본범위) | P02 이후 역할교환 경기와 P03 이후 gen3 Editor의 PR-AfterAuto-0946 새 공개방/Player PID38300 Join/Ready/Running 모두 실제 진행. 각 초기화 snapshot: 양쪽 rosterconnected/HP100/Ammo30/score·KD·feed·result·respawn·deathseq0, Editor localCamera/Listener1·remote0. 역할교환 경기 PlayerHost native클릭 1발 Ammo29/Shot1/Hit0가 EditorClient에 복제됐습니다(개발메시지 닫기 클릭이 게임발사도 발생, 패널은 잔존). P03 후 다음 경기 PlayerClient 중앙 native클릭 1발 Ammo29/Shot1/Hit0를 EditorHost 복제로 확인. 명중·피해·킬·리스폰·이동·Android 전체회귀 PASS는 주장하지 않습니다. PID38300 재실행은 다음 방 상대 준비이며 P02/P03 자동복귀 성공의 대체 근거가 아닙니다. |
+| P05 담당 단일세션/실패 fixture | 별도 담당 증거 | 20261007-persistent-recovery-01 HANDOFF의 compile errors[]/sharedTask/duplicateAwake 서비스ID유지/Runner-firstAwake/Connecting 및 WaitingForExplicitShutdown PlayStop취소/syntheticTimeout 실패진단을 분리 참조합니다. synthetic OnShutdown은 실제 SDKdisconnect가 아니며 이번 actual PASS 근거로 사용하지 않았습니다. timeout 구체이유는 로그·필드만 보이고 사용자UI는 'Not connected to the lobby.'인 진단 한계가 남습니다. CTS Dispose완료 및 실제 이전세션 callback 지연도착 직접시험은 NOT RUN입니다. |
+| P06 로그/정리/보존 | PASS(보존) | 이번 시작cursor378 이후 Console error2(seq438/439) 모두 SDK Code104 Server has disconnected, Player P02 로그도 Code104 2건을 보존. 전체Console error0으로 표현하지 않습니다. 최종Editor 오류2/경고1(누적buffer14/103)은 이번범위와 구분. 마지막 정상Lobby복귀후 Player 두PID nativeAltF4/gone, 관측delegate2개 해제, Playfalse/pausedfalse/compilingfalse/빈singleclean씬root0/autotickfalse/persistent·NRM·input·match·presentation staticnull/Runner0. ProjectSettings.asset 및 기존URP2 dirty 원본byte 정확복원. Assets/ProjectSettings/Packages 3889파일 SHA변경0/누락0/추가0, active380 최종SHA동일, 기존gitdirty 보존, 제품추가수정·stage·commit 없음. |
