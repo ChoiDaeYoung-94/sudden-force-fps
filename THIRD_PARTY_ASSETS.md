@@ -170,3 +170,43 @@ Unity 6000.3.25f1의 Play=false 임시 prefab/deep font·atlas·material 복사�
 조사 범위의 UPM manifest에 ads/purchasing/mediation 패키지가 없고 제품 스크립트·EDM/XML의 명시적 광고·결제 API/SDK 좌표도 발견되지 않았습니다. 이름에 ads가 들어간 headshot 애니메이션·ThreadScheduler 및 Google Play Games/EDM/라이선스 원문은 제거하지 않았습니다. 이는 전체 최종 DEX/모든 전이 의존성의 광고·결제 부재 증명이 아니며 최종 Android AAB 포함 검증은 별도입니다. iOS export/build도 검증하지 않았습니다.
 
 출처·심볼·범위 근거는 외부 `D:\meee\git\sudden-force-fps-validation\20261008-ads-iap-residue-readonly\REPORT.txt` 및 archive-ownership-summary.json에 있고, 제거 전 백업은 `D:\meee\git\sudden-force-fps-backups\20261008-ads-ios-residue-removal\before-manifest.json`에 있습니다.
+
+## AndroidX — 기준 APK 버전 metadata 및 공식 POM 조사
+
+기준은 외부 6a8b203 UploadKeyValidation APK(SHA256 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`)입니다. 현재 main 또는 후속 Android QA APK로 조사 결과를 확장하지 않습니다.
+
+APK에서 13개 명시적 AndroidX `.version` entry(각 6B, 총 78B)를 관찰했습니다. entry 이름에 따른 Maven 좌표 추정과 공식 POM의 groupId/artifactId/version 확인을 구분하며, 아래 13개 좌표는 공식 POM identity와 모두 일치합니다. 이는 전체 Gradle resolved graph나 최종 클래스 생존을 확정하는 증거가 아닙니다.
+
+| 정확한 좌표 및 버전 | 공식 POM |
+| --- | --- |
+| `androidx.activity:activity:1.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/activity/activity/1.0.0/activity-1.0.0.pom) |
+| `androidx.arch.core:core-runtime:2.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/arch/core/core-runtime/2.0.0/core-runtime-2.0.0.pom) |
+| `androidx.core:core:1.2.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/core/core/1.2.0/core-1.2.0.pom) |
+| `androidx.customview:customview:1.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/customview/customview/1.0.0/customview-1.0.0.pom) |
+| `androidx.fragment:fragment:1.1.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/fragment/fragment/1.1.0/fragment-1.1.0.pom) |
+| `androidx.lifecycle:lifecycle-livedata-core:2.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-livedata-core/2.0.0/lifecycle-livedata-core-2.0.0.pom) |
+| `androidx.lifecycle:lifecycle-livedata:2.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-livedata/2.0.0/lifecycle-livedata-2.0.0.pom) |
+| `androidx.lifecycle:lifecycle-runtime:2.1.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-runtime/2.1.0/lifecycle-runtime-2.1.0.pom) |
+| `androidx.lifecycle:lifecycle-viewmodel:2.1.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-viewmodel/2.1.0/lifecycle-viewmodel-2.1.0.pom) |
+| `androidx.loader:loader:1.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/loader/loader/1.0.0/loader-1.0.0.pom) |
+| `androidx.savedstate:savedstate:1.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/savedstate/savedstate/1.0.0/savedstate-1.0.0.pom) |
+| `androidx.versionedparcelable:versionedparcelable:1.1.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/versionedparcelable/versionedparcelable/1.1.0/versionedparcelable-1.1.0.pom) |
+| `androidx.viewpager:viewpager:1.0.0` | [공식 POM](https://dl.google.com/dl/android/maven2/androidx/viewpager/viewpager/1.0.0/viewpager-1.0.0.pom) |
+
+공식 POM 13개는 모두 The Apache Software License, Version 2.0을 선언합니다. 공식 AAR 총 1,088,562B를 승인된 각 2MiB/합 10MiB 한도 안에서 외부 폴더로 취득했고, 13개 모두 기존 exact cache AAR와 SHA256이 일치했습니다. POM의 dependency는 선언된 요청이며 최종 선택 그래프로 취급하지 않습니다.
+
+AAR 및 메모리 전용 classes.jar의 승인된 LICENSE/NOTICE/COPYING 및 third_party_licenses.json/txt entry는 13개 모두 `NOTFOUND_IN_APPROVED_WHITELIST`입니다. 이는 해당 범위의 관찰이며 다른 위치의 원문이나 추가 의무가 없다는 뜻이 아닙니다. 새 AndroidX 공급자 copyright는 미확인입니다. 클래스/bytecode/DEX/general strings를 읽거나 classes.jar를 저장하지 않았습니다.
+
+앱 고지에 적용한 AndroidX 섹션은 기존 660,971B prefix를 바이트 그대로 보존하고, 위 좌표/POM 출처와 공식 Apache 약관 전문을 독립 AndroidX 섹션으로 추가합니다. 약관 출처는 [Apache 공식 원문](https://www.apache.org/licenses/LICENSE-2.0.txt)이며 기존 외부 `Apache-2.0.txt` 11,358B를 exact 복사했습니다(SHA256 `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30`). 이 본문을 AAR embedded NOTICE 추출 결과로 주장하지 않습니다. 공급자 copyright를 만들지 않았고, 기존 GPGS 라이선스의 Google copyright를 AndroidX에 옮기거나 귀속 범위를 확대하지 않았습니다.
+
+기존 GPGS 본문 재사용 여부 대조는 기존 Apache 전문 포함 확인에만 사용했습니다. 이번 독립 AndroidX 섹션은 해당 GPGS copyright 본문을 복사하지 않고 지정된 공식 Apache 약관 파일만 복사합니다. 전체 전이 closure, 최종 클래스 생존, 광고 부재 또는 전체 제품 라이선스 완료는 미확정입니다. 원문 공급자 copyright와 추가 의무는 후속 공식 릴리스 근거 확인 범위로 남깁니다.
+
+독립 검토를 통과한 후보를 앱 고지에 적용했습니다. 적용 직전 기존 660,971B prefix와 후보 SHA256을 확인했으며 최종 파일은 675,225B, SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`입니다. 위 183페이지 UI 검증은 적용 전 고지의 결과입니다. 추가된 AndroidX 섹션의 Editor 표시와 최종 Android 빌드 포함 검증은 별도로 진행합니다. 외부 조사·독립 검토 근거는 `D:\meee\git\sudden-force-fps-validation\20261008-androidx-metadata-readonly\`에 보존했습니다.
+
+### AndroidX 추가 고지의 Editor 표시 검증 (2026-10-08)
+
+적용 후 Unity 6000.3.25f1에서 고지 TextAsset 로딩과 실제 C# pager의 총 187페이지를 확인했습니다. source slices를 UTF-8로 재결합한 bytes는 적용 파일과 정확히 같고, 기존 660,971B prefix 및 1~182페이지 source는 보존됐습니다. 연결 경계인 183페이지부터 마지막 187페이지까지 실제 Button pointer/EventSystem 경로로 이동·왕복·끝 clamp·스크롤·닫기/재열기를 확인했습니다.
+
+추가 구간의 표시 코드포인트 154개와 새 한글 43개를 TMP glyph와 대조했으며 불일치와 관련 경고는 0입니다. 마지막 마침표와 약관 마지막 문장이 viewport에서 접근 가능했습니다. 기존 전체 183페이지의 글리프 검증을 반복한 결과로 확대하지 않습니다. 원본 폰트·아틀라스의 깊은 복사본과 임시 prefab을 사용한 Play=false Editor 검사이며 Android 기기 표시·성능·최종 AAB 포함 검증은 별도입니다.
+
+QA 전후 19개 보존 대상의 존재·해시가 정확히 같고 임시 객체·폰트·material·atlas·EventSystem을 정리했습니다. 외부 근거는 `D:\meee\git\sudden-force-fps-backups\20261008-androidx-notices-ui-qa\HANDOFF.md`, tail-verification.json, post-qa-preservation.json 및 Boundary/TailStart/LastBottom PNG에 있습니다. #42는 추가 에셋 출처 및 최종 빌드 검증이 남아 열린 상태로 유지합니다.
