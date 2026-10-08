@@ -212,6 +212,8 @@ AAR 및 메모리 전용 classes.jar의 승인된 LICENSE/NOTICE/COPYING 및 thi
 QA 전후 19개 보존 대상의 존재·해시가 정확히 같고 임시 객체·폰트·material·atlas·EventSystem을 정리했습니다. 외부 근거는 `D:\meee\git\sudden-force-fps-backups\20261008-androidx-notices-ui-qa\HANDOFF.md`, tail-verification.json, post-qa-preservation.json 및 Boundary/TailStart/LastBottom PNG에 있습니다. #42는 추가 에셋 출처 및 최종 빌드 검증이 남아 열린 상태로 유지합니다.
 ### EmojiOne 자동 포함 경로 제외 (2026-10-08)
 
+후속 AAB 확인: 제품 HEAD0f46c28/1.0.193/code3/SHA256 `E8C216521CD68420F29C44F28A06E24B88B5C94B06FF67AF9314A03ED035949B`의 packed6,492개에서 EmojiOne 옛·새 sprite 경로와 sprite/PNG GUID 일치0을 독립 확인했습니다. 최신 ThirdPartyNotices TextAsset도 실제 AAB에서675,225 bytes를 추출해 원본 SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6` 및 바이트 일치를 확인했습니다. 아래 미검증 설명은 변경 직후 시점이며 원본 artwork 권리나 다른 에셋 전체 라이선스가 확정된 뜻은 아닙니다. AAB 전체 판정은 RELRO3건·개발 콘솔 잔존 때문에 PARTIAL입니다.
+
 배포 범위를 줄이기 위해 `Resources/Sprite Assets/EmojiOne.asset`을 기존 `Sprites/EmojiOne.asset`으로 AssetDatabase.MoveAsset 이동하고 TMP Settings의 기본 sprite 참조만 해제했습니다. 원본 asset/meta bytes와 GUID `c41005c129ba4d66911b75229fd70b45`, 내부 material 및 PNG 참조는 그대로입니다. PNG·JSON·Attribution 원본은 보존했습니다. defaultSpriteAssetPath/enableEmojiSupport/font/fallback 설정도 유지하며 저장 중 발생한 kerning migration은 시작 값으로 복원했습니다.
 
 정적 참조 검토와 Editor에서 Resources의 EmojiOne 및 기본 sprite 경로 로드가 null임을 확인했습니다. 이는 Resources/default 참조 경로를 끊은 결과이며 최종 새 AAB에서 sprite/material/PNG가 불포함된 증명이 아닙니다. 다른 포함 경로가 없는지는 새 빌드의 packed asset 근거로 확인합니다. 기존 APK에는 이 변경이 반영되지 않았습니다. EmojiOne 원본의 artwork 배포 조건이 확인된 것으로 확대하지 않습니다.

@@ -4,6 +4,8 @@
 
 ## 현재 기준 상태
 
+최신 배포 검증(2026-10-08): HEAD0f46c28에서 non-Development 서명 AAB1.0.193/code3(92,854,441 bytes)를 생성하고 버전 예약을 유지했습니다. 서명·manifest·최신 고지 본문 byte exact·EmojiOne packed 제외는 독립 감사 통과했으나 네이티브3개의 GNU_RELRO 정렬과 개발 콘솔 packed93개 잔존이 남아 총판정 PARTIAL입니다. 기존 수정과 임시 설정 복원은 완료했습니다. 상세는 ANDROID_RELEASE_CHECKLIST.md 상단을 따르며 전체 약78% 추정을 유지합니다. Play 업로드·릴리스·설치는 아직 수행하지 않았습니다.
+
 최신 추가 검증: Editor0967351/기존 APK6a8b203에서 사망 중 move/look/reload 각 단일 입력 전후 Running·dead 상태와 관련 값 불변, 리스폰 후 실제 탄약 소모·재장전 시작부터 완료까지 Running 관측을 확인했습니다. 사망 시 Ammo27→자연 리스폰30 복구도 관찰했습니다. Android 내부 gate·물리 동시 입력 검증으로 확대하지 않으며 제외 시도와 저장 간격의 한계를 기록했습니다. 정상 종료 및 baseline3923/기존6개 dirty 보존, 독립 검토 PASS. 상세는 MULTIPLAYER_TEST_PLAN.md 상단을 따릅니다. AndroidX 고지와 추가 페이지 UI 검증은 PR #59로 반영했습니다. 전체 진행은 약78% 작업 기준 추정을 유지하며, 물리 멀티터치·AndroidClient peerTimeout·실제16KB/저사양·남은 출처 정리·서명 AAB·Play 테스트 설치가 남아 있습니다.
 
 아래는 이전 검증 시점의 기록입니다.
