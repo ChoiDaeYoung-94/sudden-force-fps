@@ -71,6 +71,7 @@ namespace AD
             public bool AutomaticShutdown;
             public bool ShutdownIssued;
             public bool AllowRunnerCreation;
+            public bool FailureMessageShown;
             public NetworkRunnerManager Replacement;
             public Task Task;
         }
@@ -270,11 +271,15 @@ namespace AD
                     && (CanRecover(context) || (_sessionGeneration == context.Generation + 1
                         && ReferenceEquals(_registeredRunner, context.Replacement))))
                 {
-                    LastRecoveryError = $"{RecoveryStage}: {exception.Message}";
+                    string failedStage = RecoveryStage;
+                    LastRecoveryError = $"{failedStage}: {exception.Message}";
                     SetRecoveryStage("Failed");
                     context.AllowRunnerCreation = false;
                     Debug.LogError($"[Network] Lobby recovery failed: {LastRecoveryError}");
                     if (context.Owner != null) context.Owner.ReportLobbyRecoveryFailure(LastRecoveryError);
+                    if (exception is TimeoutException && (failedStage == "WaitingForExplicitShutdown"
+                        || failedStage == "WaitingForSdkRunnerDestruction"))
+                        ShowRecoveryTimeoutMessage(context);
                 }
             }
             finally
@@ -285,6 +290,26 @@ namespace AD
                     if (ReferenceEquals(context.Replacement, null) && popup != null) popup.ClosePopupLoading();
                     if (shutdownCompleted && context.Owner != null) Destroy(context.Owner.gameObject);
                 }
+            }
+        }
+
+        private void ShowRecoveryTimeoutMessage(RecoveryContext context)
+        {
+            // Failure listeners may have stopped the app or replaced the session.
+            if (!CanRecover(context) || context.FailureMessageShown || _popupM == null) return;
+            var popup = _popupM;
+            try
+            {
+                popup.ClosePopupLoading();
+                if (!CanRecover(context) || context.FailureMessageShown || popup == null) return;
+                context.FailureMessageShown = true;
+                popup.PopupMessage("Unable to return to the lobby. Close and reopen the app to reconnect.");
+            }
+            catch (Exception exception)
+            {
+                // Preserve the original timeout diagnostic if its UI cannot be shown.
+                if (CanRecover(context))
+                    Debug.LogError($"[Network] Recovery timeout message failed: {exception.GetType().Name}");
             }
         }
 
