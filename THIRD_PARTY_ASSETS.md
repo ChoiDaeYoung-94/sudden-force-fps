@@ -161,3 +161,12 @@ Google 공식 Maven에서 정확한 버전의 POM·AAR을 별도로 취득했으
 Unity 6000.3.25f1의 Play=false 임시 prefab/deep font·atlas·material 복사본에서 실제 Button pointer/EventSystem 경로로 183페이지 순회와 역순 이동을 확인했습니다. 표시 코드포인트 172개의 TMP glyph 대조 불일치·글리프 경고 0, 공급자 고지 28개 시작의 viewport 접근, 마지막 문장·마침표 접근, 닫기·다시 열기·빠른 페이지 이동·focus/interactable 복원·빈/누락 고지 처리를 확인했습니다. 대표 native 화면 6개를 육안 확인했으며, 모든 28개 시작을 각각 육안 검토했다는 뜻은 아닙니다.
 
 이는 Editor UI 검증입니다. Android 물리 입력·기기 glyph·메뉴 성능이나 최종 AAB 포함 검증을 대신하지 않습니다. 임시 QA 객체를 정리했고 원본 폰트·아틀라스·기존 변경사항을 보존했습니다. 근거는 외부 `D:\meee\git\sudden-force-fps-backups\20261008-notices-full-ui-qa\HANDOFF.md` 및 같은 폴더의 source-byte-proof/glyph-and-mapping/vendor-header-access/last-bottom-access/post-qa-preservation JSON과 PNG에 있습니다. #42 전체 완료는 아닙니다.
+### 광고·결제 제외 및 iOS 광고 잔재 정리 (2026-10-08)
+
+광고·인앱 결제 기능을 제외하는 프로젝트 범위에 따라 기존 `Assets/Plugins/iOS/`의 Google Mobile Ads Unity 브리지 잔재를 제거했습니다. `GADUAdNetworkExtras.h`, `GADTSmallTemplateView.xib`, `GADTMediumTemplateView.xib`, `unity-plugin-library.a`와 각 meta 8개, 비어진 NativeTemplates/iOS 폴더 meta 2개가 대상입니다. 제거 전 10개 파일을 프로젝트 밖에 백업하고 해시를 대조했습니다.
+
+정적 라이브러리는 x86_64/arm64 ar의 object 54개가 GADU/GADT/GAMU 이름이며, GADU 광고 생성·초기화와 GADT 템플릿 정의 및 GADMobileAds 외부 심볼로 광고 브리지임을 확인했습니다. importer의 `gvh_version-9.1.1`은 메타데이터 label이며 공식 해당 release의 바이트 동일성을 검증한 것은 아닙니다. 제거 파일의 importer는 Android 비활성/iOS 활성이고 해당 GUID·클래스의 다른 제품 파일 참조를 찾지 못했습니다.
+
+조사 범위의 UPM manifest에 ads/purchasing/mediation 패키지가 없고 제품 스크립트·EDM/XML의 명시적 광고·결제 API/SDK 좌표도 발견되지 않았습니다. 이름에 ads가 들어간 headshot 애니메이션·ThreadScheduler 및 Google Play Games/EDM/라이선스 원문은 제거하지 않았습니다. 이는 전체 최종 DEX/모든 전이 의존성의 광고·결제 부재 증명이 아니며 최종 Android AAB 포함 검증은 별도입니다. iOS export/build도 검증하지 않았습니다.
+
+출처·심볼·범위 근거는 외부 `D:\meee\git\sudden-force-fps-validation\20261008-ads-iap-residue-readonly\REPORT.txt` 및 archive-ownership-summary.json에 있고, 제거 전 백업은 `D:\meee\git\sudden-force-fps-backups\20261008-ads-ios-residue-removal\before-manifest.json`에 있습니다.
