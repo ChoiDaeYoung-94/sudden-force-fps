@@ -210,3 +210,12 @@ AAR 및 메모리 전용 classes.jar의 승인된 LICENSE/NOTICE/COPYING 및 thi
 추가 구간의 표시 코드포인트 154개와 새 한글 43개를 TMP glyph와 대조했으며 불일치와 관련 경고는 0입니다. 마지막 마침표와 약관 마지막 문장이 viewport에서 접근 가능했습니다. 기존 전체 183페이지의 글리프 검증을 반복한 결과로 확대하지 않습니다. 원본 폰트·아틀라스의 깊은 복사본과 임시 prefab을 사용한 Play=false Editor 검사이며 Android 기기 표시·성능·최종 AAB 포함 검증은 별도입니다.
 
 QA 전후 19개 보존 대상의 존재·해시가 정확히 같고 임시 객체·폰트·material·atlas·EventSystem을 정리했습니다. 외부 근거는 `D:\meee\git\sudden-force-fps-backups\20261008-androidx-notices-ui-qa\HANDOFF.md`, tail-verification.json, post-qa-preservation.json 및 Boundary/TailStart/LastBottom PNG에 있습니다. #42는 추가 에셋 출처 및 최종 빌드 검증이 남아 열린 상태로 유지합니다.
+### EmojiOne 자동 포함 경로 제외 (2026-10-08)
+
+배포 범위를 줄이기 위해 `Resources/Sprite Assets/EmojiOne.asset`을 기존 `Sprites/EmojiOne.asset`으로 AssetDatabase.MoveAsset 이동하고 TMP Settings의 기본 sprite 참조만 해제했습니다. 원본 asset/meta bytes와 GUID `c41005c129ba4d66911b75229fd70b45`, 내부 material 및 PNG 참조는 그대로입니다. PNG·JSON·Attribution 원본은 보존했습니다. defaultSpriteAssetPath/enableEmojiSupport/font/fallback 설정도 유지하며 저장 중 발생한 kerning migration은 시작 값으로 복원했습니다.
+
+정적 참조 검토와 Editor에서 Resources의 EmojiOne 및 기본 sprite 경로 로드가 null임을 확인했습니다. 이는 Resources/default 참조 경로를 끊은 결과이며 최종 새 AAB에서 sprite/material/PNG가 불포함된 증명이 아닙니다. 다른 포함 경로가 없는지는 새 빌드의 packed asset 근거로 확인합니다. 기존 APK에는 이 변경이 반영되지 않았습니다. EmojiOne 원본의 artwork 배포 조건이 확인된 것으로 확대하지 않습니다.
+
+Play=false 임시 prefab/deep font 복사본에서 로비 일반 label과 고지 마지막 187페이지 slice, 채팅의 TMP 대입과 동등한 일반 한글·영문·기호 문자열 표시를 확인했습니다. ChatManager.AddMessage 자체나 실제 네트워크/사용자 채팅은 실행하지 않았습니다. 명시적 sprite 태그 3종은 문자 그대로 표시됐고, 폰트에 없는 😀는 □와 글리프 경고1개로 대체됐습니다. 이모지·sprite 표시가 기존과 완전히 같거나 채팅에서 쓰이지 않는다고 주장하지 않습니다. 일반 문자 검사의 경고0과 이모지 테스트의 예상 경고를 구분합니다.
+
+원본 폰트·아틀라스·고지·prefab·기존 dirty 등 보존 대상을 대조하고 임시 객체를 정리했습니다. 외부 근거는 `D:\meee\git\sudden-force-fps-backups\20261008-emojione-resource-exclusion\`의 apply-result.json, ui-verification.json, preservation.json 및 HANDOFF.md입니다. 롤백은 AssetDatabase.MoveAsset로 기존 Resources 경로로 되돌리고 TMP 기본 참조를 원래 GUID로 복원합니다. 새 GUID를 생성하거나 원본 PNG를 재임포트하지 않습니다. #42는 최종 빌드 포함 여부와 남은 출처 확인까지 유지합니다.
