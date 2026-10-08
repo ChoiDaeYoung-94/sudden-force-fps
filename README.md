@@ -128,11 +128,10 @@ APK 메뉴는 Development/LZ4, AAB 메뉴는 LZ4HC 옵션입니다. 최신 개�
 
 ### 기존 CI/CD 구성의 현재 상태
 
-- [워크플로](.github/workflows/cicd.yml)는 커밋 메시지에 `ci skip`이 있으면 Checkout 작업을 건너뛰도록 작성되어 있습니다.
-- CI의 Unity 실행 경로는 `2022.3.43f1`이며, 현재 프로젝트는 `6000.3.25f1`입니다. 재사용 전에 빌드 PC 환경·버전·서명 입력·배포 단계를 갱신해야 합니다.
-- CI 내부 작업 폴더 이름 `SuddenForceFPS`는 체크아웃 경로로 사용됩니다. 저장소 이름과 별도로 관리되는 경로입니다.
-- 기존 `main` push → 자체 빌드 PC AAB → App Center 구성과 [unity-cicd](https://github.com/ChoiDaeYoung-94/unity-cicd) Python 안내는 과거 구성입니다. Google Play 테스트 배포 경로로 아직 전환하지 않았으며 현재 동작하는 릴리스 절차로 검증하지 않았습니다.
-- 기존 구현은 AAB 업로드 후 배포 그룹에 이메일 알림을 보내는 방식이었습니다.
+- Unity2022/macOS/self-hosted `buildpc` → App Center 구성은 [원문 보관 파일](.github/legacy/cicd.yml.disabled)로 이동했습니다. 활성 `.github/workflows`에 실행 정의가 없으므로 이 소스에는 자동 Android 빌드·배포나 PR 검증 CI가 없습니다. 과거 [unity-cicd](https://github.com/ChoiDaeYoung-94/unity-cicd) 안내는 현재 배포 절차가 아닙니다.
+- [App Center 배포 기능은 종료](https://learn.microsoft.com/en-us/appcenter/retirement)되었습니다. 현재 빌드는 위의 Unity6000.3.25f1 로컬 절차를 사용하고, 최종 배포는 기존 Sudden Force 앱의 Google Play 내부 테스트 트랙에서 진행합니다. 서명 AAB 업로드와 Play 설치 검증은 아직 완료하지 않았습니다.
+- 기존 queued/running Actions가 이 파일 이동만으로 취소됐다고 가정하지 않습니다. GitHub의 실제 실행 상태와 필요한 취소는 별도로 확인합니다. runner의 현재 OS·Unity6 라이선스·Android 도구체인·secrets 가용성은 아직 검증하지 않았습니다.
+- 후속 CI는 확인된 runner에서 수동 `workflow_dispatch` 단일 빌드 작업으로 검증한 뒤 추가합니다. 로컬 빌드·실기기 검증과 GitHub CI 결과를 구분하며, PR 병합으로 빌드·배포를 자동 실행하지 않습니다. 진행 범위는 [이슈 #44](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44)에 기록합니다.
 
 ## 계획·검증·라이선스
 
