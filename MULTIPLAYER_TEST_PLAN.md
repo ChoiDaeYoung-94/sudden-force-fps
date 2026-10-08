@@ -1,5 +1,15 @@
 # Sudden Force FPS 멀티플레이 검증 계획
 
+### 최신 AndroidClient의 EditorHost Play 종료 회귀 (#41, 2026-10-08)
+
+검증 HEAD `e3c6454`, 설치 APK의 제품 소스 `6a8b203`에서 실제 EditorHost Play 종료 후 AndroidClient가 같은 프로세스로 자동 로비 복귀하고 다음 공개방 Join/READY/START까지 통과했습니다. Editor 프로세스 자체의 OS 강제 종료·충돌이나 정상 MENU 퇴장이 아닌, 실제 Play 종료 조건의 결과입니다. 제품 상태·pose·타이머·콜백 주입은 없습니다.
+
+Android의 안전한 로그에서 Cloud Code104→SDK RunnerShutdown/DisconnectedByPluginLogic→generation1 정리·로비 로드·Runner 생성→generation2 Completed/LobbyConnected를 확인했습니다. 동일 기기 시계의 Code104→LobbyConnected 간격은3.623초입니다. PC 요청 시각과 기기 로그 시각에 역전이 있어 서로 다른 시계의 종료→복귀 시간을 계산하지 않습니다. Android Runner의 정확한 instance ID·기존 객체 파괴·활성 개수는 관측하지 못했고, peerTimeout/ExplicitPeerFallback 마커도 없어 해당 대체 경로는 **NOT RUN**입니다.
+
+같은 Android 앱과 새 Editor Play에서 다음 경기 Running2명/HP100/Ammo30/KD·Shot/Hit/Death/Respawn·Score/Feed0/ResultNone·Version0, duration300/target20을 확인했습니다. Code104 오류2건/warning1은 보존하며 전체 런타임 오류0을 주장하지 않습니다. 정리 후 Editor Win64/Play·pause·compile·import·build false/빈 clean 씬/Runner·manager·input0/match null/autotickfalse/code2, Android EXIT→OK 정상 종료·설치와 데이터 유지. 검증 중 동적 폰트 변경만 시작 bytes로 복원했고 baseline3931 변경·추가·백업해시실패0/기존 status·dirty patch 동일입니다.
+
+근거: `D:\meee\git\sudden-force-fps-backups\20261008-latest-android-host-exit-01\qa-summary.md`, 같은 폴더의 `android-allowlisted-log-markers.json`, `android-process-after-recovery.json`, `next-game-reset.json`, `cleanup-final.json`, `preservation-final.json`. 아래 메뉴·이전 버전 기록과 별개의 실제 종료 경로 검증이며, 모바일 전투·물리 동시 터치·10분 성능·Play 설치 미검증은 유지합니다.
+
 ### 최신 서명 APK의 실제 MENU·정상 퇴장 회귀 (#40/#41, 2026-10-08)
 
 HEAD `6a8b203620db0ccf8919baf95e89028a279bb550`의 peer timeout 수정과 메뉴를 포함한 새 APK를 기존 업로드 키로 빌드하고, SM-N986N/Android13/API33에 `install -r`로 설치했습니다. 아래 이전 APK·수정 Editor·표시 fixture의 결과는 당시 범위로 보존합니다. 이번에는 실제 공개방 2명/DesertHouse/300초·20점 설정으로 실행했고 HP·pose·타이머·콜백을 주입하지 않았습니다. Android 조작은 adb 단일 입력, Editor 조작은 실제 UI 버튼의 공개 클릭 경로입니다.

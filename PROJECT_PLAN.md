@@ -4,6 +4,8 @@
 
 ## 현재 기준 상태
 
+추가 회귀(2026-10-08): 최신 AndroidClient가 실제 EditorHost Play 종료 후 같은 앱 프로세스로 Cloud104/SDK 종료 경로의 자동 로비 복귀와 다음 방·경기 초기화를 통과했습니다. Editor OS 강제 종료·peerTimeout 대체 경로 통과는 아니며 해당 경로와 모바일 전투·동시 입력·성능 검증은 남아 있습니다. 전체 약74% 추정은 유지합니다. 상세 근거는 `MULTIPLAYER_TEST_PLAN.md` 상단을 따릅니다.
+
 최신 기준(2026-10-08): peer timeout 수정·MENU를 포함한 HEAD `6a8b203`의 기존 업로드 키 서명 APK(versionCode3)를 실제 Android13 기기에 업데이트 설치했습니다. Android Back/MENU/CANCEL/RESUME/LEAVE 확인, AndroidHost와 AndroidClient 정상 퇴장·로비 복귀, 새 공개방2회 재참가/경기 초기화, EditorHost 정상 메뉴 퇴장 후 최신 AndroidClient 자동 로비 복귀를 통과했습니다. AndroidClient 퇴장 후 EditorHost는 Finished/RedWin/OpponentLeft 결과를 유지했습니다. 아래 기존 실패·미실행은 당시 버전 기록이며 최신 근거는 `MULTIPLAYER_TEST_PLAN.md` U01–U07입니다.
 
 Google Play 테스트 배포까지 **약74% 추정**입니다. 작업 통과 기준의 판단이며 시간 비율이 아닙니다. 실기기 피해·죽음·리스폰, 물리 동시 멀티터치,10분 성능/메모리, 최신 AndroidClient의 호스트 강제 종료 Timeout 방향, 실제 Android16/16KB 기기, 라이선스·고지 완료, 서명 AAB·Play 테스트 배포/테스터 설치가 남아 있습니다. 사용자 성능 기준은 **60 FPS 목표, 저사양30 FPS 허용**으로 확정됐으며 아직 측정 PASS는 없습니다. 최신 APK 실제238,310,918B와 BuildReport 크기를 구분하고 최종 AAB clean packaging·용량을 확인합니다.

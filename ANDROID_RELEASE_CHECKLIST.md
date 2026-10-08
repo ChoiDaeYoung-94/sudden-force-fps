@@ -1,5 +1,11 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 최신 AndroidClient의 EditorHost Play 종료 복귀 (2026-10-08)
+
+검증 HEAD `e3c6454`와 기존 최신 업로드 키 APK(제품 `6a8b203`)로 실제 EditorHost Play 종료 후 같은 Android 프로세스의 Cloud104/SDK DisconnectedByPluginLogic→generation2 Completed/LobbyConnected 복귀 및 다음 방 Join/READY/START·경기 초기화를 확인했습니다. APK 재빌드·계정/서명 변경은 없습니다. Editor OS 프로세스 강제 종료나 peerTimeout/ExplicitPeerFallback 통과를 의미하지 않습니다. Android의 정확한 Runner instance ID·파괴·활성 개수는 미관측입니다.
+
+동일 Android 로그 시계 Code104→LobbyConnected3.623초만 기록하며, PC 요청 시각과 기기 시각 차이로 cross-clock 소요 시간은 계산하지 않습니다. Runtime Code104 오류2건/warning1을 보존했습니다. 정상 앱 종료·Editor Win64/빈 clean 씬/Runner0 정리 후 baseline3931 변화·추가·백업해시실패0/기존 dirty 보존을 확인했습니다. 근거는 `D:\meee\git\sudden-force-fps-backups\20261008-latest-android-host-exit-01\qa-summary.md`와 `MULTIPLAYER_TEST_PLAN.md`의 최신 회귀 기록입니다. 모바일 전투·물리 동시 터치·10분 성능·실제16KB 기기·AAB/Play 설치는 남아 있습니다.
+
 ## 최신 APK 빌드·MENU·실기기 정상 퇴장 (2026-10-08)
 
 HEAD `6a8b203`에서 기존 업로드 키로 서명한 새 검증 APK를 빌드하고 실제 SM-N986N/Android13/API33에 업데이트 설치했습니다. peer timeout 수정 및 MENU UI가 포함되어 있습니다. 빌드335.2643초/Succeeded/errors0/warnings2, 실제 APK238,310,918B, versionCode3/min25/target36/IL2CPP/ARMv7+ARM64/4씬입니다. SHA256 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`. BuildReport.totalSize=1,652,295,329는 APK 파일 크기가 아닙니다. 과거 warnings71의 해결을 이번 캐시 빌드 warnings2로 주장하지 않습니다.
