@@ -1,6 +1,24 @@
 # Sudden Force FPS 멀티플레이 검증 계획
 
-### 경기 메뉴·정상 퇴장 UI의 Editor 검증 (#40, 2026-10-08)
+### 최신 서명 APK의 실제 MENU·정상 퇴장 회귀 (#40/#41, 2026-10-08)
+
+HEAD `6a8b203620db0ccf8919baf95e89028a279bb550`의 peer timeout 수정과 메뉴를 포함한 새 APK를 기존 업로드 키로 빌드하고, SM-N986N/Android13/API33에 `install -r`로 설치했습니다. 아래 이전 APK·수정 Editor·표시 fixture의 결과는 당시 범위로 보존합니다. 이번에는 실제 공개방 2명/DesertHouse/300초·20점 설정으로 실행했고 HP·pose·타이머·콜백을 주입하지 않았습니다. Android 조작은 adb 단일 입력, Editor 조작은 실제 UI 버튼의 공개 클릭 경로입니다.
+
+| 항목 | 결과 | 실제 근거와 범위 |
+| --- | --- | --- |
+| U01 최신 서명 APK | PASS | Build Succeeded/335.2643초/errors0/warnings2, APK 실제238,310,918B/versionCode3/min25/target36/ARMv7+ARM64. SHA256 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`. warnings2는 이번 캐시 빌드 기록이며 과거 SDK 경고71개의 해결 근거가 아닙니다. |
+| U02 실제 시작·메뉴 | PASS(입력 범위) | 앱 시작 시 PGS 로그인 완료 native 안내 관찰, 닉네임→로비→두 피어 경기. MENU/RETURN TO LOBBY/LEAVE MATCH 확인 창, CANCEL→MENU와 RESUME→경기를 실제 화면으로 확인했습니다. Android Back의 경기→메뉴, 확인→메뉴, 메뉴→경기 전환을 반복 확인했습니다. SDK 인증 boolean·계정 선택·Play 설치본 OAuth 검증은 아닙니다. |
+| U03 메뉴 입력 차단·시간 | PASS(제한) | MENU 버튼으로 열린 상태의 조이스틱·FIRE·시점 합성 입력에서 발사/시점 변화 없이 Ammo29/ShotSequence1/AimYaw25.60837/Pitch-1.34748161 유지. 약0.006m의 작은 위치 차이가 남아 완전한 위치 고정은 주장하지 않습니다. 경기 시간은 계속 감소했습니다. 실제 Editor 메뉴에서 blocked=true/move0/fire=false/reload=false/timeScale1을 읽기 전용으로 확인했습니다. 첫 Back 검사 뒤 닫힌 메뉴의 입력이 섞인 관찰은 제외했습니다. 물리 멀티터치·held-fire 경합 전체 통과 근거가 아닙니다. |
+| U04 AndroidHost 정상 퇴장 | PASS | SFMenuQA1008-01에서 Android 실제 LEAVE MATCH→같은 앱 로비. EditorClient old manager-93782/Runner-93784 파괴→new-97716/-97718/liveRunner1/gen1→2/Completed/RanToCompletion/오류빈값/LobbyConnected. |
+| U05 AndroidClient 정상 퇴장 | PASS | SFMenuQA1008-02에서 Android 실제 LEAVE MATCH→같은 앱 로비. EditorHost는 동일 Runner를 유지하며 Finished/RedWin/OpponentLeft/ResultVersion1/0:0 및 LEFT 로스터를 표시했습니다. 호스트의 경기가 Running으로 계속된다는 뜻이 아닙니다. 결과 RETURN→new manager-101398/Runner-101400/gen3 로비. |
+| U06 재참가·초기화·역방향 호스트 퇴장 | PASS | 같은 앱/Editor 실행으로 SFMenuQA1008-02 및 -03 공개 목록 참가/READY/START/Running2명. 각 HP100/Ammo30/KD·Shot/Hit/Death/Respawn·Score/Feed0/ResultNone·Version0/300초·20점 초기화. 세 번째 경기에서 EditorHost 정상 MENU→확인→LEAVE 클릭 후 최신 AndroidClient 자동 로비 복귀, Editor fresh-105060/-105062/gen4/Runner1/Connected. Android SDK Code104 오류2건과 warning1 표시를 보존하며 전체 런타임 오류0을 주장하지 않습니다. |
+| U07 정리·보존 | PASS | observer의 정확한 delegate 해제, Editor Win64/Play·pause·compile·import·build false/빈 clean 씬/Runner·NRM0/input·match null/autotickfalse. Android 로비 EXIT→OK로 실제 앱 정상 종료·프로세스 없음, 설치·데이터 유지. 메뉴의 LEAVE는 앱 종료가 아니라 로비 복귀입니다. 동적 폰트 및 EditorUserSettings의 검증 변경만 시작 bytes로 복원 후 baseline3931 변화·추가·백업해시실패0/기존git status·dirty patch 동일. 승인된 검증3문서 편집은 이후 별도 차이입니다. |
+
+근거 root: `D:\meee\git\sudden-force-fps-backups\20261008-upload-6a8b203-01`. `apk-attempt-01/upload-validation-build.json`, `apk-verification.json`, `menu-lifecycle-observations.ndjson`, `android-host-buttonmenu-before.json`/`after.json`, `editor-host-continues-after-client-leave.json`, `second-game-reset.json`, `third-game-reset.json`, 실제 `android-*.png`, `cleanup-final.json`, `preservation-cleanup.json`에 보존했습니다. 외부 평가의 잘못된 namespace·버튼 이름/전환 중 timeout 이력은 제품 실패로 세지 않으며 모든 QA 호출에 오류가 없었다고 표현하지 않습니다.
+
+최신 AndroidClient가 호스트 **강제 종료/peer Timeout**을 받는 방향은 NOT RUN입니다. 기존 M07 수정 재시험은 구 APK AndroidHost+수정 EditorClient 범위입니다. 물리 동시 멀티터치, 실기기 상대 피해·죽음·리스폰,10분 성능/메모리, 실제 Android16/16KB 기기 실행, 서명 AAB/Play 배포·테스터 설치는 남아 있습니다. 사용자 성능 기준은 **60 FPS 목표, 저사양 30 FPS 허용**으로 확정됐으며 측정 PASS는 아직 없습니다.
+
+### 이전 기록: 경기 메뉴·정상 퇴장 UI의 Editor 검증 (#40, 2026-10-08)
 
 제품 `281fbe2`: SafeArea MENU→RESUME/RETURN TO LOBBY→CANCEL/LEAVE MATCH 확인을 추가했습니다. PC Esc/Android Back 입력의 소유권은 MatchHud에 통합하고 기존 전투 입력 차단, shared Return, 결과·복귀 우선순위를 유지합니다. 실패로 완료된 Task를 성공으로 판단하지 않고 입력 차단과 재접속 안내를 유지합니다.
 
@@ -31,11 +49,11 @@ Editor 실제 GameView Esc와 EventSystem raycast MENU/RETURN/LEAVE 클릭, CANC
 
 근거: `D:\meee\git\sudden-force-fps-backups\20261008-mobile2peer-01\qa-result.md`, 같은 폴더의 `androidhost-observations.ndjson`, `androidhost-failure-details.json`, `preservation-final.json` 및 실제 화면 캡처.
 
-정상 Android 게임 종료는 Back 입력에도 종료 UI가 없어서 NOT RUN입니다. 실제 상대 피해·죽음·킬피드·리스폰, 물리 동시 멀티터치, 10분 성능/메모리, 실제 Android16/16KB 기기 실행은 미검증으로 유지합니다. UI 저장 닉네임의 마지막 U+200B도 후속 항목입니다.
+당시 구 APK의 정상 Android 게임 종료는 Back 입력에도 종료 UI가 없어서 NOT RUN이었습니다. 최신 메뉴·로비 종료 결과는 상단 U02–U07을 따릅니다. 실제 상대 피해·죽음·킬피드·리스폰, 물리 동시 멀티터치, 10분 성능/메모리, 실제 Android16/16KB 기기 실행은 미검증으로 유지합니다. UI 저장 닉네임의 마지막 U+200B도 후속 항목입니다.
 
 ## 현재 검증 상태와 후속 단계
 
-**최신 상태(2026-10-08): PC 양방향 종료 복귀 P01–P06과 수정 EditorClient의 실제 AndroidHost 강제 종료 복귀·후속 재참가는 통과했습니다. M07 수정 전 실패 기록과 문서 위의 수정 후 실제 결과를 구분합니다. 기존 APK는 유지하여 수정 AndroidClient 전체 검증과 정상 퇴장 메뉴·실기기 전투/성능은 남아 있습니다.**
+**최신 상태(2026-10-08): PC 양방향 종료 복귀 P01–P06과 수정 EditorClient의 실제 AndroidHost 강제 종료 복귀·후속 재참가는 통과했습니다. M07 수정 전 실패 기록과 문서 위의 수정 후 실제 결과를 구분합니다. 최신 APK의 정상 메뉴 퇴장은 상단 U01–U07에서 통과했습니다. 수정 AndroidClient의 호스트 강제 종료 Timeout 방향·실기기 전투/성능은 남아 있습니다.**
 
 **현재 상태: C5 새 빌드의 실제 두피어 경기에서 20킬 TargetScore 종료, 실제300초 높은 점수 승리·Draw, 상대 정상 종료의 OpponentLeft 및 퇴장자 KD/이름 보존을 확인했습니다. 양쪽 결과·Finished 상태 고정·정상 로비 복귀·new Runner 초기화와 PC 짧은 Tab 입력을 아래 범위에서 검증했습니다. 런타임 pose/baseaim 보조와 사용자 추가 입력을 명시하고 순수 계산/아트 상태 주입 진단과 구분합니다. 제품 파일은 원상 복원했으며 문서만 변경합니다. Waiting blocked/취소·동tick 경합·진행중 reload 종료·실제held 입력·3peer/권한위조·Android·저FPS/재시뮬레이션 등은 미검증으로 유지합니다. C1–C4의 아래 기록과 미검증 항목은 각 당시 실행 범위입니다.**
 

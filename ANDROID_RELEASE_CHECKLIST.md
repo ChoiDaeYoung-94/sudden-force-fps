@@ -1,14 +1,28 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
-## 실제 기기 설치·모바일 두 피어 결과 (2026-10-08)
+## 최신 APK 빌드·MENU·실기기 정상 퇴장 (2026-10-08)
 
-수정 후 최신 결과: `257d30e` EditorClient와 기존 AndroidHost APK의 실제 강제 종료 재시험에서 약11.20초 후 새 Runner 하나·LobbyConnected 복귀, 같은 Editor 실행의 다음 공개방 참가·두 피어 경기 초기화까지 통과했습니다. 아래 Timeout 실패는 수정 전 기록입니다. 근거 `D:\meee\git\sudden-force-fps-backups\20261008-fixed-peer-timeout-01\result.json`. 재시험 baseline3931 파일 변경·추가·해시 실패0/기존 dirty 동일, Editor 정리 완료. 기존 APK 유지이므로 수정 AndroidClient의 새 빌드 검증은 남아 있으며 정상 퇴장 메뉴도 후속 작업입니다.
+HEAD `6a8b203`에서 기존 업로드 키로 서명한 새 검증 APK를 빌드하고 실제 SM-N986N/Android13/API33에 업데이트 설치했습니다. peer timeout 수정 및 MENU UI가 포함되어 있습니다. 빌드335.2643초/Succeeded/errors0/warnings2, 실제 APK238,310,918B, versionCode3/min25/target36/IL2CPP/ARMv7+ARM64/4씬입니다. SHA256 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`. BuildReport.totalSize=1,652,295,329는 APK 파일 크기가 아닙니다. 과거 warnings71의 해결을 이번 캐시 빌드 warnings2로 주장하지 않습니다.
+
+서명 v2 검증 및 기존 인증서 SHA1 `E9:56:B8:AD:10:19:A6:A2:E3:B8:89:B1:21:C1:EF:0E:72:74:18:E0`, zipalign 검사와 ARM64 .so7개의 ELF PT_LOAD16KB 정렬을 확인했습니다. native14개는 모두 압축되어 있어 비압축 native ZIP 정렬 검사는 대상0개이며 압축 entry offset 정렬을 통과했다고 쓰지 않습니다. 실제 Android16/16KB 페이지 기기 실행은 NOT RUN입니다. APK 크기 차이는 총괄이 확인한 ZIP virtual local-header69,974,701B 구간으로 분리하고 자산 증가로 추정하지 않습니다. 최종 AAB에서는 clean packaging·용량을 다시 확인합니다.
+
+PGS 로그인 완료 native 안내→닉네임·로비→실제 Android/Editor 공개방2명/DesertHouse를 확인했습니다. MENU/RESUME/CANCEL/LEAVE 확인과 Android Back 전환, 메뉴 입력 차단·경기 시간 지속, AndroidHost/AndroidClient 각각 정상 LEAVE→같은 앱 로비, 후속 새 방2회/경기 초기화를 통과했습니다. AndroidClient 퇴장 후 EditorHost는 연결을 유지하며 Finished/RedWin/OpponentLeft/ResultVersion1을 표시했습니다. 세 번째 경기의 EditorHost 정상 메뉴 퇴장 후 최신 AndroidClient 자동 로비도 확인했습니다. 이 정상 종료에서 SDK Code104 오류2건/warning1 표시가 있었으므로 런타임 전체 오류0을 주장하지 않습니다. 정확한 표와 한계는 `MULTIPLAYER_TEST_PLAN.md` U01–U07에 있습니다.
+
+빌드 finally에서 서명·임시 설정 복원 equality=true를 확인했습니다. 이후 Win64 전환의 domain reload 후 alias 일치=false/두 비밀번호 presence=false이며 versionCode2/기존 keystore path 유지였습니다. 비밀번호 값·개인 키를 출력하거나 복사하지 않았습니다. 최종 Editor Win64/Play 종료/빈 clean 씬/Runner0/autotickfalse, Android 로비 EXIT→OK로 정상 앱 종료·설치/데이터 유지. 문서 편집 전 baseline3931 변경·추가·백업해시실패0/기존dirty 동일을 확인했습니다.
+
+근거: `D:\meee\git\sudden-force-fps-backups\20261008-upload-6a8b203-01`의 build/verification/native inspection/packed-assets/실제 화면/cleanup/preservation JSON. APK 내 .so 이름 전목록과 BuildReport packed sourceAssetPath2,889개를 읽기 전용으로 기록했고 EmojiOne.asset/png 포함을 확인했습니다. 포함 사실만으로 사용·기여·라이선스 완료를 추정하지 않습니다. PhotonRuntimeFonts 문자열 경로는 해당 목록에서 미관찰이며 실제 미사용 결론이 아닙니다.
+
+남은 항목: 최신 AndroidClient의 호스트 강제 종료 Timeout 방향, 물리 동시 멀티터치, 실기기 상대 피해·죽음·리스폰,10분 성능/메모리(**60 FPS 목표·저사양30 FPS 허용**, 측정 미실행), 실제 Android16/16KB 기기, 고지·라이선스 완료, 서명 AAB/Play 테스트 업로드·테스터 설치. PGS SDK 인증 boolean·계정 선택·Play 설치본 OAuth 검증도 별도입니다. 아래 기존 실패/미실행 기록은 당시 버전과 범위를 보존합니다.
+
+## 이전 APK의 실제 기기 설치·모바일 두 피어 결과 (2026-10-08)
+
+수정 후 최신 결과: `257d30e` EditorClient와 기존 AndroidHost APK의 실제 강제 종료 재시험에서 약11.20초 후 새 Runner 하나·LobbyConnected 복귀, 같은 Editor 실행의 다음 공개방 참가·두 피어 경기 초기화까지 통과했습니다. 아래 Timeout 실패는 수정 전 기록입니다. 근거 `D:\meee\git\sudden-force-fps-backups\20261008-fixed-peer-timeout-01\result.json`. 재시험 baseline3931 파일 변경·추가·해시 실패0/기존 dirty 동일, Editor 정리 완료. 이 재시험은 기존 APK 범위입니다. 최신 APK 빌드와 정상 퇴장 메뉴는 상단 최신 결과에서 완료했으며 최신 AndroidClient의 강제 종료 Timeout 방향은 남아 있습니다.
 
 제품 `55024a5`의 기존 업로드 키 서명 APK를 SM-N986N/Android13/API33에 설치했습니다. 실제 로그인 경로를 통해 Photon kr 로비 도착, Editor와 공개방 Join/READY/START, 이동·시점·사격·재장전의 단일 adb 터치와 복제, 실제300초 Draw/TimeExpired 및 결과 RETURN→새 로비→다음 경기 초기화를 확인했습니다. PGS SDK 인증 boolean 자체나 계정 선택 창을 별도 검증한 것은 아니며 Play 설치본 인증과 구분합니다.
 
 EditorHost 종료→Android 같은 프로세스 자동 복귀는 통과했습니다. AndroidHost 검증 앱만 force-stop한 반대 방향에서는 Editor가 Timeout을 감지했지만 1분 이상 Game/기존 Runner에 남아 복귀에 실패했습니다. 이 연결 종료 실패는 배포 전 수정·재검증 대상입니다. 실제 Android 고지 UI도 열기/닫기를 확인했습니다.
 
-물리 동시 멀티터치, 상대 명중·피해·죽음·리스폰, 10분 성능/메모리, 정상 게임 종료 UI, 실제 Android16/16KB 기기 동작은 미검증입니다. ELF 정렬 검사와 실기기 실행을 혼동하지 않습니다. AAB/Play 업로드는 수행하지 않았습니다.
+당시 미검증이던 정상 게임 종료 UI는 상단 최신 메뉴/로비 EXIT 검사에서 확인했습니다. 물리 동시 멀티터치, 상대 명중·피해·죽음·리스폰,10분 성능/메모리, 실제 Android16/16KB 기기 동작은 아직 미검증입니다. ELF 정렬 검사와 실기기 실행을 혼동하지 않습니다. AAB/Play 업로드는 수행하지 않았습니다.
 
 근거: `D:\meee\git\sudden-force-fps-backups\20261008-mobile2peer-01\qa-result.md` 및 상세 실패·보존 자료. `MULTIPLAYER_TEST_PLAN.md` M01–M08에 결과를 구분했습니다. 정리 후 Editor Win64/Play 종료/빈 clean 씬/자동 tick 중지, baseline3930 변경·추가·해시 실패0/기존 dirty patch 동일. 설치와 앱 데이터는 유지하고 검증 앱만 종료한 상태입니다.
 
@@ -24,7 +38,7 @@ EditorHost 종료→Android 같은 프로세스 자동 복귀는 통과했습니
 
 2026년 10월 7일(KST) 기준입니다. `PROJECT_PLAN.md` 단계 6~7의 선행 조사입니다. 초기 조사 후 별도 배정으로 광고·결제 의존성 제거와 Editor smoke test를 완료했고, 이어서 빌드 스크립트·custom Gradle 템플릿·Windows QA 로그인 코드를 정리했습니다. Android BuildTarget 전환, 빌드, target API/서명 ProjectSettings 변경, 웹 계정 조작은 하지 않았습니다. 비밀번호, 개인 키, 계정 토큰은 기록하지 않습니다.
 
-## 판단과 우선순위
+## 초기 조사 당시 판단과 우선순위
 
 Android 빌드 도구는 설치되어 있습니다. 첫 APK/AAB 빌드는 아직 실행하지 않았으며, 다음 장애를 먼저 해결해야 합니다.
 
@@ -36,7 +50,7 @@ Android 빌드 도구는 설치되어 있습니다. 첫 APK/AAB 빌드는 아직
 6. 구형 App Center CI를 Google Play 테스트 배포 절차로 전환합니다. 첫 검증은 로컬 빌드와 Console 내부 테스트로 진행할 수 있습니다.
 7. 최신 사용자 요구에 따라 광고·결제 의존성 제거를 완료했습니다. 최종 적용·검증 결과는 문서 끝에 기록했습니다.
 
-## 현재 프로젝트 값
+## 초기 조사 당시 프로젝트 값
 
 근거는 `ProjectSettings/ProjectSettings.asset`, `ProjectSettings/ProjectVersion.txt`, `ProjectSettings/EditorBuildSettings.asset`, `Assets/Scripts/Editor/BuildScript.cs`입니다. Editor에서 적용 중인 External Tools 경로와 변경 중인 다른 담당 작업은 이번 조사에서 조회하지 않았으므로, 빌드 직전에 다시 확인해야 합니다.
 
