@@ -101,7 +101,7 @@ public sealed class CombatHudView : MonoBehaviour
         if (_desktopHint != null)
         {
             _desktopHint.enabled = !Application.isMobilePlatform && _presentation != null && !_isDead && !_matchSuppressed;
-            _desktopHint.text = touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CLICK AIM / FIRE   R RELOAD   ESC CURSOR";
+            _desktopHint.text = touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CLICK AIM / FIRE   R RELOAD   ESC MENU";
         }
     }
 

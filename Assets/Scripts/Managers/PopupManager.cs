@@ -58,6 +58,7 @@ namespace AD
 
         private void OnUpdate()
         {
+            if (MatchHudView.OwnsBackInput) return;
             if (Application.platform == RuntimePlatform.Android)
             {
                 if (Input.GetKeyDown(KeyCode.Escape) && !_isFlow)
