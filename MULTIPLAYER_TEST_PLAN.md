@@ -2,6 +2,10 @@
 
 ### 실제 Android–Editor 두 피어 검증 (2026-10-08)
 
+**M07 수정 후 상태:** `257d30e`에서 peer 연결 끊김과 SDK 자동 종료를 구분하여 복귀를 시작하도록 수정했습니다. 아래 M07은 수정 전 실제 실패 기록입니다. 수정 후 실제 AndroidHost 강제 종료 재시험은 진행 중이며 아직 PASS로 변경하지 않습니다.
+
+수정 단일 세션 검증 근거: `D:\meee\git\sudden-force-fps-validation\20261008-peer-timeout-01\HANDOFF.txt`. 컴파일 오류0, 정상 명시적 Return의 공유 Task·old Runner 파괴·새 Runner1·로비 연결 확인. synthetic peer callback은 두 프레임 경계 이후 종료→새 로비 연결을 확인했으며 실제 통신 끊김과 구분합니다. SDK Update 안에서 종료를 예약한 외부 fixture에서는 SDK 자체 종료에 합류하고 제품 fallback 요청이 없었음을 확인했습니다. 복귀 대기 중 Play 종료는 취소 상태/추가 종료 요청 없음(종료 순간 pending Task의 완료는 미확인), 프레임을 일시정지한 시험은 약30.05초에 Failed·안내 표시·새 Runner 생성 차단을 확인했습니다. 무효 외부 helper와 의도한 timeout/Pipeline 진단 오류도 보존하여 전체 Console 오류0으로 표현하지 않습니다. 비범위 tracked3895 해시 변화0, 기존 dirty 보존, Editor Win64/빈 clean 씬/Play 종료/자동 tick 중지로 반환했습니다.
+
 제품 소스 `55024a5`, QA HEAD `420ee00`(그 사이 문서 변경만), 기존 업로드 키 서명 APK 사용. SM-N986N/Android13/API33, ClientServer/kr/공개방2명/DesertHouse, 제품 경기 시간300초·목표20점 그대로 실행했습니다. HP·점수·타이머·pose 주입이나 강제 콜백을 성공 근거로 사용하지 않았습니다.
 
 | 항목 | 결과 | 실제 관측과 한계 |
