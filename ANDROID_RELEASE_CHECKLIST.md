@@ -340,3 +340,19 @@ APK 내 14개 `.so`는 모두 압축 저장되어 있습니다. 따라서 압축
 PGS는 출시된 속성/credential이며 개별 테스터2개와 내부 테스트 트랙 연결을 확인했습니다. 메일 주소는 기록하지 않습니다. 실제 시험 계정의 테스터 포함 여부는 미확인입니다. PGS 출시 상태와 기존 앱의 초안·프로덕션 비활성 상태는 별개입니다. 이번 조회에서 외부 설정 저장·OAuth 생성·PGS 게시를 하지 않았습니다.
 
 정확한 Unity6000.3.25f1 번들 adb의 `devices -l` 결과는 device0/unauthorized0/offline0입니다. 기기 정보 조회·앱 설치·실행·권한 변경은 수행하지 않았습니다.
+
+
+## 기존 업로드 키 서명 검증 APK (2026-10-08)
+
+사용자가 기존 업로드 키 검증 경로를 선택하고 Unity Publishing Settings에 비밀번호를 직접 입력했습니다. 비밀번호 값은 채팅·소스·명령·로그·증거에 기록하지 않았습니다. 첫 입력은 Android target/domain reload에서 초기화되어 preflight가 빌드를 차단했고, Android 상태의 재입력 후 대상 전환 없이 실제 빌드를 진행했습니다.
+
+- 기준 HEAD `55024a5046b405b5b665ca7529023c3c160eaf82`: 로비 시간 초과 안내와 오프라인 고지 UI 포함.
+- 산출물: `D:\meee\git\sudden-force-fps-backups\20261008-upload-55024a5-01\apk-attempt-01\SuddenForceFPS.UploadKeyValidation.apk`.
+- 크기 168,878,895 bytes, SHA256 `30e175c609550f19ea598d1b29cae493075254634ed634e828c03386000159a1`.
+- BuildPlayer Succeeded/오류0/경고71/393.223초. Development/LZ4/IL2CPP, 패키지 `com.AeDeong.SuddenForceFPS`, 버전1.0.0/임시code3, 최소25/대상·컴파일36, ARMv7+ARM64.
+- APK v2 검증 통과. 서명 SHA1 `E9:56:B8:AD:10:19:A6:A2:E3:B8:89:B1:21:C1:EF:0E:72:74:18:E0`가 기존 업로드 키 및 현재 연결 PGS Android credential과 정확히 일치합니다.
+- zipalign 검사와 ARM64 ELF7개 PT_LOAD16KB 정렬 통과. 네이티브 파일은 압축 저장이며 실제16KB 기기 실행과 구분합니다.
+- 기존 Debug APK 해시 불변. 생성 Gradle은 비민감 항목만 검사하고 서명 설정 본문을 복사하지 않았습니다. 키 파일 복사·교체·재생성, PGS/OAuth 설정 쓰기, AAB/Play 업로드를 수행하지 않았습니다.
+- 종료 후 Win64/빈 깨끗한 씬/Play 종료/자동 tick 중지. 시작3930파일 SHA 변경·추가0 및 기존 dirty patch 동일, 버전code2/ledger와 키 경로 등 파일 설정을 복원했습니다. Android 빌드 finally의 메모리 서명 값 복원과 최종 Win64 reload에서 비밀번호·alias가 초기화된 현상은 구분합니다. 최종 메모리 비밀번호 보존을 주장하지 않습니다.
+
+근거는 같은 외부 폴더의 `apk-verification.json`, `preservation-final.json`, `signing-preflight-history.json` 및 `apk-attempt-01/upload-validation-build.json`입니다. 이 APK는 실기기 인증 검증용이며 실제 설치·PGS 로그인·모바일 경기·Play 테스트 트랙 배포는 아직 미검증입니다. Play 설치본은 별도 앱 서명 인증서를 사용한다는 기존 조건도 유지합니다.
