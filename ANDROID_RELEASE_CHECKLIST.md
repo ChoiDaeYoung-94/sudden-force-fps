@@ -1,5 +1,19 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 최종 서명 AAB 감사: 부분 통과 (#43, 2026-10-08)
+
+제품 HEAD `0f46c28`에서 기존 BuildScript AAB 경로로 생성한 `1.0.193.0.aab`은 **92,854,441 bytes**, SHA256 `E8C216521CD68420F29C44F28A06E24B88B5C94B06FF67AF9314A03ED035949B`입니다. BuildReport Succeeded/오류0/경고71/641.889초이며 totalSize 1,300,342,745는 실제 AAB 파일 크기가 아닙니다. IL2CPP/ARM64/LZ4HC/DetailedBuildReport이고 Development·AllowDebugging·ConnectWithProfiler 옵션은 없습니다.
+
+- JAR 서명 및 bundletool validate 통과. 공개 인증서는 기존 업로드 키와 일치하며 Play 앱 서명과 구분합니다. jarsigner의 self-signed/PKIX/timestamp 등 안내는 보존했고 Play 수락을 증명하지 않습니다.
+- Manifest는 package `com.AeDeong.SuddenForceFPS`, 버전1.0.193/code3, 최소25/대상36, debuggable·testOnly 없음, extractNativeLibs=true. ledger `193,0,3`과 버전 메타데이터를 실제 예약했으므로 code3을 재사용하지 않습니다.
+- packed6,492개에서 EmojiOne 옛·새 sprite 경로 및 sprite/PNG GUID 일치0. 최신 ThirdPartyNotices는 AAB의 data.unity3d/sharedassets1.assets/TextAsset pathId2에서675,225 bytes를 직접 추출해 SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6` 및 원본 바이트 일치를 독립 확인했습니다.
+- ARM64 네이티브7개 PT_LOAD16KB 정렬과 BundleConfig PAGE_ALIGNMENT_16K는 통과했으나 GNU_RELRO 끝 정렬은 libc++_shared.so(나머지12288), libmain.so(8192), libswappywrapper.so(4096) 세 개 실패입니다. [Android 공식 조건](https://developer.android.com/guide/practices/page-sizes#relro)은 `(VirtAddr + MemSiz) % 0x4000 == 0`입니다. 전체16KB 호환이나 실제16KB 실행 PASS를 주장하지 않습니다.
+- IngameDebugConsole packed 에셋93개가 남아 콘솔 에셋 제외는 미충족이며 실제 릴리스 활성화는 미확정입니다. 경고71개는 CS0618 69개와 ServicesCore/Pipeline 설정 안내2개입니다.
+
+Resolver 템플릿3개가 자동 재생성됐고 이번 빌드 시간 내 생성 Gradle의 공개 repo/exclusion 블록으로 연결했습니다. 이전 빌드 생성물은 증거에서 제외했고 전체 resolved graph 검증은 미완료입니다. 종료 후 Win64/빈 clean 씬/Play·pause·compile·import·build false/Runner·manager·input0을 확인하고 원래 defines/architecture/signing 설정 및 임시 Resolver 파일을 복원했습니다. baseline3923파일은 승인 BuildScript·ledger·버전 메타데이터 외 변경·추가·백업 해시 실패0이며 원래6개 dirty를 보존했습니다. ProjectSettings 차이는 bundleVersion/AndroidBundleVersionCode 두 필드뿐입니다. 비밀번호 값은 조회·기록하지 않고 입력 필드를 초기화했습니다.
+
+외부 근거는 `sudden-force-fps-backups/20261008-release-aab-e39d53b-01`의 artifacts/build-result/packed-assets/artifact-verification/notice-payload-verification/cleanup-final/preservation-approved 및 독립 `sudden-force-fps-validation/20261008-final-aab-readonly-review/REPORT.md`입니다. 폴더 이름과 실제 제품 HEAD를 구분합니다. 총판정 **PARTIAL**: Play 업로드·설치·앱 서명 로그인, 생성 APK ZIP 정렬·실제16KB 실행·광고 전체 DEX 부재는 미검증입니다.
+
 ### Android 사망 중 이동·시점·재장전 및 리스폰 후 재장전 (#41, 2026-10-08)
 
 Editor HEAD `0967351`과 기존 설치 APK 제품 소스 `6a8b203`을 구분해 한 공개방의 duration300/target20 정상 경기에서 검증했습니다. 실제 Editor OS 이동·조준·사격과 Android adb 단일 포인터 입력을 사용했고 전투 상태·타이머·callback을 주입하지 않았습니다. 아래 상태는 EditorHost에서 읽은 Android 참가자의 권한 있는 네트워크 상태이며 Android 내부 입력 gate의 직접 계측은 아닙니다.
