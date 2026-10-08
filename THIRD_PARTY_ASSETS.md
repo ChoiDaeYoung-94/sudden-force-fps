@@ -108,3 +108,56 @@ UniRx에 포함된 Microsoft 차용 코드의 `Copyright (c) Microsoft Open Tech
 - Unity 패키지 및 Google Play services의 최종 전이 의존성·고지, EmojiOne 조건 복원, UniRx 차용 코드의 원 권리 범위는 #42 후속 확인 대상입니다. 61-section SDK 합본을 전부 앱에 적용하지 않습니다.
 
 근거와 원문 SHA256는 외부 작업 기록 `D:\meee\git\sudden-force-fps-backups\20261008-sdk-notices-audit\` 및 `20261008-sdk-notices-prepare\`에 보존했습니다. 고지 텍스트 제공과 실제 포함 권리 범위 확인을 구분하며 #42는 후속 확인이 끝나기 전 닫지 않습니다.
+
+## Unity 패키지·Photon .NET 추가 고지 (2026-10-08)
+
+앱의 `Assets/Legal/ThirdPartyNotices.txt`에 다음 5개 섹션의 고지를 추가합니다. 기존 고지 22,019바이트 전체와 기존 SDK 5개의 저작권·라이선스 원문을 보존하며, 추가 범위를 아래 항목으로 한정합니다.
+
+| 고지 항목 | 설치·사용 근거 | 고지 출처와 적용 범위 |
+| --- | --- | --- |
+| Unity uGUI 2.0.0 (TextMesh Pro 포함) | 설치본 `package.json` 버전. 대조 Android BuildReport에 `Packages/com.unity.ugui/` source paths 141개 | 설치본 `LICENSE.md`의 저작권·Unity Companion License 링크·면책 원문 전체. [Unity Companion License](https://unity.com/legal/licenses/unity-companion-license)와 구분하며, 동봉 파일 전체를 복사한 것이 UCL 웹 전문을 복사했다는 뜻은 아님 |
+| Unity Universal Render Pipeline 17.3.0 | 설치본 버전. 해당 BuildReport의 URP source paths 309개 | 설치본 `LICENSE.md` 원문 전체. Unity 패키지 본체를 MIT/Apache 라이선스로 판단하지 않음 |
+| Unity Render Pipeline Core 17.3.0 | 설치본 버전. 해당 BuildReport의 Core source paths 358개 | 설치본 `LICENSE.md` 원문 전체. 패키지 안의 모든 별도 third-party 구성요소 권리 확인을 대신하지 않음 |
+| Photon .NET Client SDK — BigInteger | packed `Fusion.Realtime.dll`의 AssemblyRef에 `Photon3Unity3D`. 로컬 Photon DLL에 `Photon.SocketServer.Numeric.BigInteger` 및 `DiffieHellmanCryptoProvider` 타입 확인 | [Photon 공식 .NET OSS PDF](https://doc.photonengine.com/docs/content/oss-.net_client_sdks.pdf) 2쪽의 Authors, 2003 Ben Maurer·2002 Chew Keong TAN·2004/2007 Novell 저작권, MIT 허가·면책 전문. PDF 레이아웃 공백만 정리하며 문구를 생략하지 않음 |
+| Photon .NET Client SDK — ZigZag Encoding | 같은 로컬 DLL의 `Protocol18.EncodeZigZag32/64`·`DecodeZigZag32/64` 메서드 확인 | 같은 공급자 PDF 2쪽의 Apache 2.0 선언에 따라 [Apache 공식 전문](https://www.apache.org/licenses/LICENSE-2.0.txt)을 제공. 공급자 PDF의 레이아웃과 공식 전문의 바이트가 같다는 주장은 하지 않으며, GPGS Google 저작권을 이 구성요소에 적용하지 않음 |
+
+설치된 `Fusion.Common`·`Fusion.Realtime`·`Fusion.Runtime`의 실제 DLL ProductVersion은 `2.0.13.2379+4f8b2d70`, `Photon3Unity3D.dll`은 `4.1.8.21+be37a12aeee85c41f8b2eb28c44cfff8b29e5668`입니다. 이는 로컬 DLL 식별값이며 공식 OSS PDF가 해당 버전만을 대상으로 한 BOM이라는 증거는 아닙니다. Photon SDK 본체의 상용 라이선스 또는 계정·플랜 권리를 OSS 고지로 대체하지 않습니다.
+
+포함 근거는 기존 검증 APK SHA256 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`에 연결된 source paths 2,889개의 BuildReport 스냅샷입니다. `PhotonLibs` 경로가 그 목록에 없다는 사실만으로 Photon DLL이 불포함이라고 단정하지 않습니다. 어셈블리 참조와 내부 타입 존재도 최종 IL2CPP에서 개별 타입·메서드가 생존했다는 확증은 아닙니다. 이후 새 APK에는 해당 APK의 포함 근거를 다시 연결해야 합니다.
+
+정확한 버전별 공급자 BOM, 조건부 Fusion·셰이더·WebSocket 구성요소, Unity Player/Burst·네이티브 라이브러리 및 Android 전이 의존성, EmojiOne artwork 조건은 여전히 후속 확인 대상입니다. 이번 5개 추가는 전체 SDK·에셋의 권리 검증 완료 또는 #42 종료를 의미하지 않으며, 61개 섹션 합본을 적용하지 않습니다.
+
+원문 사본·SHA256·공백 정리 검증·추가 섹션별 byte offset 및 보존 비교는 외부 작업 기록 `D:\meee\git\sudden-force-fps-backups\20261008-unity-photon-notices-prepare\`에 있습니다. 조건부 항목과 EmojiOne 제외 검토는 `20261008-sdk-runtime-scope\REPORT.txt` 및 `EMOJIONE_EXCLUSION_REVIEW.txt`에 보존합니다.
+
+### Google Play services 공급자 OSS 고지 및 Android 버전 메타데이터 (2026-10-08)
+
+아래 6개 버전의 vendor properties가 `6a8b203` 기준 `SuddenForceFPS.UploadKeyValidation.apk`에 실제 들어 있는 것을 확인했습니다. APK의 groupId/artifactId 필드는 미존재이며, entry 이름과 `version` 값으로 식별합니다. 생성된 `launcher-debug.apk`와 외부 검증 APK의 SHA-256이 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`으로 같아 두 APK의 바이트 동일성을 확인했습니다. output metadata는 `debug`, versionCode `3`, versionName `1.0.0`, 패키지 `com.AeDeong.SuddenForceFPS`입니다. 이후 다른 소스·APK에 이 결과를 확대하지 않습니다.
+
+| 모듈 | 실제 APK properties의 version | 공식 공급자 OSS JSON 레코드 수 | 원문 배포본 |
+| --- | --- | --- | --- |
+| play-services-base | 18.5.0 | 16 | [Google Maven AAR](https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-base/18.5.0/play-services-base-18.5.0.aar) |
+| play-services-basement | 18.4.0 | 16 | [Google Maven AAR](https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/18.4.0/play-services-basement-18.4.0.aar) |
+| play-services-drive | 17.0.0 | 9 | [Google Maven AAR](https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-drive/17.0.0/play-services-drive-17.0.0.aar) |
+| play-services-games-v2 | 20.1.2 | 23 | [Google Maven AAR](https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-games-v2/20.1.2/play-services-games-v2-20.1.2.aar) |
+| play-services-nearby | 18.5.0 | 24 | [Google Maven AAR](https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-nearby/18.5.0/play-services-nearby-18.5.0.aar) |
+| play-services-tasks | 18.2.0 | 16 | [Google Maven AAR](https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-tasks/18.2.0/play-services-tasks-18.2.0.aar) |
+
+Google 공식 Maven에서 정확한 버전의 POM·AAR을 별도로 취득했으며, 6개 공식 AAR 각각의 SHA-256이 기존 로컬 캐시 AAR과 같습니다. 캐시 존재나 수정 시각만으로 포함을 판단하지 않았습니다. APK와 생성된 merged Java resources의 6개 properties entry/version도 일치합니다. manifest blame에서 지원 wrapper `2.0.0`과 base·basement·games-v2·nearby 좌표를 보조 확인했으나, 이전 시각의 incremental 파일이므로 이것만으로 전체 선택 그래프를 확정하지 않습니다.
+
+각 AAR의 `third_party_licenses.json`과 `.txt`에서 공급자 고지 원문을 확보했습니다. 총 104개 레코드의 바이트 offset/length를 검증하고, 33개 공급자 이름과 28개의 서로 다른 원문 본문을 앱 고지에 매핑합니다. 같은 본문 SHA만 중복 제거하며, 같은 이름의 다른 원문 및 원문 내부 서브고지는 보존합니다. 기존 폰트·파티클·Core5 및 Unity·Photon 고지는 유지합니다. 각 공급자 이름은 고지 메타데이터의 표기이며 개별 컴포넌트가 모두 최종 앱 클래스에 남아 있다는 뜻이 아닙니다. 원문에 없는 라이브러리 버전이나 SPDX 식별자를 추정해서 추가하지 않습니다.
+
+6개 POM은 모두 `Android Software Development Kit License`와 [Google SDK terms URL](https://developer.android.com/studio/terms.html)을 지정합니다. Unity용 GPGS wrapper의 Apache 2.0 조건은 해당 wrapper 고지이며 Google Play services 상용 SDK 전체의 라이선스로 확대하지 않습니다. 공급자 OSS 고지와 상용 SDK 약관을 구분하고, 현재 웹 약관이 각 SDK 배포 당시 snapshot과 같거나 권리 조건 전체를 충족했다고 주장하지 않습니다. [Google 공식 OSS 안내](https://developers.google.com/android/guides/opensource)는 POM 및 공급자 embedded OSS 고지의 수집·표시를 설명합니다.
+
+이번 근거는 6개 버전 메타데이터의 실제 출하, 공식·캐시 AAR 동일성, 공급자 고지 원문과 앱 고지 후보의 대응입니다. 완전한 Gradle resolved transitive closure, AndroidX 등 추가 의존성의 최종 선택과 고지, R8/DEX 클래스·메서드 생존, 각 기능의 런타임 사용, 상용 SDK 약관 권리 완료를 증명하지 않습니다. 선언된 POM 요청 버전을 최종 선택 버전으로 간주하지 않으며, #42 전체 검증 완료로 표시하지 않습니다.
+
+외부 증빙은 `D:\meee\git\sudden-force-fps-validation\20261008-android-transitive-readonly\`의 `bounded-shipped-metadata.json`, `official-pom-map.json`, `official-aar-oss-map.json`, `vendor-license-fragments.json`, `combined-apply-verification.json`에 보존했습니다. 제품에 적용하는 고지는 검토용 머리말 348 bytes를 제외한 Google 원문 블록 624,205 bytes와 기존·Unity·Photon 고지를 바이트 그대로 연결한 후보를 기준으로 합니다. 28개 본문 전체와 104개 source mapping의 대응 검증은 고지 텍스트의 보존 검사이며 전체 앱 라이선스 완료 검사가 아닙니다.
+
+### 고지 페이지 UI 검증 (2026-10-08)
+
+최종 고지 파일은 660,971 bytes이며 SHA256은 `7bc6cbcff09412812115ab699b4215a1336b4ef6587a314a7a2f47b36299df2e`입니다. 기존 22,019 bytes prefix와 추가 라이선스 전문을 보존하고, 검토용 Google 머리말만 앱 표시용 제목과 분리했습니다.
+
+`ThirdPartyNoticePager`는 원문 범위를 보존하며 현재 페이지의 문자열만 TMP에 전달합니다. 기본 한도는 4,096 UTF-16 단위/96 LF이며 실제 합본은 183페이지, 최대 4,092 단위였습니다. 폼피드 27개는 canonical 원문에 유지하고 표시에서는 페이지 구분자로 처리합니다. 페이지 source를 이어 붙인 UTF-8 bytes는 제품 파일과 정확히 같았습니다.
+
+Unity 6000.3.25f1의 Play=false 임시 prefab/deep font·atlas·material 복사본에서 실제 Button pointer/EventSystem 경로로 183페이지 순회와 역순 이동을 확인했습니다. 표시 코드포인트 172개의 TMP glyph 대조 불일치·글리프 경고 0, 공급자 고지 28개 시작의 viewport 접근, 마지막 문장·마침표 접근, 닫기·다시 열기·빠른 페이지 이동·focus/interactable 복원·빈/누락 고지 처리를 확인했습니다. 대표 native 화면 6개를 육안 확인했으며, 모든 28개 시작을 각각 육안 검토했다는 뜻은 아닙니다.
+
+이는 Editor UI 검증입니다. Android 물리 입력·기기 glyph·메뉴 성능이나 최종 AAB 포함 검증을 대신하지 않습니다. 임시 QA 객체를 정리했고 원본 폰트·아틀라스·기존 변경사항을 보존했습니다. 근거는 외부 `D:\meee\git\sudden-force-fps-backups\20261008-notices-full-ui-qa\HANDOFF.md` 및 같은 폴더의 source-byte-proof/glyph-and-mapping/vendor-header-access/last-bottom-access/post-qa-preservation JSON과 PNG에 있습니다. #42 전체 완료는 아닙니다.
