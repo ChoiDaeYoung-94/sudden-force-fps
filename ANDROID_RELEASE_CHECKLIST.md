@@ -1,5 +1,24 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Android 로컬 사망·리스폰·단일 터치 재개 (#41, 2026-10-08)
+
+Editor 검증 HEAD `a8ce685`, 기존 설치 APK 제품 소스 `6a8b203`을 구분했습니다. APK 재빌드·재서명·설치 갱신 없이 실제 공개방 SFLocalDeath1008-01에서 EditorHost→AndroidClient Join/READY/START, 제품 duration300/target20의 경기 한 번만 진행했습니다. Editor의 실제 OS 키보드·마우스와 Android adb 단일 포인터 입력을 사용했으며 pose·aim·HP·타이머·전투 callback/state 주입은 없습니다. 첫 세 번의 사격 시도는 벽 충돌면에 막혀 사망 검증에서 제외했고, 실제 이동으로 우회한 뒤 명중했습니다. Editor UI/고지 변경을 기존 APK 검증 결과로 확대하지 않습니다.
+
+| 항목 | 결과와 정확한 범위 |
+| --- | --- |
+| Android 자신의 피격·사망 UI | PASS. Editor 실제 FIRE의 Head100/kill→모바일 HP0/dead/Death1/DeathSequence1, Editor K1/RedScore1/Feed1. Android 화면 YOU DIED/RESPAWN IN 3s→2s/CONTROLS RETURN AFTER RESPAWN와 HEAD 킬 피드를 캡처했습니다. 이전 Android 발사→Editor 상대 사망과 별개입니다. |
+| 사망 중 FIRE | PASS(단일 입력 범위). 확실히 dead인 구간의 실제250ms FIRE 전후 모바일 Ammo30/ShotSequence12 불변. HP0/RespawnRemaining2.75→1.75와 관측을 연결했습니다. 내부 Android input gate 값 직접 관측이나 모든 입력 경로 차단 통과를 뜻하지 않습니다. |
+| 자연 리스폰 | PASS. 같은 PC 시계의 첫 dead→첫 alive 관측3.017초/observer50ms cadence. Android HP100/Ammo30/alive/RespawnVersion1 및 overlay 해제 화면. Death1/DeathSequence1은 누적 유지, ShotSequence12도 유지됐으며 Shot0 초기화를 주장하지 않습니다. 사망 직전 Ammo30이므로 소모된 탄약의 리스폰 초기화까지 입증한 것은 아닙니다. |
+| 리스폰 후 이동·look·FIRE | PASS(실제 단일 제스처). Android 위치(5.625,0,13.500)→(4.475,0.030,13.496), yaw180→183.380814, Ammo30→29/ShotSequence12→13을 Running 관측과 연결했습니다. 이후 실제300초 종료 RedWin/TimeExpired/1:0을 확인했습니다. |
+| 제외·미실행 | 리스폰 후 RELOAD는 경기 종료 경계와 겹쳐 EXCLUDED/NOT RUN입니다. 이전 일반 재장전2.011초 PASS로 이번 재개 검사를 대체하지 않습니다. 사망 중 move/look/reload gate는 NOT RUN, 물리 동시 멀티터치는 기존 사용자 질문 답변 대기/NOT RUN입니다. 추가 방·재시험 없이 종료했습니다. |
+| 정리·보존 | observer 정확 제거/수집 루프 없음/실제 키·마우스 해제. Editor Win64/Play·pause·compile·import·build false/빈 clean 씬/Runner·manager·input0/match null/versionCode2. Android 실제 로비 EXIT→OK 후 재개 시 read-only pidof로 실행 프로세스 없음을 확인, 설치·데이터 유지. 콘솔을 지우지 않았고 cleanup Android 화면의 warning0/error0은 해당 화면 범위이며 전체 QA Console 오류0 주장이 아닙니다. foreground guard 거절·벽에 막힌 사격·외부 도구 인자 오류는 성공 근거에서 제외했습니다. |
+
+새 baseline은 **3923개**입니다. QA로 변경된 동적 폰트와 maximize layout만 시작 bytes로 복원했으며, 중지 전과 재개 후 문서 편집 전 비교 모두 변화·추가·백업 해시 실패0/기존 git status·dirty patch 동일입니다. 기존 여섯 dirty 및 폰트 meta·설정·키는 보존했습니다. 이후 승인된 검증 문서3개만 별도 편집합니다.
+
+근거: `D:\meee\git\sudden-force-fps-backups\20261008-android-local-respawn-01\qa-summary.md`, 같은 폴더 `combat-summary.json`, `combat-observations.jsonl`, `death-04-before-input.png/json`, `death-04-after-input.png/json`, `death-04-after-respawn.png/json`, `post-respawn-inputs.json/png`, `observer-cleanup.json`, `cleanup-resumed-final.json`, `android-cleanup.json`, `preservation-final.json`, `preservation-resumed-before-docs.json`. 공개 문서에는 기기 serial·계정 정보·PID 숫자를 넣지 않습니다.
+
+전체 진행은 **약78% 추정(시간 비율 아님)**을 유지합니다. 60 FPS 목표·저사양30 FPS 허용 기준과 이전 누적623.552초 SF 측정은 그대로이며 이번에는 성능을 재측정하지 않았습니다. 남은 항목은 사망 중 기타 입력 gate·리스폰 후 RELOAD, 물리 멀티터치, AndroidClient peerTimeout 대체 경로, 실제 Android16/16KB·저사양, 전체 라이선스·고지, 서명 AAB/Play 배포·테스터 설치입니다. 아래 이전 기록의 미실행 표시는 당시 범위입니다.
+
 ### 모바일 전투·누적 10분 화면 표시 성능 (#41, 2026-10-08)
 
 사용자 성능 기준은 **60 FPS 목표·저사양30 FPS 허용**입니다. 이번 SM-N986N 측정과 저사양 실기기 미실행 범위를 구분합니다.
