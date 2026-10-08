@@ -1,8 +1,27 @@
 # Sudden Force FPS 멀티플레이 검증 계획
 
+### 실제 Android–Editor 두 피어 검증 (2026-10-08)
+
+제품 소스 `55024a5`, QA HEAD `420ee00`(그 사이 문서 변경만), 기존 업로드 키 서명 APK 사용. SM-N986N/Android13/API33, ClientServer/kr/공개방2명/DesertHouse, 제품 경기 시간300초·목표20점 그대로 실행했습니다. HP·점수·타이머·pose 주입이나 강제 콜백을 성공 근거로 사용하지 않았습니다.
+
+| 항목 | 결과 | 실제 관측과 한계 |
+| --- | --- | --- |
+| M01 설치·로비 | PASS | 서명 검증 APK 설치·Activity 실행 후 실제 Android 로그인 경로에서 Photon kr 로비/목록0 도착. 로그인 코드는 인증 상태 또는 성공 응답에서만 진입하지만 SDK 인증 boolean 자체를 별도 조회하지 않았습니다. 계정 선택 창이나 계정 정보는 조작·기록하지 않았습니다. |
+| M02 공개방·경기 | PASS | EditorHost 방을 Android 실제 목록에서 선택, 반대 팀/READY/START로 Running2명. 양쪽 HP100/Ammo30/KD0/점수0, 실제 모바일 HUD 확인. |
+| M03 모바일 단일 입력 | PASS(제한) | adb 단일 터치 제스처의 이동·시점이 Editor에 복제, FIRE Ammo29/ShotSequence1, RELOAD IsReloading→Ammo30, roster2명 표시. 물리적인 동시 멀티터치 통과 근거는 아닙니다. |
+| M04 경기 종료·다음 방 | PASS | 실제 300초 경과 후 Draw/TimeExpired/0:0/ResultVersion1, Android 결과 화면과 실제 RETURN 버튼. 양쪽 fresh Lobby 후 다음 방에서 HP100/Ammo30/KD·shot/hit/death/respawn·score/feed/result0 초기화 확인. |
+| M05 EditorHost 종료 | PASS | 실제 Play 종료 후 Android는 재실행 없이 같은 프로세스로 fresh Lobby 자동 복귀. SDK Code104 등 예상 연결 종료 오류 로그는 보존하며 전체 오류0으로 주장하지 않습니다. |
+| M06 AndroidHost 생성 | PASS | 실제 방 이름·맵·Confirm UI로 생성, Editor 발견/Join/READY, Android START 후 Editor server=false/Running2명 확인. 키보드 닫힘 직후 첫 맵 터치는 선택되지 않아 화면 재관측 후 다시 선택했습니다. |
+| M07 AndroidHost 프로세스 소실 | FAIL | 허용된 검증 앱만 adb force-stop, 프로세스 소멸 확인. 1분 이상 Editor DesertHouse/sessionGame 유지, LobbyDisconnected/LastLobbyError Timeout, old manager -40286/Runner -40288 생존, remaining274.65625 고정. IsRunning=true/_shutdownObserved=false/_disconnectShutdownPending=true. OnDisconnectedFromServer 이후 OnShutdown 관측 없이 복귀 미시작. 강제 콜백·수동 복귀를 PASS로 세지 않았습니다. |
+| M08 고지·정리 | PASS(범위) | Android 고지 열기/닫기 및 Liberation Sans OFL 표시. Editor Play 종료/Win64/빈 clean 씬/Runner0/autotickfalse, 관측 delegate 해제. baseline3930 변경·추가·해시 실패0 및 기존 dirty patch 동일. 앱 설치·데이터는 유지하고 force-stopped 상태입니다. |
+
+근거: `D:\meee\git\sudden-force-fps-backups\20261008-mobile2peer-01\qa-result.md`, 같은 폴더의 `androidhost-observations.ndjson`, `androidhost-failure-details.json`, `preservation-final.json` 및 실제 화면 캡처.
+
+정상 Android 게임 종료는 Back 입력에도 종료 UI가 없어서 NOT RUN입니다. 실제 상대 피해·죽음·킬피드·리스폰, 물리 동시 멀티터치, 10분 성능/메모리, 실제 Android16/16KB 기기 실행은 미검증으로 유지합니다. UI 저장 닉네임의 마지막 U+200B도 후속 항목입니다.
+
 ## 현재 검증 상태와 후속 단계
 
-**최신 종료 복귀 상태: persistent 매니저 수정 후 새 빌드에서 양방향 호스트 종료→클라이언트 자동 로비 복귀와 다음 방 재접속을 통과했습니다. 문서 끝의 P01–P06을 기준으로 하며, 아래 N01–N08 실패 기록은 수정 전 결과로 보존합니다.**
+**최신 상태(2026-10-08): PC 양방향 종료 복귀 P01–P06은 통과했지만, 실제 AndroidHost 강제 종료→EditorClient 복귀는 M07에서 실패했습니다. 아래 M01–M08을 최신 모바일 기준으로 확인합니다. 기존 PC 통과와 이전 실패 기록은 당시 결과로 보존합니다.**
 
 **현재 상태: C5 새 빌드의 실제 두피어 경기에서 20킬 TargetScore 종료, 실제300초 높은 점수 승리·Draw, 상대 정상 종료의 OpponentLeft 및 퇴장자 KD/이름 보존을 확인했습니다. 양쪽 결과·Finished 상태 고정·정상 로비 복귀·new Runner 초기화와 PC 짧은 Tab 입력을 아래 범위에서 검증했습니다. 런타임 pose/baseaim 보조와 사용자 추가 입력을 명시하고 순수 계산/아트 상태 주입 진단과 구분합니다. 제품 파일은 원상 복원했으며 문서만 변경합니다. Waiting blocked/취소·동tick 경합·진행중 reload 종료·실제held 입력·3peer/권한위조·Android·저FPS/재시뮬레이션 등은 미검증으로 유지합니다. C1–C4의 아래 기록과 미검증 항목은 각 당시 실행 범위입니다.**
 
