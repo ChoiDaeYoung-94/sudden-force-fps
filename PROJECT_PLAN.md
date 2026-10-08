@@ -1,8 +1,12 @@
 # Sudden Force FPS 완성 계획
 
-2026년 10월 7일 기준입니다. 핵심 목표는 Photon Fusion으로 기본 FPS 전투와 팀전 경기 전체를 구현하고, Android에서 두 명 이상이 한 판을 끝내고 로비로 돌아오는 버전을 Google Play 테스트 트랙에 배포하는 것입니다. 기존 DesertHouse와 캐릭터를 활용합니다. 광고와 인앱 결제는 프로젝트에서 제거합니다. 실기기 검증용 APK와 테스트 배포용 AAB, 빌드·조작 안내, Fusion 구현 설명 및 검증 결과를 전달합니다. 스킬·장비 확장은 기본 경기와 테스트 배포 완료 후 별도 범위로 다룹니다.
+2026년 10월 8일 기준입니다. 핵심 목표는 Photon Fusion으로 기본 FPS 전투와 팀전 경기 전체를 구현하고, Android에서 두 명 이상이 한 판을 끝내고 로비로 돌아오는 버전을 Google Play 테스트 트랙에 배포하는 것입니다. 기존 DesertHouse와 캐릭터를 활용합니다. 광고와 인앱 결제는 프로젝트에서 제거합니다. 실기기 검증용 APK와 테스트 배포용 AAB, 빌드·조작 안내, Fusion 구현 설명 및 검증 결과를 전달합니다. 스킬·장비 확장은 기본 경기와 테스트 배포 완료 후 별도 범위로 다룹니다.
 
 ## 현재 기준 상태
+
+최신 추가 검증: Editor0967351/기존 APK6a8b203에서 사망 중 move/look/reload 각 단일 입력 전후 Running·dead 상태와 관련 값 불변, 리스폰 후 실제 탄약 소모·재장전 시작부터 완료까지 Running 관측을 확인했습니다. 사망 시 Ammo27→자연 리스폰30 복구도 관찰했습니다. Android 내부 gate·물리 동시 입력 검증으로 확대하지 않으며 제외 시도와 저장 간격의 한계를 기록했습니다. 정상 종료 및 baseline3923/기존6개 dirty 보존, 독립 검토 PASS. 상세는 MULTIPLAYER_TEST_PLAN.md 상단을 따릅니다. AndroidX 고지와 추가 페이지 UI 검증은 PR #59로 반영했습니다. 전체 진행은 약78% 작업 기준 추정을 유지하며, 물리 멀티터치·AndroidClient peerTimeout·실제16KB/저사양·남은 출처 정리·서명 AAB·Play 테스트 설치가 남아 있습니다.
+
+아래는 이전 검증 시점의 기록입니다.
 
 추가 검증(2026-10-08): Editor HEADa8ce685/기존 APK6a8b203에서 실제 Editor 사격→Android 자신의 Head100 사망·YOU DIED3/2 카운트다운·같은 PC의 최초 dead→최초 alive 저장값 간격3.017초인 자연 리스폰(최소50ms polling·상태 변화/1초 heartbeat 저장, 실제 저장 gap50ms·지연 정밀도 보장 아님) HP100/Ammo30/overlay 해제를 확인했습니다. 확실히 dead인 구간 FIRE의 Ammo/Shot 불변과 리스폰 후 단일 터치 move/look/FIRE의 입력 결과를 확인했습니다. 이동 시작은 Running에서, 최종 이동·yaw·발사 변화는 첫 Finished 스냅샷에서 포착한 관측 제한을 유지합니다. 사망 중 move/look/reload gate는 미실행, 리스폰 후 RELOAD는 경기 종료 경계와 겹쳐 제외/미실행입니다. 물리 멀티터치는 기존 답변 대기이며 전체78% 추정을 유지합니다. 새 baseline3923/원래dirty 정확 보존 후 정리했고 상세 근거는 MULTIPLAYER_TEST_PLAN.md 상단을 따릅니다.
 
