@@ -1,5 +1,25 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Android 사망 중 이동·시점·재장전 및 리스폰 후 재장전 (#41, 2026-10-08)
+
+Editor HEAD `0967351`과 기존 설치 APK 제품 소스 `6a8b203`을 구분해 한 공개방의 duration300/target20 정상 경기에서 검증했습니다. 실제 Editor OS 이동·조준·사격과 Android adb 단일 포인터 입력을 사용했고 전투 상태·타이머·callback을 주입하지 않았습니다. 아래 상태는 EditorHost에서 읽은 Android 참가자의 권한 있는 네트워크 상태이며 Android 내부 입력 gate의 직접 계측은 아닙니다.
+
+| 항목 | 관찰 결과와 범위 |
+| --- | --- |
+| 사망 중 이동 | PASS(단일 입력 전후). before/after 모두 Running·HP0·IsDead=true, 실제350ms 조이스틱 입력 전후 위치 동일. RespawnRemaining2.859375→2.3125. |
+| 사망 중 시점 | PASS(단일 입력 전후). before/after 모두 Running·HP0·IsDead=true, 실제 시점 입력 전후 yaw180/pitch0 동일. RespawnRemaining2.859375→2.25. |
+| 사망 중 재장전 | PASS(단일 입력 전후). before/after 모두 Running·HP0·IsDead=true, 실제250ms RELOAD 입력 전후 Ammo27/Shot6/IsReloading=false/ReloadRemaining0 유지. |
+| 리스폰 후 재장전 | PASS. 실제 FIRE 후 Ammo30→28 관찰, RELOAD 첫 관측에서는 마지막 발까지 반영된 Ammo27/Shot3/IsReloading=true/remaining1.8125. 이후 remaining0/Ammo30/IsReloading=false 완료까지 8개 관찰 모두 Running·alive였으며 Shot3 유지. 종료 경계와 겹치지 않았습니다. |
+| 소모 탄약의 자연 리스폰 복구 | PASS(마지막 사망 사례). 사망 Ammo27/Shot6에서 자연 리스폰 HP100/Ammo30/RespawnVersion4, Shot6은 유지됐습니다. |
+
+첫 이동 시도는 사망 화면 캡처 지연 때문에 입력이 부활 후 도달했으므로 제외했습니다. 사망하지 않은 이동 시도도 제외했습니다. 실제 입력 로그와 원자료는 유지했으며 모든 시뮬레이션 tick에서 입력이 없었음, Android 내부 gate callback 실행 또는 물리적 멀티터치 통과로 확대하지 않습니다.
+
+최초 reloading 저장→최초 완료 저장 약1.852초는 첫 저장 때 이미1.8125초가 남아 있던 관측 구간이며 정확한 전체 재장전 시간 측정이 아닙니다. post-reload pcEpoch는 eval 요청 직전 시각으로 취득 완료 시각이 아닙니다. observer는 최소50ms polling 후 상태 변화 또는1초 heartbeat 때 저장하며 저장 간격50ms나 지연 정밀도를 보장하지 않습니다.
+
+정상 메뉴 LEAVE 및 로비 EXIT/OK 후 Android 실행 프로세스 없음·설치 데이터 유지, Editor Win64/Play·pause·compile·import·build false/빈 clean 씬/Runner·manager·input0/match null/observer 제거/code2를 확인했습니다. QA로 변경한 font와 maximize layout만 baseline bytes로 복원한 뒤 3923파일 변화·추가·백업 해시 실패0, 기존6개 dirty와 patch 동일입니다. 최종 콘솔의 현재 groundTruth error0/warning0와 누적 수집 카운터 error7/warn4는 구분하며 전체 검증 중 오류0을 주장하지 않습니다.
+
+근거는 외부 `D:\meee\git\sudden-force-fps-backups\20261008-android-dead-input-reload-01\qa-summary.md`, move/look/reload-check.json, post-respawn-reload.json, combat-observations.jsonl, actual-inputs.jsonl, preservation-final.json, cleanup-final.json, android-exit.json, console-status-final.json 및 PNG입니다. 독립 검토에서 원자료와 화면·제외 범위를 대조했습니다. 제품·APK·서명은 변경하지 않았습니다. 물리 멀티터치·최신 AndroidClient peerTimeout 대체 경로·저사양/실제16KB 기기·최종 고지 포함·AAB/Play 테스트 설치가 남아 #41은 유지합니다. 아래 기록은 각 이전 검증 시점의 범위입니다.
+
 ### Android 로컬 사망·리스폰·단일 터치 재개 (#41, 2026-10-08)
 
 Editor 검증 HEAD `a8ce685`, 기존 설치 APK 제품 소스 `6a8b203`을 구분했습니다. APK 재빌드·재서명·설치 갱신 없이 실제 공개방 SFLocalDeath1008-01에서 EditorHost→AndroidClient Join/READY/START, 제품 duration300/target20의 경기 한 번만 진행했습니다. Editor의 실제 OS 키보드·마우스와 Android adb 단일 포인터 입력을 사용했으며 pose·aim·HP·타이머·전투 callback/state 주입은 없습니다. 첫 세 번의 사격 시도는 벽 충돌면에 막혀 사망 검증에서 제외했고, 실제 이동으로 우회한 뒤 명중했습니다. Editor UI/고지 변경을 기존 APK 검증 결과로 확대하지 않습니다.
