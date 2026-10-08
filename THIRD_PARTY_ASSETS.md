@@ -78,8 +78,33 @@
 | Kenney 텍스처·직접 합성 효과음 2개 | 문서와 실제 파일 일치. C3 전투 프리팹 연결 확인 |
 | Military 캐릭터·플레이어 애니메이션 22개·무기·기존 HUD 이미지 7개·Loading Icons | 취득 당시 출처와 조건이 현재 파일에서 확인되지 않음. 기존 취득 자료나 제작자 정보를 추가 대조 |
 | Liberation Sans | 동봉 OFL 파일 확인. 배포 앱에 필요한 고지를 포함하는 경로 확인 필요 |
-| EmojiOne 샘플 | Resources 포함 후보. 정확한 버전과 해당 고지 확인 또는 미사용 샘플 제외 검토 |
+| EmojiOne 샘플 | 최신 Android BuildReport에서 EmojiOne.asset·EmojiOne.png 실제 포함 확인. 정확한 artwork 버전·라이선스·앱 attribution은 미확정이며 별도 조건 복원 대상. 이번 SDK 고지 변경에서 제거·교체하지 않음 |
 | 기존 오디오 61개 | 정적 참조 0, Resources 밖. 실제 빌드 포함 여부를 확인하고 사용 에셋과 분리 |
 | SimplePixelUI Font2 | 현재 미참조 후보. 동봉 OFL과 TTF 내부 표기 불일치가 있어 사용 전에 출처 조건 확인 |
 
 출처가 미확인이라는 사실을 배포 불가 확정으로 해석하지 않습니다. 취득 조건을 확인한 에셋은 유지하며, 확인되지 않는 배포 포함 항목의 대응은 실제 포함 목록과 이식 영향을 검토한 뒤 결정합니다.
+
+## SDK 고지 및 최신 Android 빌드 포함 확인 (2026-10-08)
+
+앱의 `Assets/Legal/ThirdPartyNotices.txt`에 아래 5개 SDK의 원문 고지를 제공합니다. 기존 폰트·파티클 고지를 보존하며, 이 추가가 모든 SDK와 에셋의 배포 고지 검증 완료를 의미하지는 않습니다.
+
+| SDK | 식별·사용 근거 | 고지 원문 출처 |
+| --- | --- | --- |
+| UniRx | `UpdateManager`의 `EveryUpdate` 사용. 정확한 전체 패키지 버전은 미확정이므로 버전 번호를 표시하지 않음 | [공식 MIT 원문](https://github.com/neuecc/UniRx/blob/7.1.0/LICENSE). 이 태그의 `Observable.cs`와 로컬 파일 텍스트 일치만 확인했으며 전체 패키지 버전의 증거로 취급하지 않음 |
+| UniTask 2.5.10 | 로컬 `package.json` 및 씬 전환·로그인 코드 사용 | [2.5.10 MIT 원문](https://github.com/Cysharp/UniTask/blob/2.5.10/LICENSE) |
+| Google Play Games plugin for Unity 2.0.0 | 로컬 package·PluginVersion 및 Android 로그인 코드 사용 | [v2.0.0 copyright 및 Apache 2.0 전문](https://github.com/playgameservices/play-games-plugin-for-unity/blob/v2.0.0/LICENSE) |
+| In-game Debug Console 1.6.8 | 로컬 README, Login 씬의 prefab 참조, 최신 BuildReport의 관련 source paths 29개 확인 | [v1.6.8 MIT 원문](https://github.com/yasirkula/UnityIngameDebugConsole/blob/v1.6.8/LICENSE.txt) |
+| NanoSockets | APK의 ARM64·ARMv7 `libnanosockets.so` 확인. 각 uncompressed entry SHA256가 로컬 Fusion 번들 라이브러리와 동일 | 로컬 `Assets/Photon/Fusion/Plugins/NanoSockets/libnanosockets_LICENSE.txt`의 Stanislav Denisov copyright 및 MIT 전문 |
+
+UniRx에 포함된 Microsoft 차용 코드의 `Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.` 문구도 앱 고지에서 원문대로 보존합니다. 해당 source header의 원문은 `See License.txt in the project root for license information.`까지이며 저장소의 해당 코드 파일에 남아 있습니다. 로컬에서 그 `License.txt`는 확인하지 못했습니다. 공식 UniRx README는 Rx.NET·mono 코드 차용을 설명하므로, 원본 시대별 라이선스와 저작권 범위가 모두 해소됐다고 판단하지 않습니다.
+
+### 실제 포함 증거 및 남은 범위
+
+- 대조 APK: `SuddenForceFPS.UploadKeyValidation.apk`, 238,310,918 bytes, SHA256 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`.
+- 해당 검증 폴더의 `packed-assets.json`은 Unity `BuildReport.GetLatestReport().packedAssets.contents.sourceAssetPath`를 모은 목록으로, source paths 2,889개를 기록합니다. 이는 최종 IL2CPP 타입·메서드 단위 사용 여부나 모든 전이 의존성의 권리 조건을 증명하는 자료는 아닙니다.
+- `apk-native-inspection.json`은 native `.so` 14개를 기록합니다. ARM64의 7개는 `libc++_shared.so`, `libmain.so`, `libnanosockets.so`, `libswappywrapper.so`, `libunity.so`, `lib_burst_generated.so`, `libil2cpp.so`입니다. 이름과 포함 사실만으로 각 라이브러리 내부 OSS 목록이나 라이선스 전체를 확정하지 않습니다.
+- EmojiOne의 `Assets/ThirdPartyAssets/TextMesh Pro/Resources/Sprite Assets/EmojiOne.asset` 및 `Assets/ThirdPartyAssets/TextMesh Pro/Sprites/EmojiOne.png`가 실제 packed source 목록에 있습니다. 이전 문서의 'Resources 포함 후보'에서 실제 포함 확인으로 갱신합니다. 동봉 Attribution 파일은 제작자 사이트 안내만 제공하므로 정확한 artwork 버전·라이선스·앱 attribution은 여전히 미확정입니다. 화면에서 emoji를 직접 사용하지 않는다는 이유로 미포함 처리하지 않으며, 이번 변경에서 제거·교체하거나 특정 버전의 조건을 임의 적용하지 않습니다.
+- Fusion 실제 DLL/build 정보는 `2.0.13.2379`이며 `package.json`의 `1.1.0` 표기와 구분합니다. 공식 Photon OSS 문서의 runtime 내장 라이브러리, codegen 도구, 번들 폰트 범위를 별도로 대조해야 합니다. 별도 KCC 애드온은 발견되지 않았고 현재 게임은 Fusion 기본 `NetworkCharacterController`를 사용합니다.
+- Unity 패키지 및 Google Play services의 최종 전이 의존성·고지, EmojiOne 조건 복원, UniRx 차용 코드의 원 권리 범위는 #42 후속 확인 대상입니다. 61-section SDK 합본을 전부 앱에 적용하지 않습니다.
+
+근거와 원문 SHA256는 외부 작업 기록 `D:\meee\git\sudden-force-fps-backups\20261008-sdk-notices-audit\` 및 `20261008-sdk-notices-prepare\`에 보존했습니다. 고지 텍스트 제공과 실제 포함 권리 범위 확인을 구분하며 #42는 후속 확인이 끝나기 전 닫지 않습니다.
