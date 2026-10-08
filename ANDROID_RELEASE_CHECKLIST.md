@@ -2,6 +2,8 @@
 
 ## 실제 기기 설치·모바일 두 피어 결과 (2026-10-08)
 
+수정 후 최신 결과: `257d30e` EditorClient와 기존 AndroidHost APK의 실제 강제 종료 재시험에서 약11.20초 후 새 Runner 하나·LobbyConnected 복귀, 같은 Editor 실행의 다음 공개방 참가·두 피어 경기 초기화까지 통과했습니다. 아래 Timeout 실패는 수정 전 기록입니다. 근거 `D:\meee\git\sudden-force-fps-backups\20261008-fixed-peer-timeout-01\result.json`. 재시험 baseline3931 파일 변경·추가·해시 실패0/기존 dirty 동일, Editor 정리 완료. 기존 APK 유지이므로 수정 AndroidClient의 새 빌드 검증은 남아 있으며 정상 퇴장 메뉴도 후속 작업입니다.
+
 제품 `55024a5`의 기존 업로드 키 서명 APK를 SM-N986N/Android13/API33에 설치했습니다. 실제 로그인 경로를 통해 Photon kr 로비 도착, Editor와 공개방 Join/READY/START, 이동·시점·사격·재장전의 단일 adb 터치와 복제, 실제300초 Draw/TimeExpired 및 결과 RETURN→새 로비→다음 경기 초기화를 확인했습니다. PGS SDK 인증 boolean 자체나 계정 선택 창을 별도 검증한 것은 아니며 Play 설치본 인증과 구분합니다.
 
 EditorHost 종료→Android 같은 프로세스 자동 복귀는 통과했습니다. AndroidHost 검증 앱만 force-stop한 반대 방향에서는 Editor가 Timeout을 감지했지만 1분 이상 Game/기존 Runner에 남아 복귀에 실패했습니다. 이 연결 종료 실패는 배포 전 수정·재검증 대상입니다. 실제 Android 고지 UI도 열기/닫기를 확인했습니다.
@@ -12,7 +14,7 @@ EditorHost 종료→Android 같은 프로세스 자동 복귀는 통과했습니
 
 ## 최신 검증 상태 (2026-10-08)
 
-아래 초기 조사 기록의 현재값과 미실행 표시는 당시 시점의 기록입니다. 기존 업로드 키로 서명한 최신 APK를 실제 Android 13 기기에 설치하여 로그인 경로→Photon kr 로비, 두 피어 경기 및 실제 300초 경기 종료를 확인했습니다. AndroidHost 강제 종료 후 EditorClient가 게임 화면에 남는 실패가 발견되어 수정 중입니다. 문서 끝의 실기기 결과가 최신 기준이며, 서명된 AAB와 Google Play 테스트 트랙 업로드는 아직 완료하지 않았습니다.
+아래 초기 조사 기록의 현재값과 미실행 표시는 당시 시점의 기록입니다. 기존 업로드 키로 서명한 APK를 실제 Android13 기기에 설치하여 로그인 경로→Photon kr 로비, 두 피어 경기·실제300초 종료를 확인했습니다. AndroidHost 강제 종료 후 EditorClient 잔존 실패는 수정 Editor 재시험에서 해결을 확인했습니다. 문서 위의 수정 후 결과와 기존 실패 기록을 구분하며, 서명된 AAB와 Google Play 테스트 트랙 업로드는 아직 완료하지 않았습니다.
 
 로그인 복구 변경은 `Login.cs` 한 파일에 적용했습니다. 실제 Win64 Login→Lobby 진입과 Android 대상 컴파일을 통과했고, 타입 이름만 바꾼 외부 Android 분기에서 가짜 SDK 응답으로 실패·취소·수동 재시도·30초 시간 초과·중복/늦은 응답·화면 이탈을 검증했습니다. 최초 검증 보조 코드의 Start 순서와 고정 씬 이름 가정 오류는 보정 후 재검증하고 원본 결과도 보존했습니다.
 

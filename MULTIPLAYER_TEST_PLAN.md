@@ -2,6 +2,12 @@
 
 ### 실제 Android–Editor 두 피어 검증 (2026-10-08)
 
+**M07 수정 후 상태: PASS(수정 EditorClient 범위).** `257d30e`에서 peer 연결 끊김과 SDK 자동 종료를 구분해 복귀를 시작하도록 수정한 뒤, 기존 Android APK를 Host로 사용해 같은 force-stop을 실제 재시험했습니다. 아래 M07은 수정 전 실패 기록으로 보존합니다. 수정 AndroidClient APK 전체 회귀를 통과했다는 뜻은 아닙니다.
+
+최신 근거: `D:\meee\git\sudden-force-fps-backups\20261008-fixed-peer-timeout-01\result.json`. 종료04:05:42.152Z→복귀 시작04:05:52.142Z→Completed52.535Z→LobbyConnected53.349Z, 약11.20초. old manager -66122/Runner -66124 파괴, new -70034/-70036 한 개, generation1→2, 공유 Task 완료/오류 빈 값, automaticShutdown=false/ShutdownIssued=true 확인. 같은 Editor Play에서 Android 재실행·새 공개방 목록 Join/READY/START로 두 피어 Running을 재확인했고 HP100/Ammo30/KD·Shot/Hit/Death/Respawn·Score/Feed0/ResultNone·Version0으로 초기화됐습니다. `editor-fresh-lobby.png`, `recovery-transitions.json`, `next-game-reset.json`에 실제 근거를 보존했습니다. observer 해제/Editor Play 종료·Win64·빈 clean 씬·Runner0·autotickfalse, 검증 앱만 종료/데이터 유지. 재시험 baseline3931 변경·추가·해시 실패0/기존 dirty 동일. 초기에 로비 연결 완료 전 닉네임 조회의 외부 평가 오류1건은 시험에서 제외하고 전체 Console 오류0을 주장하지 않습니다.
+
+수정 단일 세션 검증 근거: `D:\meee\git\sudden-force-fps-validation\20261008-peer-timeout-01\HANDOFF.txt`. 컴파일 오류0, 정상 명시적 Return의 공유 Task·old Runner 파괴·새 Runner1·로비 연결 확인. synthetic peer callback은 두 프레임 경계 이후 종료→새 로비 연결을 확인했으며 실제 통신 끊김과 구분합니다. SDK Update 안에서 종료를 예약한 외부 fixture에서는 SDK 자체 종료에 합류하고 제품 fallback 요청이 없었음을 확인했습니다. 복귀 대기 중 Play 종료는 취소 상태/추가 종료 요청 없음(종료 순간 pending Task의 완료는 미확인), 프레임을 일시정지한 시험은 약30.05초에 Failed·안내 표시·새 Runner 생성 차단을 확인했습니다. 무효 외부 helper와 의도한 timeout/Pipeline 진단 오류도 보존하여 전체 Console 오류0으로 표현하지 않습니다. 비범위 tracked3895 해시 변화0, 기존 dirty 보존, Editor Win64/빈 clean 씬/Play 종료/자동 tick 중지로 반환했습니다.
+
 제품 소스 `55024a5`, QA HEAD `420ee00`(그 사이 문서 변경만), 기존 업로드 키 서명 APK 사용. SM-N986N/Android13/API33, ClientServer/kr/공개방2명/DesertHouse, 제품 경기 시간300초·목표20점 그대로 실행했습니다. HP·점수·타이머·pose 주입이나 강제 콜백을 성공 근거로 사용하지 않았습니다.
 
 | 항목 | 결과 | 실제 관측과 한계 |
@@ -21,7 +27,7 @@
 
 ## 현재 검증 상태와 후속 단계
 
-**최신 상태(2026-10-08): PC 양방향 종료 복귀 P01–P06은 통과했지만, 실제 AndroidHost 강제 종료→EditorClient 복귀는 M07에서 실패했습니다. 아래 M01–M08을 최신 모바일 기준으로 확인합니다. 기존 PC 통과와 이전 실패 기록은 당시 결과로 보존합니다.**
+**최신 상태(2026-10-08): PC 양방향 종료 복귀 P01–P06과 수정 EditorClient의 실제 AndroidHost 강제 종료 복귀·후속 재참가는 통과했습니다. M07 수정 전 실패 기록과 문서 위의 수정 후 실제 결과를 구분합니다. 기존 APK는 유지하여 수정 AndroidClient 전체 검증과 정상 퇴장 메뉴·실기기 전투/성능은 남아 있습니다.**
 
 **현재 상태: C5 새 빌드의 실제 두피어 경기에서 20킬 TargetScore 종료, 실제300초 높은 점수 승리·Draw, 상대 정상 종료의 OpponentLeft 및 퇴장자 KD/이름 보존을 확인했습니다. 양쪽 결과·Finished 상태 고정·정상 로비 복귀·new Runner 초기화와 PC 짧은 Tab 입력을 아래 범위에서 검증했습니다. 런타임 pose/baseaim 보조와 사용자 추가 입력을 명시하고 순수 계산/아트 상태 주입 진단과 구분합니다. 제품 파일은 원상 복원했으며 문서만 변경합니다. Waiting blocked/취소·동tick 경합·진행중 reload 종료·실제held 입력·3peer/권한위조·Android·저FPS/재시뮬레이션 등은 미검증으로 유지합니다. C1–C4의 아래 기록과 미검증 항목은 각 당시 실행 범위입니다.**
 
