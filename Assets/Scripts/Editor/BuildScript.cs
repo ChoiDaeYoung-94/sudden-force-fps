@@ -110,7 +110,8 @@ public static class BuildScript
                 target = BuildTarget.Android,
                 targetGroup = BuildTargetGroup.Android,
                 locationPathName = Path.Combine(OutputDirectory, version + "." + build + (appBundle ? ".aab" : ".apk")),
-                options = appBundle ? BuildOptions.CompressWithLz4HC : BuildOptions.CompressWithLz4 | BuildOptions.Development,
+                options = (appBundle ? BuildOptions.CompressWithLz4HC : BuildOptions.CompressWithLz4 | BuildOptions.Development)
+                    | BuildOptions.DetailedBuildReport,
                 // Adds only for this Player build; preserves all project defines such as DOTWEEN.
                 extraScriptingDefines = appBundle ? Array.Empty<string>() : new[] { "Debug" }
             };
