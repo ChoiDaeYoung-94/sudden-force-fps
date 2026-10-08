@@ -1,5 +1,13 @@
 # Sudden Force FPS 멀티플레이 검증 계획
 
+### 경기 메뉴·정상 퇴장 UI의 Editor 검증 (#40, 2026-10-08)
+
+제품 `281fbe2`: SafeArea MENU→RESUME/RETURN TO LOBBY→CANCEL/LEAVE MATCH 확인을 추가했습니다. PC Esc/Android Back 입력의 소유권은 MatchHud에 통합하고 기존 전투 입력 차단, shared Return, 결과·복귀 우선순위를 유지합니다. 실패로 완료된 Task를 성공으로 판단하지 않고 입력 차단과 재접속 안내를 유지합니다.
+
+Editor 실제 GameView Esc와 EventSystem raycast MENU/RETURN/LEAVE 클릭, CANCEL/RESUME pointer dispatch, 표시 fixture의 Finished 우선순위와 입력 neutral, 복구 Failed 상태 fixture를 검증했습니다. 단일 Editor의 live Lobby Runner에서 확인 클릭→Returning latch·동일 shared Task→새 Lobby 생성까지 완료했습니다. MatchSnapshot/로컬 입력 상태·Failed 상태는 외부 runtime fixture이며 실제 authoritative 두 피어 경기의 정상 퇴장이나 Android 시스템 Back 검증을 대신하지 않습니다. 이슈 #40은 열어 둡니다.
+
+근거: `D:\meee\git\sudden-force-fps-backups\20261008-match-menu-ui\HANDOFF.txt`, 같은 폴더의 `menu.png`, `confirm.png`, `input-open-qa.json`, `shared-return-qa.json`, `return-completion.json`. 최종 컴파일 실패=false/Console errors0은 마지막 clean check이며 평가 시행착오 로그를 정리한 뒤의 값입니다. 모든 QA 시도에 오류가 없었다는 뜻은 아닙니다. 기존 씬986 fileID 손실0/신규69, 기존 block 수정은 MatchHud 참조7개와 SafeArea 자식2개 추가뿐입니다. SceneTemplate 자동 migration은 시작 bytes로 복원했고, 제품4파일과 총괄 승인 문서 외의 원래 파일·dirty 변경은 보존했습니다. Editor Win64/Play 종료/빈 clean 씬/자동 tick 중지로 정리했습니다.
+
 ### 실제 Android–Editor 두 피어 검증 (2026-10-08)
 
 **M07 수정 후 상태: PASS(수정 EditorClient 범위).** `257d30e`에서 peer 연결 끊김과 SDK 자동 종료를 구분해 복귀를 시작하도록 수정한 뒤, 기존 Android APK를 Host로 사용해 같은 force-stop을 실제 재시험했습니다. 아래 M07은 수정 전 실패 기록으로 보존합니다. 수정 AndroidClient APK 전체 회귀를 통과했다는 뜻은 아닙니다.
