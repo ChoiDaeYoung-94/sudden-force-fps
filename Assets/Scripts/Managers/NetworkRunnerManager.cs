@@ -40,7 +40,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     private CancellationToken _connectionToken;
     private bool _applicationStopping;
     private bool _shutdownObserved;
-    private bool _disconnectShutdownPending;
+    private int _peerDisconnectFrame = -1;
     // These guards protect this Runner's operations. Lobby recovery has a
     // separate application lifetime owned by persistent AD.Managers.
     private bool HasLiveOwner => this != null && _instance == this && Application.isPlaying && !_applicationStopping;
@@ -538,7 +538,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.LogError($"[Network] Lobby recovery failed: {LastRoomError}");
             return _returnTask = Task.CompletedTask;
         }
-        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved || _disconnectShutdownPending);
+        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved, _peerDisconnectFrame);
         return _returnTask;
     }
 
@@ -665,7 +665,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (!IsRetired) _ = ReturnToLobbyAsync();
             else if (AD.Managers.Instance != null)
-                _ = AD.Managers.Instance.RecoverLobbyAsync(this, runner, automaticShutdown: true);
+                _ = AD.Managers.Instance.RecoverLobbyAsync(this, runner, automaticShutdown: true, peerDisconnectFrame: _peerDisconnectFrame);
         }
     }
 
@@ -673,7 +673,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
         if (!IsCurrentCallback(runner) || !CanConnect) return;
-        _disconnectShutdownPending = true;
+        // A simulation peer timeout does not itself initiate Runner shutdown.
+        _peerDisconnectFrame = Time.frameCount;
         LastLobbyError = reason.ToString();
         if (LobbyStatus != LobbyConnectionStatus.Connecting && LobbyStatus != LobbyConnectionStatus.Failed)
         {
@@ -682,8 +683,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         HasReceivedSessionList = false;
         _sessionList.Clear();
         NotifyLobbyStatusChanged();
-        // Fusion owns the disconnect shutdown. OnShutdown hands recovery to
-        // persistent Managers before the SDK destroys this Runner's GameObject.
+        // Status listeners may already have returned or stopped this session.
+        if (CanConnect && SessionPhase != NetworkSessionPhase.Lobby) _ = ReturnToLobbyAsync();
     }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }

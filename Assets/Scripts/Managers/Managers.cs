@@ -74,6 +74,8 @@ namespace AD
             public bool FailureMessageShown;
             public NetworkRunnerManager Replacement;
             public Task Task;
+            public int PeerDisconnectFrame = -1;
+            public readonly System.Diagnostics.Stopwatch ShutdownTimer = System.Diagnostics.Stopwatch.StartNew();
         }
 
         private void Awake()
@@ -153,7 +155,7 @@ namespace AD
             return true;
         }
 
-        internal Task RecoverLobbyAsync(NetworkRunnerManager owner, NetworkRunner runner, bool automaticShutdown)
+        internal Task RecoverLobbyAsync(NetworkRunnerManager owner, NetworkRunner runner, bool automaticShutdown, int peerDisconnectFrame = -1)
         {
             if (!HasApplicationLifetime || !ReferenceEquals(_registeredRunner, owner)) return Task.CompletedTask;
             if (_recovery != null)
@@ -163,13 +165,15 @@ namespace AD
                     // A callback before our first yield may reveal SDK-owned shutdown.
                     // A callback caused by our explicit Shutdown(false) must not change its mode.
                     if (automaticShutdown && !_recovery.ShutdownIssued) _recovery.AutomaticShutdown = true;
+                    if (_recovery.PeerDisconnectFrame < 0 && !_recovery.ShutdownIssued)
+                        _recovery.PeerDisconnectFrame = peerDisconnectFrame;
                     return _recovery.Task;
                 }
                 if (_recovery.Task != null && !_recovery.Task.IsCompleted) return Task.CompletedTask;
             }
             var context = new RecoveryContext {
                 Owner = owner, Runner = runner, Generation = _sessionGeneration,
-                AutomaticShutdown = automaticShutdown
+                AutomaticShutdown = automaticShutdown, PeerDisconnectFrame = peerDisconnectFrame
             };
             _recovery = context;
             LastRecoveryError = string.Empty;
@@ -201,8 +205,57 @@ namespace AD
                 if (context.Owner != null) context.Owner.PublishLobbyReturn();
                 if (!CanRecover(context)) return;
                 if (popup != null) popup.PopupLoading();
-                var deadline = System.Diagnostics.Stopwatch.StartNew();
-                if (context.Runner != null && !context.AutomaticShutdown)
+                if (!CanRecover(context)) return;
+                var deadline = context.ShutdownTimer;
+                if (context.PeerDisconnectFrame >= 0 && context.Runner != null
+                    && !context.AutomaticShutdown && !context.Runner.IsShutdown)
+                {
+                    SetRecoveryStage("WaitingForExplicitShutdown");
+                    // Fusion consumes deferred shutdown after Update/Render resets
+                    // its phase. Let the callback frame AND the next full frame finish.
+                    // This uses the running SDK loop, not its internal deferred flag.
+                    while ((long)Time.frameCount - context.PeerDisconnectFrame < 2)
+                    {
+                        if (!CanRecover(context)) return;
+                        if (deadline.Elapsed.TotalSeconds >= ShutdownTimeoutSeconds)
+                            throw new TimeoutException("Peer-disconnect frame boundary did not advance within 30 seconds.");
+                        await Task.Delay(16, _applicationToken);
+                    }
+                    if (!CanRecover(context)) return;
+                    if (context.Runner != null && deadline.Elapsed.TotalSeconds >= ShutdownTimeoutSeconds)
+                        throw new TimeoutException("Peer-disconnect shutdown budget expired before the frame boundary completed.");
+                }
+                // A listener or the completed SDK frame may have initiated shutdown.
+                if (context.Runner != null && context.Runner.IsShutdown && !context.ShutdownIssued)
+                    context.AutomaticShutdown = true;
+                if (context.Runner != null && !context.AutomaticShutdown && context.PeerDisconnectFrame >= 0)
+                {
+                    SetRecoveryStage("WaitingForSdkRunnerDestruction");
+                    if (!CanRecover(context)) return;
+                    Task shutdown = null;
+                    if (context.Runner != null)
+                    {
+                        context.Runner.ProvideInput = false;
+                        if (!context.AutomaticShutdown && !context.Runner.IsShutdown)
+                        {
+                            context.ShutdownIssued = true;
+                            shutdown = context.Runner.Shutdown(destroyGameObject: true);
+                            _ = ObserveShutdownAsync(shutdown);
+                            if (CanRecover(context)) Debug.Log("[Network] Closing disconnected peer Runner after the SDK frame boundary.");
+                        }
+                    }
+                    // A deferred Shutdown may return CompletedTask before cleanup.
+                    // SDK-owned GO destruction remains the completion boundary.
+                    while (context.Runner != null)
+                    {
+                        if (!CanRecover(context)) return;
+                        if (shutdown != null && (shutdown.IsFaulted || shutdown.IsCanceled)) await shutdown;
+                        if (deadline.Elapsed.TotalSeconds >= ShutdownTimeoutSeconds)
+                            throw new TimeoutException("Peer Runner shutdown did not destroy the old Runner within 30 seconds.");
+                        await Task.Delay(16, _applicationToken);
+                    }
+                }
+                else if (context.Runner != null && !context.AutomaticShutdown)
                 {
                     SetRecoveryStage("WaitingForExplicitShutdown");
                     context.Runner.ProvideInput = false;
