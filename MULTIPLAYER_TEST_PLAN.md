@@ -8,8 +8,8 @@ Editor 검증 HEAD `a8ce685`, 기존 설치 APK 제품 소스 `6a8b203`을 구�
 | --- | --- |
 | Android 자신의 피격·사망 UI | PASS. Editor 실제 FIRE의 Head100/kill→모바일 HP0/dead/Death1/DeathSequence1, Editor K1/RedScore1/Feed1. Android 화면 YOU DIED/RESPAWN IN 3s→2s/CONTROLS RETURN AFTER RESPAWN와 HEAD 킬 피드를 캡처했습니다. 이전 Android 발사→Editor 상대 사망과 별개입니다. |
 | 사망 중 FIRE | PASS(단일 입력 범위). 확실히 dead인 구간의 실제250ms FIRE 전후 모바일 Ammo30/ShotSequence12 불변. HP0/RespawnRemaining2.75→1.75와 관측을 연결했습니다. 내부 Android input gate 값 직접 관측이나 모든 입력 경로 차단 통과를 뜻하지 않습니다. |
-| 자연 리스폰 | PASS. 같은 PC 시계의 첫 dead→첫 alive 관측3.017초/observer50ms cadence. Android HP100/Ammo30/alive/RespawnVersion1 및 overlay 해제 화면. Death1/DeathSequence1은 누적 유지, ShotSequence12도 유지됐으며 Shot0 초기화를 주장하지 않습니다. 사망 직전 Ammo30이므로 소모된 탄약의 리스폰 초기화까지 입증한 것은 아닙니다. |
-| 리스폰 후 이동·look·FIRE | PASS(실제 단일 제스처). Android 위치(5.625,0,13.500)→(4.475,0.030,13.496), yaw180→183.380814, Ammo30→29/ShotSequence12→13을 Running 관측과 연결했습니다. 이후 실제300초 종료 RedWin/TimeExpired/1:0을 확인했습니다. |
+| 자연 리스폰 | PASS. 같은 PC 시계의 첫 dead→첫 alive 관측 간격3.017초입니다. observer는 최소50ms polling 후 상태 변화 또는1초 heartbeat에서만 저장하므로 실제 저장 gap은50ms가 아닙니다. 지연의 정밀도·오차 범위는 확정하지 않았으며 정확한3.017초 리스폰 보장이 아닙니다. Android HP100/Ammo30/alive/RespawnVersion1 및 overlay 해제 화면. Death1/DeathSequence1은 누적 유지, ShotSequence12도 유지됐으며 Shot0 초기화를 주장하지 않습니다. 사망 직전 Ammo30이므로 소모된 탄약의 리스폰 초기화까지 입증한 것은 아닙니다. |
+| 리스폰 후 이동·look·FIRE | PASS(입력 결과 관측 제한). Android 위치(5.625,0,13.500)→(4.475,0.030,13.496), yaw180→183.380814, Ammo30→29/ShotSequence12→13을 확인했습니다. 이동 시작은 Running/remaining0.890625에서 보였고, 최종 이동·yaw·발사 변화는 첫 Finished 스냅샷에서 함께 포착했습니다. 따라서 전체 입력 변화가 별도 Running 스냅샷에 잡혔다고 주장하지 않습니다. 실제300초 종료 RedWin/TimeExpired/1:0을 확인했습니다. |
 | 제외·미실행 | 리스폰 후 RELOAD는 경기 종료 경계와 겹쳐 EXCLUDED/NOT RUN입니다. 이전 일반 재장전2.011초 PASS로 이번 재개 검사를 대체하지 않습니다. 사망 중 move/look/reload gate는 NOT RUN, 물리 동시 멀티터치는 기존 사용자 질문 답변 대기/NOT RUN입니다. 추가 방·재시험 없이 종료했습니다. |
 | 정리·보존 | observer 정확 제거/수집 루프 없음/실제 키·마우스 해제. Editor Win64/Play·pause·compile·import·build false/빈 clean 씬/Runner·manager·input0/match null/versionCode2. Android 실제 로비 EXIT→OK 후 재개 시 read-only pidof로 실행 프로세스 없음을 확인, 설치·데이터 유지. 콘솔을 지우지 않았고 cleanup Android 화면의 warning0/error0은 해당 화면 범위이며 전체 QA Console 오류0 주장이 아닙니다. foreground guard 거절·벽에 막힌 사격·외부 도구 인자 오류는 성공 근거에서 제외했습니다. |
 
@@ -27,11 +27,11 @@ Editor 검증 HEAD `a8ce685`, 기존 설치 APK 제품 소스 `6a8b203`을 구�
 
 | 항목 | 확인 결과와 범위 |
 | --- | --- |
-| 모바일 발사·재장전 | 탄약28→재장전 remaining2.0→30, 같은 PC 시계 관측2.011초/50ms cadence. |
+| 모바일 발사·재장전 | 탄약28→재장전 remaining2.0→30, 같은 PC 시계 첫 reload→완료 관측 간격2.011초. 최소50ms polling·상태 변화/1초 heartbeat 저장이며 실제 저장 gap은50ms 보장이 아니고 지연 정밀도는 미확정입니다. |
 | 부위별 피해 | Android 발사→Editor 상대 Head100/사망, Arm18/HP82, 다음 경기 Torso25/HP75→추가 Torso25/HP50→Leg18/HP32. Host authoritative metadata로 네 부위를 확인했습니다. Head ELIMINATED100/헤드 킬 피드, Arm HIT18, Torso HIT25 화면을 캡처했습니다. Leg은 Ammo27 화면과 metadata를 확인했고 짧은 HIT18 팝업은 캡처하지 못했습니다. |
 | 상대 사망·리스폰 | Head 뒤 Editor 상대 HP0/dead/Death1/DeathSequence1, 모바일 K1/BlueScore1/Feed1. 3.019초 뒤 상대 HP100/Ammo30/alive/RespawnVersion1, Shot·Hit0. Death1은 누적값으로 유지됩니다. Android 자신의 incoming death/사망 overlay/터치 gate·재개는 NOT RUN입니다. |
 | 누적 성능 | Running PC 구간630.329초 중 보수적 유효 표시 간격623.552초, 로비·결과·전환247.635초 제외. SF presentation 평균 환산59.646973 FPS, median16.633490/p95 16.702083/p99 16.815521/max33.375938ms. >33.34ms 11개, >50ms0. 매 프레임60 FPS 고정을 뜻하지 않습니다. |
-| 표본·관측 한계 | 1171회/명령 실패0, 유효 raw timestamp147800/unique52568/duplicate95232, 분석 표시 간격37193, timestamp reset0/감지한 unknown gap0. 127-frame ring/계획0.75초 polling/경계3초 제외/누락 프레임 보간 없음. 수집 소요 median86.587/max542.957ms, PC read-only observer50ms 및 adb 부하 포함. PC 시작 시각 이후 관찰값을 읽으므로 음수 phase age는 해당 수집 소요 안에서만 허용합니다. 기기와 PC 시계를 동기화했다고 주장하지 않습니다. |
+| 표본·관측 한계 | 1171회/명령 실패0, 유효 raw timestamp147800/unique52568/duplicate95232, 분석 표시 간격37193, timestamp reset0/감지한 unknown gap0. 127-frame ring/계획0.75초 polling/경계3초 제외/누락 프레임 보간 없음. 수집 소요 median86.587/max542.957ms, PC read-only observer의 최소50ms polling·상태 변화/1초 heartbeat 저장 및 adb 부하 포함. 실제 저장 gap은50ms가 아니며 관측 지연 정밀도는 미확정입니다. PC 시작 시각 이후 관찰값을 읽으므로 음수 phase age는 해당 수집 소요 안에서만 허용합니다. 기기와 PC 시계를 동기화했다고 주장하지 않습니다. |
 | 메모리·온도 | PSS first700761/peak746087/last746023KB, RSS816784/862052/861988KB. 수집 중 Android thermal type0 CPU40.9→peak48.9→last44.3°C, thermal status 관측0. dumpsys battery32.2→peak36.4→last36.2°C. type2의0 stub값은 실제 배터리 온도로 해석하지 않습니다. PID CPU jiffies84표본17177→100729이며 CPU 비율·엔진 CPU/GPU frame time은 미관측입니다. |
 | 부하 범위 | 이동/시점/일부 발사와 상대 이동·사망·리스폰을 포함하나 대체로 정지한 시간도 많습니다. 재장전은 성능 수집 전에, 세 번째 경기 Torso/Leg 명중은 성능 수집 종료 후입니다. 10분 연속 격렬한 전투·물리 동시 멀티터치·저사양30 FPS 검증을 뜻하지 않습니다. |
 | 정리·보존 | 같은 Android 프로세스로 세 경기 후 로비 EXIT→OK 정상 종료, 설치·데이터 유지. 기존 Cloud104 오류4/warning0 화면 보존으로 전체 런타임 오류0을 주장하지 않습니다. observer 제거/수집 종료/Editor Win64·Play/pause/compile/import/build false/빈 clean 씬/Runner·manager·input0/match null/code2. QA 변경 폰트와 UserSettings 두 파일만 시작 bytes로 복원 후 baseline3931 변화·추가·백업 해시 실패0, 기존 git status·dirty patch 동일입니다. 이후 승인된 검증 문서3개 변경은 별도입니다. |

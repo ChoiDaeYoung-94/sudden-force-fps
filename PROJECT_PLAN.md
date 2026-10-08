@@ -4,7 +4,7 @@
 
 ## 현재 기준 상태
 
-추가 검증(2026-10-08): Editor HEADa8ce685/기존 APK6a8b203에서 실제 Editor 사격→Android 자신의 Head100 사망·YOU DIED3/2 카운트다운·3.017초 관측 자연 리스폰 HP100/Ammo30/overlay 해제를 확인했습니다. 확실히 dead인 구간 FIRE의 Ammo/Shot 불변과 리스폰 후 단일 터치 move/look/FIRE 재개는 통과했습니다. 사망 중 move/look/reload gate는 미실행, 리스폰 후 RELOAD는 경기 종료 경계와 겹쳐 제외/미실행입니다. 물리 멀티터치는 기존 답변 대기이며 전체78% 추정을 유지합니다. 새 baseline3923/원래dirty 정확 보존 후 정리했고 상세 근거는 MULTIPLAYER_TEST_PLAN.md 상단을 따릅니다.
+추가 검증(2026-10-08): Editor HEADa8ce685/기존 APK6a8b203에서 실제 Editor 사격→Android 자신의 Head100 사망·YOU DIED3/2 카운트다운·같은 PC의 최초 dead→최초 alive 저장값 간격3.017초인 자연 리스폰(최소50ms polling·상태 변화/1초 heartbeat 저장, 실제 저장 gap50ms·지연 정밀도 보장 아님) HP100/Ammo30/overlay 해제를 확인했습니다. 확실히 dead인 구간 FIRE의 Ammo/Shot 불변과 리스폰 후 단일 터치 move/look/FIRE의 입력 결과를 확인했습니다. 이동 시작은 Running에서, 최종 이동·yaw·발사 변화는 첫 Finished 스냅샷에서 포착한 관측 제한을 유지합니다. 사망 중 move/look/reload gate는 미실행, 리스폰 후 RELOAD는 경기 종료 경계와 겹쳐 제외/미실행입니다. 물리 멀티터치는 기존 답변 대기이며 전체78% 추정을 유지합니다. 새 baseline3923/원래dirty 정확 보존 후 정리했고 상세 근거는 MULTIPLAYER_TEST_PLAN.md 상단을 따릅니다.
 
 최신 검증(2026-10-08): 서명 APK 제품 소스6a8b203/QA HEAD75323af에서 모바일 발사·재장전, 실제 Editor 상대 Head100/Torso25/Arm18/Leg18 피해·사망·3초 리스폰을 확인했습니다. 당시 Android 자신의 incoming death/overlay/터치 gate는 미검증이었으며 위 후속 검사에서 사망 UI·dead FIRE·리스폰 후 move/look/FIRE를 확인했습니다. 기타 gate·리스폰 후 RELOAD는 남아 있습니다. 실제300초 경기3개의 Running 구간에서 SF 유효 표시 간격623.552초/평균 환산59.646973 FPS를 수집했습니다. p95 16.702083/p99 16.815521/max33.375938ms, >33.34ms11/>50ms0, 감지 gap·명령 실패0입니다. 대체로 정지한 구간과 도구 부하를 포함하며 엔진 CPU/GPU frame time·연속 격렬한 전투·저사양 검증으로 확대하지 않습니다. PSS/RSS·typed CPU thermal·배터리 및 원래 dirty 정확 복원 근거는 MULTIPLAYER_TEST_PLAN.md 상단을 따릅니다.
 
