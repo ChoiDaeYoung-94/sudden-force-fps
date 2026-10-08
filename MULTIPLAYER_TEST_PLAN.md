@@ -1,5 +1,28 @@
 # Sudden Force FPS 멀티플레이 검증 계획
 
+### 모바일 전투·누적 10분 화면 표시 성능 (#41, 2026-10-08)
+
+사용자 성능 기준은 **60 FPS 목표·저사양30 FPS 허용**입니다. 이번 SM-N986N 측정과 저사양 실기기 미실행 범위를 구분합니다.
+
+검증 HEAD `75323af95e7331f2ccdc072b597fb469b8a001b9`, 설치 APK 제품 소스 `6a8b203`, SM-N986N/Android13/API33/SM8250 QTI입니다. 실제 공개방 SFCombat1008-01/-02/-03에서 EditorHost와 AndroidClient가 Join/READY/START로 경기했습니다. 제품 duration300/target20을 유지했고 상태·HP·pose·aim·타이머·전투 콜백 주입 없이 Android adb 단일 터치와 Editor 실제 키보드/마우스를 사용했습니다. 단일 10분 경기가 아닌 실제 300초 경기 세 개의 Running 구간 누적입니다.
+
+| 항목 | 확인 결과와 범위 |
+| --- | --- |
+| 모바일 발사·재장전 | 탄약28→재장전 remaining2.0→30, 같은 PC 시계 관측2.011초/50ms cadence. |
+| 부위별 피해 | Android 발사→Editor 상대 Head100/사망, Arm18/HP82, 다음 경기 Torso25/HP75→추가 Torso25/HP50→Leg18/HP32. Host authoritative metadata로 네 부위를 확인했습니다. Head ELIMINATED100/헤드 킬 피드, Arm HIT18, Torso HIT25 화면을 캡처했습니다. Leg은 Ammo27 화면과 metadata를 확인했고 짧은 HIT18 팝업은 캡처하지 못했습니다. |
+| 상대 사망·리스폰 | Head 뒤 Editor 상대 HP0/dead/Death1/DeathSequence1, 모바일 K1/BlueScore1/Feed1. 3.019초 뒤 상대 HP100/Ammo30/alive/RespawnVersion1, Shot·Hit0. Death1은 누적값으로 유지됩니다. Android 자신의 incoming death/사망 overlay/터치 gate·재개는 NOT RUN입니다. |
+| 누적 성능 | Running PC 구간630.329초 중 보수적 유효 표시 간격623.552초, 로비·결과·전환247.635초 제외. SF presentation 평균 환산59.646973 FPS, median16.633490/p95 16.702083/p99 16.815521/max33.375938ms. >33.34ms 11개, >50ms0. 매 프레임60 FPS 고정을 뜻하지 않습니다. |
+| 표본·관측 한계 | 1171회/명령 실패0, 유효 raw timestamp147800/unique52568/duplicate95232, 분석 표시 간격37193, timestamp reset0/감지한 unknown gap0. 127-frame ring/계획0.75초 polling/경계3초 제외/누락 프레임 보간 없음. 수집 소요 median86.587/max542.957ms, PC read-only observer50ms 및 adb 부하 포함. PC 시작 시각 이후 관찰값을 읽으므로 음수 phase age는 해당 수집 소요 안에서만 허용합니다. 기기와 PC 시계를 동기화했다고 주장하지 않습니다. |
+| 메모리·온도 | PSS first700761/peak746087/last746023KB, RSS816784/862052/861988KB. 수집 중 Android thermal type0 CPU40.9→peak48.9→last44.3°C, thermal status 관측0. dumpsys battery32.2→peak36.4→last36.2°C. type2의0 stub값은 실제 배터리 온도로 해석하지 않습니다. PID CPU jiffies84표본17177→100729이며 CPU 비율·엔진 CPU/GPU frame time은 미관측입니다. |
+| 부하 범위 | 이동/시점/일부 발사와 상대 이동·사망·리스폰을 포함하나 대체로 정지한 시간도 많습니다. 재장전은 성능 수집 전에, 세 번째 경기 Torso/Leg 명중은 성능 수집 종료 후입니다. 10분 연속 격렬한 전투·물리 동시 멀티터치·저사양30 FPS 검증을 뜻하지 않습니다. |
+| 정리·보존 | 같은 Android 프로세스로 세 경기 후 로비 EXIT→OK 정상 종료, 설치·데이터 유지. 기존 Cloud104 오류4/warning0 화면 보존으로 전체 런타임 오류0을 주장하지 않습니다. observer 제거/수집 종료/Editor Win64·Play/pause/compile/import/build false/빈 clean 씬/Runner·manager·input0/match null/code2. QA 변경 폰트와 UserSettings 두 파일만 시작 bytes로 복원 후 baseline3931 변화·추가·백업 해시 실패0, 기존 git status·dirty patch 동일입니다. 이후 승인된 검증 문서3개 변경은 별도입니다. |
+
+근거: `D:\meee\git\sudden-force-fps-backups\20261008-mobile-combat-performance-01\qa-summary.md`, 같은 폴더 `combat-summary.json`, `combat-observations.jsonl`, `performance-summary.json`, `performance-audit.json`, `performance-samples.jsonl`, 실제 PNG, `cleanup-final.json`, `android-cleanup.json`, `preservation-final.json`. 실행 전 CPU32.8°C/배터리30.6°C는 최초 도구 응답을 전사한 `prelaunch-thermal-baseline.json`에 출처를 표시했습니다. 이는 수집 중 first 값과 별개입니다.
+
+남은 검증: 물리 동시 멀티터치, Android local incoming death/overlay/터치 차단·재개, 최신 AndroidClient의 peerTimeout 대체 경로, 실제 Android16/16KB 기기, 저사양 성능과 엔진 CPU/GPU 시간, 전체 에셋 라이선스·고지, 서명 AAB/Play 테스트 트랙 및 테스터 설치입니다. 아래 이전 기록의 미실행 표시는 당시 범위입니다.
+
+이하 이전 검증 기록은 당시 결과와 미실행 범위를 보존합니다. 현재 완료·잔여 범위는 위 모바일 전투·성능 기록을 우선합니다.
+
 ### 최신 AndroidClient의 EditorHost Play 종료 회귀 (#41, 2026-10-08)
 
 검증 HEAD `e3c6454`, 설치 APK의 제품 소스 `6a8b203`에서 실제 EditorHost Play 종료 후 AndroidClient가 같은 프로세스로 자동 로비 복귀하고 다음 공개방 Join/READY/START까지 통과했습니다. Editor 프로세스 자체의 OS 강제 종료·충돌이나 정상 MENU 퇴장이 아닌, 실제 Play 종료 조건의 결과입니다. 제품 상태·pose·타이머·콜백 주입은 없습니다.
@@ -63,7 +86,7 @@ Editor 실제 GameView Esc와 EventSystem raycast MENU/RETURN/LEAVE 클릭, CANC
 
 ## 현재 검증 상태와 후속 단계
 
-**최신 상태(2026-10-08): PC 양방향 종료 복귀 P01–P06과 수정 EditorClient의 실제 AndroidHost 강제 종료 복귀·후속 재참가는 통과했습니다. M07 수정 전 실패 기록과 문서 위의 수정 후 실제 결과를 구분합니다. 최신 APK의 정상 메뉴 퇴장은 상단 U01–U07에서 통과했습니다. 수정 AndroidClient의 호스트 강제 종료 Timeout 방향·실기기 전투/성능은 남아 있습니다.**
+**최신 상태(2026-10-08): PC 양방향 종료 복귀 P01–P06과 수정 EditorClient의 실제 AndroidHost 강제 종료 복귀·후속 재참가는 통과했습니다. M07 수정 전 실패 기록과 문서 위의 수정 후 실제 결과를 구분합니다. 최신 APK의 정상 메뉴 퇴장은 상단 U01–U07에서 통과했습니다. 최신 AndroidClient peerTimeout 대체 경로·물리 멀티터치·모바일 자신의 사망 UI는 남아 있습니다. 모바일 단일 입력 상대 전투와 누적 SF 성능 결과는 상단 최신 기록을 따릅니다.**
 
 **현재 상태: C5 새 빌드의 실제 두피어 경기에서 20킬 TargetScore 종료, 실제300초 높은 점수 승리·Draw, 상대 정상 종료의 OpponentLeft 및 퇴장자 KD/이름 보존을 확인했습니다. 양쪽 결과·Finished 상태 고정·정상 로비 복귀·new Runner 초기화와 PC 짧은 Tab 입력을 아래 범위에서 검증했습니다. 런타임 pose/baseaim 보조와 사용자 추가 입력을 명시하고 순수 계산/아트 상태 주입 진단과 구분합니다. 제품 파일은 원상 복원했으며 문서만 변경합니다. Waiting blocked/취소·동tick 경합·진행중 reload 종료·실제held 입력·3peer/권한위조·Android·저FPS/재시뮬레이션 등은 미검증으로 유지합니다. C1–C4의 아래 기록과 미검증 항목은 각 당시 실행 범위입니다.**
 
