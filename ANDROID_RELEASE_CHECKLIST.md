@@ -329,3 +329,14 @@ APK 내 14개 `.so`는 모두 압축 저장되어 있습니다. 따라서 압축
 - 종료 후 Win64/Play 종료/빈 깨끗한 씬/자동 tick 중지, 기존 ProjectSettings·defines·버전·서명 설정·ledger·URP 변경 및 루트 파일 정확 복원. 시작3895파일 SHA 변경/추가/누락0, 기존 dirty patch 동일.
 
 근거는 같은 외부 폴더의 `apk-verification.json`, `apk-native-inspection.json`, `generated-gradle-audit.json`, `preservation-final.json` 및 BuildReport에 보존했습니다. 전환 중 Pipeline 조회 timeout1건은 제품 컴파일/빌드 오류와 구분했습니다. 실기기 설치·Google 계정 인증·모바일 조작·한 판·백그라운드 및 실제 네트워크 종료 회귀는 미검증입니다. debug code3은 Play 업로드용 버전 코드 예약을 뜻하지 않습니다.
+
+
+## PGS 인증 연결 재확인 (2026-10-08)
+
+기존 Chrome 로그인 탭에서 Play Console을 읽기 전용으로 확인했습니다. PGS 프로젝트 APP_ID `311409806449`는 Android manifest의 값과 일치합니다. 출시된 Android credential3개는 모두 `com.AeDeong.SuddenForceFPS`를 사용합니다. 확인한 연결 인증서 SHA1은 `14:98:8C:4A:2E:B1:4B:56:A9:9D:9F:A7:02:EA:C8:46:AE:12:A4:63`, 기존 업로드 키 `E9:56:B8:AD:10:19:A6:A2:E3:B8:89:B1:21:C1:EF:0E:72:74:18:E0`, Play 앱 서명 `CF:E6:15:DA:6A:91:0B:3A:78:51:D2:29:EA:10:B2:66:BF:00:9A:53`입니다.
+
+현재 최신 개발 APK의 Debug SHA1 `6A:6F:43:7F:04:6B:06:0D:E1:4F:A1:CF:3B:4B:FD:AB:47:16:42:C7`와 일치하는 연결 credential은 이3개 중 없습니다. 이는 설정 선행조건 불일치이며 실제 기기 인증 실패를 수행했다는 뜻은 아닙니다. 미연결 Cloud OAuth의 존재 여부는 아직 별도로 확인하지 않았습니다. Debug 인증을 연결하거나 기존 승인된 키로 새 검증본을 서명하는 경로 선택이 필요합니다.
+
+PGS는 출시된 속성/credential이며 개별 테스터2개와 내부 테스트 트랙 연결을 확인했습니다. 메일 주소는 기록하지 않습니다. 실제 시험 계정의 테스터 포함 여부는 미확인입니다. PGS 출시 상태와 기존 앱의 초안·프로덕션 비활성 상태는 별개입니다. 이번 조회에서 외부 설정 저장·OAuth 생성·PGS 게시를 하지 않았습니다.
+
+정확한 Unity6000.3.25f1 번들 adb의 `devices -l` 결과는 device0/unauthorized0/offline0입니다. 기기 정보 조회·앱 설치·실행·권한 변경은 수행하지 않았습니다.
