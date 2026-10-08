@@ -1,8 +1,18 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
-## 최신 검증 상태 (2026-10-07)
+## 실제 기기 설치·모바일 두 피어 결과 (2026-10-08)
 
-아래 초기 조사 기록의 현재값과 미실행 표시는 당시 시점의 기록입니다. 첫 개발용 Android APK는 API 36으로 빌드하고 산출물 서명·아키텍처 검사를 완료했습니다. 기존 Sudden Force 앱과 업로드 인증서 일치도 확인했습니다. 실제 Android 기기의 설치·Google 계정 인증·한 판 플레이 및 서명된 AAB·Play 업로드는 아직 완료하지 않았습니다.
+제품 `55024a5`의 기존 업로드 키 서명 APK를 SM-N986N/Android13/API33에 설치했습니다. 실제 로그인 경로를 통해 Photon kr 로비 도착, Editor와 공개방 Join/READY/START, 이동·시점·사격·재장전의 단일 adb 터치와 복제, 실제300초 Draw/TimeExpired 및 결과 RETURN→새 로비→다음 경기 초기화를 확인했습니다. PGS SDK 인증 boolean 자체나 계정 선택 창을 별도 검증한 것은 아니며 Play 설치본 인증과 구분합니다.
+
+EditorHost 종료→Android 같은 프로세스 자동 복귀는 통과했습니다. AndroidHost 검증 앱만 force-stop한 반대 방향에서는 Editor가 Timeout을 감지했지만 1분 이상 Game/기존 Runner에 남아 복귀에 실패했습니다. 이 연결 종료 실패는 배포 전 수정·재검증 대상입니다. 실제 Android 고지 UI도 열기/닫기를 확인했습니다.
+
+물리 동시 멀티터치, 상대 명중·피해·죽음·리스폰, 10분 성능/메모리, 정상 게임 종료 UI, 실제 Android16/16KB 기기 동작은 미검증입니다. ELF 정렬 검사와 실기기 실행을 혼동하지 않습니다. AAB/Play 업로드는 수행하지 않았습니다.
+
+근거: `D:\meee\git\sudden-force-fps-backups\20261008-mobile2peer-01\qa-result.md` 및 상세 실패·보존 자료. `MULTIPLAYER_TEST_PLAN.md` M01–M08에 결과를 구분했습니다. 정리 후 Editor Win64/Play 종료/빈 clean 씬/자동 tick 중지, baseline3930 변경·추가·해시 실패0/기존 dirty patch 동일. 설치와 앱 데이터는 유지하고 검증 앱만 종료한 상태입니다.
+
+## 최신 검증 상태 (2026-10-08)
+
+아래 초기 조사 기록의 현재값과 미실행 표시는 당시 시점의 기록입니다. 기존 업로드 키로 서명한 최신 APK를 실제 Android 13 기기에 설치하여 로그인 경로→Photon kr 로비, 두 피어 경기 및 실제 300초 경기 종료를 확인했습니다. AndroidHost 강제 종료 후 EditorClient가 게임 화면에 남는 실패가 발견되어 수정 중입니다. 문서 끝의 실기기 결과가 최신 기준이며, 서명된 AAB와 Google Play 테스트 트랙 업로드는 아직 완료하지 않았습니다.
 
 로그인 복구 변경은 `Login.cs` 한 파일에 적용했습니다. 실제 Win64 Login→Lobby 진입과 Android 대상 컴파일을 통과했고, 타입 이름만 바꾼 외부 Android 분기에서 가짜 SDK 응답으로 실패·취소·수동 재시도·30초 시간 초과·중복/늦은 응답·화면 이탈을 검증했습니다. 최초 검증 보조 코드의 Start 순서와 고정 씬 이름 가정 오류는 보정 후 재검증하고 원본 결과도 보존했습니다.
 
@@ -340,3 +350,19 @@ APK 내 14개 `.so`는 모두 압축 저장되어 있습니다. 따라서 압축
 PGS는 출시된 속성/credential이며 개별 테스터2개와 내부 테스트 트랙 연결을 확인했습니다. 메일 주소는 기록하지 않습니다. 실제 시험 계정의 테스터 포함 여부는 미확인입니다. PGS 출시 상태와 기존 앱의 초안·프로덕션 비활성 상태는 별개입니다. 이번 조회에서 외부 설정 저장·OAuth 생성·PGS 게시를 하지 않았습니다.
 
 정확한 Unity6000.3.25f1 번들 adb의 `devices -l` 결과는 device0/unauthorized0/offline0입니다. 기기 정보 조회·앱 설치·실행·권한 변경은 수행하지 않았습니다.
+
+
+## 기존 업로드 키 서명 검증 APK (2026-10-08)
+
+사용자가 기존 업로드 키 검증 경로를 선택하고 Unity Publishing Settings에 비밀번호를 직접 입력했습니다. 비밀번호 값은 채팅·소스·명령·로그·증거에 기록하지 않았습니다. 첫 입력은 Android target/domain reload에서 초기화되어 preflight가 빌드를 차단했고, Android 상태의 재입력 후 대상 전환 없이 실제 빌드를 진행했습니다.
+
+- 기준 HEAD `55024a5046b405b5b665ca7529023c3c160eaf82`: 로비 시간 초과 안내와 오프라인 고지 UI 포함.
+- 산출물: `D:\meee\git\sudden-force-fps-backups\20261008-upload-55024a5-01\apk-attempt-01\SuddenForceFPS.UploadKeyValidation.apk`.
+- 크기 168,878,895 bytes, SHA256 `30e175c609550f19ea598d1b29cae493075254634ed634e828c03386000159a1`.
+- BuildPlayer Succeeded/오류0/경고71/393.223초. Development/LZ4/IL2CPP, 패키지 `com.AeDeong.SuddenForceFPS`, 버전1.0.0/임시code3, 최소25/대상·컴파일36, ARMv7+ARM64.
+- APK v2 검증 통과. 서명 SHA1 `E9:56:B8:AD:10:19:A6:A2:E3:B8:89:B1:21:C1:EF:0E:72:74:18:E0`가 기존 업로드 키 및 현재 연결 PGS Android credential과 정확히 일치합니다.
+- zipalign 검사와 ARM64 ELF7개 PT_LOAD16KB 정렬 통과. 네이티브 파일은 압축 저장이며 실제16KB 기기 실행과 구분합니다.
+- 기존 Debug APK 해시 불변. 생성 Gradle은 비민감 항목만 검사하고 서명 설정 본문을 복사하지 않았습니다. 키 파일 복사·교체·재생성, PGS/OAuth 설정 쓰기, AAB/Play 업로드를 수행하지 않았습니다.
+- 종료 후 Win64/빈 깨끗한 씬/Play 종료/자동 tick 중지. 시작3930파일 SHA 변경·추가0 및 기존 dirty patch 동일, 버전code2/ledger와 키 경로 등 파일 설정을 복원했습니다. Android 빌드 finally의 메모리 서명 값 복원과 최종 Win64 reload에서 비밀번호·alias가 초기화된 현상은 구분합니다. 최종 메모리 비밀번호 보존을 주장하지 않습니다.
+
+근거는 같은 외부 폴더의 `apk-verification.json`, `preservation-final.json`, `signing-preflight-history.json` 및 `apk-attempt-01/upload-validation-build.json`입니다. 이 APK는 실기기 인증 검증용이며 실제 설치·PGS 로그인·모바일 경기·Play 테스트 트랙 배포는 아직 미검증입니다. Play 설치본은 별도 앱 서명 인증서를 사용한다는 기존 조건도 유지합니다.
