@@ -1,5 +1,31 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 콘솔 필터 적용 서명 AAB 및 Play 업로드 (#43, 2026-10-11)
+
+제품 HEAD `b3796f2`의 공개 BuildScript.BuildAOSAAB를 1회 실행해 `1.0.194.1.aab`을 생성했습니다. 버전1.0.194/code5, ledger `194,1,5`이며 실패 예약 code4는 재사용하지 않았습니다. 파일은92,830,812 bytes, SHA256 `4F0707124470C0AED645B94F300609A7E703C5EBF34279FEED102841A7F0D728`입니다. 새 report GUID `eecb083685e5447b8f231d001e6260aa`, Succeeded/524.616초/오류0/경고71이며 non-Development/IL2CPP/ARM64/CleanBuildCache/DetailedBuildReport/LZ4HC입니다.
+
+- 독립 JAR 서명·bundletool validate 통과, 기존 업로드 인증서 일치. Manifest package `com.AeDeong.SuddenForceFPS`, 최소25/대상36, debuggable·testOnly 없음.
+- 실제 AAB의 ThirdPartyNotices TextAsset는675,225 bytes/SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`로 원본 바이트와 일치합니다. EmojiOne 경로·GUID packed 일치0입니다.
+- packed6,409개/11파일에서 콘솔 항목은12개 모두 MonoScript이며 비MonoScript0입니다. 기존93개 대비 GO/UI/프리팹/텍스처 항목이 제외됐습니다. 스크립트·AAR 전체 제거 또는 전체 권리 해소를 뜻하지 않습니다. signed report의 실제4씬 build step과 앞선 unsigned 콜백 검증은 구분합니다.
+- 네이티브7개 PT_LOAD16KB 정렬은 통과하지만 RELRO는 libc++_shared.so(12288), libmain.so(8192), libswappywrapper.so(4096) 세 건 실패가 유지됩니다. 실제16KB 실행·전체호환 PASS가 아닙니다.
+- Play 내부 테스트 초안 release3에 code5 업로드 및 검토 화면 진입을 완료했습니다. 차단 오류 없이 경고3개(이전 대비 지원기기9,137개 감소, Java 가독화 파일 및 네이티브 심볼 미등록)가 표시됩니다. ARM64/최소API 변경의 기기 범위 영향을 유지하며, 업로드 통과를 RELRO 해결로 해석하지 않습니다. 내부 출시·Play 설치·앱 서명 로그인은 아직 별도 검증 대상입니다.
+
+Win64/원래 defines·아키텍처·빌드 설정/원본 Login5roots·dirtyfalse를 복원하고 암호 두 입력칸을 비웠습니다. baseline3,925개에서 예약metadata2개 외 변경0/추가0/백업 해시 실패0이며 원래6dirty binary patch가 동일합니다. 외부 AAB는 읽기 전용으로 보관했습니다. 근거: `sudden-force-fps-backups/20261011-signed-aab-code5-b3796f2-01/HANDOFF.md` 및 독립 `sudden-force-fps-validation/20261011-signed-aab-code5-readonly-review/REPORT.md`. 총판정 PARTIAL은 남은 RELRO/실기기/Play 검증을 포함하며 콘솔 필터의 서명 빌드 검증은 통과했습니다.
+
+### 콘솔 필터 보완과 서명 없는 Android 내보내기 (#43, 2026-10-11)
+
+cf5204d의 실제 AAB 시도는 Login 처리 중 `Console reference does not resolve to the expected prefab root.`로 실패했습니다(약57.88초/오류3/경고71/출력 없음). 실제 nonnull BuildReport 콜백 진입과 실패 시 중단만 확인됐습니다. 예약된 1.0.194/code4 및 ledger `194,0,4`는 유지하며 재사용하지 않습니다.
+
+필터는 기존 prefab GUID 검사를 유지하고, 정확한 RuntimeInitialize 스크립트의 직접 참조와 DebugLogManager 스크립트 GUID 계약으로도 대상을 확인하도록 보완했습니다. 같은 씬의 루트·단일 manager·owner 미포함·모호하지 않은 참조를 모두 검증한 후에만 변경합니다. 이름 검색은 없으며 이 계약이 모든 자식의 vendor 출처까지 증명하는 것은 아닙니다. 독립 정적 검토, 컴파일 오류0/경고0 및 씬 복사본14사례(연결유지/완전unpack 제거, 잘못된 참조 선실패, Development/report-null 보존, 멱등성)를 통과했습니다.
+
+서명 없는 첫 내보내기는 Win64에서 Android target만 지정해 호출했고 URP Compatibility 사전 검사에서 실패했습니다(약0.340초/오류2/경고4/씬 콜백 미도달). Android 전환 완료를 명시적으로 기다린 다음 기존 URP_COMPATIBILITY_MODE define을 확인하고 두 번째로 내보냈습니다. 렌더링 설정이나 해당 define의 영구 변경은 하지 않았습니다.
+
+두 번째 Gradle export는 Succeeded/331.4354127초/오류1/경고71입니다. 오류1은 정확히 도구의 `/api/exec request: Main thread operation timed out after 30000ms`이며 필터 예외가 아닙니다. 오류0으로 표현하지 않습니다. 동일 BuildReport GUID `a0ab6e832dfa494aacd40f8983ffca0c`와 start/end, 고유 출력 폴더, source SHA256 `0E92B5E95903A4A2A3348D322F12089F87D0954BCD536021E7FB6B6D9C566680`를 연결했습니다. CleanBuildCache/DetailedBuildReport/LZ4HC/non-Development/ARM64/활성4씬에서 실제 후순서 관찰 콜백은 모두 nonnull report·DebugLogManager0·콘솔 참조0을 기록했습니다. 행별 runID/시각이 없는 한계는 외부 driver·report·출력 연결과 구분합니다.
+
+동일 report packed6,409개/11파일에서 기존 콘솔93항목(29경로)은12항목(12경로, 모두 MonoScript)으로 감소했고 기존 GO/UI/Texture/Sprite 항목은0입니다. 코드·AAR·아틀라스 전체 픽셀 제거를 증명하지 않으며 최종 signed AAB 검증을 대체하지 않습니다. BuildScript 예약 엔트리와 Gradle assemble/sign은 호출하지 않아 내보내기 중 ledger는 불변입니다.
+
+최종 Win64/Login 원본5roots/dirtyfalse/Play·compile·import·build false, 원래 defines·아키텍처·export/AAB 설정을 복원했습니다. 디스크에 남은 아키텍처·custom keystore 숫자2필드만 원값으로 복원해45/45 baseline 해시가 일치했고, 원래6개 dirty와 승인 필터·버전 메타데이터 외 변경은 없습니다. 임시 observer·테스트 파일은 제거했습니다. 외부 근거는 `sudden-force-fps-backups/20261011-release-console-reference-contract/HANDOFF.md` 및 `20261011-release-console-recheck-01`입니다. 네이티브 RELRO3건, 새 signed AAB·고지 본문·EmojiOne 최종 확인, Play 업로드·설치는 남아 있습니다.
+
 ### 최종 서명 AAB 감사: 부분 통과 (#43, 2026-10-08)
 
 제품 HEAD `0f46c28`에서 기존 BuildScript AAB 경로로 생성한 `1.0.193.0.aab`은 **92,854,441 bytes**, SHA256 `E8C216521CD68420F29C44F28A06E24B88B5C94B06FF67AF9314A03ED035949B`입니다. BuildReport Succeeded/오류0/경고71/641.889초이며 totalSize 1,300,342,745는 실제 AAB 파일 크기가 아닙니다. IL2CPP/ARM64/LZ4HC/DetailedBuildReport이고 Development·AllowDebugging·ConnectWithProfiler 옵션은 없습니다.
