@@ -1,5 +1,13 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Play 내부 테스트 출시 완료 및 실제 설치 선행 조건 (#43, 2026-10-11)
+
+PR #64 병합 main `d1dd25b`에서 배포 기록을 이어갑니다. 위 PR의 제품 빌드 HEAD `b3796f2`로 생성한 동일 AAB code5를 Play 내부 테스트 release3으로 저장·출시했고, Console에서 2026-10-11 14:17 KST `내부 테스터에게 제공됨`을 확인했습니다. 차단 오류 없이 경고3개는 앞선 업로드 기록과 같습니다. 업로드 및 내부 출시는 완료했지만 실제 설치·로그인·경기 검증은 미완료입니다.
+
+현재 기기의 기존 sideload APK는 versionCode3/versionName1.0.0/installer 없음입니다. 공개 인증서 SHA256 `4D072592228C991D3F6A0EDA768C8CBEE40895C3B1F4A6FB9379540F048965E0`는 업로드 키이며, Play 앱 서명 SHA256 `01B2846B34835CD145264048DD5C642B6F112D35AA8F0B601DBA11F49E100D86`와 다릅니다. 따라서 기존 설치 위의 직접 업데이트와 Play 앱 서명 로그인 검증을 완료했다고 볼 수 없습니다. Play 앱 상세는 첫 확인에서 항목 없음, 정확한 내부 테스트 링크는 현재 계정에 초대가 없다는 안내를 표시했습니다. 계정·테스터 목록 변경, 기존 앱 제거·데이터 삭제나 sideload 대체 설치는 하지 않았습니다. 등록된 테스터 계정과 기존 데이터 보존을 고려한 설치 방법을 사용자 확인 후 진행합니다.
+
+출시 근거는 앞선 외부 빌드 폴더의 `play-code5-review.png`/`play-code5-released.png`, 설치 조건 근거는 `sudden-force-fps-backups/20261011-play-delivery-code5-01`입니다. #43의 실제 출시 댓글과 완료 기준을 갱신했으며 통합 설치 항목은 열린 상태로 유지합니다. RELRO3건 및 나머지 품질·출처 검증은 별도 미완료 상태입니다.
+
 ### 콘솔 필터 적용 서명 AAB 및 Play 업로드 (#43, 2026-10-11)
 
 제품 HEAD `b3796f2`의 공개 BuildScript.BuildAOSAAB를 1회 실행해 `1.0.194.1.aab`을 생성했습니다. 버전1.0.194/code5, ledger `194,1,5`이며 실패 예약 code4는 재사용하지 않았습니다. 파일은92,830,812 bytes, SHA256 `4F0707124470C0AED645B94F300609A7E703C5EBF34279FEED102841A7F0D728`입니다. 새 report GUID `eecb083685e5447b8f231d001e6260aa`, Succeeded/524.616초/오류0/경고71이며 non-Development/IL2CPP/ARM64/CleanBuildCache/DetailedBuildReport/LZ4HC입니다.
