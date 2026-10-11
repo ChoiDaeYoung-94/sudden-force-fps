@@ -1,5 +1,7 @@
 # Third-party asset provenance
 
+2026-10-11 서명 AAB code5 추가 확인: 실제 ThirdPartyNotices TextAsset675,225 bytes/SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`가 원본과 바이트 일치했고 EmojiOne 경로·GUID packed0을 독립 확인했습니다. 콘솔 packed12항목은 모두 MonoScript이고 비MonoScript0입니다. UI·프리팹·텍스처 제외의 검증이며 script·AAR 전체 부재나 남은 Military/Weapons/HUD 등 에셋 출처·배포 권리 확인 완료는 아닙니다. signed 산출물과 상세 근거는 ANDROID_RELEASE_CHECKLIST.md 상단을 따릅니다.
+
 2026-10-11 빌드 범위 추가 확인: 서명 없는 Android export의 동일 BuildReport packed6,409개에서 IngameDebugConsole 기존93항목/29경로는12항목/12경로(모두 MonoScript)로 감소했습니다. 기존 GO/UI/Texture/Sprite 항목은0이며 script·AAR 전체 부재나 vendor 권리 검증 완료를 뜻하지 않습니다. 최종 signed AAB의 고지 본문·EmojiOne 및 새 패키지 범위는 별도 확인 대상입니다. 내보내기와 보존 근거는 ANDROID_RELEASE_CHECKLIST.md 상단을 따릅니다.
 
 확인·취득일: **2026-10-07 (Asia/Seoul)**. 이 문서는 확인된 출처와 확인이 필요한 항목을 구분합니다. 저장소에 파일이 있다는 사실만으로 취득 권한이나 배포 라이선스를 확정하지 않습니다.

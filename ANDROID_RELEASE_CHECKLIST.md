@@ -1,5 +1,17 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 콘솔 필터 적용 서명 AAB 및 Play 업로드 (#43, 2026-10-11)
+
+제품 HEAD `b3796f2`의 공개 BuildScript.BuildAOSAAB를 1회 실행해 `1.0.194.1.aab`을 생성했습니다. 버전1.0.194/code5, ledger `194,1,5`이며 실패 예약 code4는 재사용하지 않았습니다. 파일은92,830,812 bytes, SHA256 `4F0707124470C0AED645B94F300609A7E703C5EBF34279FEED102841A7F0D728`입니다. 새 report GUID `eecb083685e5447b8f231d001e6260aa`, Succeeded/524.616초/오류0/경고71이며 non-Development/IL2CPP/ARM64/CleanBuildCache/DetailedBuildReport/LZ4HC입니다.
+
+- 독립 JAR 서명·bundletool validate 통과, 기존 업로드 인증서 일치. Manifest package `com.AeDeong.SuddenForceFPS`, 최소25/대상36, debuggable·testOnly 없음.
+- 실제 AAB의 ThirdPartyNotices TextAsset는675,225 bytes/SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`로 원본 바이트와 일치합니다. EmojiOne 경로·GUID packed 일치0입니다.
+- packed6,409개/11파일에서 콘솔 항목은12개 모두 MonoScript이며 비MonoScript0입니다. 기존93개 대비 GO/UI/프리팹/텍스처 항목이 제외됐습니다. 스크립트·AAR 전체 제거 또는 전체 권리 해소를 뜻하지 않습니다. signed report의 실제4씬 build step과 앞선 unsigned 콜백 검증은 구분합니다.
+- 네이티브7개 PT_LOAD16KB 정렬은 통과하지만 RELRO는 libc++_shared.so(12288), libmain.so(8192), libswappywrapper.so(4096) 세 건 실패가 유지됩니다. 실제16KB 실행·전체호환 PASS가 아닙니다.
+- Play 내부 테스트 초안 release3에 code5 업로드 및 검토 화면 진입을 완료했습니다. 차단 오류 없이 경고3개(이전 대비 지원기기9,137개 감소, Java 가독화 파일 및 네이티브 심볼 미등록)가 표시됩니다. ARM64/최소API 변경의 기기 범위 영향을 유지하며, 업로드 통과를 RELRO 해결로 해석하지 않습니다. 내부 출시·Play 설치·앱 서명 로그인은 아직 별도 검증 대상입니다.
+
+Win64/원래 defines·아키텍처·빌드 설정/원본 Login5roots·dirtyfalse를 복원하고 암호 두 입력칸을 비웠습니다. baseline3,925개에서 예약metadata2개 외 변경0/추가0/백업 해시 실패0이며 원래6dirty binary patch가 동일합니다. 외부 AAB는 읽기 전용으로 보관했습니다. 근거: `sudden-force-fps-backups/20261011-signed-aab-code5-b3796f2-01/HANDOFF.md` 및 독립 `sudden-force-fps-validation/20261011-signed-aab-code5-readonly-review/REPORT.md`. 총판정 PARTIAL은 남은 RELRO/실기기/Play 검증을 포함하며 콘솔 필터의 서명 빌드 검증은 통과했습니다.
+
 ### 콘솔 필터 보완과 서명 없는 Android 내보내기 (#43, 2026-10-11)
 
 cf5204d의 실제 AAB 시도는 Login 처리 중 `Console reference does not resolve to the expected prefab root.`로 실패했습니다(약57.88초/오류3/경고71/출력 없음). 실제 nonnull BuildReport 콜백 진입과 실패 시 중단만 확인됐습니다. 예약된 1.0.194/code4 및 ledger `194,0,4`는 유지하며 재사용하지 않습니다.
