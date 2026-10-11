@@ -1,8 +1,10 @@
 # Sudden Force FPS 완성 계획
 
-2026년 10월 8일 기준입니다. 핵심 목표는 Photon Fusion으로 기본 FPS 전투와 팀전 경기 전체를 구현하고, Android에서 두 명 이상이 한 판을 끝내고 로비로 돌아오는 버전을 Google Play 테스트 트랙에 배포하는 것입니다. 기존 DesertHouse와 캐릭터를 활용합니다. 광고와 인앱 결제는 프로젝트에서 제거합니다. 실기기 검증용 APK와 테스트 배포용 AAB, 빌드·조작 안내, Fusion 구현 설명 및 검증 결과를 전달합니다. 스킬·장비 확장은 기본 경기와 테스트 배포 완료 후 별도 범위로 다룹니다.
+2026년 10월 11일 기준입니다. 핵심 목표는 Photon Fusion으로 기본 FPS 전투와 팀전 경기 전체를 구현하고, Android에서 두 명 이상이 한 판을 끝내고 로비로 돌아오는 버전을 Google Play 테스트 트랙에 배포하는 것입니다. 기존 DesertHouse와 캐릭터를 활용합니다. 광고와 인앱 결제는 프로젝트에서 제거합니다. 실기기 검증용 APK와 테스트 배포용 AAB, 빌드·조작 안내, Fusion 구현 설명 및 검증 결과를 전달합니다. 스킬·장비 확장은 기본 경기와 테스트 배포 완료 후 별도 범위로 다룹니다.
 
 ## 현재 기준 상태
+
+최신 추가 검증(2026-10-11): 실제 AAB code4 시도는 콘솔 prefab 식별 검사에서 실패해1.0.194/code4 예약을 유지했습니다. 필터를 정확한 직접 참조+스크립트 GUID 계약으로 보완한 뒤 씬 복사본14사례와 실제 Android Gradle 내보내기에서4씬의 콘솔 컴포넌트·참조0을 확인했습니다. packed 콘솔93항목은 MonoScript12항목으로 감소했습니다. 내보내기는 Succeeded이나 도구 응답 timeout 오류1건이 기록돼 있으며 signed AAB 성공을 뜻하지 않습니다. 원본 씬·45개 baseline·기존dirty 보존을 완료했고 상세는 ANDROID_RELEASE_CHECKLIST.md 상단을 따릅니다. 최종 AAB·RELRO3건·Play 설치 검증이 남아 전체 약78% 추정을 유지합니다.
 
 최신 배포 검증(2026-10-08): HEAD0f46c28에서 non-Development 서명 AAB1.0.193/code3(92,854,441 bytes)를 생성하고 버전 예약을 유지했습니다. 서명·manifest·최신 고지 본문 byte exact·EmojiOne packed 제외는 독립 감사 통과했으나 네이티브3개의 GNU_RELRO 정렬과 개발 콘솔 packed93개 잔존이 남아 총판정 PARTIAL입니다. 기존 수정과 임시 설정 복원은 완료했습니다. 상세는 ANDROID_RELEASE_CHECKLIST.md 상단을 따르며 전체 약78% 추정을 유지합니다. Play 업로드·릴리스·설치는 아직 수행하지 않았습니다.
 
