@@ -1,5 +1,18 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 새 PC 복제와 Play 서명 APK 전달 (#66, 2026-10-13)
+
+실제품은 이전 PC에서 복사하지 않고 원격 main `f61be81`로 새 Git worktree를 구성했습니다. 과거 미커밋 변경6개·외부 백업·AAB 증거 파일이 복구됐다고 가정하지 않습니다. 새 Editor6000.3.25f1의 최초 실행은 Safe Mode/`Fatal error. Internal CLR error. (0x80131506)`이며 bundled .NET6.0.21→Roslyn csc/Unity.Burst.rsp의 access violation이 관찰됐습니다. 제품 C# 문법 오류로 확정하지 않습니다. 지정 Editor 정상 종료 후 해당 Library/Bee만 외부 격리했고, 사용자 Google SDK/NDK 약관 동의 후 공식 Android 모듈 설치를 진행합니다. 엔진·패키지 버전 변경, 임의 .NET 교체나 보안 설정 완화는 하지 않았습니다.
+
+신규 APK 빌드·버전 예약 대신, 기존 활성 내부 테스트 code5/1.0.194의 Play Console `서명됨, 범용 APK`를 다운로드했습니다. 전달명 `SuddenForceFPS-1.0.194-code5-PlaySigned.apk`,99,434,034 bytes,SHA256 `FC64BA8EFF0521A8CD12081293C15B84019D1B481E5B69B0E844DFBCCFFAAABF`입니다. AAB의 SHA와 다르며 새 PC 빌드 성공을 뜻하지 않습니다. 외부 읽기 전용 사본과 원 다운로드 해시 일치를 확인했습니다. 사용자 지정 Drive에 APK와 테스트 안내 TXT의 업로드 완료를 확인했으며, 비공개 계정·Drive 주소는 저장소에 게시하지 않습니다.
+
+- 독립 ZIP123항목 CRC·중복 경로 검사 통과. manifest는 package `com.AeDeong.SuddenForceFPS`/version1.0.194/code5/min25/target36/ARM64 native7개이며 debuggable·testOnly 명시 없음. androguard4.1.4로 manifest·공개 인증서를 교차 확인했습니다.
+- 공개 인증서 SHA256 `01B2846B34835CD145264048DD5C642B6F112D35AA8F0B601DBA11F49E100D86`는 기존 Play 앱 서명과 일치하고 업로드 인증서와 구분합니다. 기존 cryptography를 사용한 독립 v2 subset의 RSA-PKCS1/SHA512 signed-data 서명·인증서/공개키·보호구간97chunk digest 대조는 통과했습니다. 자체 subset 구현이며 공식 apksigner·Android 플랫폼 및 v3/v3.1/v4 전체 검증으로 표현하지 않습니다.
+- 실제 notice675,225 bytes/SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`는 과거 code5 AAB 본문과 일치합니다. 자체 UnityFS/LZ4 검사에서 sharedassets1.assets의 유일한 이름·길이 대상 본문을 확인했으며 pathId/GUID 재매핑은 하지 않았습니다. 현재 Git HEAD blob674,975 bytes 및 새 checkout687,423 bytes와는 raw exact가 아니고 줄바꿈 정규화 후 내용 일치입니다. 파일·Git 줄바꿈 설정은 변경하지 않았습니다.
+- 네이티브7개의 PT_LOAD16KB 정렬과 RELRO3건 실패는 별도입니다. 실제16KB·저사양·물리 동시 입력·이 APK의 로그인/경기는 아직 검증하지 않았습니다. Drive 직접 설치는 Play 스토어 설치·업데이트 경로 검증을 대체하지 않습니다. 기존 개발 앱을 삭제하지 않고 다른 기기에서 사용자가 수동 테스트할 수 있도록 안내했습니다.
+
+외부 근거는 `D:/codex/validation/sudden-force-fps/20261013-apk-preflight-review`와 `20261013-delivery`, 환경 진단은 `20261013-pc-android-preflight`입니다. 이전 PC의 외부 경로를 현재 존재하는 것으로 해석하지 않습니다. APK 전달과 새 PC 환경 복구, 사용자 실기기 결과를 각각 분리해 추적합니다.
+
 ### Play 내부 테스트 출시 완료 및 실제 설치 선행 조건 (#43, 2026-10-11)
 
 PR #64 병합 main `d1dd25b`에서 배포 기록을 이어갑니다. 위 PR의 제품 빌드 HEAD `b3796f2`로 생성한 동일 AAB code5를 Play 내부 테스트 release3으로 저장·출시했고, Console에서 2026-10-11 14:17 KST `내부 테스터에게 제공됨`을 확인했습니다. 차단 오류 없이 경고3개는 앞선 업로드 기록과 같습니다. 업로드 및 내부 출시는 완료했지만 실제 설치·로그인·경기 검증은 미완료입니다.
