@@ -4,6 +4,8 @@
 
 ## 현재 기준 상태
 
+최신 복원 상태(2026-10-14, #66): Editor Process에만 임시 count4를 적용한 신규 netcorerun probe와 Android111개 오류·경고0을 확인했습니다. 하지만 타깃 전환 후 `-parallel-`가 API와 실제 rsp에서 사라져 동일 조건 게이트를 통과하지 못했고 비교 Gradle export는 실행하지 않았습니다. 환경 exact 원복·Win64복원117개/오류·경고0·후속 `scriptCompilationFailed=false`/idle과 설정35개·source3888개·원장194,1,5 보존을 확인했습니다. 앞선 APIUpdater 실패 해결·새 PC 빌드 성공의 근거는 아닙니다. 다음은 compiler 인자 저장·지속 경로의 원인 검토이며 전체 약80% 추정을 유지합니다.
+
 2026-10-14 후속 기준(#66/#42/#41): BIOS는 사용자 결정에 따라 보류했습니다. 임시 Android `-parallel-` 전환 컴파일108개/오류0·경고83은 통과했지만, 후속 비서명 ARM64 Gradle export는 APIUpdater의 AccessViolation/CLR 오류로 실제 BuildReport Failed(오류2·경고2)입니다. 씬·네이티브·Gradle 생성에 도달하지 않았고 새 APK/AAB·버전 예약은 없습니다. 원래 설정·source3888개·원장194,1,5는 보존했으나 최종 `scriptCompilationFailed=true`는 미해소입니다. 새 PC 빌드 복구는 열린 상태입니다.
 
 HUD PNG7개는 사용자가 직접 제작 또는 AI 생성한 것으로 확인해 기존 이미지를 유지합니다. 캐릭터·무기·맵·로딩의 공식 출처 후보를 복구했지만 기존 취득 기록·원 패키지 및 애니메이션22개 대응은 남았습니다. RELRO3건은 공식 점검 미충족 경고이며 실제16KB 실패가 관찰된 것은 아닙니다. 실제16KB 호환 검증은 여전히 필요합니다. Play 서명 APK는 전달 완료·사용자 설치 전이며, Play 설치/로그인/두 피어 경기·물리 멀티터치·저사양 검증은 남아 있습니다. 전체 약80% 작업 기준 추정을 유지하고 시간 비율로 해석하지 않습니다. 상세는 배포 점검표와 에셋 기록을 따릅니다.

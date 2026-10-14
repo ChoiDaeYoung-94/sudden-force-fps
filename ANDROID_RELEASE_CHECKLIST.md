@@ -1,5 +1,15 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Process count 진단 게이트와 최종 원복 (#66, 2026-10-14 후속)
+
+[Microsoft가 지원하는 `DOTNET_PROCESSOR_COUNT`](https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/environment-processorcount-on-windows)를 현재 Editor Process에만 임시4로 설정했습니다. 정확한 Unity `netcorerun` 신규 직접 자식 probe는 ProcessorCount4/.NET6.0.21/exit0을 반환했습니다. 이는 해당 probe의 상속 확인이며, 실행하지 않은 내부 APIUpdater의 환경 상속·오류 해결을 입증하지 않습니다. User/Machine 환경·레지스트리·물리 CPU affinity는 변경하지 않았습니다.
+
+Android 전환111개 어셈블리는 오류·경고0으로 완료됐습니다. 다만 `-parallel-` setter 직후 readback에는 값이 있었으나 전환 후 API는 빈 배열이었고 실제 Android 응답 파일3개에도 옵션이 없었습니다. 동일 조건 유지 게이트가 충족되지 않아 계획대로 **Gradle export는 실행하지 않았습니다(NOT RUN/시도0)**. 앞선 APIUpdater 실패가 해결됐다고 판정하지 않으며 옵션이 사라진 원인도 미확정입니다. 성공을 얻기 위한 재설정·반복 전환·추가 export는 수행하지 않았습니다.
+
+Process 환경값을 정확한 원래 미설정 상태로 되돌린 뒤, Win64 복원117개는 오류·경고0으로 완료됐습니다. 후속 `scriptCompilationFailed=false`/idle을 확인했으며 이전 true 상태를 인위적으로 초기화하지 않았습니다. 원래 타깃·추가 인자[]·ABI·defines·도구 경로·빌드 옵션을 보존했고 serialized35개 시작 바이트 일치/source3888개 승인된 총괄 문서4개 외 예상 밖 변화0/Git clean/원장194,1,5를 확인했습니다. 새 APK/AAB·키복사·버전 예약은 없습니다. 현재 Editor 복원 상태와 아직 실패한 Android Player 빌드를 구분합니다.
+
+외부 근거: `D:/codex/validation/sudden-force-fps/20261014-android-gradle-export-count4-parallel-01/final-preservation-and-handoff.json`. 다음 작업은 공개 compiler setter의 타깃 전환 후 지속·저장 경로 검토이며, 이 단위에서 영구 설정이나 새 빌드 절차를 채택하지 않았습니다.
+
 ### 소프트웨어 조건 검증과 Gradle export 실패 (#66, 2026-10-14 후속)
 
 사용자 결정에 따라 BIOS 업데이트를 보류하고 소프트웨어 조건을 먼저 검증했습니다. Android 추가 C# compiler 옵션에 `-parallel-`만 임시 적용한 전환 시도(runId `d5326bc875d44019b159d5575977b19f`)는 어셈블리108개/오류0·경고83으로 완료됐고, 이전에 실패한 두 어셈블리도 오류0이었습니다. 원래 Win64 복원117개는 오류·경고0이며 옵션을 원래 빈 배열로 복원했습니다. 이는 Roslyn 내부 병렬 컴파일 조건에서 얻은 단일 결과로, Bee의 동시 프로세스 수 제한이나 원인 해결·재발 방지의 증명이 아닙니다.
