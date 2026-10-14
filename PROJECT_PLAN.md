@@ -10,6 +10,8 @@
 
 아래 항목의 성공·실패·대기 상태와 진행률은 각각 해당 기록 시점입니다. 현재 상태는 가장 위의 최신 사용자 확인과 배포 점검표를 함께 따릅니다.
 
+최신 startup 진단(2026-10-14, #66): 초기182초 종료 미확인 마감 뒤 첫 예약 callback이 지연 실행됐고 정확 PID·시각의 native Editor shutdown 충돌(c0000005)을 확인했습니다. 정상 종료 성공은 아닙니다. 기존 Editor·소유 helper19개 없음 및 자동 저장8파일 원본 복원·fresh58·소스3888(총괄 문서3개 외 차이0)·Recovery3·원장194,1,5 보호를 확인했습니다. 이 후속 마감까지 launch·환경·probe·빌드0이며 파일 보호 조건에서 새 Process 한정 count4 startup1회를 별도 진단으로 승인했습니다. 초기 UNKNOWN을 최신 상태로 혼동하지 않고 새 실행 결과는 다음 실제 기록을 따릅니다. 새 PC 빌드 복구는 미완료이고 전체 약85% 작업 기준 추정을 유지합니다.
+
 최신 선별 저장 진단(2026-10-14, #66): Android compiler setter와 PlayerSettings 한정 SaveAssetIfDirty를 각각1회 실행했으나 디스크 옵션 지속 게이트가 미충족돼 Android 전환·export를 실행하지 않았습니다. 원래 인자·파일35개·tracked 소스3888개·원장은 보존했지만 Editor의 PlayerSettings 변경 표시는true로 남았습니다. 미추적 복구 씬/metadata3개는 이동·삭제의 자동 승인 거부 이후 원위치 보존 중입니다. 새 PC Android 빌드 복구는 미완료입니다. Windows 검증 Player 준비는 별도 단위이며 아직 빌드 성공 결과가 아닙니다.
 
 최신 복원 상태(2026-10-14, #66): Editor Process에만 임시 count4를 적용한 신규 netcorerun probe와 Android111개 오류·경고0을 확인했습니다. 하지만 타깃 전환 후 `-parallel-`가 API와 실제 rsp에서 사라져 동일 조건 게이트를 통과하지 못했고 비교 Gradle export는 실행하지 않았습니다. 환경 exact 원복·Win64복원117개/오류·경고0·후속 `scriptCompilationFailed=false`/idle과 설정35개·source3888개·원장194,1,5 보존을 확인했습니다. 앞선 APIUpdater 실패 해결·새 PC 빌드 성공의 근거는 아닙니다. 다음은 compiler 인자 저장·지속 경로의 원인 검토이며 전체 약80% 추정을 유지합니다.

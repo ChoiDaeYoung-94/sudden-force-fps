@@ -1,5 +1,27 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 새 프로세스 한정 환경의 startup·직접 자식 probe (#66, 2026-10-14 후속)
+
+종료 충돌 후 기존 프로세스 없음·파일 보호 조건에서 동일 Unity6000.3.25f1·프로젝트를 단1회 새로 실행했습니다. 새 Editor의 Win64 ready/idle·컴파일 실패false·씬 dirty=false, 원래 defines·양쪽 추가 compiler 인자[]·Mono2x·1.0.194/code5·활성4씬을 확인했습니다. 새 Process의 `DOTNET_PROCESSOR_COUNT=4`와 User/Machine 원래 미설정을 구분합니다. 직접 자식으로 실행한 기존 검증 프로그램1회는 별도 환경 override 없이 .NET6.0.21/ProcessorCount4/exit0/stderr없음을 반환했습니다.
+
+이는 새 프로세스 연결과 해당 신규 자식의 환경 상속 확인입니다. startup 로그에서 실제 csc/스크립트 재컴파일은 관찰되지 않아 게임 재컴파일 통과로 표시하지 않습니다. 앞선 native shutdown 충돌의 해결·재발 방지, 내부 APIUpdater/모든 helper의 실제 상속·Android Player 빌드 성공도 아직 아닙니다. 환경4는 진단 Editor에 남으며 전역 환경 변경이나 환경 exact 원복으로 표현하지 않습니다. 후속 Android 대상 컴파일은 원래 인자[]를 유지하는 별도 조건으로 검증합니다.
+
+### 지연 종료의 실제 실행·shutdown 충돌 및 파일 복원 (#66, 2026-10-14 후속)
+
+초기 종료 미확인 마감 이후 사용자가 Unity 창 활성화 요청에 응답했고, 처음 예약한 동일 callback의 실제 메뉴 invocation1회가 뒤늦게 기록됐습니다. 정확한 기존 PID·실행 파일·시각과 일치하는 Windows Application Error1000/exception `c0000005`/module unknown을 확인했습니다. 뒤의 WER 보고2개를 별도의 충돌2회로 세지 않습니다. Cleanup·shutdown 로그가 있어도 **정상 종료 PASS가 아닌 native Editor shutdown 충돌**이며 compiler/Player 빌드 실패와 구분합니다.
+
+기존 Editor와 소유 helper19개가 모두 사라졌습니다. 종료 저장의8개 변화는 명시된 Android empty compiler array(원래 빈 인자와 의미 동일), Graphics 줄끝, URP runtime목록·조건부 숨김 리소스, orphan metadata3개, buildsettings·layout입니다. 승인된 fresh 원본 바이트로 복원해 관련58개·소스3888개(총괄 문서3개 외 차이0)·Recovery3 해시 및 원장194,1,5를 보존했습니다. 복구 파일 이동·삭제나 서명 키 조회·복사는 하지 않았습니다.
+
+정상 종료 게이트FAIL은 유지합니다. 기존 프로세스 없음과 파일 보호PASS를 근거로 새 Editor의 Process 한정 count4 startup1회를 별도 진단으로 승인했으며, 이 후속 마감 시점의 launch·환경·probe·build는0입니다. 새 실행의 결과·현재 건강 상태는 다음 실제 기록을 따릅니다. 아래 UNKNOWN/NOT RUN은 초기 시점 기록이며 지연 callback이 여전히 남아 있다는 현재 상태로 확대하지 않습니다. 근거: `D:/codex/validation/sudden-force-fps/20261014-editor-count4-startup-01/delayed-exit-followup-final.json`.
+
+### 새 Editor startup 진단의 정상 종료 게이트 (#66, 2026-10-14 후속)
+
+재시작 전 공개 메모리·디스크 비교에서 Graphics 사용자 설정 차이는0이었습니다. URP의 runtime목록 비움과 조건부 숨김 리소스 차이2건은 설치 코드의 직렬화 동작과 대응했고 사용자 편집 필드 차이는 발견하지 못했습니다. PlayerSettings 전체 비밀값은 조회하지 않고 승인된 안전 getter 및 디스크 해시를 대조했습니다. 이 비교를 전체 native 메모리 보존 증명으로 확대하지 않습니다.
+
+fresh 관련58파일(설정35 포함)·tracked 소스3888개·Recovery3개·안전 getter·씬 dirty=false를 확인한 뒤 정확한 기존 Editor에 `File/Exit` 예약 요청1회가 전달됐습니다. 약182초까지 실제 메뉴 호출·완료 기록이 없고 기존 프로세스가 남아 있어 **정상 종료 UNKNOWN → startup NOT RUN**으로 중단했습니다. 메뉴 대화상자나 veto가 원인이라고 확정하지 않습니다. 요청 전 Win64 idle/컴파일 실패false와 요청 후 최종 건강 상태UNKNOWN을 구분합니다. 지연 callback이 남아 있을 가능성 때문에 종료 요청을 반복하거나 새 Editor를 실행하지 않았습니다.
+
+launch·환경 변경·probe·강제 컴파일·저장·빌드·추가 입력·강제 종료는 모두0입니다. fresh58·소스3888·Recovery3 해시 변화0 및 원장194,1,5를 확인했고 복구 파일은 원위치 미추적 상태로 보존했습니다. 사용자에게 Unity 창의 정상 표시/응답 없음/대화상자 여부만 확인 요청했으며 저장·종료·강제 종료를 요청하지 않았습니다. 실제 startup 환경4·내부 helper 상속·새 PC 빌드 성공은 미검증입니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-editor-count4-startup-01/final-preservation-and-handoff.json`.
+
 ### 전달 APK 두 Android 기기 사용자 경기 검증 (#41/#43, 2026-10-14 후속)
 
 사용자는 **Galaxy Note20 Ultra와 Galaxy S25 Ultra**에서 전달 APK로 방 참가·서로 다른 팀 선택·READY/START 후 양쪽 경기 화면 진입이 정상이라고 확인했습니다. 이어 동시 이동·시점·사격과 손을 뗐을 때 입력 해제, 재장전·상대 사망·리스폰, 한 경기 종료 후 양쪽 결과 화면·로비 복귀·새 방 참가를 묻자 “이것도 다 잘 되는 것 같아”라고 답했습니다. 요청한 기능 흐름에 대한 **사용자 수동 정상 보고**로 기록하며 총괄의 직접 계측·화면 관찰이나 모든 입력 조합의 전수 통과로 표시하지 않습니다.
