@@ -1,5 +1,17 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 진단 옵션·예약 콜백 export의 오류0 결과 (#66, 2026-10-14 후속)
+
+같은 Unity6000.3.25f1·Process4·원래 compiler 인자[]에 공식 `-diag-debug-shader-compiler`가 전달된 별도 Editor에서 Android 전환1회 후 새 외부 출력으로 예약 export1회를 진행했습니다. 실제 queued 응답·콜백1회·진입 시 콜백 제거·BuildPlayer1회·QueuePlayerLoopUpdate1회와 **Succeeded/오류0·경고2/28.3659452초**를 확인했습니다. 경고는 Unity 서비스 연결 안내와 RuntimePipelineConfig 미설정 안내입니다. 이전 direct eval의 timeout 로그가 이번 report에 섞이지 않았습니다.
+
+95개 셰이더 처리·패스 통계231줄·캐시 적중920·새 variant4개(CoreBlit1/FinalPost2/UberPost1)가 관찰됐으며 이전 실패3종의 새 작업을 포함합니다. 이번 로그의 shader 오류·통신 오류·새 Windows fault는0입니다. 반면 Csc66·IL2CPP는 캐시/서명 검사 재사용으로 새 Csc/APIUpdater/codegen 실행은 관찰되지 않았습니다. 앞선 Player 실제 action66 결과와 이 cached 결과를 구분합니다.
+
+startup에서는 직접 child ShaderCompiler1개였지만 빌드 완료 후 동일 Editor의 직접 자식5개가 관찰됐고 active-build 최고 수를 포착하지 못했습니다. 실제 arg 전달과 실행 결과는 확인했지만 **옵션이 전체 worker 수를1개로 강제한 효과·1시간 timeout 효과·단일 원인 해결·재발 방지는 확정하지 않습니다**. 캐시와 호출 계측 변경의 영향도 분리하며 새 기기 렌더링 검증으로 확대하지 않습니다. 앞선 Editor shutdown c0000005 FAIL도 유지합니다.
+
+출력2,794파일/1,184,672,474B·CPP940·기존 AArch64 ELF64 SO4개·4씬 build/pack·notice TextAsset 메타데이터를 확인했습니다. libil2cpp.so는 없고 Gradle assemble·최종 native link·APK/AAB·서명·최종16KB 패키지·새 기기 실행은0입니다. Console 메타데이터12개는 MonoScript 범위이며 씬 인스턴스 완전 제거 계측이나 packed notice 본문 대조를 대체하지 않습니다. 이전 부분 성공 출력은 보존했습니다.
+
+임시 ABI/signing/export/development/bundle 원복과 Win64 switch1회·자연 pipeline117/오류·경고0(actualCsc0 서명검사)를 확인했습니다. 최종 Win64 idle/compileFailed=false·원래 safe getter·콜백/마커 제거 상태입니다. 알려진 자동 변화28개를 fresh73 원본 bytes로 복원해 설정35·주요58·관련73·소스3888 차이0, Recovery3 원위치/hash·원장194,1,5/code5를 보존했습니다. PSdirtytrue와 Process4/diag arg는 진단 조건으로 남고 전역환경/환경 exact 원복으로 표시하지 않습니다. 다음은 생성 Gradle 프로젝트의 네이티브 컴파일·패키징 검증입니다. 근거: `D:/codex/validation/sudden-force-fps/20261014-android-gradle-export-count4-shader-diag-01/final-preservation-and-handoff.json`.
+
 ### startup4·원래 인자 조건의 실제 Gradle export와 shader 오류 (#66, 2026-10-14 후속)
 
 건강한 Android 대상에서 비개발 ARM64/IL2CPP·비서명 Gradle export를 `BuildPipeline.BuildPlayer` 단1회 실행했습니다. 실제 report는 **Succeeded/85.6017초/오류4·경고74/1,184,674,657B**이나 오류4는 CLI main-thread5000ms timeout 로그1건과 CoreBlit·FinalPost·UberPost의 실제 shader IPC 오류3건입니다. 같은 시각의 정확한 UnityShaderCompiler.exe에서 native fault3개(c0000005 2개/c000001d 1개)를 확인했습니다. Assert8개·WER6개 보고를 추가 오류/충돌로 중복 집계하지 않습니다. 생성 결과는 **PARTIAL: 파일 생성 성공, 렌더링·배포 검증 미통과**이며 새 APK/AAB·Gradle assemble은0입니다.
