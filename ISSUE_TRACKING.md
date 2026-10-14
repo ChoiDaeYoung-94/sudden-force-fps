@@ -1,6 +1,6 @@
 # GitHub 이슈와 PR 작업 관리
 
-## 현재 운영 기준 (2026-10-08)
+## 현재 운영 기준 (2026-10-14)
 
 사용자 지시에 따라 이슈의 완료 기준을 먼저 정하고 `codex/issue-번호-설명` 브랜치에서 작업합니다. 한글 커밋과 PR에 이슈를 연결하고, 변경 내용·검증 결과·남은 제한을 리뷰한 뒤 저장소 규칙을 준수하여 병합합니다. 일부 요구만 해결했으면 `Refs #번호`, 이슈 전체 범위가 완료된 경우만 `Closes #번호`를 사용합니다. 진행 중/미검증 이슈를 소급 완료하지 않습니다.
 
@@ -16,11 +16,14 @@ GitHub 연결은 PR 작성자와 같은 계정이므로 정식 자기 승인을 
 | [#37 로비 안내·고지 UI](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/37) | [PR #45](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/45), 기존 에셋 전체 라이선스 완료와 구분 |
 | [#38 서명 APK·모바일 경기](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/38) | [PR #46](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/46), 실제300초/복귀/초기화와 미검증 전투·성능 구분 |
 | [#39 peer timeout 복귀](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/39) | [PR #47](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/47), 수정 EditorClient 실제 강제 종료 재시험/재참가 통과 |
-| [#40 정상 퇴장 메뉴](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/40) | MENU·확인·입력 차단 구현 중, 실제 Android 정상 퇴장까지 열림 유지 |
+| [#40 정상 퇴장 메뉴](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/40) | 구현·기존 검증 완료로 닫힘. 최신 APK 사용자 방 퇴장 보고와 실제 두 피어 경기 전체 회귀는 구분 |
 | [#41 Android 최종 검증](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/41) | 최신 APK·전투·물리 동시 입력·10분 성능·종료 회귀 |
 | [#42 라이선스·고지](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/42) | 배포 포함 자산·SDK 출처 및 필수 고지 점검 |
-| [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | release AAB·필수 Console 항목·테스터 설치/로그인/경기 |
+| [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | code5 내부 출시·APK 전달 완료, Galaxy Note20 Ultra 사용자 설치/로그인/로비/방 생성·퇴장 보고 확인. 스토어 경로와 두 피어 경기 검증은 남음 |
 | [#44 CI 전환](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44) | Unity6/Google Play 작업에 맞게 기존 자동 빌드·배포 경로 정리 |
+| [#66 새 PC 빌드 환경](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/66) | 도구체인 설치·Win64 복원 확인, PR67–69 병합. Android Player/APIUpdater 실패와 compiler 옵션 지속 검증 진행 중 |
+
+2026-10-14 GitHub 상태를 읽기 대조했습니다. #37–40은 닫혔고 #1·35·36·41–44·66은 열려 있습니다. 이번 사용자 APK 결과는 수동 보고이며 직접 계측이나 Play 스토어 설치 결과로 확대하지 않습니다. 아래 이전 날짜의 조사·완료 체크는 당시 기록입니다.
 
 ## 최초 조사 기록 (2026-10-07)
 

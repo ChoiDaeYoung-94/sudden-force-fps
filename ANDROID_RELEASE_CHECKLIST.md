@@ -1,5 +1,11 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 전달 APK 사용자 설치·로그인·방 검증 (#43, 2026-10-14)
+
+사용자는 전달한 APK를 **Galaxy Note20 Ultra**에 설치하고 실행했으며, Google Play Games 로그인 후 로비 진입·방 생성·방 퇴장이 정상 동작한다고 보고했습니다. 사용자 수동 테스트 결과로 기록하며 총괄의 직접 기기 계측·화면 관찰 결과로 표현하지 않습니다. 전달 대상은 기존 `1.0.194/code5` Play 서명 범용 APK이며 새 PC에서 새로 만든 APK가 아닙니다.
+
+Android 버전·구체 모델번호·설치된 앱의 버전/인증서 대조·재실행 횟수는 확인하지 않았습니다. Play 스토어 테스터 참여·설치/업데이트 경로, 두 피어 실제 경기·복귀·재참가, 물리 멀티터치·성능·16KB 검증은 별도입니다. 이번 성공으로 새 PC APIUpdater 빌드 실패(#66)가 해결됐다고 판정하지 않습니다. 기존 앱·데이터 보존 합의를 유지하며 #43 전체는 열린 상태입니다.
+
 ### Process count 진단 게이트와 최종 원복 (#66, 2026-10-14 후속)
 
 [Microsoft가 지원하는 `DOTNET_PROCESSOR_COUNT`](https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/environment-processorcount-on-windows)를 현재 Editor Process에만 임시4로 설정했습니다. 정확한 Unity `netcorerun` 신규 직접 자식 probe는 ProcessorCount4/.NET6.0.21/exit0을 반환했습니다. 이는 해당 probe의 상속 확인이며, 실행하지 않은 내부 APIUpdater의 환경 상속·오류 해결을 입증하지 않습니다. User/Machine 환경·레지스트리·물리 CPU affinity는 변경하지 않았습니다.
