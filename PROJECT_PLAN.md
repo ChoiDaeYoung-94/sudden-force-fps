@@ -4,6 +4,14 @@
 
 ## 현재 기준 상태
 
+최신 사용자 실기기 확인(2026-10-14, #43): 전달 APK를 Galaxy Note20 Ultra에 설치·실행하고 Google 로그인 후 로비·방 생성·퇴장이 정상 동작했다는 사용자 수동 결과를 받았습니다. 두 피어 경기·복귀/재참가, Play 스토어 설치/업데이트 경로, 동시 터치·저사양·16KB 및 남은 출처 검증은 아직 별도입니다. 새 PC Android 빌드 복구(#66)는 진행 중입니다. 설치·인증·기본 방 흐름의 추가 확인을 반영해 전체 진행은 **약82% 작업 기준 추정**이며 시간 비율이나 최종 품질 점수가 아닙니다.
+
+### 날짜별 환경·배포 기록
+
+아래 항목의 성공·실패·대기 상태와 진행률은 각각 해당 기록 시점입니다. 현재 상태는 가장 위의 최신 사용자 확인과 배포 점검표를 함께 따릅니다.
+
+최신 선별 저장 진단(2026-10-14, #66): Android compiler setter와 PlayerSettings 한정 SaveAssetIfDirty를 각각1회 실행했으나 디스크 옵션 지속 게이트가 미충족돼 Android 전환·export를 실행하지 않았습니다. 원래 인자·파일35개·tracked 소스3888개·원장은 보존했지만 Editor의 PlayerSettings 변경 표시는true로 남았습니다. 미추적 복구 씬/metadata3개는 이동·삭제의 자동 승인 거부 이후 원위치 보존 중입니다. 새 PC Android 빌드 복구는 미완료입니다. Windows 검증 Player 준비는 별도 단위이며 아직 빌드 성공 결과가 아닙니다.
+
 최신 복원 상태(2026-10-14, #66): Editor Process에만 임시 count4를 적용한 신규 netcorerun probe와 Android111개 오류·경고0을 확인했습니다. 하지만 타깃 전환 후 `-parallel-`가 API와 실제 rsp에서 사라져 동일 조건 게이트를 통과하지 못했고 비교 Gradle export는 실행하지 않았습니다. 환경 exact 원복·Win64복원117개/오류·경고0·후속 `scriptCompilationFailed=false`/idle과 설정35개·source3888개·원장194,1,5 보존을 확인했습니다. 앞선 APIUpdater 실패 해결·새 PC 빌드 성공의 근거는 아닙니다. 다음은 compiler 인자 저장·지속 경로의 원인 검토이며 전체 약80% 추정을 유지합니다.
 
 2026-10-14 후속 기준(#66/#42/#41): BIOS는 사용자 결정에 따라 보류했습니다. 임시 Android `-parallel-` 전환 컴파일108개/오류0·경고83은 통과했지만, 후속 비서명 ARM64 Gradle export는 APIUpdater의 AccessViolation/CLR 오류로 실제 BuildReport Failed(오류2·경고2)입니다. 씬·네이티브·Gradle 생성에 도달하지 않았고 새 APK/AAB·버전 예약은 없습니다. 원래 설정·source3888개·원장194,1,5는 보존했으나 최종 `scriptCompilationFailed=true`는 미해소입니다. 새 PC 빌드 복구는 열린 상태입니다.

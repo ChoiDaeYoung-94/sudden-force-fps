@@ -1,5 +1,33 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 필수 Standalone 심볼 후보의 컴파일 게이트 (#66, 2026-10-14 후속)
+
+첫 Windows 오류에 따라 공개 API로 원래 Standalone 정의를 유지하며 `URP_COMPATIBILITY_MODE` 하나만 메모리에 추가했습니다. 후속 컴파일8개/오류1·경고0에서 Unity.Burst 어셈블리의 Roslyn nullable attribute synthesis·metadata emit 내부 NullReferenceException이 관찰됐습니다. 새 구간에서 C# 오류 코드·AccessViolation·이전CLR 문구는 관찰되지 않았습니다. getter는 추가 심볼을 유지했으나 디스크는 원래 정의였고, 컴파일·지속 게이트를 충족하지 않아 **새 Windows 빌드는 미실행**입니다. 제품 문법 오류나 Burst 패키지 결함으로 원인을 확정하지 않습니다.
+
+원래 정의를 복원한 자연 컴파일7개는 오류·경고0, 후속 실패 플래그false/idle 및 observer 해제를 확인했습니다. 메모리·디스크 정의와 인자[]/설정35개·tracked 소스3888개·Recovery3개 해시·원장194,1,5를 보존했고, PlayerSettings 변경 표시는true로 유지했습니다. 안전한 설정 커밋 후보는 없으며 첫 Windows 필수 심볼 조건도 아직 미해결입니다. 전역 저장·private writer·YAML 수정·환경count4·반복 빌드나 오류 플래그 초기화는 수행하지 않았습니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-windows-qa-urp-compat-01/final-preservation-and-handoff.json`.
+
+### Windows 검증 Player 첫 빌드의 필수 심볼 검사 (#66, 2026-10-14)
+
+현재 Win64·Mono2x·활성4씬·원래 renderer/defines/args를 유지하고 기존 `MultiplayerValidationBuild.BuildWindows64`를 단1회 실행했습니다. 실제 report/manifest는 **Failed/오류2·경고1/0.281초**이며 `Build player → Preprocess Player`에서 중단됐습니다. 실행 파일·Player 파일 해시 목록은 없고 실행·두 피어 검증도 미실행입니다. 도구 timeout을 실패 근거로 사용하지 않습니다.
+
+설치된 URP의 `URPBuildDataValidator`는 직렬화 Compatibility Mode가 켜져 있는데 `URP_COMPATIBILITY_MODE`가 없으면 빌드를 거절합니다. 현재 global 설정은1이고 Standalone에는 심볼이 없다는 실제 오류와 검사 코드를 대조했습니다. 이번 새 로그에서 C# 오류·AccessViolation·CLR 오류는 관찰하지 않았습니다. 이 원인은 앞선 Android 런타임 실패와 별도입니다.
+
+자동 저장된 URP3개를 before 원본으로 정확 복원했고 설정35개·tracked 소스3888개·원장194,1,5를 보존했습니다. Recovery3개는 원위치 해시가 같으며 PlayerSettings 변경 표시는true로 유지했습니다. 추가 심볼·타깃/백엔드·환경·renderer 변경과 반복 빌드는 이 시도에서 수행하지 않았습니다. 다음은 필수 Standalone 심볼 하나의 별도 수정·검증이며 아직 성공 결과가 아닙니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-windows-qa-player-01/final-preservation-and-handoff.json`.
+
+### Compiler 인자 선별 저장 검증 (#66, 2026-10-14 후속)
+
+닫혀 있던 기존 프로젝트를 정확한 Unity6000.3.25f1로 한 번 정상 실행한 뒤 Win64 idle/실패 플래그false/원래 인자[]를 확인했습니다. 공개 Android compiler setter1회 후 getter는 `-parallel-`, PlayerSettings의 변경 표시는true였습니다. 해당 PlayerSettings 객체에만 `AssetDatabase.SaveAssetIfDirty`를1회 호출했지만 파일 SHA256과 디스크 인자 영역은 바뀌지 않았고, 지연 읽기에서도 옵션이 기록되지 않았습니다. **이 호출에서 디스크 지속 게이트를 확인하지 못했으며 Android 전환·export는 미실행**입니다. 원인이나 모든 설정 저장 경로의 실패로 확대하지 않습니다.
+
+메모리 인자[]·설정 파일35개 시작 바이트·tracked 소스3888개·원장194,1,5는 보존했고 Win64 idle/컴파일 실패false를 확인했습니다. 다만 PlayerSettings 변경 표시는 원래false에서true로 남아, 파일 원복과 Editor 메타 상태를 구분합니다. 전역 저장·SetDirty/dirty 숨김·private writer·환경count4·재시도는 수행하지 않았습니다.
+
+Editor 시작 때 생긴 미추적 `Assets/_Recovery.meta`, `Assets/_Recovery/0.unity`, `Assets/_Recovery/0.unity.meta`는 원래 위치에 보존했습니다. 외부 이동·빈 폴더 삭제 명령이 자동 승인 검토의 `blocked by policy`로 거부됐고 상세 사유는 제공되지 않았습니다. 명령은 미실행이며 다른 경로·도구로 우회하지 않았습니다. tracked 제품 파일 원복과 전체 Git clean을 혼동하지 않습니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-android-compiler-args-selective-save-01/final-preservation-and-handoff.json`.
+
+### 전달 APK 사용자 설치·로그인·방 검증 (#43, 2026-10-14)
+
+사용자는 전달한 APK를 **Galaxy Note20 Ultra**에 설치하고 실행했으며, Google Play Games 로그인 후 로비 진입·방 생성·방 퇴장이 정상 동작한다고 보고했습니다. 사용자 수동 테스트 결과로 기록하며 총괄의 직접 기기 계측·화면 관찰 결과로 표현하지 않습니다. 전달 대상은 기존 `1.0.194/code5` Play 서명 범용 APK이며 새 PC에서 새로 만든 APK가 아닙니다.
+
+Android 버전·구체 모델번호·설치된 앱의 버전/인증서 대조·재실행 횟수는 확인하지 않았습니다. Play 스토어 테스터 참여·설치/업데이트 경로, 두 피어 실제 경기·복귀·재참가, 물리 멀티터치·성능·16KB 검증은 별도입니다. 이번 성공으로 새 PC APIUpdater 빌드 실패(#66)가 해결됐다고 판정하지 않습니다. 기존 앱·데이터 보존 합의를 유지하며 #43 전체는 열린 상태입니다.
+
 ### Process count 진단 게이트와 최종 원복 (#66, 2026-10-14 후속)
 
 [Microsoft가 지원하는 `DOTNET_PROCESSOR_COUNT`](https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/environment-processorcount-on-windows)를 현재 Editor Process에만 임시4로 설정했습니다. 정확한 Unity `netcorerun` 신규 직접 자식 probe는 ProcessorCount4/.NET6.0.21/exit0을 반환했습니다. 이는 해당 probe의 상속 확인이며, 실행하지 않은 내부 APIUpdater의 환경 상속·오류 해결을 입증하지 않습니다. User/Machine 환경·레지스트리·물리 CPU affinity는 변경하지 않았습니다.

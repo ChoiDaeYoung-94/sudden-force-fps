@@ -4,7 +4,9 @@
 
 2026-10-14 기준으로 기본 전투·경기와 기존 Android 실기기 PGS 로그인·두 피어 경기 검증을 진행했고, `1.0.194 / versionCode 5`를 Google Play 내부 테스트에 출시했습니다. Play 설치본의 로그인·경기, 물리 멀티터치·저사양·실제16KB 기기와 남은 에셋 출처 검증은 미완료입니다. 최신 범위와 날짜별 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)와 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)을 따릅니다.
 
-새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 설치와 도구 실행, 공식 OpenJDK의 별도 경로 및 실제 Win64 컴파일을 확인했습니다. 2026-10-14 진단에서 임시 Android compiler 옵션 `-parallel-`로 편집기 컴파일108개는 오류0으로 완료됐지만, 후속 비서명 ARM64 Gradle export는 Unity APIUpdater의 AccessViolation/CLR 오류로 실패했습니다. 다음 Process count 진단은 compiler 옵션 유지 게이트 미충족으로 비교 export를 실행하지 않았습니다. 환경·설정·소스·버전을 원복하고 Win64117개 오류·경고0 및 후속 실패 플래그false를 확인했습니다. BIOS는 사용자 결정에 따라 보류했고 원인 및 새 PC Android 빌드 복구는 미완료입니다. 기존 Play 버전5의 서명된 범용 APK는 사용자 지정 Drive에 전달했으며 설치 전입니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다. 최신 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 설치와 도구 실행, 공식 OpenJDK의 별도 경로 및 실제 Win64 컴파일을 확인했습니다. 2026-10-14 진단에서 임시 Android compiler 옵션 `-parallel-`로 편집기 컴파일108개는 오류0으로 완료됐지만, 후속 비서명 ARM64 Gradle export는 Unity APIUpdater의 AccessViolation/CLR 오류로 실패했습니다. 다음 Process count 진단은 compiler 옵션 유지 게이트 미충족으로 비교 export를 실행하지 않았습니다. 환경·설정·소스·버전을 원복하고 Win64117개 오류·경고0 및 후속 실패 플래그false를 확인했습니다. BIOS는 사용자 결정에 따라 보류했고 원인 및 새 PC Android 빌드 복구는 미완료입니다. 기존 Play 버전5의 서명된 범용 APK는 사용자 지정 Drive에 전달했고, 사용자는 Galaxy Note20 Ultra에서 설치·실행·Google 로그인 후 로비·방 생성/퇴장이 정상이라고 확인했습니다. Play 스토어 설치 경로와 두 피어 경기는 별도 검증 대상입니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다. 최신 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+
+후속 PlayerSettings 선별 저장 시험도 파일에 옵션이 기록되지 않아 Android 전환 없이 마쳤습니다. 인자와 tracked 파일은 원래 값이지만 Editor의 변경 표시와 미추적 복구 파일3개는 남겨 보존했습니다. 실제 두 피어 검증을 위한 Windows 클라이언트 준비는 별도로 진행합니다.
 
 HUD 이미지7개는 사용자가 직접 제작 또는 AI 생성했다고 확인해 유지합니다. 캐릭터·무기·맵·로딩의 공식 출처 후보와 남은 취득·원 패키지 확인은 [에셋 기록](THIRD_PARTY_ASSETS.md)을 따릅니다.
 
