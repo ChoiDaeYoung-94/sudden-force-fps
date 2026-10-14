@@ -1,5 +1,23 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### startup4·원래 인자 조건의 실제 Gradle export와 shader 오류 (#66, 2026-10-14 후속)
+
+건강한 Android 대상에서 비개발 ARM64/IL2CPP·비서명 Gradle export를 `BuildPipeline.BuildPlayer` 단1회 실행했습니다. 실제 report는 **Succeeded/85.6017초/오류4·경고74/1,184,674,657B**이나 오류4는 CLI main-thread5000ms timeout 로그1건과 CoreBlit·FinalPost·UberPost의 실제 shader IPC 오류3건입니다. 같은 시각의 정확한 UnityShaderCompiler.exe에서 native fault3개(c0000005 2개/c000001d 1개)를 확인했습니다. Assert8개·WER6개 보고를 추가 오류/충돌로 중복 집계하지 않습니다. 생성 결과는 **PARTIAL: 파일 생성 성공, 렌더링·배포 검증 미통과**이며 새 APK/AAB·Gradle assemble은0입니다.
+
+실제 단계별 trace에서 Player Csc 완결 action66·MovedFromExtractor41, 후속 MovedFromExtractor1·IL2CPP codegen1이 관찰됐습니다. 개별 Csc exit code와 profiler track ID의 실제 OS PID는 직접 보관/대조하지 않았습니다. 최종 native trace의Csc0을 전체 export의Csc0으로 확대하지 않습니다. 새로운 fatalCLR/AccessViolation 문구의 미관찰과 shader helper native fault는 별도입니다. CPP940개·ARM64 SO4개·Gradle 프로젝트를 생성했으나 libil2cpp.so 최종 네이티브 컴파일은 아직 없고 assemble·실기기·실제16KB 통과가 아닙니다.
+
+출력2,795파일/1,184,760,095B의 SHA256을 보관했고 signing material 파일0을 확인했습니다. 활성4씬 build/pack과 packedAsset6,409개·notice TextAsset 포함을 확인했습니다. packed notice 본문 추출 및 post-filter hierarchy 직접 계측은 미실행입니다. Console MonoScript12개의 포함을 Console instance 존재로 해석하지 않습니다.
+
+임시 ABI·custom signing·export·development·bundle 값을 복원하고 Win64 switch1회를 완료했습니다. 자연 pipeline117개/오류·경고0이지만 실제Csc0(up-to-date)입니다. 최종 Win64 idle/compileFailed=false/씬dirty=false·원래 안전 getter/observer 제거를 확인했고 PS dirty=true를 숨기지 않았습니다. Process4는 진단 환경으로 남아 전역 환경 원복으로 표현하지 않습니다.
+
+승인된28개 자동·resolver 변화는 fresh hash가 일치하는 원본 bytes로 복원했습니다. 기존 루트 탐색 Gradle 코드의 hardcoded URI 자동 대체와 임시 ARM64 packaging 필터를 영구 채택하지 않았습니다. 원래 Win64 기준 설정35·관련58 exact/소스3888 예상 밖 차이0·Recovery3 원위치 hash·원장194,1,5/code5를 보존했습니다. source/키/엔진·패키지·BIOS·보안·전원·affinity 변경 및 새 버전 예약은 없습니다. 다음은 공식 single shader compiler 진단 조건이며 아직 실행 결과가 아닙니다. 근거: `D:/codex/validation/sudden-force-fps/20261014-android-gradle-export-startup-count4-default-01/final-preservation-and-handoff.json`.
+
+### Android 대상 전환의 cached pipeline 결과 (#66, 2026-10-14 후속)
+
+새 Editor의 Process4와 원래 추가 compiler 인자[]에서 공개 Android switch1회가 실제true/Android로 반환됐고 pipelineStarted1/AssemblyFinished117/Finished1·오류·경고0을 확인했습니다. 최초 CLI5000ms timeout은 동일 요청의 외부 반환·완료 기록으로 실제 결과를 대조했으며 재요청하지 않았습니다. Bee의Csc117개는 CheckInputSignature뿐이고 runNodeAction/noderesult0이므로 **actualRoslyn NOT RUN(up-to-date)**입니다. 새로운 Roslyn117회 성공·CLR 문제 해결의 증명은 아닙니다.
+
+최종 Android idle/compileFailed=false·원래 인자/define/API36/min25/ARMv7+ARM64/IL2CPP·도구 경로·버전을 유지했고 export/build/인자·define·환경 setter·save·버전 예약은0입니다. 이 단계의 관련58 중56개 exact이며 Library BuildSettings/EditorUserBuildSettings 2개는 Android target 캐시 변화로 유지했습니다. 제품 소스·Recovery·원장을 보존했고 다음 실제 export의 임시 설정·Win64 복원과 구분합니다. 근거: `D:/codex/validation/sudden-force-fps/20261014-android-target-startup-count4-default-01/final-preservation-and-handoff.json`.
+
 ### 새 프로세스 한정 환경의 startup·직접 자식 probe (#66, 2026-10-14 후속)
 
 종료 충돌 후 기존 프로세스 없음·파일 보호 조건에서 동일 Unity6000.3.25f1·프로젝트를 단1회 새로 실행했습니다. 새 Editor의 Win64 ready/idle·컴파일 실패false·씬 dirty=false, 원래 defines·양쪽 추가 compiler 인자[]·Mono2x·1.0.194/code5·활성4씬을 확인했습니다. 새 Process의 `DOTNET_PROCESSOR_COUNT=4`와 User/Machine 원래 미설정을 구분합니다. 직접 자식으로 실행한 기존 검증 프로그램1회는 별도 환경 override 없이 .NET6.0.21/ProcessorCount4/exit0/stderr없음을 반환했습니다.
