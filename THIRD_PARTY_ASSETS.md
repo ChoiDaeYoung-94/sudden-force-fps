@@ -1,5 +1,21 @@
 # Third-party asset provenance
 
+## HUD 제작 확인과 남은 원본 대조 (2026-10-14, #42)
+
+사용자는 `Assets/Art/Game/UI`의 `Crosshair.png`, `Fire.png`, `Gun.png`, `Health.png`, `HPBar.png`, `Jump.png`, `Sit.png` 7개를 **직접 제작 또는 AI 생성**한 이미지라고 확인했습니다. 이 답변을 프로젝트 자체 제작 HUD의 출처 기록으로 반영하고 기존 파일과 GUID를 유지합니다. 개별 파일의 제작 방식·생성 도구는 추정하지 않으며, PNG 생성 시각 메타데이터를 저작자 증명으로 취급하지 않습니다. 이전의 HUD 출처 질문은 해소됐습니다.
+
+직렬화 참조를 대조하면 `Sit.png`는 달리기 버튼, `Jump.png`는 재장전 버튼에 연결돼 있습니다. 파일명만으로 웅크림·점프 구현을 주장하지 않습니다. 이번 작업은 출처 기록이며 이미지·입력·씬 변경이나 런타임 UI 검증은 수행하지 않았습니다.
+
+| 기존 자산 | 확인한 공식 출처 후보 | 남은 확인 |
+| --- | --- | --- |
+| Military/Survivalist 캐릭터 | Slayver의 [Survivalist character, 181470](https://marketplace.unity.com/packages/3d/characters/survivalist-character-181470), 현재 무료·Standard Unity Asset Store EULA. 공식 제작자 목록의 모델명과 로컬 파일명이 대응 | 기존 계정 취득 내역과 원 패키지의 로컬 파일 대응 |
+| Weapon_02 | JustCreate의 [Low Poly FPS Weapons Lite, 245929](https://assetstore.unity.com/packages/3d/props/guns/low-poly-fps-weapons-lite-245929), 현재 무료·Standard EULA | 기존 계정 취득 내역과 원 모델·텍스처 대응 |
+| DesertHouse 맵 자산 | JustCreate의 [Low Poly FPS Map Lite, 258453](https://marketplace.unity.com/packages/3d/environments/low-poly-fps-map-lite-258453), 현재 무료·Standard EULA | 기존 취득 기록과 로컬 원 패키지 대응 |
+| 로딩 이미지·애니메이션 | [Animated Loading Icons, 47844](https://assetstore.unity.com/packages/2d/gui/icons/animated-loading-icons-47844), 현재 단종. 공식 페이지는 기존 취득자의 새·기존 프로젝트 이용을 안내 | 기존 취득 내역, spritesheet·animation 대응 및 당시 적용 조건 |
+| 플레이어 애니메이션 22개 | 캐릭터와 같은 반입 커밋 및 제작 메타데이터는 확인 | 정확한 원 클립·제공 패키지 대응. 별도 ArtStation 판매 파일의 존재를 무료 Unity판에 포함됐다는 증거로 사용하지 않음 |
+
+현재 무료 표시와 비슷한 파일명은 기존 취득 권한·원 패키지 동일성을 모두 증명하지 않습니다. 단종이나 기록 미확인 역시 배포 불가 확정으로 해석하지 않습니다. 새 PC의 미디어 726개 해시와 활성 4개 씬·Resources의 보수적 참조 체인을 읽기 대조했으며, 이는 최종 산출물의 실제 포함 목록을 대체하지 않습니다. 이번에 다운로드·에셋 교체는 하지 않았고 #42 전체는 열린 상태입니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-remaining-assets-readonly`.
+
 2026-10-11 서명 AAB code5 추가 확인: 실제 ThirdPartyNotices TextAsset675,225 bytes/SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`가 원본과 바이트 일치했고 EmojiOne 경로·GUID packed0을 독립 확인했습니다. 콘솔 packed12항목은 모두 MonoScript이고 비MonoScript0입니다. UI·프리팹·텍스처 제외의 검증이며 script·AAR 전체 부재나 남은 Military/Weapons/HUD 등 에셋 출처·배포 권리 확인 완료는 아닙니다. signed 산출물과 상세 근거는 ANDROID_RELEASE_CHECKLIST.md 상단을 따릅니다.
 
 2026-10-11 빌드 범위 추가 확인: 서명 없는 Android export의 동일 BuildReport packed6,409개에서 IngameDebugConsole 기존93항목/29경로는12항목/12경로(모두 MonoScript)로 감소했습니다. 기존 GO/UI/Texture/Sprite 항목은0이며 script·AAR 전체 부재나 vendor 권리 검증 완료를 뜻하지 않습니다. 최종 signed AAB의 고지 본문·EmojiOne 및 새 패키지 범위는 별도 확인 대상입니다. 내보내기와 보존 근거는 ANDROID_RELEASE_CHECKLIST.md 상단을 따릅니다.

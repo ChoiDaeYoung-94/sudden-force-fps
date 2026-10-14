@@ -4,7 +4,9 @@
 
 2026-10-14 기준으로 기본 전투·경기와 기존 Android 실기기 PGS 로그인·두 피어 경기 검증을 진행했고, `1.0.194 / versionCode 5`를 Google Play 내부 테스트에 출시했습니다. Play 설치본의 로그인·경기, 물리 멀티터치·저사양·실제16KB 기기와 남은 에셋 출처 검증은 미완료입니다. 최신 범위와 날짜별 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)와 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)을 따릅니다.
 
-새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 설치와 도구 실행, 공식 OpenJDK의 별도 경로 사용 및 실제 Win64 컴파일을 확인했습니다. 후속 Android 전환 컴파일은112개 어셈블리 중 런타임 AccessViolation 오류2건·경고83건으로 실패했습니다. 원래 Win64로 복원한110개 어셈블리는 오류·경고0으로 완료했고 원래 설정·파일을 보존했습니다. 간헐적인 CLR/TypeLoad/AccessViolation의 원인은 미확정이며 새 PC Android 빌드 성공 상태가 아닙니다. 상세 근거와 PC 안정성 점검 후보는 배포 점검표를 따릅니다. 기존 Play 버전5의 서명된 범용 APK는 검사 후 사용자 지정 Drive로 전달했습니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다.
+새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 설치와 도구 실행, 공식 OpenJDK의 별도 경로 및 실제 Win64 컴파일을 확인했습니다. 2026-10-14 진단에서 임시 Android compiler 옵션 `-parallel-`로 편집기 컴파일108개는 오류0으로 완료됐지만, 후속 비서명 ARM64 Gradle export는 Unity APIUpdater의 AccessViolation/CLR 오류로 실패했습니다. 다음 Process count 진단은 compiler 옵션 유지 게이트 미충족으로 비교 export를 실행하지 않았습니다. 환경·설정·소스·버전을 원복하고 Win64117개 오류·경고0 및 후속 실패 플래그false를 확인했습니다. BIOS는 사용자 결정에 따라 보류했고 원인 및 새 PC Android 빌드 복구는 미완료입니다. 기존 Play 버전5의 서명된 범용 APK는 사용자 지정 Drive에 전달했으며 설치 전입니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다. 최신 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+
+HUD 이미지7개는 사용자가 직접 제작 또는 AI 생성했다고 확인해 유지합니다. 캐릭터·무기·맵·로딩의 공식 출처 후보와 남은 취득·원 패키지 확인은 [에셋 기록](THIRD_PARTY_ASSETS.md)을 따릅니다.
 
 ## 주요 구현
 

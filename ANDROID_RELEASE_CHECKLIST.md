@@ -1,5 +1,31 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Process count 진단 게이트와 최종 원복 (#66, 2026-10-14 후속)
+
+[Microsoft가 지원하는 `DOTNET_PROCESSOR_COUNT`](https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/environment-processorcount-on-windows)를 현재 Editor Process에만 임시4로 설정했습니다. 정확한 Unity `netcorerun` 신규 직접 자식 probe는 ProcessorCount4/.NET6.0.21/exit0을 반환했습니다. 이는 해당 probe의 상속 확인이며, 실행하지 않은 내부 APIUpdater의 환경 상속·오류 해결을 입증하지 않습니다. User/Machine 환경·레지스트리·물리 CPU affinity는 변경하지 않았습니다.
+
+Android 전환111개 어셈블리는 오류·경고0으로 완료됐습니다. 다만 `-parallel-` setter 직후 readback에는 값이 있었으나 전환 후 API는 빈 배열이었고 실제 Android 응답 파일3개에도 옵션이 없었습니다. 동일 조건 유지 게이트가 충족되지 않아 계획대로 **Gradle export는 실행하지 않았습니다(NOT RUN/시도0)**. 앞선 APIUpdater 실패가 해결됐다고 판정하지 않으며 옵션이 사라진 원인도 미확정입니다. 성공을 얻기 위한 재설정·반복 전환·추가 export는 수행하지 않았습니다.
+
+Process 환경값을 정확한 원래 미설정 상태로 되돌린 뒤, Win64 복원117개는 오류·경고0으로 완료됐습니다. 후속 `scriptCompilationFailed=false`/idle을 확인했으며 이전 true 상태를 인위적으로 초기화하지 않았습니다. 원래 타깃·추가 인자[]·ABI·defines·도구 경로·빌드 옵션을 보존했고 serialized35개 시작 바이트 일치/source3888개 승인된 총괄 문서4개 외 예상 밖 변화0/Git clean/원장194,1,5를 확인했습니다. 새 APK/AAB·키복사·버전 예약은 없습니다. 현재 Editor 복원 상태와 아직 실패한 Android Player 빌드를 구분합니다.
+
+외부 근거: `D:/codex/validation/sudden-force-fps/20261014-android-gradle-export-count4-parallel-01/final-preservation-and-handoff.json`. 다음 작업은 공개 compiler setter의 타깃 전환 후 지속·저장 경로 검토이며, 이 단위에서 영구 설정이나 새 빌드 절차를 채택하지 않았습니다.
+
+### 소프트웨어 조건 검증과 Gradle export 실패 (#66, 2026-10-14 후속)
+
+사용자 결정에 따라 BIOS 업데이트를 보류하고 소프트웨어 조건을 먼저 검증했습니다. Android 추가 C# compiler 옵션에 `-parallel-`만 임시 적용한 전환 시도(runId `d5326bc875d44019b159d5575977b19f`)는 어셈블리108개/오류0·경고83으로 완료됐고, 이전에 실패한 두 어셈블리도 오류0이었습니다. 원래 Win64 복원117개는 오류·경고0이며 옵션을 원래 빈 배열로 복원했습니다. 이는 Roslyn 내부 병렬 컴파일 조건에서 얻은 단일 결과로, Bee의 동시 프로세스 수 제한이나 원인 해결·재발 방지의 증명이 아닙니다.
+
+동일 옵션을 임시 적용한 후속 Android 게이트117개/오류·경고0을 확인하고, 공개 `BuildPipeline.BuildPlayer`로 비서명 ARM64·IL2CPP·non-Development Gradle export를 단1회 실행했습니다. runId `6a85cb93dbee47e6906d37945ae12cc8`의 실제 BuildReport는 **Failed/오류2·경고2/19.9514852초/크기0**입니다. `Compile scripts` 단계에서 `netcorerun.exe`로 실행되는 `ApiUpdater.MovedFromExtractor.dll`이 AccessViolation·Internal CLR `0x80131506`으로 종료됐습니다. 실패 helper command header 3개는 BuildReport 오류2건과 별도 수치이며 C# compiler 실패3건으로 분류하지 않습니다. Player의 실제 `Assembly-CSharp.rsp`에는 `-parallel-`가 전달됐습니다. 원인은 미확정입니다.
+
+씬 처리·개발 콘솔 필터·고지 payload·네이티브·Gradle 단계에 도달하지 않았고 export 폴더가 생성되지 않았습니다. 빈 packed 목록은 불필요 자산 제외 성공의 근거가 아닙니다. `BuildScript` 버전 예약, APK/AAB 생성, Gradle assemble 및 서명은 수행하지 않았습니다. 기존 버전 `1.0.194/code5`, 원장 `194,1,5`를 유지했습니다.
+
+원래 Win64 복원 컴파일은111개/오류0·경고17이나, 최종 전역 `scriptCompilationFailed=true`가 남았습니다. 설정 복원과 Editor 정상 상태를 구분하며 실패 플래그를 인위적으로 초기화하지 않았습니다. serialized35개 시작 바이트 일치/source3888개 예상 밖 변화0/Git clean을 확인했고, 자동 import 변화와 새로 생성된 PerformanceTest 파일만 근거 보존 후 원복했습니다. 영구 compiler 옵션은 채택하지 않았습니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261013-pc-android-preflight/software-compiler-recovery` 및 `20261014-android-gradle-export-parallel-01/final-preservation-and-handoff.json`.
+
+### 16KB·RELRO 판정 범위 재확인 (#41, 2026-10-14)
+
+동일한 Play 서명 code5 APK에서 네이티브7개의 PT_LOAD16KB 정렬을 확인했으며 `libc++_shared.so`, `libmain.so`, `libswappywrapper.so`의 RELRO 끝주소 나머지12288/8192/4096은 그대로입니다. [Android 공식 가이드의 RELRO 점검](https://developer.android.com/guide/practices/page-sizes#relro)은 이 조건의 미충족과 잠재적 segfault 위험을 안내하므로 경고를 유지합니다. 다만 공식 LOAD 검사 스크립트·AOSP 로더 경계와 정적 segment 배치를 독립 대조한 결과, 이 나머지만으로 모든 실제 기기의 설치 거절·즉시 충돌을 확정할 수는 없습니다. 기존 내부 테스트 출시는 차단되지 않았습니다.
+
+세 라이브러리의 페이지 반올림된 RELRO 끝은 다음 writable LOAD의 페이지 시작과 같고 정적 program header에서 다른 writable payload와 겹치지 않았습니다. 이 관찰은 실제 로더·재배치·런타임 쓰기 검증이 아닙니다. **공식 점검 미충족3건 및 실제16KB 실행 미검증** 상태를 유지하며 전체 호환 PASS로 표시하지 않습니다. 후속 검증에는 ARM64/실제 페이지 크기16384/호환 모드 비활성 환경의 실행·로그인·경기·native crash 기록이 필요합니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-16kb-requirements-review`와 `20261014-relro-independent-review`.
+
 ### Android 대상 컴파일 실패와 원래 Win64 복원 (#66, 2026-10-14 후속)
 
 새 PC에서 Android 전환1회(runId `71197b07d337491cb868e7337cd93983`)의 실제 어셈블리112개 시작·종료를 확인했습니다. 오류2/경고83이며 Unity.Services.Authentication.PlayerAccounts와 UnityEditor.UI.Analytics 컴파일이 각각 실패했습니다. 새 로그는 Roslyn PE 메타데이터 읽기·emit 경계의 `System.AccessViolationException`이며 C# 오류 코드·TypeLoad/StartupHook/이전CLR 문구는 관찰되지 않았습니다. Android `scriptCompilationFailed=true`를 확인했고 제품 문법 오류·특정 패키지 결함으로 확정하지 않습니다. 설치 도구 실행·Win64 성공은 Android 성공을 대체하지 않습니다.
