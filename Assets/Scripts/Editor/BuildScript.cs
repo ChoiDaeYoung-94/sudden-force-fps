@@ -88,6 +88,8 @@ public static class BuildScript
         int week = Math.Max(ledger[0], (int)((DateTime.UtcNow.Date - new DateTime(2023, 1, 21)).TotalDays / 7));
         int build = week == ledger[0] ? checked(ledger[1] + 1) : 0;
         string version = "1.0." + week.ToString(CultureInfo.InvariantCulture);
+        string outputPath = Path.Combine(OutputDirectory, version + "." + build + (appBundle ? ".aab" : ".apk"));
+        RequireOutputPathAvailable(outputPath);
         Directory.CreateDirectory(OutputDirectory);
         // Reserve a new code before building; failed attempts may leave a harmless gap.
         File.WriteAllText(BuildInfoPath, string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", week, build, versionCode));
@@ -109,7 +111,7 @@ public static class BuildScript
                 scenes = scenes,
                 target = BuildTarget.Android,
                 targetGroup = BuildTargetGroup.Android,
-                locationPathName = Path.Combine(OutputDirectory, version + "." + build + (appBundle ? ".aab" : ".apk")),
+                locationPathName = outputPath,
                 // Reprocess release scenes so cached player data cannot bypass scene filters.
                 options = (appBundle ? BuildOptions.CompressWithLz4HC | BuildOptions.CleanBuildCache : BuildOptions.CompressWithLz4 | BuildOptions.Development)
                     | BuildOptions.DetailedBuildReport,
@@ -117,8 +119,9 @@ public static class BuildScript
                 extraScriptingDefines = appBundle ? Array.Empty<string>() : new[] { "Debug" }
             };
             BuildReport report = BuildPipeline.BuildPlayer(options);
-            if (report == null || report.summary.result != BuildResult.Succeeded)
+            if (report == null)
                 throw new BuildFailedException("Android BuildReport did not succeed.");
+            ValidateBuildOutput(report.summary.result, report.summary.totalErrors, outputPath);
             Debug.Log("[AndroidBuild] Succeeded: " + options.locationPathName + ", versionCode=" + versionCode);
         }
         finally
@@ -126,6 +129,20 @@ public static class BuildScript
             PlayerSettings.Android.keystorePass = originalStorePassword;
             PlayerSettings.Android.keyaliasPass = originalAliasPassword;
         }
+    }
+
+    private static void RequireOutputPathAvailable(string outputPath)
+    {
+        Require(!File.Exists(outputPath) && !Directory.Exists(outputPath),
+            "The expected Android output path already exists; build cancelled to preserve it.");
+    }
+
+    private static void ValidateBuildOutput(BuildResult result, int totalErrors, string outputPath)
+    {
+        if (result != BuildResult.Succeeded || totalErrors != 0)
+            throw new BuildFailedException("Android BuildReport must succeed without errors.");
+        if (!File.Exists(outputPath) || new FileInfo(outputPath).Length == 0)
+            throw new BuildFailedException("Android build did not produce a nonempty APK or AAB.");
     }
 
     private static int[] ReadLedger()
