@@ -1,5 +1,13 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Compiler 인자 선별 저장 검증 (#66, 2026-10-14 후속)
+
+닫혀 있던 기존 프로젝트를 정확한 Unity6000.3.25f1로 한 번 정상 실행한 뒤 Win64 idle/실패 플래그false/원래 인자[]를 확인했습니다. 공개 Android compiler setter1회 후 getter는 `-parallel-`, PlayerSettings의 변경 표시는true였습니다. 해당 PlayerSettings 객체에만 `AssetDatabase.SaveAssetIfDirty`를1회 호출했지만 파일 SHA256과 디스크 인자 영역은 바뀌지 않았고, 지연 읽기에서도 옵션이 기록되지 않았습니다. **이 호출에서 디스크 지속 게이트를 확인하지 못했으며 Android 전환·export는 미실행**입니다. 원인이나 모든 설정 저장 경로의 실패로 확대하지 않습니다.
+
+메모리 인자[]·설정 파일35개 시작 바이트·tracked 소스3888개·원장194,1,5는 보존했고 Win64 idle/컴파일 실패false를 확인했습니다. 다만 PlayerSettings 변경 표시는 원래false에서true로 남아, 파일 원복과 Editor 메타 상태를 구분합니다. 전역 저장·SetDirty/dirty 숨김·private writer·환경count4·재시도는 수행하지 않았습니다.
+
+Editor 시작 때 생긴 미추적 `Assets/_Recovery.meta`, `Assets/_Recovery/0.unity`, `Assets/_Recovery/0.unity.meta`는 원래 위치에 보존했습니다. 외부 이동·빈 폴더 삭제 명령이 자동 승인 검토의 `blocked by policy`로 거부됐고 상세 사유는 제공되지 않았습니다. 명령은 미실행이며 다른 경로·도구로 우회하지 않았습니다. tracked 제품 파일 원복과 전체 Git clean을 혼동하지 않습니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-android-compiler-args-selective-save-01/final-preservation-and-handoff.json`.
+
 ### 전달 APK 사용자 설치·로그인·방 검증 (#43, 2026-10-14)
 
 사용자는 전달한 APK를 **Galaxy Note20 Ultra**에 설치하고 실행했으며, Google Play Games 로그인 후 로비 진입·방 생성·방 퇴장이 정상 동작한다고 보고했습니다. 사용자 수동 테스트 결과로 기록하며 총괄의 직접 기기 계측·화면 관찰 결과로 표현하지 않습니다. 전달 대상은 기존 `1.0.194/code5` Play 서명 범용 APK이며 새 PC에서 새로 만든 APK가 아닙니다.
