@@ -2,11 +2,11 @@
 
 > Photon Fusion 2 기반의 호스트·클라이언트 멀티플레이 Unity 3D FPS 프로젝트입니다. 로비에서 방을 만들고 팀을 선택해 DesertHouse에서 한 판을 진행합니다.
 
-2026-10-14 기준으로 기본 전투·경기와 기존 Android 실기기 PGS 로그인·두 피어 경기 검증을 진행했고, `1.0.194 / versionCode 5`를 Google Play 내부 테스트에 출시했습니다. Play 설치본의 로그인·경기, 물리 멀티터치·저사양·실제16KB 기기와 남은 에셋 출처 검증은 미완료입니다. 최신 범위와 날짜별 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)와 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)을 따릅니다.
+2026-10-14 기준으로 `1.0.194 / versionCode 5`를 Google Play 내부 테스트에 출시했습니다. 전달한 Play 서명 APK는 사용자 수동 테스트에서 Galaxy Note20 Ultra·S25 Ultra의 두 피어 경기 진입, 동시 이동·시점·사격과 입력 해제, 재장전·사망·리스폰, 경기 종료·로비 복귀·새 방 참가가 정상이라고 보고됐습니다. Play 스토어 설치/업데이트 경로, 메뉴와 사망 중 입력 차단의 전수 회귀, 최신 APK 성능·저사양·실제16KB 기기 및 남은 에셋 출처 검증은 별도입니다. 최신 범위와 날짜별 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)와 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)을 따릅니다.
 
-새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 설치와 도구 실행, 공식 OpenJDK의 별도 경로 및 실제 Win64 컴파일을 확인했습니다. 2026-10-14 진단에서 임시 Android compiler 옵션 `-parallel-`로 편집기 컴파일108개는 오류0으로 완료됐지만, 후속 비서명 ARM64 Gradle export는 Unity APIUpdater의 AccessViolation/CLR 오류로 실패했습니다. 다음 Process count 진단은 compiler 옵션 유지 게이트 미충족으로 비교 export를 실행하지 않았습니다. 환경·설정·소스·버전을 원복하고 Win64117개 오류·경고0 및 후속 실패 플래그false를 확인했습니다. BIOS는 사용자 결정에 따라 보류했고 원인 및 새 PC Android 빌드 복구는 미완료입니다. 기존 Play 버전5의 서명된 범용 APK는 사용자 지정 Drive에 전달했고, 사용자는 Galaxy Note20 Ultra에서 설치·실행·Google 로그인 후 로비·방 생성/퇴장이 정상이라고 확인했습니다. Play 스토어 설치 경로와 두 피어 경기는 별도 검증 대상입니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다. 최신 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 설치와 도구 실행, 공식 OpenJDK의 별도 경로 및 실제 Win64 컴파일을 확인했습니다. 2026-10-14 진단에서 임시 Android compiler 옵션 `-parallel-`로 편집기 컴파일108개는 오류0으로 완료됐지만, 후속 비서명 ARM64 Gradle export는 Unity APIUpdater의 AccessViolation/CLR 오류로 실패했습니다. 다음 Process count 진단은 compiler 옵션 유지 게이트 미충족으로 비교 export를 실행하지 않았습니다. 환경·설정·소스·버전을 원복하고 Win64117개 오류·경고0 및 후속 실패 플래그false를 확인했습니다. BIOS는 사용자 결정에 따라 보류했고 원인 및 새 PC Android 빌드 복구는 미완료입니다. 기존 Play 버전5의 서명된 범용 APK는 사용자 지정 Drive에 전달했고, 사용자는 Galaxy Note20 Ultra에서 설치·실행·Google 로그인 후 로비·방 생성/퇴장이 정상이라고 확인했습니다. 후속 두 기기 경기 흐름은 위 사용자 수동 보고로 보완했으며 Play 스토어 설치/업데이트 경로는 남았습니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다. 최신 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
 
-후속 PlayerSettings 선별 저장 시험도 파일에 옵션이 기록되지 않아 Android 전환 없이 마쳤습니다. 인자와 tracked 파일은 원래 값이지만 Editor의 변경 표시와 미추적 복구 파일3개는 남겨 보존했습니다. 실제 두 피어 검증을 위한 Windows 클라이언트 준비는 별도로 진행합니다.
+후속 PlayerSettings 선별 저장 시험도 파일에 옵션이 기록되지 않아 Android 전환 없이 마쳤습니다. 인자와 tracked 파일은 원래 값이지만 Editor의 변경 표시와 미추적 복구 파일3개는 남겨 보존했습니다. Windows 검증 클라이언트는 필수 URP 심볼 검사 및 후속 컴파일 게이트에서 준비가 중단됐습니다. 두 Android 기기의 사용자 수동 검증은 이 PC 빌드 복구와 독립적으로 진행했습니다.
 
 HUD 이미지7개는 사용자가 직접 제작 또는 AI 생성했다고 확인해 유지합니다. 캐릭터·무기·맵·로딩의 공식 출처 후보와 남은 취득·원 패키지 확인은 [에셋 기록](THIRD_PARTY_ASSETS.md)을 따릅니다.
 
@@ -19,7 +19,7 @@ HUD 이미지7개는 사용자가 직접 제작 또는 AI 생성했다고 확인
 | 전투 | 이동·시점·달리기, 총기 반동, 부위별 피해, 탄약·재장전, 사망·리스폰 · [GamePlayerNetworkData.cs](Assets/Scripts/Creature/Player/GamePlayerNetworkData.cs) |
 | 경기·HUD | 팀 점수·타이머·KD·킬 피드·스코어보드·결과 화면 · [NetworkMatchState.cs](Assets/Scripts/Game/Match/NetworkMatchState.cs) |
 | 씬·복귀 | 일반 씬 전환과 Fusion 경기 씬 로드, persistent Managers가 종료된 Runner를 정리하고 새 로비 Runner를 생성 · [Managers.cs](Assets/Scripts/Managers/Managers.cs) |
-| 로그인 | Android Google Play Games Services v2 인증·취소/실패/30초 시간 초과·재시도 처리. 기존 업로드 키 APK의 실기기 인증을 확인했으며 Play 앱 서명 설치본 인증은 별도 미검증 · [Login.cs](Assets/Scripts/UI/Login.cs) |
+| 로그인 | Android Google Play Games Services v2 인증·취소/실패/30초 시간 초과·재시도 처리. 기존 업로드 키 APK의 실기기 인증과 전달 Play 서명 APK의 사용자 로그인 보고 확인. 스토어 설치 경로는 별도 · [Login.cs](Assets/Scripts/UI/Login.cs) |
 
 Fusion은 방 접속뿐 아니라 입력 전달, 권한에 따른 상태 복제, Hitbox 지연 보정 쿼리와 경기 씬 전환에 사용합니다. 지연·손실 환경의 전체 품질 검증은 별도이며, 상세 통과 범위와 미검증 항목은 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)에 구분합니다.
 
