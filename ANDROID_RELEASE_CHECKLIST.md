@@ -1,5 +1,15 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Preferences 종료 후 실제 Win64 재컴파일 검증 (#66, 2026-10-14 후속)
+
+사용자가 Preferences를 닫은 뒤 같은 Editor의 실제 응답과 외부 custom JDK 경로 유지가 확인됐습니다. 실제 `RequestScriptCompilation(CleanBuildCache)` 첫 시도는 시작·종료 이벤트가 있었지만 assembly 완료0/`scriptCompilationFailed=true`로 실패했습니다. 분류는 `0xE0434352`/`System.TypeLoadException`/`System.Diagnostics.Tracing.EventSource`·`System.Private.CoreLib`/`StartupHookProvider` 스택이며, 제품 C# 오류 코드나 최초 CLR0x80131506 문구는 관찰되지 않았습니다. 종료 이벤트·C# 오류 코드0만으로 성공을 판단하지 않습니다.
+
+읽기 진단에서 EventSource 형식은 설치된 CoreLib에 존재했고, Editor·사용자·시스템의 지정 시작 훅/프로파일링 환경은 비어 있었습니다. DAG의 시작 훅 문자열을 실제 환경 주입으로 확정하지 않았습니다. Microsoft 공식 .NET6.0.21 ZIP의 SHA512를 검증하고 설치된 coreclr.dll·System.Private.CoreLib.dll 두 파일과 바이트 일치를 확인했습니다(전체 런타임 무결성 검증은 아님). 외부 최소 프로그램의 컴파일·실행, 같은 Editor의 자식 실행 및 Bee의 두 런타임 모드만 자식에 적용한 비교는 성공했습니다. 시스템·Editor 환경, 설치 DLL, 엔진·패키지 버전은 변경하지 않았습니다.
+
+조건부 승인 후 두 번째이자 마지막 실제 Win64 시도 runId `4497e2aba6004b4f90f68b73b7d5944c`에서 전체 시작/종료 각1, 어셈블리 시작/종료 각16, 오류·경고0을 확인했습니다. 제품 Assembly-CSharp/firstpass/Editor도 포함됩니다. 후속 `scriptCompilationFailed=false`/Editor 응답·idle/JDK 경로 유지 및 observer 해제를 확인했습니다. 이벤트 간격22.345555초이며 새 로그406,522 bytes 구간에 이전 CLR/TypeLoad/StartupHook/C# 오류가 없었습니다. 첫 실패의 정확한 원인·재발 방지는 확정하지 않습니다. Android 대상 컴파일·새 빌드·실기기 검증은 별도입니다.
+
+자동 meta·ShaderGraph 줄바꿈을 baseline 바이트로 복원하고 문서 커밋 a57b0b9 기준 Git clean/3888파일·승인 문서3개만 차이/backup 해시 실패0/원장194,1,5를 확인했습니다. 새 빌드·버전 예약은 없습니다. 외부 `20261014-actual-compile-retry-*`, `20261014-compile-retry-final-handoff.json`, `preservation-current.json`과 독립 QA 기록이 근거입니다. 아래 부분 회복·실패 상태는 당시 기록으로 보존합니다.
+
 ### 새 PC SDK·NDK 복구와 Editor 부분 회복 (#66, 2026-10-14)
 
 사용자가 정체된 Android Support 설치를 종료한 뒤 전체 dry-run 목록을 먼저 검토하고, 본체와 JDK를 포함하지 않는 SDK·NDK leaf 9개를 공식 CLI로 설치했습니다. 결과는 success/오류0/경고0이며 adb 36.0.0, aapt2, NDK clang(r27c/27.2.12479018), CMake 3.22.1, SDK Manager 16의 실제 버전 실행을 확인했습니다. 앞선 본체 재설치와 취소 과정에서 SDK·NDK·JDK가 제거됐던 상태를 CLI의 과거 설치 표시와 구분했습니다.
