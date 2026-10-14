@@ -1,5 +1,15 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### Android 대상 컴파일 실패와 원래 Win64 복원 (#66, 2026-10-14 후속)
+
+새 PC에서 Android 전환1회(runId `71197b07d337491cb868e7337cd93983`)의 실제 어셈블리112개 시작·종료를 확인했습니다. 오류2/경고83이며 Unity.Services.Authentication.PlayerAccounts와 UnityEditor.UI.Analytics 컴파일이 각각 실패했습니다. 새 로그는 Roslyn PE 메타데이터 읽기·emit 경계의 `System.AccessViolationException`이며 C# 오류 코드·TypeLoad/StartupHook/이전CLR 문구는 관찰되지 않았습니다. Android `scriptCompilationFailed=true`를 확인했고 제품 문법 오류·특정 패키지 결함으로 확정하지 않습니다. 설치 도구 실행·Win64 성공은 Android 성공을 대체하지 않습니다.
+
+원래 Win64로 복원1회(runId `a80b481db4f34bd2a1171388368b4f4a`)의 어셈블리110개가 오류·경고0으로 완료됐습니다. 이는 복원에 따른 컴파일이며 Android 재시도가 아닙니다. 후속 응답/실패값false/idle/observer해제와 defines·version/code·API·아키텍처·빌드 옵션·SDK/NDK/custom JDK 경로의 전환 전 일치를 확인했습니다. serialized snapshot35개가 시작 바이트와 일치함을 확인하고 source3888개는 phase 시작 대비 변화0, 초기 baseline 대비 승인 문서3개만 차이였습니다. 자동 meta3개와 GvhProjectSettings/ShaderGraph 줄바꿈2개를 정확히 복원했고 Git clean/HEADac8dcf4/원장194,1,5를 확인했습니다. APK/AAB·Gradle export·버전 예약·엔진/패키지 변경은 없습니다.
+
+PC 안정성 후보: 읽기 조회에서 i9-14900KF/MSI MAG B760M MORTAR(MS-7E01)/BIOS M.50(2023-09-11)을 확인했습니다. [Intel 공식 안내](https://community.intel.com/t5/Mobile-and-Desktop-Processors/Intel-Core-13th-and-14th-Gen-Vmin-Shift-Instabilty-Update-New/td-p/1686948)는 해당 세대의 알려진 안정성 문제 완화를 위해 최신 BIOS와 Intel Default Settings를 권고합니다. 현재의 서로 다른 간헐 런타임 예외에 대한 환경 후보이며 CPU 고장이나 이번 실패의 원인으로 확정하지 않습니다. BIOS·시스템 설정 변경이나 재부팅은 수행하지 않았습니다. 다음 검증은 PC 안정성 조치 검토 후 Android 재검증이며, 반복 재시도로 완료 처리하지 않습니다.
+
+외부 근거: `D:/codex/validation/sudden-force-fps/20261013-pc-android-preflight/android-target-validation`의 switch/restore 이벤트와 `final-preservation-and-handoff.json`, 독립 QA 기록. 아래 Win64 성공과 최초 실패는 당시 범위로 보존합니다.
+
 ### Preferences 종료 후 실제 Win64 재컴파일 검증 (#66, 2026-10-14 후속)
 
 사용자가 Preferences를 닫은 뒤 같은 Editor의 실제 응답과 외부 custom JDK 경로 유지가 확인됐습니다. 실제 `RequestScriptCompilation(CleanBuildCache)` 첫 시도는 시작·종료 이벤트가 있었지만 assembly 완료0/`scriptCompilationFailed=true`로 실패했습니다. 분류는 `0xE0434352`/`System.TypeLoadException`/`System.Diagnostics.Tracing.EventSource`·`System.Private.CoreLib`/`StartupHookProvider` 스택이며, 제품 C# 오류 코드나 최초 CLR0x80131506 문구는 관찰되지 않았습니다. 종료 이벤트·C# 오류 코드0만으로 성공을 판단하지 않습니다.
