@@ -1,5 +1,29 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 빌드 성공 판정·출력 충돌 보호 검증 (#75, 2026-10-14)
+
+`BuildScript`는 report 존재·Succeeded·totalErrors0와 같은 예상 경로의 nonempty APK/AAB를 모두 확인한 뒤 성공 로그를 출력합니다. 같은 경로에 파일이나 디렉터리가 있으면 출력 디렉터리 생성·원장 예약·PlayerSettings 변경 전에 중단하고 기존 산출물을 보존합니다. APK Development/Debug·AAB 비개발 옵션, 버전 예약 규칙과 서명 비밀번호 finally·batch 실패 종료 흐름은 유지했습니다.
+
+자동 filewatch 반영을 확인하지 못한 뒤 수정 스크립트1개만 공개 `ImportAssetOptions.Default`로 import1회했습니다. 후속 Win64 Editor 어셈블리1개의 컴파일이 오류·경고0으로 완료됐고 새 검증 함수2개 로드·idle·compileFailedfalse·관찰기 해제를 확인했습니다. 외부 fixture와 우리 클래스의 함수 호출로8사례(Succeeded+오류4, Failed+오류0, 산출물 부재·빈 파일·nonempty 파일, 기존 파일·디렉터리·새 경로)를 검증해 모두 통과했습니다. 기존 파일 바이트와 디렉터리·누락 경로·원장·버전을 보존했습니다.
+
+이 검증에서 BuildAndroid/Run·버전 예약·서명·빌드·타깃 전환·강제 컴파일·전체 Refresh·SaveProject·Engine private 쓰기는0입니다. 함수 경계 검증과 실제 signed APK/AAB·batch 통합 실행·인증서/manifest 검증을 구분합니다. 근거: `D:/codex/validation/sudden-force-fps/20261014-build-success-guards-01/`의 `natural-compile-events.jsonl`, `after-import-health-safe.json`, `helper-harness-result.json`.
+
+### 새 PC 실제 네이티브 컴파일·무서명 APK 생성 (#66, 2026-10-14 후속)
+
+생성된 Gradle 프로젝트의 실제 `:launcher:assembleRelease`가 **종료 코드0 / BUILD SUCCESSFUL / 6분25초**로 완료됐습니다. Gradle actionable150개 중44개 실행·106개 up-to-date이며 taskStarted/Finished174개·실패0입니다. IL2CPP 작업과 Bee의 실제 native 결과887개(exit0)를 확인했고, C/C++815개·archive1·최종 link1·objcopy3 등을 포함합니다. `libil2cpp.so` 생성과 최종 APK 패키징까지 진행한 결과입니다.
+
+초기3개 호출은 외부 검증 스크립트의 잘못된 서명 객체 판정, 구성 완료 전 Property 조회, 메타데이터 작업 분류로 실제 native 작업 전에 중단됐습니다. 이를 제품 컴파일 실패로 집계하지 않습니다. 수정 후 호출은 CMake/Ninja에서 Gradle 캐시의280자 경로로 실패했습니다. 자식 `GRADLE_USER_HOME`을 짧은 외부 `D:/codex/g/sff-gradle-01`로 바꾼 다음 CMake 자연 재구성·새 경로 사용 및 성공을 확인했습니다. 기존 캐시 삭제·프로젝트 복제·OS LongPaths 설정 변경 없이 진행했습니다.
+
+검증 APK는99,413,147B·SHA256 `DA56249A1260F3853FFD2415B3144E3EAC9481565D271C721D4A9D686D3D3A98`, package `com.AeDeong.SuddenForceFPS`, `1.0.194/code5`, min25/target36·ARM64only·debuggablefalse입니다. 공개 release DSL의 서명 설정null·서명 플래그4개false와 실제 서명 작업 부재를 확인했고, 메타데이터 writer만 정확히 허용했습니다. apksigner의 서명 없음 결과·JAR/APK signing block/idsig 부재로 **무서명**을 확인했습니다. 이 파일은 설치·Drive 전달·Play 업로드 대상으로 사용하지 않습니다.
+
+ZIP CRC121개·읽기 전용 `zipalign -c -P 16 4`는 통과했고 ELF64/AArch64 SO7개의 PT_LOAD align>=16384·offset/vaddr congruence0을 확인했습니다. 기존 RELRO 경고3개(libc++_shared 끝 나머지12288·libmain8192·libswappywrapper4096)는 동일하고 새 libil2cpp.so8192 경고1개가 추가돼 **총4개**입니다. 페이지 반올림 tail의 다른 writable LOAD payload overlap0은 정적 관찰이며 공식 RELRO 검사 통과나 런타임 안전을 의미하지 않습니다. 실제16KB 기기·호환 모드 비활성 실행, 새 서명 APK/AAB·실기기 렌더링·Store 경로는 미검증입니다.
+
+이번 APK의 SO7개는 모두 ZIP Deflate 압축 방식입니다. 따라서 zipalign 명령 통과를 APK 안 비압축 SO의16KB 직접 배치 검증으로 확대하지 않습니다. ELF LOAD 정렬 검사는 별도이며, 실제 배포 AAB에서 생성한 APK의 압축·배치와 기기 실행 검증이 필요합니다.
+
+원본 export2,794파일·소스3,888개·관련73개·Recovery3개·원장194,1,5/code5를 보존했습니다. 추가 export1,613파일/5,888,012,710B는 생성 build/cache/native/APK 산출물로 분리 기록했습니다. Unity 명령·제품 코드/설정·키·버전 예약·시스템 변경은 이 native 단위에서0입니다. 마지막 확인된 Win64 상태와 Editor PID45064의 Process4/diag 인자는 유지하고 이전 PSdirty와 shutdown 충돌을 해결했다고 표시하지 않습니다. 다음 #75는 오류 있는 Succeeded·기존/누락/빈 산출물의 성공 판정을 보강하는 별도 코드 작업입니다.
+
+근거: `D:/codex/validation/sudden-force-fps/20261014-native-gradle-short-cache-01/`의 `final-preservation-and-handoff.json`, `actual-native-backend-results-safe.json`, `apk-static-validation.json`, `relro-direct-comparison.json`.
+
 ### 진단 옵션·예약 콜백 export의 오류0 결과 (#66, 2026-10-14 후속)
 
 같은 Unity6000.3.25f1·Process4·원래 compiler 인자[]에 공식 `-diag-debug-shader-compiler`가 전달된 별도 Editor에서 Android 전환1회 후 새 외부 출력으로 예약 export1회를 진행했습니다. 실제 queued 응답·콜백1회·진입 시 콜백 제거·BuildPlayer1회·QueuePlayerLoopUpdate1회와 **Succeeded/오류0·경고2/28.3659452초**를 확인했습니다. 경고는 Unity 서비스 연결 안내와 RuntimePipelineConfig 미설정 안내입니다. 이전 direct eval의 timeout 로그가 이번 report에 섞이지 않았습니다.

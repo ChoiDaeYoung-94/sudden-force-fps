@@ -21,7 +21,8 @@ GitHub 연결은 PR 작성자와 같은 계정이므로 정식 자기 승인을 
 | [#42 라이선스·고지](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/42) | 배포 포함 자산·SDK 출처 및 필수 고지 점검 |
 | [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | code5 내부 출시·APK 전달 완료, Note20 Ultra 사용자 로그인 확인 및 Note20 Ultra·S25 Ultra 두 피어 경기/복귀/재참가 수동 정상 보고. 스토어 설치/업데이트 경로와 남은 배포 기준은 열림 |
 | [#44 CI 전환](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44) | Unity6/Google Play 작업에 맞게 기존 자동 빌드·배포 경로 정리 |
-| [#66 새 PC 빌드 환경](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/66) | 도구체인 설치·Win64 복원 확인, PR67–69 병합. Android Player/APIUpdater 실패와 compiler 옵션 지속 검증 진행 중 |
+| [#66 새 PC 빌드 환경](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/66) | 오류0 Gradle 생성(PR74)과 실제 ARM64 IL2CPP·무서명 APK 패키징 성공. 간헐 안정성·서명 배포·실제16KB 등 남음 |
+| [#75 빌드 성공 판정](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/75) | 오류0·새 nonempty APK/AAB 및 원장 예약 전 출력 충돌 보호 구현, Win64 Editor 컴파일·경계8사례 통과. PR 검토·병합 진행 |
 
 2026-10-14 GitHub 상태를 읽기 대조했습니다. #37–40은 닫혔고 #1·35·36·41–44·66은 열려 있습니다. 이번 사용자 APK 결과는 수동 보고이며 직접 계측이나 Play 스토어 설치 결과로 확대하지 않습니다. 아래 이전 날짜의 조사·완료 체크는 당시 기록입니다.
 
