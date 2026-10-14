@@ -2,9 +2,9 @@
 
 > Photon Fusion 2 기반의 호스트·클라이언트 멀티플레이 Unity 3D FPS 프로젝트입니다. 로비에서 방을 만들고 팀을 선택해 DesertHouse에서 한 판을 진행합니다.
 
-2026-10-13 기준으로 기본 전투·경기와 기존 Android 실기기 PGS 로그인·두 피어 경기 검증을 진행했고, `1.0.194 / versionCode 5`를 Google Play 내부 테스트에 출시했습니다. Play 설치본의 로그인·경기, 물리 멀티터치·저사양·실제16KB 기기와 남은 에셋 출처 검증은 미완료입니다. 최신 범위와 날짜별 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)와 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)을 따릅니다.
+2026-10-14 기준으로 기본 전투·경기와 기존 Android 실기기 PGS 로그인·두 피어 경기 검증을 진행했고, `1.0.194 / versionCode 5`를 Google Play 내부 테스트에 출시했습니다. Play 설치본의 로그인·경기, 물리 멀티터치·저사양·실제16KB 기기와 남은 에셋 출처 검증은 미완료입니다. 최신 범위와 날짜별 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)와 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)을 따릅니다.
 
-새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. Unity 6000.3.25f1의 CLR 컴파일러 오류를 진단 중이며 새 PC 빌드 성공 상태는 아닙니다. 기존 Play 버전5에서 받은 서명된 범용 APK를 검사해 사용자 지정 Drive로 전달했습니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다.
+새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 9개 구성요소 설치와 adb/aapt2/NDK clang/CMake/Java/SDK Manager 실행을 확인했습니다. Unity 공식 OpenJDK 17.0.18+8은 본체 재설치 없이 별도 경로에 준비했습니다. 같은 Unity 6000.3.25f1 재시작에서 Safe Mode와 이전 CLR 오류가 재현되지 않고 Editor가 연결됐지만, CLI의 `up_to_date` 결과는 강제 재컴파일 통과가 아닙니다. JDK 사용자 경로의 API 반환은 확인했으나 Preferences 표시와 후속 도구 응답 지연이 남아 있으며 새 PC 빌드 성공 상태는 아닙니다. 기존 Play 버전5의 서명된 범용 APK는 검사 후 사용자 지정 Drive로 전달했습니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다.
 
 ## 주요 구현
 

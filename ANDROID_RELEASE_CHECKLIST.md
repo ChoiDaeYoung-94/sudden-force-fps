@@ -1,5 +1,15 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 새 PC SDK·NDK 복구와 Editor 부분 회복 (#66, 2026-10-14)
+
+사용자가 정체된 Android Support 설치를 종료한 뒤 전체 dry-run 목록을 먼저 검토하고, 본체와 JDK를 포함하지 않는 SDK·NDK leaf 9개를 공식 CLI로 설치했습니다. 결과는 success/오류0/경고0이며 adb 36.0.0, aapt2, NDK clang(r27c/27.2.12479018), CMake 3.22.1, SDK Manager 16의 실제 버전 실행을 확인했습니다. 앞선 본체 재설치와 취소 과정에서 SDK·NDK·JDK가 제거됐던 상태를 CLI의 과거 설치 표시와 구분했습니다.
+
+OpenJDK는 같은 Unity 6000.3.25f1의 공식 Windows 아카이브 17.0.18+8을 `D:/codex/toolchains/sudden-force-fps/unity-6000.3.25f1/OpenJDK`에 준비했습니다. 118,110,508 bytes/SHA256 `15E8817D1F5DB6DB3571EBE7430EF37F7FA8E60E8FF6F3E18CA1CB4C29F78774`가 공식 배포 파일명 digest와 일치하고 Java 실행을 확인했습니다. 공식 API integrity 필드는 비어 있어 별도 서명된 체크섬 검증으로 확대하지 않습니다. 시스템 PATH/Java나 CLI 모듈 메타데이터를 변경하지 않았습니다.
+
+기존 Bee 캐시 격리 후 같은 Editor를 1회 재시작해 Safe Mode 없이 실제 Pipeline 연결·eval 성공, 현재 로그의 CLR/CS 오류 미관찰 및 새 Burst DLL 생성 시각을 확인했습니다. CLI recompile는 `up_to_date`/오류0 결과이며 강제 재컴파일 이벤트 완료는 아직 검증하지 않았습니다. 공식 `AndroidExternalToolsSettings.jdkRootPath` 설정 직후 getter는 정확한 외부 JDK 경로를 반환했지만, Preferences의 공란/경고 표시와 이후 main-thread 5초 timeout 2건은 별도로 남아 있습니다. 도구 복구는 확인했으나 전체 Editor 안정화·Android 대상 컴파일·새 빌드 성공은 미완료입니다.
+
+3888개 baseline 검사에서 승인 문서3개 외 자동 삭제된 meta3개와 줄바꿈만 바뀐 ShaderGraph1개를 정확히 복원했고, 문서 커밋 d11dd05 기준 저장소가 깨끗함을 확인했습니다. 원장 `194,1,5`와 제품 소스·설정을 유지했으며 새 APK/AAB 또는 버전 예약은 없습니다. 외부 근거는 `D:/codex/validation/sudden-force-fps/20261013-pc-android-preflight`의 `20261014-*` 기록과 독립 `20261014-env-recovery-review`입니다. 아래 10월13일 최초 실행 실패는 당시 기록입니다.
+
 ### 새 PC 복제와 Play 서명 APK 전달 (#66, 2026-10-13)
 
 실제품은 이전 PC에서 복사하지 않고 원격 main `f61be81`로 새 Git worktree를 구성했습니다. 과거 미커밋 변경6개·외부 백업·AAB 증거 파일이 복구됐다고 가정하지 않습니다. 새 Editor6000.3.25f1의 최초 실행은 Safe Mode/`Fatal error. Internal CLR error. (0x80131506)`이며 bundled .NET6.0.21→Roslyn csc/Unity.Burst.rsp의 access violation이 관찰됐습니다. 제품 C# 문법 오류로 확정하지 않습니다. 지정 Editor 정상 종료 후 해당 Library/Bee만 외부 격리했고, 사용자 Google SDK/NDK 약관 동의 후 공식 Android 모듈 설치를 진행합니다. 엔진·패키지 버전 변경, 임의 .NET 교체나 보안 설정 완화는 하지 않았습니다.
