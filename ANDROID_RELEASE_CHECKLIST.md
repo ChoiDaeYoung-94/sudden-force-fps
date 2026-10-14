@@ -1,5 +1,19 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 필수 Standalone 심볼 후보의 컴파일 게이트 (#66, 2026-10-14 후속)
+
+첫 Windows 오류에 따라 공개 API로 원래 Standalone 정의를 유지하며 `URP_COMPATIBILITY_MODE` 하나만 메모리에 추가했습니다. 후속 컴파일8개/오류1·경고0에서 Unity.Burst 어셈블리의 Roslyn nullable attribute synthesis·metadata emit 내부 NullReferenceException이 관찰됐습니다. 새 구간에서 C# 오류 코드·AccessViolation·이전CLR 문구는 관찰되지 않았습니다. getter는 추가 심볼을 유지했으나 디스크는 원래 정의였고, 컴파일·지속 게이트를 충족하지 않아 **새 Windows 빌드는 미실행**입니다. 제품 문법 오류나 Burst 패키지 결함으로 원인을 확정하지 않습니다.
+
+원래 정의를 복원한 자연 컴파일7개는 오류·경고0, 후속 실패 플래그false/idle 및 observer 해제를 확인했습니다. 메모리·디스크 정의와 인자[]/설정35개·tracked 소스3888개·Recovery3개 해시·원장194,1,5를 보존했고, PlayerSettings 변경 표시는true로 유지했습니다. 안전한 설정 커밋 후보는 없으며 첫 Windows 필수 심볼 조건도 아직 미해결입니다. 전역 저장·private writer·YAML 수정·환경count4·반복 빌드나 오류 플래그 초기화는 수행하지 않았습니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-windows-qa-urp-compat-01/final-preservation-and-handoff.json`.
+
+### Windows 검증 Player 첫 빌드의 필수 심볼 검사 (#66, 2026-10-14)
+
+현재 Win64·Mono2x·활성4씬·원래 renderer/defines/args를 유지하고 기존 `MultiplayerValidationBuild.BuildWindows64`를 단1회 실행했습니다. 실제 report/manifest는 **Failed/오류2·경고1/0.281초**이며 `Build player → Preprocess Player`에서 중단됐습니다. 실행 파일·Player 파일 해시 목록은 없고 실행·두 피어 검증도 미실행입니다. 도구 timeout을 실패 근거로 사용하지 않습니다.
+
+설치된 URP의 `URPBuildDataValidator`는 직렬화 Compatibility Mode가 켜져 있는데 `URP_COMPATIBILITY_MODE`가 없으면 빌드를 거절합니다. 현재 global 설정은1이고 Standalone에는 심볼이 없다는 실제 오류와 검사 코드를 대조했습니다. 이번 새 로그에서 C# 오류·AccessViolation·CLR 오류는 관찰하지 않았습니다. 이 원인은 앞선 Android 런타임 실패와 별도입니다.
+
+자동 저장된 URP3개를 before 원본으로 정확 복원했고 설정35개·tracked 소스3888개·원장194,1,5를 보존했습니다. Recovery3개는 원위치 해시가 같으며 PlayerSettings 변경 표시는true로 유지했습니다. 추가 심볼·타깃/백엔드·환경·renderer 변경과 반복 빌드는 이 시도에서 수행하지 않았습니다. 다음은 필수 Standalone 심볼 하나의 별도 수정·검증이며 아직 성공 결과가 아닙니다. 외부 근거: `D:/codex/validation/sudden-force-fps/20261014-windows-qa-player-01/final-preservation-and-handoff.json`.
+
 ### Compiler 인자 선별 저장 검증 (#66, 2026-10-14 후속)
 
 닫혀 있던 기존 프로젝트를 정확한 Unity6000.3.25f1로 한 번 정상 실행한 뒤 Win64 idle/실패 플래그false/원래 인자[]를 확인했습니다. 공개 Android compiler setter1회 후 getter는 `-parallel-`, PlayerSettings의 변경 표시는true였습니다. 해당 PlayerSettings 객체에만 `AssetDatabase.SaveAssetIfDirty`를1회 호출했지만 파일 SHA256과 디스크 인자 영역은 바뀌지 않았고, 지연 읽기에서도 옵션이 기록되지 않았습니다. **이 호출에서 디스크 지속 게이트를 확인하지 못했으며 Android 전환·export는 미실행**입니다. 원인이나 모든 설정 저장 경로의 실패로 확대하지 않습니다.
