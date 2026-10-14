@@ -19,7 +19,7 @@ GitHub 연결은 PR 작성자와 같은 계정이므로 정식 자기 승인을 
 | [#40 정상 퇴장 메뉴](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/40) | 구현·기존 검증 완료로 닫힘. 최신 APK 사용자 방 퇴장 보고와 실제 두 피어 경기 전체 회귀는 구분 |
 | [#41 Android 최종 검증](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/41) | Note20 Ultra·S25 Ultra 사용자 수동 경기·동시 이동/시점/사격·입력 해제·재장전/사망/리스폰·종료/재참가 정상 보고. 입력 전수·비정상 종료·최신 APK 성능 등 남음 |
 | [#42 라이선스·고지](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/42) | 배포 포함 자산·SDK 출처 및 필수 고지 점검 |
-| [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | code5 내부 출시·APK 전달 완료, Note20 Ultra·S25 Ultra 사용자 수동 로그인/두 피어 경기/복귀/재참가 정상 보고. 스토어 설치/업데이트 경로와 남은 배포 기준은 열림 |
+| [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | code5 내부 출시·APK 전달 완료, Note20 Ultra 사용자 로그인 확인 및 Note20 Ultra·S25 Ultra 두 피어 경기/복귀/재참가 수동 정상 보고. 스토어 설치/업데이트 경로와 남은 배포 기준은 열림 |
 | [#44 CI 전환](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44) | Unity6/Google Play 작업에 맞게 기존 자동 빌드·배포 경로 정리 |
 | [#66 새 PC 빌드 환경](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/66) | 도구체인 설치·Win64 복원 확인, PR67–69 병합. Android Player/APIUpdater 실패와 compiler 옵션 지속 검증 진행 중 |
 
