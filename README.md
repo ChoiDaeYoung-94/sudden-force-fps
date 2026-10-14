@@ -2,23 +2,15 @@
 
 > Photon Fusion 2 기반의 호스트·클라이언트 멀티플레이 Unity 3D FPS 프로젝트입니다. 로비에서 방을 만들고 팀을 선택해 DesertHouse에서 한 판을 진행합니다.
 
-2026-10-14 기준으로 `1.0.194 / versionCode 5`를 Google Play 내부 테스트에 출시했습니다. 전달한 Play 서명 APK는 사용자 수동 테스트에서 Galaxy Note20 Ultra·S25 Ultra의 두 피어 경기 진입, 동시 이동·시점·사격과 입력 해제, 재장전·사망·리스폰, 경기 종료·로비 복귀·새 방 참가가 정상이라고 보고됐습니다. Play 스토어 설치/업데이트 경로, 메뉴와 사망 중 입력 차단의 전수 회귀, 최신 APK 성능·저사양·실제16KB 기기 및 남은 에셋 출처 검증은 별도입니다. 최신 범위와 날짜별 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)와 [멀티플레이 검증 기록](MULTIPLAYER_TEST_PLAN.md)을 따릅니다.
+## 현재 상태 (2026-10-15 정리)
 
-새 PC에서는 원격 `f61be81`을 새 워크트리에 복제했습니다. SDK·NDK 설치와 도구 실행, 공식 OpenJDK의 별도 경로 및 실제 Win64 컴파일을 확인했습니다. 2026-10-14 진단에서 임시 Android compiler 옵션 `-parallel-`로 편집기 컴파일108개는 오류0으로 완료됐지만, 후속 비서명 ARM64 Gradle export는 Unity APIUpdater의 AccessViolation/CLR 오류로 실패했습니다. 다음 Process count 진단은 compiler 옵션 유지 게이트 미충족으로 비교 export를 실행하지 않았습니다. 환경·설정·소스·버전을 원복하고 Win64117개 오류·경고0 및 후속 실패 플래그false를 확인했습니다. BIOS는 사용자 결정에 따라 보류했고 원인 및 새 PC Android 빌드 복구는 미완료입니다. 기존 Play 버전5의 서명된 범용 APK는 사용자 지정 Drive에 전달했고, 사용자는 Galaxy Note20 Ultra에서 설치·실행·Google 로그인 후 로비·방 생성/퇴장이 정상이라고 확인했습니다. 후속 두 기기 경기 흐름은 위 사용자 수동 보고로 보완했으며 Play 스토어 설치/업데이트 경로는 남았습니다. 과거 외부 백업과 미커밋 변경의 복구를 가정하지 않습니다. 최신 근거는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+`1.0.194 / versionCode 5`는 2026-10-11 Google Play 내부 테스트에 출시했습니다. 전달한 Play 서명 APK는 10월 14일 사용자 수동 테스트에서 Galaxy Note20 Ultra·S25 Ultra의 두 피어 경기 진입, 동시 이동·시점·사격과 입력 해제, 재장전·사망·리스폰, 경기 종료·로비 복귀·새 방 참가가 정상이라고 보고됐습니다. 직접 APK 설치 결과이며 Play 스토어 설치/업데이트 결과와 구분합니다.
 
-후속 PlayerSettings 선별 저장 시험도 파일에 옵션이 기록되지 않아 Android 전환 없이 마쳤습니다. 인자와 tracked 파일은 원래 값이지만 Editor의 변경 표시와 미추적 복구 파일3개는 남겨 보존했습니다. Windows 검증 클라이언트는 필수 URP 심볼 검사 및 후속 컴파일 게이트에서 준비가 중단됐습니다. 두 Android 기기의 사용자 수동 검증은 이 PC 빌드 복구와 독립적으로 진행했습니다.
+새 PC에서는 10월 14일 실제 ARM64 IL2CPP 컴파일과 검증용 무서명 APK 패키징을 완료했습니다. 이 APK는 설치·Drive 전달·Play 업로드 대상이 아닙니다. SO7개 LOAD16KB 정렬을 확인했지만 RELRO 정적 경고4건과 실제16KB 기기 검증은 남았습니다. SO는 압축 저장돼 zipalign 통과를 비압축 SO의16KB 직접 배치 검증으로 확대하지 않습니다. 오류·기존/누락/빈 산출물의 빌드 성공 판정은 [PR #76](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/76)으로 보강했고 [#75](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/75)는 닫혔습니다. 수정 Editor 컴파일과8개 함수 경계 사례가 통과했으며 서명 빌드·batch 통합 실행과는 구분합니다.
 
-HUD 이미지7개는 사용자가 직접 제작 또는 AI 생성했다고 확인해 유지합니다. 캐릭터·무기·맵·로딩의 공식 출처 후보와 남은 취득·원 패키지 확인은 [에셋 기록](THIRD_PARTY_ASSETS.md)을 따릅니다.
+남은 핵심은 새 PC 서명 배포 경로, 등록 테스터의 Store 설치/업데이트와 로그인·경기·재참가, MENU·사망 중 입력 경계/비정상 연결 종료, 최신 APK 성능·저사양·실제16KB, 배포 포함 에셋·고지와 Console 선언 확인입니다. 광고·인앱 결제는 제외하며 공개 프로덕션 출시·새 자동 CI·PlayFab 통합·스킬/장비 확장은 별도 범위입니다. 전체 약89%는 작업 기준 추정입니다.
 
-후속 새 Editor 진단은 처음에 종료 예약 요청 뒤 실제 종료를 확인하지 못해 중단했습니다. 이후 지연 callback의 실행과 해당 Editor의 shutdown 충돌을 확인했으며 정상 종료 성공으로 처리하지 않았습니다. 기존 프로세스·helper가 모두 사라진 뒤 자동 저장8파일을 원본으로 복원해 제품·복구 파일·버전을 보존했습니다. 파일 보호를 확인한 조건에서 새 프로세스 한정 환경으로 별도 startup 진단을 진행하며, 새 PC 빌드 복구 성공은 아직 아닙니다. 상세와 날짜별 상태는 배포 점검표를 따릅니다.
-
-새 Process4·원래 compiler 인자[] 조건의 실제 비서명 Gradle export는 생성 Succeeded이나 shader compiler 오류3건이 남아 부분 성공입니다. 임시 설정과 Win64 대상·제품 원본을 복원했고, 진단 환경4 및 PS 변경 표시는 유지했습니다. 새 APK/AAB·버전 예약이나 렌더링 품질 통과는 아닙니다. 다음은 단일 shader compiler 조건의 별도 진단입니다.
-
-후속 진단 옵션·예약 콜백 export는 실제 오류0·경고2로 생성 Succeeded이며 이전 실패3종의 새 shader variant4개도 완료됐습니다. 원래 Win64·설정·소스·버전을 보존했습니다. 옵션의 전체 worker1 효과나 충돌 원인 해결을 확정하지 않으며 진단 환경4/arg·PSdirty는 남습니다. 다음은 Gradle 네이티브 컴파일·패키징·서명 단계로, 아직 새 APK/AAB/실기기 검증은 아닙니다. 상세한 시점별 범위는 배포 점검표를 따릅니다.
-
-이어서 짧은 외부 Gradle 캐시 경로를 사용한 실제 네이티브 컴파일·APK 패키징이 종료 코드0으로 완료됐습니다. 새 PC에서 생성한 검증용 APK는 `1.0.194/code5`·ARM64·비개발·무서명이며, 휴대폰 설치나 Drive 전달 대상이 아닙니다. ZIP 무결성·읽기 전용 zipalign·7개 네이티브 라이브러리의 LOAD16KB 정렬을 확인했습니다. SO7개는 압축 저장돼 zipalign 통과를 비압축 SO의16KB 직접 배치 검증으로 확대하지 않습니다. RELRO 정적 경고4건과 실제16KB 기기 검증은 남았습니다. 기존 Play 서명 APK와 구분하며, 빌드 성공 판정 보강은 [#75](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/75)에서 진행합니다.
-
-Android 빌드 도구는 오류0 보고서와 새 nonempty APK/AAB가 모두 확인돼야 성공으로 처리하고, 기존 출력은 원장 예약 전에 보호합니다. 수정 Editor 컴파일과8개 경계 사례 검증을 통과했으며, 서명 AAB·batch 통합 실행 검증과는 구분합니다.
+이전 APIUpdater·shader·shutdown 진단의 실패와 복원 이력은 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)에 보존합니다. 일부 빌드 성공으로 간헐 충돌 원인 해결·재발 방지를 확정하지 않습니다. 과거 외부 백업·미커밋 변경의 복구나 서명 비밀번호 이전을 가정하지 않습니다. HUD 이미지7개는 사용자가 직접 제작 또는 AI 생성했다고 확인했으며 남은 출처는 [에셋 기록](THIRD_PARTY_ASSETS.md)을 따릅니다. 최신 검증 범위는 [멀티플레이 기록](MULTIPLAYER_TEST_PLAN.md)과 배포 점검표를 우선합니다.
 
 ## 주요 구현
 
@@ -147,8 +139,8 @@ APK 메뉴는 Development/LZ4, AAB 메뉴는 non-Development/LZ4HC/CleanBuildCac
 ### 기존 CI/CD 구성의 현재 상태
 
 - Unity2022/macOS/self-hosted `buildpc` → App Center 구성은 [원문 보관 파일](.github/legacy/cicd.yml.disabled)로 이동했습니다. 활성 `.github/workflows`에 실행 정의가 없으므로 이 소스에는 자동 Android 빌드·배포나 PR 검증 CI가 없습니다. 과거 [unity-cicd](https://github.com/ChoiDaeYoung-94/unity-cicd) 안내는 현재 배포 절차가 아닙니다.
-- [App Center 배포 기능은 종료](https://learn.microsoft.com/en-us/appcenter/retirement)되었습니다. 로컬 빌드는 Unity6000.3.25f1 절차를 사용하며 기존 Sudden Force 앱의 Google Play 내부 테스트 code5 업로드·출시는 완료했습니다. Play 설치·로그인·경기 검증은 남아 있습니다.
-- 기존 queued/running Actions가 이 파일 이동만으로 취소됐다고 가정하지 않습니다. GitHub의 실제 실행 상태와 필요한 취소는 별도로 확인합니다. runner의 현재 OS·Unity6 라이선스·Android 도구체인·secrets 가용성은 아직 검증하지 않았습니다.
+- [App Center 배포 기능은 종료](https://learn.microsoft.com/en-us/appcenter/retirement)되었습니다. 로컬 빌드는 Unity6000.3.25f1 절차를 사용하며 기존 Sudden Force 앱의 Google Play 내부 테스트 code5 업로드·출시는 완료했습니다. Play 스토어 설치본의 설치·로그인·경기 검증은 남아 있습니다.
+- 2026-10-08 확인한 과거 Actions 2건은 completed/cancelled였고 저장소에 등록된 self-hosted runner는 없었습니다. 해당 시점의 확인이며 현재 runner 가용성이나 Unity6 라이선스·Android 도구체인·secrets 구성을 보장하지 않습니다. 새 CI 환경은 미구성입니다.
 - 후속 CI는 확인된 runner에서 수동 `workflow_dispatch` 단일 빌드 작업으로 검증한 뒤 추가합니다. 로컬 빌드·실기기 검증과 GitHub CI 결과를 구분하며, PR 병합으로 빌드·배포를 자동 실행하지 않습니다. 진행 범위는 [이슈 #44](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44)에 기록합니다.
 
 ## 계획·검증·라이선스
