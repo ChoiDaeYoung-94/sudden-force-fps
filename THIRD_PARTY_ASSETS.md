@@ -1,5 +1,11 @@
 # Third-party asset provenance
 
+## 코드12 서명 AAB 고지 본문 확인 (2026-10-15, #42/#66)
+
+기존 업로드 키로 서명한 `1.0.194/code12` AAB의 `base/assets/bin/Data/data.unity3d`에서 고지 TextAsset 본문687,423B를 디코딩해 소스 전문 SHA256 `5EECFD5DAA79ECD94CBBDA5F2CED0FE4289D6ED4FF05C1BA5BAF51188DB48FCD`와 일치를 확인했습니다. 서명 전후 payload127개 바이트 차이0이며 JAR 서명 메타데이터3개만 추가됐습니다. 새 object-table GUID 증명, 전체 에셋 권리 조건 또는 고지 UI 실기기 검증을 완료했다는 뜻은 아닙니다.
+
+근거는 `D:/codex/validation/sudden-force-fps/20261015-export-aab-code12-c1-01/`의 `signed-notice-body-validation.json`, `signed-static-validation.json`, `signed-cryptographic-validation.json`입니다. 서명 AAB는 배포 후보이며 Play 업로드·Store 설치 검증은 아직 없습니다. 남은 출처 범위 때문에 #42는 유지합니다.
+
 ## HUD 제작 확인과 남은 원본 대조 (2026-10-14, #42)
 
 사용자는 `Assets/Art/Game/UI`의 `Crosshair.png`, `Fire.png`, `Gun.png`, `Health.png`, `HPBar.png`, `Jump.png`, `Sit.png` 7개를 **직접 제작 또는 AI 생성**한 이미지라고 확인했습니다. 이 답변을 프로젝트 자체 제작 HUD의 출처 기록으로 반영하고 기존 파일과 GUID를 유지합니다. 개별 파일의 제작 방식·생성 도구는 추정하지 않으며, PNG 생성 시각 메타데이터를 저작자 증명으로 취급하지 않습니다. 이전의 HUD 출처 질문은 해소됐습니다.

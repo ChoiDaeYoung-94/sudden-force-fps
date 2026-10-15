@@ -4,7 +4,7 @@
 
 ## 현재 기준 상태
 
-2026-10-15 최신 코드12: 동일 검증 export·도구체인에서 wrapper/Gradle JVM에만 C1 옵션을 추가한 실제 bundleRelease가 exit0으로 끝나 무서명 AAB92,822,470B를 생성했습니다. 원장194,4,12, 실제 manifest·ARM64·비개발·ZIP·bundletool·고지 본문687,423B 일치를 확인했습니다. 기존 키 서명은 사용자 로컬 암호 재입력 대기이며 전체는 **약90% 작업 기준 추정**입니다. 아래 이전89% 기록은 해당 시점입니다. clean Unity 재빌드나 C2/APIUpdater 근본 원인 해결은 아니며 서명·Store·실제16KB·최종 품질/출처 확인은 남습니다.
+2026-10-15 최신 코드12: 동일 검증 export·도구체인에서 wrapper/Gradle JVM에만 C1 옵션을 추가한 실제 bundleRelease가 exit0으로 끝났고, 이후 기존 업로드 키의 단일 jarsigner 서명도 exit0으로 완료했습니다. 서명 AAB92,835,970B의 인증서·payload127개 전체 서명과 원본 바이트 일치, 실제 manifest·ARM64·비개발·ZIP·bundletool·고지 본문687,423B 일치를 확인했습니다. 원장194,4,12, 전체는 **약90% 작업 기준 추정**입니다. 아래 이전89% 기록은 해당 시점입니다. clean Unity 재빌드나 C2/APIUpdater 근본 원인 해결은 아니며 Play 업로드·Store·실제16KB·최종 품질/출처 확인은 남습니다.
 
 2026-10-15 후속 코드11: 오류0 기존 export2794개 원본을 보존한 Gradle unsigned bundleRelease 경로의 dry-run은 통과했지만, 실제 호출은 task 실행 전 JVM C2 스레드 충돌/exit1로 실패했습니다. AAB·서명0, 원장194,3,11을 유지하며 다음 코드는12 이상입니다. OS 변경 없이 해당 JVM의 JIT 조건을 검토하고 있으며 성공이나 근본 원인 해결은 아직 아닙니다.
 
