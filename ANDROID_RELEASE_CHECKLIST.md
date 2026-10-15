@@ -7,11 +7,20 @@
 | 기존 Play 테스트 | 10월11일 내부 release3·1.0.194/code5 출시. 전달 Play 서명 APK의 두 기기 기본 경기 정상은10월14일 사용자 수동 보고 |
 | 새 PC 빌드 | 10월14일 ARM64 IL2CPP·무서명 APK 생성 성공. 설치·Drive 전달·Play 업로드 대상으로 사용하지 않음 |
 | 새 AAB 시도 | 10월15일 코드10을 예약한 비개발 ARM64 AAB 1회는 Player 스크립트 컴파일 단계에서 Failed/오류3·경고71. AAB 미생성, 다음 코드는11 이상 |
+| export 기반 후속 | 코드11의 unsigned bundleRelease는 dry-run 통과 후 실제 호출에서 Gradle JVM C2 스레드 충돌/exit1. task 실행·AAB·서명0, 원장194,3,11 보존, 다음 코드는12 이상 |
 | 빌드 성공 판정 | PR76 병합/#75 닫힘. Editor 컴파일·검증 함수8사례 통과, 서명/batch 통합 실행은 별도 |
 | 남은 배포 확인 | 새 PC 서명 경로·등록 테스터 Store 설치/업데이트·Store 설치본 로그인/경기·Console 선언 |
 | 남은 품질/출처 | MENU·사망 중 입력/연결 종료 경계, 최신 성능·저사양·실제16KB, 배포 자산·고지 매핑 |
 
 새 무서명 APK의 RELRO 정적 경고는4건이며 기존 Play APK의3건과 구분합니다. SO7개는 압축 저장돼 LOAD 정렬·zipalign과 실제16KB 실행을 같은 결과로 처리하지 않습니다. 아래는 각 시점의 상세 기록과 체크입니다. 초기 체크박스나 당시의 '다음 작업' 문구를 현재 미완료 목록으로 일괄 해석하지 않고 이 요약과 해당 이슈의 최신 기록을 우선합니다. 새 자동 CI·PlayFab·추가 리팩토링과 공개 프로덕션 출시는 별도 범위입니다.
+
+### 코드11 export 기반 AAB 시도 (#66, 2026-10-15)
+
+이전 오류0 export의 원본2,794개 해시 차이0과 현재 HEAD까지 런타임 변경 없음을 독립 검토했습니다. AGP9.0.0의 `finalizeDsl`에서 code11/name1.0.194·비개발·서명 설정null을 적용하는 외부 init-script를 사용했고, `FinalizeBundleTask`의 실제 서명 데이터·서명 파일·코드 투명성 설정 부재를 확인한 dry-run은 exit0입니다. Gradle에 서명 비밀값을 전달하지 않았고 기존 export 파일을 수정하지 않았습니다.
+
+출력 경로 부재를 확인한 뒤 원장 `194,3,11`을 예약한 실제 `:launcher:bundleRelease`1회는 초기 구성 중 single-use JVM이 종료되어 exit1입니다. task 실행 전 `initLoaded`만 기록됐으며 AAB·서명0입니다. crash 기록은 OpenJDK17.0.18+8의 `C2 CompilerThread3`에서 `EXCEPTION_ACCESS_VIOLATION(0xc0000005)`·`jvm.dll+0x6aa66f`를 가리킵니다. 이것으로 하드웨어·BIOS·단일 근본 원인을 확정하지 않습니다. 코드11 재시도는 하지 않으며 다음은12 이상입니다. 다음 후보는 해당 Gradle JVM에만 `-XX:TieredStopAtLevel=1`을 적용하는 조건이며 아직 그 결과는 없습니다.
+
+근거: `D:/codex/validation/sudden-force-fps/20261015-export-aab-code11-01/`의 `preflight.json`, `dry-result.json`, `actual-result.json`, `gradle-task-events.jsonl` 및 원본 export의 `hs_err_pid58200.log`. 원본 crash와 실패 결과는 보존합니다. 이 단위는 코드10의 Unity/APIUpdater 실패와 별도이며 서명 암호 재입력을 요청하지 않았습니다.
 
 ### 코드10 서명 AAB 시도와 예약 보존 (#66, 2026-10-15)
 
