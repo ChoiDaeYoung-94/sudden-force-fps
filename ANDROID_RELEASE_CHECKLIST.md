@@ -8,12 +8,28 @@
 | 새 PC 빌드 | 10월14일 ARM64 IL2CPP·무서명 APK 생성 성공. 설치·Drive 전달·Play 업로드 대상으로 사용하지 않음 |
 | 새 AAB 시도 | 10월15일 코드10을 예약한 비개발 ARM64 AAB 1회는 Player 스크립트 컴파일 단계에서 Failed/오류3·경고71. AAB 미생성, 다음 코드는11 이상 |
 | export 기반 후속 | 코드11의 unsigned bundleRelease는 dry-run 통과 후 실제 호출에서 Gradle JVM C2 스레드 충돌/exit1. task 실행·AAB·서명0, 원장194,3,11 보존, 다음 코드는12 이상 |
-| 코드12 현재 결과 | Gradle JVM C1 조건에서 실제 bundleRelease exit0·무서명 AAB92,822,470B 생성. 원장194,4,12. 기본 정적 검증·고지 본문 일치 통과, 기존 키 서명은 로컬 암호 재입력 대기 |
+| 코드12 현재 결과 | Gradle JVM C1 조건의 AAB 생성·기존 업로드 키 서명 완료. 서명본92,835,970B·payload127개 전체 서명·인증서 일치·정적 검증 통과. 원장194,4,12, Play 업로드·Store 검증 전 |
 | 빌드 성공 판정 | PR76 병합/#75 닫힘. Editor 컴파일·검증 함수8사례 통과, 서명/batch 통합 실행은 별도 |
 | 남은 배포 확인 | 새 PC 서명 경로·등록 테스터 Store 설치/업데이트·Store 설치본 로그인/경기·Console 선언 |
 | 남은 품질/출처 | MENU·사망 중 입력/연결 종료 경계, 최신 성능·저사양·실제16KB, 배포 자산·고지 매핑 |
 
 새 무서명 APK의 RELRO 정적 경고는4건이며 기존 Play APK의3건과 구분합니다. SO7개는 압축 저장돼 LOAD 정렬·zipalign과 실제16KB 실행을 같은 결과로 처리하지 않습니다. 아래는 각 시점의 상세 기록과 체크입니다. 초기 체크박스나 당시의 '다음 작업' 문구를 현재 미완료 목록으로 일괄 해석하지 않고 이 요약과 해당 이슈의 최신 기록을 우선합니다. 새 자동 CI·PlayFab·추가 리팩토링과 공개 프로덕션 출시는 별도 범위입니다.
+
+### 코드12 기존 업로드 키 서명·검증 (#66, 2026-10-15)
+
+사용자가 로컬 암호 두 칸을 재입력한 뒤 기존 `src/AeDeong.keystore`/alias `aedeong`으로 JDK17 jarsigner를1회 실행해 **exit0 / 서명 AAB92,835,970B**를 생성했습니다. 원본 무서명 파일은 보존했습니다. 암호는 단일 jarsigner 자식 환경에만 전달했고 명령줄·파일·로그·부모/Gradle 환경에 기록하지 않았습니다. Unity CLI는 main-thread5000ms timeout으로 COMMAND_FAILED를 반환했으나, 실제 프로세스 종료 코드0·서명 산출물·암호 없이 수행한 파일 검증을 별도로 확인했으며 재서명0입니다.
+
+- 서명 AAB SHA256: `21AD89A76079243D2C53AB7B7F26C29B34019D6CE815D5462FE8A2CF01906E9A`
+- 공개 업로드 인증서 SHA1: `E956B8AD1019A6A2E3B889B121C1EF0E727418E0`
+- 공개 업로드 인증서 SHA256: `4D072592228C991D3F6A0EDA768C8CBEE40895C3B1F4A6FB9379540F048965E0`
+- JAR 파일 검증·전체 payload127개 기대 인증서 서명, unsigned payload0·wrong signer0. 원본 payload127개 바이트 차이0이고 추가된 파일은 JAR 서명 메타데이터3개뿐입니다.
+- 실제 서명 AAB의 manifest(code12/name1.0.194/package 일치/min25·target36/ARM64/nondebuggable), ZIP130개 CRC, bundletool validate, BundleConfig16KB·SO7개 LOAD16KB·고지 본문687,423B 일치를 확인했습니다. 자체 서명 인증서의 PKIX 체인·timestamp 부재/2072-06-15 만료 경고는 JAR 무결성 실패와 구분합니다.
+
+서명본도 RELRO 정적 경고4건이 있으며 실제16KB 기기·Play 생성 APK 배치·Store 설치 검증은 미실행입니다. 현재 runtime/원본export2794·무서명 AAB·기존 APK·crash·Recovery를 보존했고 원장194,4,12는 그대로입니다. 최종 Editor는 Android idle/compileFailed=false·queue markerfalse이며 서명 프로세스는 종료됐습니다. 아래 무서명 단위의 서명 대기는 당시 시점의 기록입니다.
+
+검증 원본은 `D:/codex/validation/sudden-force-fps/20261015-export-aab-code12-c1-01/SuddenForceFPS.1.0.194.code12.signed.aab`이며, 업로드 후보 복사본은 `D:/codex/releases/sudden-force-fps/1.0.194-code12/SuddenForceFPS-1.0.194-code12-UploadSigned.aab`입니다. 두 파일의 SHA256은 같습니다. 해당 배포 폴더에는 SHA256SUMS·한국어 테스트 안내·제약 설명만 함께 준비했으며 키·암호는 포함하지 않았습니다. Play 업로드·출시·새 기기 설치는 아직 수행하지 않았습니다.
+
+근거: 같은 검증 폴더의 `sign-result.json`, `signed-result-summary.json`, `signed-cryptographic-validation.json`, `signed-static-validation.json`, `signed-notice-body-validation.json`, `final-preservation-and-handoff.json`.
 
 ### 코드12 C1 JVM 조건의 무서명 AAB 생성 (#66, 2026-10-15)
 
