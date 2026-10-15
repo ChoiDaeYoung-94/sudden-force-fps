@@ -6,11 +6,22 @@
 | --- | --- |
 | 기존 Play 테스트 | 10월11일 내부 release3·1.0.194/code5 출시. 전달 Play 서명 APK의 두 기기 기본 경기 정상은10월14일 사용자 수동 보고 |
 | 새 PC 빌드 | 10월14일 ARM64 IL2CPP·무서명 APK 생성 성공. 설치·Drive 전달·Play 업로드 대상으로 사용하지 않음 |
+| 새 AAB 시도 | 10월15일 코드10을 예약한 비개발 ARM64 AAB 1회는 Player 스크립트 컴파일 단계에서 Failed/오류3·경고71. AAB 미생성, 다음 코드는11 이상 |
 | 빌드 성공 판정 | PR76 병합/#75 닫힘. Editor 컴파일·검증 함수8사례 통과, 서명/batch 통합 실행은 별도 |
 | 남은 배포 확인 | 새 PC 서명 경로·등록 테스터 Store 설치/업데이트·Store 설치본 로그인/경기·Console 선언 |
 | 남은 품질/출처 | MENU·사망 중 입력/연결 종료 경계, 최신 성능·저사양·실제16KB, 배포 자산·고지 매핑 |
 
 새 무서명 APK의 RELRO 정적 경고는4건이며 기존 Play APK의3건과 구분합니다. SO7개는 압축 저장돼 LOAD 정렬·zipalign과 실제16KB 실행을 같은 결과로 처리하지 않습니다. 아래는 각 시점의 상세 기록과 체크입니다. 초기 체크박스나 당시의 '다음 작업' 문구를 현재 미완료 목록으로 일괄 해석하지 않고 이 요약과 해당 이슈의 최신 기록을 우선합니다. 새 자동 CI·PlayFab·추가 리팩토링과 공개 프로덕션 출시는 별도 범위입니다.
+
+### 코드10 서명 AAB 시도와 예약 보존 (#66, 2026-10-15)
+
+사용자는 Play 최대 코드가5로 보인다고 말씀하시고 다음 배포 코드를10부터 사용하도록 지정했습니다. Console 전체 업로드 내역을 도구로 직접 확인한 결과는 아닙니다. 기존 `BuildScript.BuildAOSAAB`를 단발 Editor update 콜백에서1회 호출했고, 프로세스 한정 `SUDDEN_FORCE_VERSION_CODE=10`으로 원장 `194,2,10`을 예약했습니다. 비개발 ARM64/IL2CPP·API36/min25 조건의 결과는 **Failed/오류3·경고71/173.4085초/산출물0**입니다. Gradle·서명 단계 전에 Player 스크립트 컴파일의 APIUpdater에서 TypeLoadException과 CLR 치명적 오류 `0x80131506`이 관찰됐습니다. 개별 helper PID·모든 Player Csc exit code는 확인하지 못했으며 단일 원인이나 하드웨어 문제를 확정하지 않습니다.
+
+예약된10은 재사용하지 않으며 다음 빌드는11 이상입니다. 코드 환경변수와 임시 옵션은 메모리에서 복원됐고 최종 Editor는 Android idle/compileFailed=false입니다. 단, ABI는 메모리 ARMv7+ARM64·디스크 ARM64가 달라 전체 설정 원복 성공으로 표시하지 않습니다. 사용자 입력 암호는 종료 콜백에서는 존재했지만 이후 조회에서는 두 항목이 초기화됐으므로 최종 상태는 재입력 필요입니다. 비밀번호 값·길이·키 바이트를 출력하거나 복사하지 않았습니다.
+
+기존 dirty와 Recovery3개는 보존했습니다. 자동 변화는 내용6파일·줄끝17파일로 분리했고, Resolver의 구형 packagingOptions 재생성과 절대 Maven URI, 렌더링 설정, 자동 백업·PerformanceTest 자료를 임의 채택하거나 일괄 원복하지 않았습니다. Report 시각의 이중 UTC 변환으로 생긴 최초 `fresh=false`는 원본 기록을 보존하고 별도 원시 시각·로그 근거로 정정했습니다. 서명 성공·새 AAB 전달·Play 업로드·실제16KB 통과는 없습니다. 이전 오류0 Gradle export 활용 가능성을 별도 검토하며 새 clean Unity 빌드 성공으로 표현하지 않습니다.
+
+근거: `D:/codex/validation/sudden-force-fps/20261015-signed-aab-code10-01/`의 `build-start.json`, `build-end.json`, `failure-tool-attribution-safe.json`, `final-preservation-and-handoff.json`.
 
 ### 빌드 성공 판정·출력 충돌 보호 검증 (#75, 2026-10-14)
 

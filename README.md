@@ -4,6 +4,8 @@
 
 ## 현재 상태 (2026-10-15 정리)
 
+10월15일 새 PC의 비개발 ARM64 AAB 빌드는 코드10을 예약한 뒤 Player 스크립트 컴파일의 APIUpdater/CLR 오류로 실패했습니다(오류3·경고71, AAB 미생성). 원장 `194,2,10`을 보존하며 다음 코드는11 이상입니다. 사용자 지시로10부터 사용했으며 Play 최대 코드를 직접 재조회한 결과는 아닙니다. 이전 오류0 Gradle export 기반의 배포 경로를 별도 검토 중입니다. 아래 기존 Play APK·무서명 APK 성과와 이번 새 서명 빌드 실패를 구분합니다.
+
 `1.0.194 / versionCode 5`는 2026-10-11 Google Play 내부 테스트에 출시했습니다. 전달한 Play 서명 APK는 10월 14일 사용자 수동 테스트에서 Galaxy Note20 Ultra·S25 Ultra의 두 피어 경기 진입, 동시 이동·시점·사격과 입력 해제, 재장전·사망·리스폰, 경기 종료·로비 복귀·새 방 참가가 정상이라고 보고됐습니다. 직접 APK 설치 결과이며 Play 스토어 설치/업데이트 결과와 구분합니다.
 
 새 PC에서는 10월 14일 실제 ARM64 IL2CPP 컴파일과 검증용 무서명 APK 패키징을 완료했습니다. 이 APK는 설치·Drive 전달·Play 업로드 대상이 아닙니다. SO7개 LOAD16KB 정렬을 확인했지만 RELRO 정적 경고4건과 실제16KB 기기 검증은 남았습니다. SO는 압축 저장돼 zipalign 통과를 비압축 SO의16KB 직접 배치 검증으로 확대하지 않습니다. 오류·기존/누락/빈 산출물의 빌드 성공 판정은 [PR #76](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/76)으로 보강했고 [#75](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/75)는 닫혔습니다. 수정 Editor 컴파일과8개 함수 경계 사례가 통과했으며 서명 빌드·batch 통합 실행과는 구분합니다.
