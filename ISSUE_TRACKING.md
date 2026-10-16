@@ -1,6 +1,6 @@
 # GitHub 이슈와 PR 작업 관리
 
-## 현재 운영 기준 (2026-10-15)
+## 현재 운영 기준 (2026-10-16)
 
 사용자 지시에 따라 이슈의 완료 기준을 먼저 정하고 `codex/issue-번호-설명` 브랜치에서 작업합니다. 한글 커밋과 PR에 이슈를 연결하고, 변경 내용·검증 결과·남은 제한을 리뷰한 뒤 저장소 규칙을 준수하여 병합합니다. 일부 요구만 해결했으면 `Refs #번호`, 이슈 전체 범위가 완료된 경우만 `Closes #번호`를 사용합니다. 진행 중/미검증 이슈를 소급 완료하지 않습니다.
 
@@ -19,12 +19,12 @@ GitHub 연결은 PR 작성자와 같은 계정이므로 정식 자기 승인을 
 | [#40 정상 퇴장 메뉴](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/40) | 구현·기존 검증 완료로 닫힘. 최신 APK 사용자 방 퇴장 보고와 실제 두 피어 경기 전체 회귀는 구분 |
 | [#41 Android 최종 검증](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/41) | Note20 Ultra·S25 Ultra 사용자 수동 경기·동시 이동/시점/사격·입력 해제·재장전/사망/리스폰·종료/재참가 정상 보고. 입력 전수·비정상 종료·최신 APK 성능 등 남음 |
 | [#42 라이선스·고지](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/42) | 배포 포함 자산·SDK 출처 및 필수 고지 점검 |
-| [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | code5 내부 출시·APK 전달 완료, Note20 Ultra 사용자 로그인 확인 및 Note20 Ultra·S25 Ultra 두 피어 경기/복귀/재참가 수동 정상 보고. 스토어 설치/업데이트 경로와 남은 배포 기준은 열림 |
+| [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | code12 내부 release4 제공과 실제 참여 링크 직접 확인. 두 기기 Store 업데이트·로그인·로비·방 참가 사용자 정상 보고. 최신 한 경기/재참가·남은 품질/출처 기준은 열림 |
 | [#44 CI 전환](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44) | Unity6/Google Play 작업에 맞게 기존 자동 빌드·배포 경로 정리 |
 | [#66 새 PC 빌드 환경](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/66) | 오류0 Gradle 생성(PR74)과 실제 ARM64 IL2CPP·무서명 APK 패키징 성공. 간헐 안정성·서명 배포·실제16KB 등 남음 |
 | [#75 빌드 성공 판정](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/75) | 오류0·새 nonempty APK/AAB 및 원장 예약 전 출력 충돌 보호 구현, Win64 Editor 컴파일·경계8사례 통과. [PR #76](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/76) 병합 완료·이슈 닫힘 |
 
-2026-10-15 GitHub 상태를 읽기 대조했습니다. #37–40·75는 닫혔고 #1·35·36·41–44·66은 열려 있습니다. 새 자동 CI·#35 잔여 리팩토링·#36 PlayFab은 별도 후속 범위이며 이번 내부 테스트 완료의 선행 조건으로 확대하지 않습니다. 이번 사용자 APK 결과는 수동 보고이며 직접 계측이나 Play 스토어 설치 결과로 확대하지 않습니다. 아래 이전 날짜의 조사·완료 체크는 당시 기록입니다.
+2026-10-16 최신 결과는 Console 직접 관찰과 사용자 수동 보고를 구분합니다. 코드12 Store 기본 흐름과 MENU/리스폰 후 held FIRE의 새 입력 요구는 사용자 확인이며 직접 기기 계측이 아닙니다. 광고 없음 선언 저장·출하 DEX의 지정 네임스페이스 점검을 보완했으며 #41–43·66은 남은 기준 때문에 열림 유지합니다. #37–40·75는 기존 완료 상태이고 새 자동 CI·#35 잔여 리팩토링·#36 PlayFab·공개 배포 설정 전체는 이번 내부 테스트 완료의 선행 조건으로 확대하지 않습니다. 아래 이전 날짜의 조사·완료 체크는 당시 기록입니다.
 
 ## 최초 조사 기록 (2026-10-07)
 
