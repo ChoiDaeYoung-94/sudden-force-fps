@@ -4,6 +4,18 @@
 
 최신은 **코드18 서명 AAB92,840,760B 생성·검증 및 Google Play 내부 테스트 release5 제공 완료**입니다. 총괄이 지정 Console 탭에서 직접 업로드·출시했고10월16일16:37의 내부 테스터 제공 상태를 확인했습니다. 원장194,10,18·다음 새 코드19 이상이며 기존 코드12 파일과 검증 이력은 보존합니다. 실기기 검증 전반은 추가 사용자 결정으로 작업 PC 연결 가능 시점까지 후순위로 두고 코드18 Store 설치·실행은 아직 검증하지 않았습니다. 기존 성능 시험의 후속 범위 합의와 미실행 기록을 보존합니다.
 
+### 코드18 후속: C1 전달 실패 진단과 대응 심볼 준비 (#66/#43, 2026-10-16)
+
+PR86·PR87을 각각 main30591c2·faca0ae로 Squash merge한 뒤 추가 읽기 진단을 수행했습니다. 설치 Unity6000.3.25f1 SDK의 `GradleWrapper.Run → AndroidJavaTools.RunJava → Command.Run`은 실행 전에 `CleanupEnvironmentVariables`로 `_JAVA_OPTIONS`, `JAVA_TOOL_OPTIONS`, `CLASSPATH`를 제거합니다. 코드15 Queue는 C1을 JAVA_TOOL_OPTIONS에만 설정했고 JDK_JAVA_OPTIONS·GRADLE_OPTS는 기존 값 부재만 확인했습니다. 두 변수도 제거됐다고 단정하지 않습니다. 내부 AndroidGradle의 기본 인자 생성과 실제 로그는 `-Dorg.gradle.jvmargs=-Xmx4096m`만 포함하며 당시 실제 TieredStopAtLevel4와 일치합니다. 이는 코드15 C1 미전달을 설명하며 .NET 접근 위반·clang TBAA 치명적 오류·PC 재부팅 원인 해결은 아닙니다.
+
+[Gradle 공식 우선순위](https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties)상 명시적 -D 인자는 gradle.properties보다 우선하므로 template에 C1만 추가해 해결됐다고 처리하지 않습니다. 공개 maxJvmHeapSize는 정수형 힙 설정이며 자유 JVM 인자의 공개 설정 경로는 확인하지 못했습니다. SDK 변경·내부 API 실행·환경 정리 우회는 수행하지 않았습니다. `daemonDisabled=false`는 당시 guard의 시스템 속성 비교 결과이며 실제 daemon 운용 전체의 증거가 아닙니다. [--no-daemon도 일회용 JVM을 만들 수 있으므로](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:disabling_the_daemon) 실제 VM 인자를 따로 확인합니다. 후속은 공식 Gradle export와 별도 명시적 C1 패키징의 재현 경로로 검토하며 이번 추가 빌드·버전 예약은0입니다.
+
+코드18 AAB의 native7개와 현재 stripped 출력 전체 바이트가 일치했고 대응 심볼6개의 ARM64·Build ID·심볼 테이블을 확인했습니다. Unity 핵심3개는 같은 빌드의 `libil2cpp.sym.so`, Bee 커스텀 `libunity.sym.so`, 설치 모듈 `libmain.sym.so`이며 원본과 심볼 이름·주소 대응을 확인했습니다. 설치 모듈의 일반 Release/ThinLTO libunity는 Build ID가 달라 사용하지 않았습니다. 추가 Burst·Swappy·C++ 원본은 할당 섹션 이름·주소·크기·바이트까지 AAB와 일치합니다.
+
+외부 `20261016-code18-native-symbols-01/SuddenForceFPS-1.0.194-code18-native-symbols.zip`은36,141,209B/SHA256 `F889F7DA1DD68AD79F4EED1E0607E86C009FB4133667592F51FE7B70858A8238`입니다. ABI 폴더 아래6개 .so 엔트리·중복/추가0·CRC와 각 원본 SHA 일치를 총괄 및 독립 검토에서 확인했습니다. 압축 전111,724,224B이며 core Unity3개는 SYMBOL_TABLE로 .debug_line이 없고 Swappy만 현재 원본의 .debug_line을 포함합니다. 전체 소스 행번호 제공이나 native7개 전체 확보로 보고하지 않습니다. libnanosockets 별도 심볼은 찾지 못했습니다. 이 ZIP은 앱 설치 파일이 아니며 Console 업로드·접수·경고 해소는 아직0입니다. 기존 서명 AAB와 키·암호는 변경하지 않았습니다. 구조와 용도는 [Android 심볼 안내](https://developer.android.com/build/include-native-symbols)와 [Unity6000.3 심볼 안내](https://docs.unity3d.com/6000.3/Documentation/Manual/android-symbols.html)를 따릅니다.
+
+근거: 외부 `20261016-git-workflow-cleanup-01/unity-gradle-c1-diagnosis.md`, 코드15 Queue·SDK IL·실제 Editor 호출, `20261016-code18-native-symbols-01/validation-summary.json`·SHA256SUMS.txt·안내.txt 및 독립 읽기 검토입니다. SDK 원본·심볼 ZIP·원시 로그는 소스 커밋에 포함하지 않습니다.
+
 ### 코드15 직렬 네이티브 빌드·재부팅 복구·코드18 서명 AAB (#66/#42/#43, 2026-10-16)
 
 코드14에서 실패한 LocalizationModule의 APIUpdater를 외부 출력만 바꿔 count1/count4 단독과 count1 자식4개 병렬로 총6회 실행했습니다. 모두 exit0·동일32B·stderr0이며 원본 입력·소스3883개·Git 상태를 보존했습니다. 동일 DLL의 짧은 검사이므로 전체 빌드 안정화나 코드14 성공의 증거는 아닙니다.
