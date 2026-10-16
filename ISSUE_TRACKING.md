@@ -8,7 +8,7 @@
 
 최신 #66 후속은 코드15 네이티브 완료/Gradle 옵션 게이트 실패, 코드16 재부팅 중 결과 미확정, 코드17 CMake 경로 게이트 실패와 코드18 별도 Gradle 생성·기존 키 서명·정적 검증입니다. 원장194,10,18·다음 새 코드19 이상이며 전체 payload129개 서명 검증과 독립 검토를 마친 뒤 총괄이 Play에 직접 업로드·출시해 내부 테스트 release5/code18·16:37 게시·내부 테스터 제공을 확인했습니다. #42의 보완 고지는 새 배포 AAB에 정확히 포함됐지만 남은 원본 대응·기기 표시는 미완료입니다. 실기기 검증 전반은 사용자 결정으로 PC 연결 가능 시점까지 후순위로 두며 #41/#43을 완료 처리하지 않습니다. GitHub CLI의 기존 계정 인증을 확인했고 PR86의 독립 검토 기록·최신 head/base·필수 검사 없음·MERGEABLE/CLEAN을 대조해 보호 규칙 우회 없이 Squash merge했습니다. 미실행 CI를 통과로 기록한 것은 아니며 나머지 이슈는 부분 완료 범위에 따라 유지합니다.
 
-추가 PC 진단: 설치 Unity SDK가 JAVA_TOOL_OPTIONS를 실행 직전 제거하고 Gradle JVM에 힙 크기만 명시하므로 코드15 C1 미전달 원인을 확인했습니다. template만 변경하는 해결이나 전체 충돌 원인 해결로 확대하지 않습니다. 코드18 native7개 중6개 대응 심볼 ZIP36,141,209B의 Build ID·원본 SHA·CRC·독립 검토를 완료했고 Console 업로드는0입니다. 핵심 Unity3개는 함수명용 SYMBOL_TABLE이며 nanosockets와 전체 소스 행번호 지원은 빠져 있습니다. 새 빌드·예약0, 상세는 ANDROID_RELEASE_CHECKLIST.md의 코드18 후속 절을 따릅니다.
+추가 PC 진단: 설치 Unity SDK가 JAVA_TOOL_OPTIONS를 실행 직전 제거하고 Gradle JVM에 힙 크기만 명시하므로 코드15 C1 미전달 원인을 확인했습니다. template만 변경하는 해결이나 전체 충돌 원인 해결로 확대하지 않습니다. 재사용 offline Gradle 사전 검사 도구는 [PR89](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/89)로 main5f2ffb4에 병합했고12개 경계 검사·현 export code15 대상 실제 dry-run/입력 보존이 통과했습니다. 코드18 native7개 중6개 대응 심볼 ZIP36,141,209B도 Build ID·원본 SHA·CRC·독립 검토 후 총괄이 Console에 업로드해 코드18의 첨부 완료 표시를 확인했습니다. 핵심 Unity3개는 함수명용 SYMBOL_TABLE이며 nanosockets와 전체 소스 행번호 지원은 빠져 있습니다. Console 권고 전체 해소·최신 실기기 검증은 미확인으로 유지합니다. 새 빌드·예약0, 상세는 ANDROID_RELEASE_CHECKLIST.md의 코드18 후속 절을 따릅니다.
 
 아래는 코드13·14 마감 당시의 기록입니다.
 
