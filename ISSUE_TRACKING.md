@@ -2,7 +2,7 @@
 
 ## 현재 운영 기준 (2026-10-16)
 
-코드13·14의 고지 반영 AAB 시도는 각각 Linker·APIUpdater 접근 위반으로 실패해 #66에서 추적합니다. 원장194,6,14와 다음 코드15 이상을 유지하며 AAB·새 서명·업로드0입니다. 고지 보완 PR83의 소스 반영과 코드12 실제 배포를 구분하고 #42/#43의 후속 배포·검증 기준은 열림 유지합니다. 휴대폰 연결 보류로 #41 최신 성능 검증도 미완료입니다.
+코드13·14의 고지 반영 AAB 시도는 각각 Linker·APIUpdater 접근 위반으로 실패해 #66에서 추적합니다. 원장194,6,14와 다음 코드15 이상을 유지하며 AAB·새 서명·업로드0입니다. 고지 보완 PR83의 소스 반영과 코드12 실제 배포를 구분하고 #42/#43의 후속 배포·검증 기준은 열림 유지합니다. 10월16일 사용자 결정으로 #41의 발열·장시간 FPS/메모리·저사양 성능 검증은 후속으로 미루고 이번 내부 테스트 완료 조건에서 제외합니다. 최신 측정 미실행과 과거 측정 결과를 구분하며 성능 측정용 USB 연결은 지금 요청하지 않습니다.
 
 사용자 지시에 따라 이슈의 완료 기준을 먼저 정하고 `codex/issue-번호-설명` 브랜치에서 작업합니다. 한글 커밋과 PR에 이슈를 연결하고, 변경 내용·검증 결과·남은 제한을 리뷰한 뒤 저장소 규칙을 준수하여 병합합니다. 일부 요구만 해결했으면 `Refs #번호`, 이슈 전체 범위가 완료된 경우만 `Closes #번호`를 사용합니다. 진행 중/미검증 이슈를 소급 완료하지 않습니다.
 
@@ -19,7 +19,7 @@ GitHub 연결은 PR 작성자와 같은 계정이므로 정식 자기 승인을 
 | [#38 서명 APK·모바일 경기](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/38) | [PR #46](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/46), 실제300초/복귀/초기화와 미검증 전투·성능 구분 |
 | [#39 peer timeout 복귀](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/39) | [PR #47](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/47), 수정 EditorClient 실제 강제 종료 재시험/재참가 통과 |
 | [#40 정상 퇴장 메뉴](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/40) | 구현·기존 검증 완료로 닫힘. 최신 APK 사용자 방 퇴장 보고와 실제 두 피어 경기 전체 회귀는 구분 |
-| [#41 Android 최종 검증](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/41) | Note20 Ultra·S25 Ultra 사용자 수동 경기·동시 이동/시점/사격·입력 해제·재장전/사망/리스폰·종료/재참가 정상 보고. 입력 전수·비정상 종료·최신 APK 성능 등 남음 |
+| [#41 Android 최종 검증](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/41) | Note20 Ultra·S25 Ultra 사용자 수동 경기·동시 이동/시점/사격·입력 해제·재장전/사망/리스폰·종료/재참가 정상 보고. 입력 전수·비정상 종료 등 남음. 발열·장시간 FPS/메모리·저사양 성능 측정은 사용자 결정으로 후속 연기 |
 | [#42 라이선스·고지](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/42) | 배포 포함 자산·SDK 출처 및 필수 고지 점검 |
 | [#43 Play 내부 테스트](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/43) | code12 내부 release4 제공과 실제 참여 링크 직접 확인. 두 기기 Store 업데이트·로그인·로비·방 참가 사용자 정상 보고. 최신 한 경기/재참가·남은 품질/출처 기준은 열림 |
 | [#44 CI 전환](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44) | Unity6/Google Play 작업에 맞게 기존 자동 빌드·배포 경로 정리 |
