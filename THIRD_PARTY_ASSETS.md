@@ -1,5 +1,13 @@
 # Third-party asset provenance
 
+## 코드12 광고·결제 네임스페이스와 남은 출처 점검 (2026-10-16, #42)
+
+서명 AAB SHA256 `21AD89A76079243D2C53AB7B7F26C29B34019D6CE815D5462FE8A2CF01906E9A`의 DEX1개 전체에서 타입 참조와 클래스 정의3696개를 읽었습니다. [AOSP DEX 형식](https://source.android.com/docs/core/runtime/dex-format)의 헤더·테이블 경계·SHA1/Adler32를 검증했고 Google Mobile Ads·Play Billing·Unity Ads/Purchasing·ironSource 등 지정17개 네임스페이스 참조/정의0을 확인했습니다. GPGS238·Unity bridge36·Unity Player207 클래스 정의를 양성 대조로 확인했습니다. 프로젝트 UPM·제품 스크립트·Android 의존성의 명시적 광고/결제 API·좌표와 실제 manifest의 AD_ID/BILLING도 발견되지 않았습니다. AAB 해시를 보존했고 제품 변경·재빌드는 없습니다.
+
+이는 기존 광고·결제 제외 작업을 보완하는 출하 DEX 점검이며, 알 수 없는 난독화·이름 변경·네이티브·동적/원격 동작 전체의 부재 증명이나 전체 SDK 권리 검증은 아닙니다. Console 광고 없음 선언은 저장했고 검토 전송 전입니다. 근거: 외부 `20261016-play-code12-followup-01/shipped-dex-audit.json` 및 `ads-none-saved.png`.
+
+독립 읽기 조사에서 기존 캐릭터·무기·맵·단종 로딩 팩의 공식 출처 후보와 참조 체인을 재확인했고 새 권리 문제나 배포 불가 근거는 확인하지 못했습니다. 다음은 기존 계정 My Assets의 상품181470/245929/258453/47844 취득 기록과 로컬 파일의 대응 확인입니다. 캐릭터와 같은 반입 커밋의 애니메이션22개는 캐릭터 원 패키지 목록부터 대조합니다. 현재 무료 표시·단종·버전 차이만으로 취득/미취득을 확정하지 않으며 HUD7개에 대한 사용자 제작 확인을 유지합니다. 고지 본문 출하 검증과 취득 권한·원본 대응은 구분하므로 #42는 열린 상태입니다.
+
 ## 코드12 서명 AAB 고지 본문 확인 (2026-10-15, #42/#66)
 
 기존 업로드 키로 서명한 `1.0.194/code12` AAB의 `base/assets/bin/Data/data.unity3d`에서 고지 TextAsset 본문687,423B를 디코딩해 소스 전문 SHA256 `5EECFD5DAA79ECD94CBBDA5F2CED0FE4289D6ED4FF05C1BA5BAF51188DB48FCD`와 일치를 확인했습니다. 서명 전후 payload127개 바이트 차이0이며 JAR 서명 메타데이터3개만 추가됐습니다. 새 object-table GUID 증명, 전체 에셋 권리 조건 또는 고지 UI 실기기 검증을 완료했다는 뜻은 아닙니다.
