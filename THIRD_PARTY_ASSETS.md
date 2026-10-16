@@ -1,12 +1,30 @@
 # Third-party asset provenance
 
+## 기존 계정의 세 팩 취득 기록 확인 (2026-10-16, #42)
+
+사용자가 지정한 작업용 Chrome의 기존 탭에서 로그인된 공식 Asset Store의 구매 배너와 My Assets 항목을 직접 대조했습니다. 아래는 새 구매가 아니라 기존 취득 기록입니다. 현재 상품의 무료 표시만으로 취득을 추정했던 범위를 보완했습니다.
+
+| 공식 상품 | 기존 취득일 표시 | 현재 로컬 파일과 공식 패키지 목록의 대응 |
+| --- | --- | --- |
+| Slayver [Survivalist character,181470](https://assetstore.unity.com/packages/3d/characters/survivalist-character-181470) | 2024-11-13 | `Military/Basemesh/SK_Military_Survivalist.fbx`와 공식 `Survivalist/Basemesh/SK_Military_Survivalist.fbx` 이름 대응1개 |
+| JustCreate [Low Poly FPS Weapons Lite,245929](https://assetstore.unity.com/packages/3d/props/guns/low-poly-fps-weapons-lite-245929) | 2024-11-14 | `Weapon_02.fbx`를 포함한 모델5개와 `WeaponsLite_Texture_01.png`, 총6개 이름 대응 |
+| JustCreate [Low Poly FPS Map Lite,258453](https://assetstore.unity.com/packages/3d/environments/low-poly-fps-map-lite-258453) | 2024-11-14 | 건물·상자·벽·계단 등 FBX13개와 `LowPolyFPSLite_Texture_01.png`, 총14개 이름 대응 |
+
+세 상품 모두 기존 소유 상태의 **Unity에서 열기**와 현재 **Standard Unity Asset Store EULA** 표시를 확인했습니다. 캐릭터의 현재 제공 버전은1.2, 무기·맵은1.0입니다. 원 패키지를 다운로드·반입하거나 제품 파일을 변경하지 않았으며, 공식 파일명과 로컬 경로/해시 목록을 연결한 검사입니다. 공식 바이너리와의 바이트 동일성, 취득 당시 약관 snapshot이나 전체 에셋·SDK 조건을 증명한 것으로 확대하지 않습니다. 아래10월14일 표의 세 팩 취득 미확인은 이 기록으로 보완됐고 원본 바이트 대조는 별도입니다.
+
+현재 캐릭터 패키지의 펼쳐 본 `StarterAssets/ThirdPersonController/Character/Animations`에는 `Jump--InAir.anim.fbx`, `Locomotion--Run_N.anim.fbx` 등 기본 클립이 표시됩니다. 이 목록으로2024년 반입된 프로젝트의 플레이어22개 `.anim` 출처를 확정하지 않았습니다. 캐릭터 취득 확인과 별도 애니메이션 원본 대응을 구분하며, 현재 버전에 없는 이름이 당시에도 없었다고 판단하지 않습니다.
+
+[Animated Loading Icons,47844](https://assetstore.unity.com/packages/2d/gui/icons/animated-loading-icons-47844)의 공식 단종 페이지는 기존 소유자의 신규·기존 프로젝트 계속 사용을 안내합니다. 현재 로그인 계정 My Assets에서 정확한 제목과 `Loading` 검색 및 기본/숨김/단종 상태를 확인했지만 대상 취득 항목을 찾지 못했습니다. 이는 해당 계정·검색 범위의 미확인이며 과거 취득 무효나 사용 금지 근거가 아닙니다. 다른 기존 계정·원 패키지의 확인은 남아 있습니다. HUD7개는 사용자 제작 확인을 그대로 유지합니다.
+
+근거: `D:/codex/validation/sudden-force-fps/20261016-asset-entitlements-01/`의 `asset-entitlements.json`, `local-name-correspondence.json`, 팩별 `*-acquired.png`/`*-package-files.txt`, `loading-deprecated-search.txt`입니다. 개인 계정 화면 원본은 외부 검증 자료에만 보관합니다. 이번에 계정 인증 정보 추출·새 구매/약관 동의·패키지 다운로드/교체·Editor 시작/제품 빌드·서명은 수행하지 않았습니다. #42는 남은 원본/고지 대응 때문에 열림 유지합니다.
+
 ## 코드12 광고·결제 네임스페이스와 남은 출처 점검 (2026-10-16, #42)
 
 서명 AAB SHA256 `21AD89A76079243D2C53AB7B7F26C29B34019D6CE815D5462FE8A2CF01906E9A`의 DEX1개 전체에서 타입 참조와 클래스 정의3696개를 읽었습니다. [AOSP DEX 형식](https://source.android.com/docs/core/runtime/dex-format)의 헤더·테이블 경계·SHA1/Adler32를 검증했고 Google Mobile Ads·Play Billing·Unity Ads/Purchasing·ironSource 등 지정17개 네임스페이스 참조/정의0을 확인했습니다. GPGS238·Unity bridge36·Unity Player207 클래스 정의를 양성 대조로 확인했습니다. 프로젝트 UPM·제품 스크립트·Android 의존성의 명시적 광고/결제 API·좌표와 실제 manifest의 AD_ID/BILLING도 발견되지 않았습니다. AAB 해시를 보존했고 제품 변경·재빌드는 없습니다.
 
 이는 기존 광고·결제 제외 작업을 보완하는 출하 DEX 점검이며, 알 수 없는 난독화·이름 변경·네이티브·동적/원격 동작 전체의 부재 증명이나 전체 SDK 권리 검증은 아닙니다. Console 광고 없음 선언은 저장했고 검토 전송 전입니다. 근거: 외부 `20261016-play-code12-followup-01/shipped-dex-audit.json` 및 `ads-none-saved.png`.
 
-독립 읽기 조사에서 기존 캐릭터·무기·맵·단종 로딩 팩의 공식 출처 후보와 참조 체인을 재확인했고 새 권리 문제나 배포 불가 근거는 확인하지 못했습니다. 다음은 기존 계정 My Assets의 상품181470/245929/258453/47844 취득 기록과 로컬 파일의 대응 확인입니다. 캐릭터와 같은 반입 커밋의 애니메이션22개는 캐릭터 원 패키지 목록부터 대조합니다. 현재 무료 표시·단종·버전 차이만으로 취득/미취득을 확정하지 않으며 HUD7개에 대한 사용자 제작 확인을 유지합니다. 고지 본문 출하 검증과 취득 권한·원본 대응은 구분하므로 #42는 열린 상태입니다.
+독립 읽기 조사 당시 기존 캐릭터·무기·맵·단종 로딩 팩의 공식 출처 후보와 참조 체인을 재확인했고 새 권리 문제나 배포 불가 근거는 확인하지 못했습니다. 이후 세 팩의 기존 취득 기록과 파일명 대응을 위 추가 기록으로 보완했습니다. 애니메이션22개·단종 로딩 팩의 원본 대응과 조건부 SDK 고지는 별도로 유지하며 HUD7개의 사용자 제작 확인을 되묻거나 미확인으로 되돌리지 않습니다. #42는 열린 상태입니다.
 
 ## 코드12 서명 AAB 고지 본문 확인 (2026-10-15, #42/#66)
 
