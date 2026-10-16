@@ -1,5 +1,18 @@
 # Third-party asset provenance
 
+## MiniJSON·Newtonsoft.Json 앱 고지 보완 (2026-10-16, #42)
+
+코드12가 사용한 Gradle export의 IL2CPP 출력에서 MiniJSON 직렬화/역직렬화 함수의 구현·등록과 Newtonsoft.Json 모듈 등록을 확인했습니다. 코드12 AAB의 `global-metadata.dat`에도 두 이름이 존재하고, 코드12에 내장된 기존 앱 고지와 현재 수정 전 파일의 SHA256은 `5EECFD5DAA79ECD94CBBDA5F2CED0FE4289D6ED4FF05C1BA5BAF51188DB48FCD`로 일치하지만 두 라이브러리의 저작권·MIT 허가/면책 고지가 빠져 있었습니다.
+
+`Assets/Legal/ThirdPartyNotices.txt`의 기존687,423B를 그대로 보존하고 아래 원문을 덧붙였습니다.
+
+- MiniJSON: 로컬 `Assets/ThirdPartyAssets/MiniJSON.cs` 헤더의 Calvin Rien(2013) 저작권, Patrick van Bergen 기반 안내와 MIT 허가·면책 전체. 주석 구분자만 제거했으며 전체 파일이 현재 UnityCsReference와 동일하다고 주장하지 않습니다. [공식 저장소의 같은 고지 헤더](https://github.com/Unity-Technologies/UnityCsReference/blob/master/External/JsonParsers/MiniJson/MiniJSON.cs)를 대조했습니다.
+- Newtonsoft Json for Unity: 설치 패키지 `com.unity.nuget.newtonsoft-json`3.2.2(설명상 upstream13.0.2)의 `LICENSE.md`와 `Third Party Notices.md` 전체. James Newton-King·SaladLab·Kalle Jillheden·Mike Wuetherick의 공급자 MIT 고지를 생략하지 않았으며 공급자 원문의 중복 `Copyright (c)` 표기도 보존했습니다. [upstream13.0.2 MIT 원문](https://github.com/JamesNK/Newtonsoft.Json/blob/13.0.2/LICENSE.md)과 패키지 전체의 적용 범위를 구분합니다.
+
+수정 후 작업 파일은694,428B/SHA256 `D326402384AE8EA89BDFA8034F0B017BB8A198E8E9449616B9CAE60A1836267D`입니다. 실제 `ThirdPartyNoticePager.cs`를 Unity6000.3.25f1 번들 Mono에서 실행해 수정 전191/수정 후193페이지의 source 재결합 일치와 페이지 예산(최대4089 UTF-16단위/93LF)을 확인했습니다. 외부 PowerShell의 .NET10에서는 수정 전 원문도 `StringInfo.ElementIndex` 동작 차이로 실패했으므로 그 시도를 제품 실패나 통과 결과로 취급하지 않고, 제품 코드는 변경하지 않았습니다. Unity UI·글리프·Android 실기기 표시는 이번에 실행하지 않았습니다.
+
+**배포된 코드12 AAB는 수정하지 않았습니다.** 이 보완은 다음 새 배포 코드13 이상에서 실제 고지 본문 포함과 표시를 확인해야 합니다. 두 구체적 누락을 고친 것이며 과거 문서의 모든 미확인 항목을 새 누락으로 간주하거나 #42 전체를 닫지 않습니다. 근거: `D:/codex/validation/sudden-force-fps/20261016-json-notices-01/`의 원문 사본·`prepare-result.json`·`pager-validation.jsonl`, 코드12 export의 `Assembly-CSharp__2.cpp`/`Assembly-CSharp_CodeGen.c`/`Il2CppCodeRegistration.cpp`입니다.
+
 ## 기존 계정의 세 팩 취득 기록 확인 (2026-10-16, #42)
 
 사용자가 지정한 작업용 Chrome의 기존 탭에서 로그인된 공식 Asset Store의 구매 배너와 My Assets 항목을 직접 대조했습니다. 아래는 새 구매가 아니라 기존 취득 기록입니다. 현재 상품의 무료 표시만으로 취득을 추정했던 범위를 보완했습니다.
