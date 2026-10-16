@@ -1,0 +1,90 @@
+import groovy.json.JsonOutput
+
+// This guard is for the pinned Gradle 9.3.1 / AGP 9.0.0 export, dry-run only.
+def evidence = new File(System.getenv('SFF_PREFLIGHT_REPORT'))
+def emit = { Map item -> evidence.append(JsonOutput.toJson(item) + '\n', 'UTF-8') }
+def fail = { boolean ok, String message -> if (!ok) throw new GradleException(message) }
+def vm = java.lang.management.ManagementFactory.getPlatformMXBean(com.sun.management.HotSpotDiagnosticMXBean.class)
+def args = java.lang.management.ManagementFactory.runtimeMXBean.inputArguments
+def c1 = vm.getVMOption('TieredStopAtLevel').value == '1' && vm.getVMOption('TieredCompilation').value == 'true' && args.contains('-XX:TieredStopAtLevel=1') && args.contains('-Xmx4096M')
+def heap = vm.getVMOption('MaxHeapSize').value.toLong()
+def safe = [kind:'jvm', c1:c1, heapBytes:heap, processors:Runtime.runtime.availableProcessors(),
+            workers:gradle.startParameter.maxWorkerCount, parallel:gradle.startParameter.parallelProjectExecutionEnabled,
+            dryRun:gradle.startParameter.dryRun]
+emit(safe)
+fail(c1 && heap == 4294967296L && safe.processors == 1 && safe.workers == 1 && !safe.parallel && safe.dryRun, 'C1/worker/dry-run gate failed')
+emit([kind:'toolchain', gradle:gradle.gradleVersion])
+fail(gradle.gradleVersion == '9.3.1', 'Unsupported Gradle version')
+fail(gradle.startParameter.taskNames == [':launcher:bundleRelease'], 'Unexpected task request')
+fail(gradle.startParameter.offline, 'Offline resolution is required')
+fail(System.getenv().keySet().every { !it.toUpperCase().contains('PASSWORD') && !it.toUpperCase().contains('TOKEN') && !it.toUpperCase().contains('SECRET') && !(it in ['SFF_STOREPASS','SFF_KEYPASS']) }, 'Credential environment is present')
+
+gradle.settingsEvaluated { settings ->
+    fail(settings.settingsDir.canonicalFile == new File(System.getenv('SFF_PREFLIGHT_EXPORT')).canonicalFile, 'Unexpected export directory')
+}
+
+def signingFlags = [:]
+def releaseOutputs = []
+gradle.beforeProject { p -> p.plugins.withId('com.android.application') {
+    fail(p.path == ':launcher', 'Unexpected application project')
+    def plugin = p.plugins.findPlugin('com.android.application')
+    def version = plugin.class.classLoader.loadClass('com.android.Version').getField('ANDROID_GRADLE_PLUGIN_VERSION').get(null)
+    fail(version == '9.0.0', 'Unsupported AGP version')
+    def components = p.extensions.getByName('androidComponents')
+    components.finalizeDsl { android ->
+        def release = android.buildTypes.getByName('release')
+        // Do not overwrite versionCode/versionName; observe the existing export.
+        release.signingConfig = null
+        def identity = [kind:'release', agp:version, package:android.defaultConfig.applicationId,
+                        code:android.defaultConfig.versionCode, name:android.defaultConfig.versionName,
+                        unsigned:release.signingConfig == null, debuggable:release.debuggable]
+        emit(identity)
+        fail(identity.package == System.getenv('SFF_PREFLIGHT_PACKAGE') && identity.code == System.getenv('SFF_PREFLIGHT_CODE').toInteger()
+             && identity.name == System.getenv('SFF_PREFLIGHT_NAME') && identity.unsigned && !identity.debuggable, 'Release identity gate failed')
+    }
+    components.onVariants(components.selector().withBuildType('release')) { variant ->
+        releaseOutputs.addAll(variant.outputs)
+        def signing = variant.signingConfig
+        if (signing != null) {
+            signing.enableV1Signing.set(false); signing.enableV2Signing.set(false)
+            signing.enableV3Signing.set(false); signing.enableV4Signing.set(false)
+            signingFlags[p.path] = [signing.enableV1Signing, signing.enableV2Signing, signing.enableV3Signing, signing.enableV4Signing]
+        }
+        fail(!variant.debuggable, 'Debuggable release variant')
+    }
+} }
+
+def finalizerClass = 'com.android.build.gradle.internal.tasks.FinalizeBundleTask'
+def allowedFinalizer = { t -> t.path == ':launcher:signReleaseBundle' && t.class.name in [finalizerClass, finalizerClass + '_Decorated'] }
+def allowedMetadata = { t -> t.path == ':launcher:writeReleaseSigningConfigVersions' && t.class.name in ['com.android.build.gradle.internal.tasks.SigningConfigVersionsWriterTask','com.android.build.gradle.internal.tasks.SigningConfigVersionsWriterTask_Decorated'] }
+gradle.taskGraph.whenReady { graph ->
+    def identities = releaseOutputs.collect { [code:it.versionCode.get(), name:it.versionName.get()] }
+    emit([kind:'outputs', identities:identities])
+    fail(!identities.isEmpty() && identities.every { it.code == System.getenv('SFF_PREFLIGHT_CODE').toInteger() && it.name == System.getenv('SFF_PREFLIGHT_NAME') }, 'Final output version changed')
+    fail(signingFlags.values().every { it.every { prop -> !prop.get() } }, 'Signing flag enabled')
+    def named = graph.allTasks.findAll { t -> t.name.toLowerCase().contains('release') && (t.name.toLowerCase().contains('signing') || t.name.toLowerCase().startsWith('sign')) }
+    def blocked = named.findAll { !allowedFinalizer(it) && !allowedMetadata(it) }
+    def finalizers = graph.allTasks.findAll { allowedFinalizer(it) }
+    fail(blocked.isEmpty() && finalizers.size() == 1, 'Unexpected signing task graph')
+    finalizers.each { t ->
+        def provider = t.signingConfigData
+        def files = provider?.signingConfigFileCollection
+        fail((files == null || files.isEmpty()) && provider?.signingConfigData?.getOrNull() == null
+             && t.codeTransparencySigningConfigData == null
+             && t.project.extensions.getByName('android').buildTypes.getByName('release').signingConfig == null, 'Unsigned finalizer gate failed')
+    }
+    def nativeTasks = graph.allTasks.findAll { it.name.startsWith('buildCMake') && it.name.contains('arm64-v8a') }
+    fail(!nativeTasks.isEmpty(), 'ARM64 CMake task missing')
+    nativeTasks.each { t ->
+        def staging = t.project.extensions.getByName('android').externalNativeBuild.cmake.buildStagingDirectory
+        def matches = staging != null && staging.canonicalFile == new File(System.getenv('SFF_PREFLIGHT_CMAKE')).canonicalFile
+        emit([kind:'cmake', matches:matches])
+        fail(matches, 'Unexpected CMake staging root')
+    }
+    emit([kind:'graph', unsignedFinalizers:finalizers.size(), blockedSigningTasks:blocked.size()])
+}
+gradle.taskGraph.beforeTask { t ->
+    emit([kind:'taskStarted'])
+    throw new GradleException('Task execution is forbidden in this preflight')
+}
+gradle.buildFinished { result -> emit([kind:'finished', failed:result.failure != null]) }
