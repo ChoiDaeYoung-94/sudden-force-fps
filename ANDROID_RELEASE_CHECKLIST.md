@@ -2,6 +2,8 @@
 
 ### 현재 배포·검증 요약 (2026-10-16 정리)
 
+최신 새 AAB 시도는 아래 코드13·14 기록처럼 모두 실패했습니다. 현재 원장은194,6,14이고 다음 새 코드는15 이상입니다. 코드12 내부 테스트 제공은 유지되며 고지 보완의 새 배포 반영은 미완료입니다.
+
 후속 고지 수정(#42): 코드12에 포함된 MiniJSON·Newtonsoft.Json의 빠진 고지를 소스에 추가했습니다. 기존 고지 원문을 보존한 작업 파일은694,428B이며 번들 Mono에서 실제 pager193페이지의 원문 재결합·예산 검사를 통과했습니다. 배포된 코드12는 기존 본문687,423B로 보존되며 수정 반영 완료가 아닙니다. 다음 새 코드13 이상에서 본문 포함·표시와 새 배포를 검증합니다. 상세와 범위는 [에셋·고지 기록](THIRD_PARTY_ASSETS.md)을 따릅니다.
 
 | 항목 | 현재 상태 |
@@ -17,6 +19,24 @@
 | 남은 품질/출처 | MENU·사망 중 입력/연결 종료 경계, 최신 성능·저사양·실제16KB, 배포 자산·고지 매핑 |
 
 새 무서명 APK의 RELRO 정적 경고는4건이며 기존 Play APK의3건과 구분합니다. SO7개는 압축 저장돼 LOAD 정렬·zipalign과 실제16KB 실행을 같은 결과로 처리하지 않습니다. 아래는 각 시점의 상세 기록과 체크입니다. 초기 체크박스나 당시의 '다음 작업' 문구를 현재 미완료 목록으로 일괄 해석하지 않고 이 요약과 해당 이슈의 최신 기록을 우선합니다. 새 자동 CI·PlayFab·추가 리팩토링과 공개 프로덕션 출시는 별도 범위입니다.
+
+### 코드13·14 고지 반영 AAB 실패·개별 Linker 검사 (#66/#42/#43, 2026-10-16)
+
+새 Editor6000.3.25f1/프로세스 count4/Android idle에서 사용자가 기존 서명 암호 두 칸을 입력한 뒤, 공식 `BuildScript.BuildAOSAAB`를 각 코드에1회 실행했습니다. 빌드 중 ARM64 단독·비개발·IL2CPP·API36/min25를 선택하고 임시 JVM C1 환경을 빌드 프로세스에만 적용했습니다. 기존 코드12 export의 버전/서명 제거 init-script는 재사용하지 않았습니다. 기존 원장194,4,12에서 스크립트가13을 예약했고 이후 다음 조건의 새 시도는14를 예약했습니다.
+
+| 시도 | 실제 결과 |
+| --- | --- |
+| 코드13 /194,5,13 | Failed·오류2·경고71·339.887초, AAB0. Android 자료·ARM64 네이티브 컴파일 작업 진행 뒤 `UnityLinker.exe`/.NET8.0.4의 `System.AccessViolationException`과 Windows coreclr.dll/c0000005 이벤트를 확인했습니다. 당시 `WritePlayDependencies`의 BUSY 출력과 직접 충돌 프로세스를 구분하며, 의존성 보고 파일은 이후 생성됐습니다. 사용자가 안내창에서 Yes를 직접 눌렀지만 총괄이 문구를 관찰하지 못했으므로 안내 종류를 추정하지 않습니다. |
+| 외부 Linker 단독 검사 | 원래 응답 파일의 `--out`·`--profiler-output-file` 두 경로만 새 외부 폴더로 변경하고 설치된 UnityLinker를 자식 프로세스 count1로1회 실행했습니다. exit0/5.51초·출력177개(98DLL), 원 응답 파일 SHA 보존. 코드 예약·새 AAB·전체 파이프라인 성공이 아닙니다. 선언된 출력은 분리했지만 가능한 모든 부수쓰기의 부재를 보증하지 않습니다. |
+| 코드14 /194,6,14 | count1 전체 빌드도 Failed·오류2·경고71·105.779초, AAB0. `ProducePlayerScriptAssemblies`에서 `UnityEngine.LocalizationModule.dll`의 `ApiUpdater.MovedFromExtractor.dll` 작업이 netcorerun.exe/0xC0000005로 종료됐습니다. Csc 자체 충돌이나 제품 C# 문법 오류를 별도로 확정하지 않습니다. 단독 Linker 통과를 전체 안정화로 확대하지 않습니다. |
+
+두 빌드 모두 실제 Gradle JVM 게이트 기록·새 서명 AAB·업로드0입니다. 사전 별도 Java 옵션 전달 검사는 통과했지만 이번 전체 빌드에서 Gradle C1 적용까지 도달했다고 주장하지 않습니다. 코드13 callback은 BuildReport의 `buildStartedAt`가 Unspecified인 UTC 값인데 로컬 시각 변환을 적용해 `NoCurrentReport`로 기록했습니다. 원본 callback 기록을 보존하고 후속 실제 Failed 보고서의 출력 경로·시각·카운터로 보완했으며, 코드14는 경로와 UTC 해석을 함께 확인했습니다.
+
+최종 임시 환경·ABI/메모리 설정·예약 callback과 Gradle guard를 복원/해제했습니다. 빌드·Resolver가 저장한 mainTemplate·AndroidResolverDependencies와 PlayerSettings는 시작 snapshot으로 복원하고 Editor에 다시 반입했습니다. 키 파일 내용을 검증 자료로 추출/복사하거나 키를 교체하지 않았습니다. 키를 제외한3897개 검사 파일 중 의도한 원장 변경만 남았고 기존 dirty35 상태를 보존합니다. 제품 고지는694,428B/지정SHA이며 코드12 AAB는 보존됐습니다. 최종 Android idle/compileFailed=false/count4지만, callback finally의 암호 presence true 이후 정리/reload에서는 두 칸이 비어 있으므로 최종 암호 보존으로 보고하지 않습니다. 재입력은 다음 실행 경로가 준비됐을 때 요청합니다.
+
+원장194,6,14를 보존하고13·14를 재사용하지 않습니다. 다음은 작업자별 런타임/입출력을 분리한 진단이며 코드14 마감 이후 추가 전체 빌드는 실행하지 않았습니다. BIOS/펌웨어·전원/보안·전역 환경은 변경하지 않았습니다. 사용자 요청에 따라 휴대폰 연결은 현재 보류하고, 최신 FPS·메모리·발열·16KB/저사양 검증은 미완료로 유지합니다.
+
+근거: 외부 `20261016-code13-preflight-01/`의 `build-result.json`/`build-result-followup.json`/`bounded-runtime-events.json`/공유 `Editor.log`, `20261016-linker-singlecpu-01/`의 invocation/result와 원 rsp, `20261016-code14-singlecpu-build-01/`의 build-result/post-build-cleanup-state/final-preservation-before-docs JSON입니다. 전체 로그·서명 설정·암호·기기 식별자는 저장소에 추가하지 않습니다.
 
 ### 코드12 Store 사용자 보고·참여 링크·광고 점검 (#41/#42/#43, 2026-10-16)
 
