@@ -2,6 +2,33 @@
 
 ### 현재 배포·검증 요약 (2026-10-16 정리)
 
+최신은 **코드18 서명 AAB92,840,760B 생성·검증 및 Google Play 내부 테스트 release5 제공 완료**입니다. 총괄이 지정 Console 탭에서 직접 업로드·출시했고10월16일16:37의 내부 테스터 제공 상태를 확인했습니다. 원장194,10,18·다음 새 코드19 이상이며 기존 코드12 파일과 검증 이력은 보존합니다. 실기기 검증 전반은 추가 사용자 결정으로 작업 PC 연결 가능 시점까지 후순위로 두고 코드18 Store 설치·실행은 아직 검증하지 않았습니다. 기존 성능 시험의 후속 범위 합의와 미실행 기록을 보존합니다.
+
+### 코드15 직렬 네이티브 빌드·재부팅 복구·코드18 서명 AAB (#66/#42/#43, 2026-10-16)
+
+코드14에서 실패한 LocalizationModule의 APIUpdater를 외부 출력만 바꿔 count1/count4 단독과 count1 자식4개 병렬로 총6회 실행했습니다. 모두 exit0·동일32B·stderr0이며 원본 입력·소스3883개·Git 상태를 보존했습니다. 동일 DLL의 짧은 검사이므로 전체 빌드 안정화나 코드14 성공의 증거는 아닙니다.
+
+[Unity 공식 안내](https://unity.com/releases/editor/beta/6000.1.0b2)의 `BEE_BUILD_THREADS`와 현재 설치본 지원을 확인하고 코드15 전체 빌드1회에 Editor 프로세스 한정 Bee1/count1 및 임시 Java C1 옵션을 적용했습니다. 실제 trace에서 스크립트 Csc66/MovedFromExtractor282, 이후 Linker·IL2CPP 코드 생성·ARM64 컴파일/링크가 선택 작업 동시최대1로 실행됐습니다. 계획된 object815개가 모두 생성됐고, 최종 native 후속 backend는 exit0입니다. 그러나 실제 Gradle JVM 게이트는 TieredStopAtLevel4/daemonDisabled=false를 반환해 차단했습니다. 최종 Unity BuildReport는 **Failed/오류4·경고71/1545.8618601초/AAB0**입니다. native 완료를 전체 빌드 성공으로 표시하지 않습니다. 실패 안내의 OK만 닫은 뒤 callback finally가 임시 환경·메모리 설정을 복원했습니다.
+
+코드16은 직접 Java/Gradle C1·무서명 설정의 dry-run exit0 후 원장194,8,16이 남았지만, 예기치 않은 PC 재부팅 이후 actual 예약 marker·invocation/result·AAB가 없습니다. 실제 task 실행 여부·종료 코드는 미확정이며16을 재사용하지 않습니다. 제한된 Windows 이벤트에는 시스템 오류 후 재부팅 기록이 있으나 원인·빌드와의 인과를 확정하지 않습니다. BIOS·시스템·보안·전역 환경은 변경하지 않았습니다. Editor 프로세스가 없는 상태에서 빌드가 자동 저장한3설정을 시작 snapshot으로 복원하고 새 backup2와 해당 meta 총2개를 삭제 없이 외부에 보존했습니다. 복구 후 소스3883개는 원장만 변경·추가/누락0, 새 Gradle 원 입력65개는 해시 차이0입니다.
+
+코드17의 첫 dry-run은 프로세서 수1에서 Runtime 보고 힙이 명시적4GiB 한도보다 작은 조건을 기존 정확 일치 검사로 차단했습니다(예약0). 다음 검사는 명시 VM `MaxHeapSize=4294967296`와 `0<Runtimeheap<=한도`를 구분해 통과했습니다. actual은194,9,17을 예약한 뒤 이전 export용 `unityLibrary/.cxx` 검사로 중단됐습니다(exit1/AAB0). 현재 Unity 생성 프로젝트는 프로젝트 루트의 `.utmp`를 사용하므로 CMake 컴파일러 충돌로 해석하지 않습니다. 코드18에서는 AGP staging canonical 경로·Ninja1개·Swappy 소스·짧은 Gradle 캐시 참조·이전 긴 캐시 미참조를 configurationComplete와 실행 직전 모두 확인했습니다. 생성 Ninja나 공급자 소스를 임의 수정하지 않았습니다.
+
+코드18의 별도 Gradle 실제 실행은 **exit0/무서명 AAB92,827,100B**, task175개 시작·종료를 기록했습니다. 실제 JVM C1, 명시4GiB 한도/Runtime 보고4,151,836,672B, processors1/maxWorkers1/parallel=false와 무서명 finalizer를 확인했습니다. FramePacing CMake 작업도 포함하므로 단순 복사·압축으로 설명하지 않습니다. 소스3883개는 의도한 원장194,10,18만 변경·추가0, Gradle 입력65개 해시 차이0이고 기존 코드12 AAB 해시는 보존됐습니다.
+
+- 무서명 SHA256: `CA78934820A71FA7F9D4557ECB4ABBE7A4996E70595AC61D0AB397383FFB418E`. 검증 폴더에 동일 바이트 사본을 보존했으며 Play 업로드 대상이 아닙니다.
+- manifest: 기존 패키지·1.0.194/code18·min25/target36·비개발·ARM64. ZIP129개 CRC와 bundletool validate가 통과했고 JAR 서명 항목은0입니다.
+- SO7개 LOAD16KB와 BundleConfig `PAGE_ALIGNMENT_16K`를 확인했습니다. GNU_RELRO 정적 경고4건(libc++/il2cpp/main/swappywrapper), 압축 저장과 실제16KB 기기 미검증 범위를 유지합니다.
+- 내장 고지694,428B/SHA `D326402384AE8EA89BDFA8034F0B017BB8A198E8E9449616B9CAE60A1836267D`는 소스와 정확히 같습니다. DEX1개도 코드12와 SHA가 같아 기존 지정 광고·결제 SDK 검사와 연결되며, 미지 코드의 동작 전체 부재나 에셋 권리 전체 완료로 확대하지 않습니다.
+
+재개한 Unity에서 기존 키·alias를 선택한 뒤 두 암호 입력칸의 존재 여부만 확인하고 단1회 비동기 jarsigner 서명을 수행했습니다(exit0/timeout=false). 키 복사·교체·암호 기록은 없으며 서명 암호는 자식 프로세스 환경에만 전달했습니다. 서명본92,840,760B/SHA256 `83ADB6D168F787CF0419DD5141A6675B1105D99D4407FE6E4FF115A073DD7FD9`의 payload129개 전체 무결성·기존 업로드 인증서를 확인했고 unsigned payload와 바이트 차이/누락0·서명 metadata3개 추가뿐입니다. 업로드 인증서 SHA256은 `4D072592228C991D3F6A0EDA768C8CBEE40895C3B1F4A6FB9379540F048965E0`이며 Play 앱 서명과 구분합니다. signed ZIP132개·bundletool·고지 정확 일치도 통과했고 독립 검토에서 서명→manifest→실제 payload의 digest 체인을 재확인했습니다.
+
+배포용 파일은 외부 `D:/codex/releases/sudden-force-fps/1.0.194-code18/SuddenForceFPS-1.0.194-code18-UploadSigned.aab`입니다. 재개한 Editor가 새로 만든 Recovery 씬·meta2개는 기존 자료와 구분해 삭제 없이 외부에 보존했습니다. 최종 소스3883개 감사에서 원장만 변경·추가/누락0, Gradle 입력65개 해시 차이0입니다. 실제 Play 업로드 후 패키지·code18/min25/target36/ARM64와 지원 기기 감소0을 확인했고, 출시 검증의 권고2건은 가독화 파일·네이티브 디버그 기호 미업로드입니다. 기존 내부 테스트 트랙의 저장 및 출시 후 release5/code18·내부 테스터 제공·16:37 게시를 확인하고 DOM·화면을 외부에 보존했습니다. 실제 참여 링크는 `https://play.google.com/apps/internaltest/4701524132186452960`이며 공개 프로덕션 출시는 수행하지 않았습니다. Store 설치·실행 및 실기기 시험은 사용자 결정에 따라 후순위입니다. 코드15의 전체 실패와 현재 생성 Gradle 프로젝트 기반 패키징 성공을 구분하며, 원인 해결·재부팅 재발 방지·clean Unity 전체 빌드 성공을 확정하지 않습니다.
+
+근거: 외부 `20261016-apiupdater-isolated-01/`, `20261016-code15-bee1-build-01/`의 단계별 trace와 BuildReport, `20261016-reboot-recovery-01/`의 복구 전후·제한 이벤트, `20261016-export-aab-code16-c1-01/`, `20261016-export-aab-code17-c1-01/02`, `20261016-export-aab-code18-c1-01/`의 결과·검사 기록입니다. 코드17의 `01/02`는 각각 끝이 `-01`, `-02`인 별도 폴더입니다. 전체 로그·키·암호·기기 식별자는 저장소에 추가하지 않습니다.
+
+아래는 이전 범위와 시점의 기록입니다.
+
 10월16일 사용자 결정: 빌드 후 발열·장시간 FPS/메모리·저사양 성능 측정은 후속으로 미루고 이번 내부 테스트 배포 마무리의 완료 조건에서 제외합니다. 기존60 FPS 목표·저사양30 FPS 허용 기준과 과거 측정 원자료는 유지하며 최신 측정은 미실행입니다. 성능 측정용 USB 연결은 지금 요청하지 않습니다. 설치·로그인·Fusion 경기/복귀, 필요한 정적 빌드·서명·16KB 및 에셋·고지 점검은 유지합니다. 아래 날짜별 성능 미완료 기록은 후속 범위를 뜻하며 통과로 바꾸지 않습니다.
 
 최신 새 AAB 시도는 아래 코드13·14 기록처럼 모두 실패했습니다. 현재 원장은194,6,14이고 다음 새 코드는15 이상입니다. 코드12 내부 테스트 제공은 유지되며 고지 보완의 새 배포 반영은 미완료입니다.

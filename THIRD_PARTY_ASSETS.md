@@ -1,5 +1,11 @@
 # Third-party asset provenance
 
+## 코드18 서명 AAB의 보완 고지 포함 확인 (2026-10-16, #42)
+
+기존 업로드 키로 서명한 코드18 AAB92,840,760B/SHA256 `83ADB6D168F787CF0419DD5141A6675B1105D99D4407FE6E4FF115A073DD7FD9`에서 고지 본문694,428B/SHA256 `D326402384AE8EA89BDFA8034F0B017BB8A198E8E9449616B9CAE60A1836267D`가 현재 소스와 정확히 일치함을 확인했습니다. 아래 MiniJSON·Newtonsoft.Json 보완이 실제 새 산출물에 포함됐으며 서명 전후 payload129개 바이트 차이0입니다. DEX1개도 코드12와 같아 기존 지정17개 광고·결제 SDK 조사 범위에 연결됩니다. 총괄이 직접 업로드·출시한 Play 내부 테스트 release5/code18의16:37 내부 테스터 제공을 확인했습니다. 앱 고지의 실제 기기 표시와 나머지 애니메이션·단종 로딩 팩의 원본 대응 등 #42의 남은 범위는 유지하며 새 Store 설치·실행 성공으로 확대하지 않습니다.
+
+근거: 외부 `20261016-export-aab-code18-c1-01/`의 `signed-notice-body-validation.json`, `signed-static-validation.json`, `signed-release-summary.json`과 독립 서명 검토입니다.
+
 ## MiniJSON·Newtonsoft.Json 앱 고지 보완 (2026-10-16, #42)
 
 코드12가 사용한 Gradle export의 IL2CPP 출력에서 MiniJSON 직렬화/역직렬화 함수의 구현·등록과 Newtonsoft.Json 모듈 등록을 확인했습니다. 코드12 AAB의 `global-metadata.dat`에도 두 이름이 존재하고, 코드12에 내장된 기존 앱 고지와 현재 수정 전 파일의 SHA256은 `5EECFD5DAA79ECD94CBBDA5F2CED0FE4289D6ED4FF05C1BA5BAF51188DB48FCD`로 일치하지만 두 라이브러리의 저작권·MIT 허가/면책 고지가 빠져 있었습니다.
