@@ -1,5 +1,25 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 코드21 무서명 AAB 검증 완료 (2026-10-17, #66/#42)
+
+자체 로딩·원형 HUD(PR96/PR97)를 반영한 **1.0.195 / 코드21 무서명 AAB**를 생성·정적 검증했습니다. 공식 증분 export는 오류0·경고2·183.062초, 별도 offline C1 Gradle은 exit0·1335.0초입니다. 이번에는 변경 소스의 새 IL2CPP 작업을 실행했고, 코드20 네이티브 재사용 없이 새 라이브러리와 최종 stripped payload 일치를 확인했습니다. Unity 단일 AAB 호출 안정화·충돌 근본 해결·기기 실행을 의미하지 않습니다.
+
+AAB는92,631,531B/SHA256 `DC81AE7FA302CC4C05DA92BE5247A7A7A940C9F672D302007258F3E0F4EAB781`입니다. ZIP/bundletool·패키지·min25/target36·비개발·ARM64 SO7개 LOAD16KB·고지709,379B 전체 본문 일치와 지정 광고/결제 SDK17네임스페이스의 DEX 참조·정의0을 확인했습니다. 패킹 보고서의 Loading Icons 경로는0건이며 플레이어22클립은 모두 포함돼 있습니다. 실제16KB·RELRO 경고5건·기기/UI/전체 경기·전체 에셋 권리 확인은 별도입니다.
+
+**현재 Play 제공본은 코드20입니다. 코드21 서명·업로드는 아직 대기입니다.** 원장 `195,2,21`·다음 새코드22 이상을 유지하며 실패 코드도 재사용하지 않습니다. 시작3,883개 파일은 원장 외 동일하도록 복원했고 새 Gradle backup2/meta만 외부 보존했습니다. 기존 dirty와 이전 AAB6개 해시를 보존했고 키는 읽거나 해시하지 않았습니다. 실기기 후순위·성능 측정 후속 합의와 전체 약92% 작업 기준 추정을 유지합니다.
+
+다음 PC 우선순위는 코드21 서명·내부 테스트 반영, 반복 Gradle 안내창의 공식 EDM 전환 검증([이슈98](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/98)), CC0 애니메이션 후보의 리타깃/소총 자세 검증입니다. 후보 확보만으로 현재22클립 출처 대응을 완료 처리하지 않습니다. 아래 자체 HUD·코드20 기록은 각각 당시 범위입니다.
+
+### 코드21 근거와 남은 범위
+
+코드21 심볼 ZIP34,234,538B/SHA256 `8DA3F71458A24A20157EDA0A66F6AB4E34A93D6F99D5473F298E672D3FE821E4`는 실제 AAB와 대응하는5/7라이브러리만 포함합니다. IL2CPP·libmain은 Build ID/ALLOC 배치와 실제 debuglink CRC, Burst·Swappy·C++는 Build ID/전체 ALLOC 바이트를 확인했습니다. libmain·Swappy는 debug_line이 있지만 IL2CPP·Burst·C++는 없습니다. libunity는 설치본26개 심볼 후보 모두 실제 Build ID와 달라 제외했고 nanosockets도 누락입니다. 기존 코드20 심볼을 대입하지 않았으며 Console 업로드는 아직0입니다. `20261017-code21-native-symbols-01/validation-summary.json`과 독립 검토 JSON에 근거를 보존했습니다.
+
+빌드 입력은 main5bc7588과 시작 시 보존한 기존 dirty 상태입니다. Gradle의 실제 buildIl2Cpp 작업이 skipped=false/upToDate=false/didWork=true로 끝났고 새 CircleGraphic·LoadingSpinnerGraphic 메시/Update 메서드의 생성 C++와 새 libil2cpp를 확인했습니다. 기존20과 SHA가 다르며 최종 AAB payload는 이번 stripped library와 같습니다. 공식 export와 별도 패키징의 검증이며 clean 전체 빌드로 확대하지 않습니다.
+
+출력은 외부 `D:/codex/validation/sudden-force-fps/20261017-code21-export-01/SuddenForceFPS.1.0.195.code21.unsigned.aab`입니다. unsigned-static-validation/unsigned-notice-body-validation/fresh-native-validation/shipped-dex-audit/packed-source-validation/unsigned-release-summary/restoration-result JSON에 근거를 남겼습니다. 패킹 경로2,783개 보고서의 Loading Icons0과 플레이어22클립 포함을 실제 AAB의 모든 객체/GUID 전수 판독이나 모든 라이선스 완료로 확대하지 않습니다. DEX17목록 외 난독화·native·remote 광고/결제 동작 전수를 증명한 것은 아닙니다.
+
+export 직후 Editor가 복원 ABI에 맞춰 재컴파일하는 동안 첫 packed-report helper2회는 idle 게이트로 차단됐고, 완료 후 재실행해 확인했습니다. Gradle 자체는 export오류0·dry 게이트 통과 후 각각1회 실행했습니다. 구형 템플릿 안내 Yes 후 export가 진행됐고 정확한 Resolver 재삽입 순서는 미확정입니다. 반복 안내의 설치 EDM1.2.182 생성 문법과 Unity 검사 충돌은 IL/소스 대조로 확인했으며 #98에서 공식2.1.1 패키지의 정적 API/AGP분기 대응을 검토했습니다. 후보는 외부에만 보존했고 설치/전환/로컬 해결 재현은0입니다.
+
 ## 후속 소스: 자체 원형 HUD 검증 (2026-10-17, #42)
 
 CanvasJoyStick의 테두리 1개와 DesertHouse HUD의 테두리·손잡이 2개를 자체 `CircleGraphic` 메시로 대체했습니다. 기존 RectTransform·색상·활성 상태·레이캐스트·입력 바인딩을 보존했고, 두 자산의 Animated Loading Icons 의존성은 0건입니다. 이전 자체 로딩 표시와 함께 남은 직접 spritesheet 참조 3개를 제거한 소스 변경입니다.
