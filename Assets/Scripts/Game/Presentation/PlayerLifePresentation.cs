@@ -4,6 +4,8 @@ public sealed class PlayerLifePresentation : MonoBehaviour
 {
     [SerializeField] private GamePlayerNetworkData _owner;
     [SerializeField] private Animator _animator;
+    [Tooltip("Compatibility correction for older death clips without baked body height. Disable for the CC0 rifle clips.")]
+    [SerializeField] private bool _applyLegacyDeathGrounding = true;
     private CombatPresentation _presentation;
     private bool _hasSnapshot, _dead;
     private int _version;
@@ -37,7 +39,7 @@ public sealed class PlayerLifePresentation : MonoBehaviour
 
     private void GroundDeathPose()
     {
-        if (!_hasSnapshot || !_dead || _animator == null || !_animator.isHuman || _owner == null
+        if (!_applyLegacyDeathGrounding || !_hasSnapshot || !_dead || _animator == null || !_animator.isHuman || _owner == null
             || _animator.avatar == null || !_animator.avatar.isValid || !_animator.avatar.isHuman) return;
         // The imported death motion expects vertical root motion. Keep the
         // network root still and offset only the humanoid's rendered pose.

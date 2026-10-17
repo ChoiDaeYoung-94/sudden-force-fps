@@ -12839,3 +12839,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+============================================================
+Quaternius - Ultimate Modular Men (adapted rifle animations)
+Source: https://quaternius.com/packs/ultimatemodularcharacters.html
+License: CC0 1.0 Universal
+Adaptations: Humanoid retargeting, two-hand rifle grip, grounded death pose,
+continuous forearm rotation and an original idle breathing curve.
+The original vendor declaration follows unchanged:
+
+------------------------------------------------------
+Ultimate Modular Males by @Quaternius
+Consider supporting me on Patreon, even $1 helps me a lot!
+
+https://www.patreon.com/quaternius
+-------------------------------------------------------
+
+License:
+CC0 1.0 Universal (CC0 1.0)
+Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/

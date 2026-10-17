@@ -123,7 +123,7 @@ Animator:
   m_GameObject: {fileID: 237131049092180482}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0e55d5c42cc96404f872b45455603f8b, type: 3}
-  m_Controller: {fileID: 9100000, guid: 63868178c81bc4e47ab8b72afe8eb315, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4db9023922989c14ab869fb83136993a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -330,6 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifePresentation
   _owner: {fileID: 1016590275866807403}
   _animator: {fileID: 5472449699248465287}
+  _applyLegacyDeathGrounding: 0
 --- !u!1 &340533059628415021
 GameObject:
   m_ObjectHideFlags: 0
