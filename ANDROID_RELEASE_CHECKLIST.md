@@ -1,5 +1,11 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### UnsafeCollections MIT 고지 반영과 후속 빌드 준비 (#42/#66, 2026-10-17)
+
+2026-10-17 추가: Photon Fusion 공급자 선언과 실제 코드19 생성 입력에 대응하는 UnsafeCollections 메모리 보조 부분의 MIT 고지1건을 소스에 추가했습니다. 새 소스709,379B/SHA256 `F35330D344D7209A617A8CFC919E2A2FDC26E6BC30090E3EAA26B6D76EBB9790`의 기존707,770B prefix를 바이트 그대로 보존했고, 공식 고정 LICENSE 전문·pager197페이지 원문 round-trip·Editor TextAsset 바이트와 에셋 GUID 보존을 확인했습니다. 앱 UI·후속 AAB 포함·기기 표시는 미검증입니다. 코드19은 이전707,770B 고지의 검증용 무서명 AAB로 보존하며 서명/업로드0, 현재 Play 제공본은 코드18입니다. 원장195,0,19·다음 새코드20이상·전체 약92% 추정과 기기 검증 후순위 합의를 유지합니다.
+
+새 고지의 Editor TextAsset 확인과 기존 pager 독립 실행 결과를 실제 앱 화면/Android 검증으로 확대하지 않습니다. 아래 코드19 AAB는 이 추가 고지 이전의707,770B 본문으로 검증된 보존 산출물입니다.
+
 ### 코드19 공식 export·별도 무서명 AAB 검증 (#66/#42/#43, 2026-10-17)
 
 2026-10-17 코드19: Unity6000.3.25f1의 새 공식 Gradle export가 오류0·경고71·448.111초로 완료됐습니다. 이어 별도 C1 JVM·명시4GiB·processor1/worker1·parallelfalse 및 IL2CPP/Bee count1 조건의 offline Gradle bundleRelease가 exit0으로 끝나, 버전1.0.195/code19의 무서명 AAB 92,829,022B/SHA256 `EE26786D896B590FE5CDA48597BA240708EBBB7D2E18241991BE3A89C4C46693`를 생성했습니다. ZIP/bundletool·패키지·min25/target36·비개발·ARM64 SO7개 LOAD16KB와 새 고지707,770B의 본문 바이트 일치를 확인했습니다. 원장 `195,0,19`는 유지하며 다음 새 코드는20 이상입니다. **코드19 서명·업로드·기기 실행은 아직 미검증이고 현재 Play 제공본은 코드18**입니다. export와 별도 패키징의 성공이며 Unity의 단일 AAB 호출 안정화나 과거 충돌의 근본 해결로 확대하지 않습니다.

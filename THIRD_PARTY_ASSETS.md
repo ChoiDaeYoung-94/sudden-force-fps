@@ -1,5 +1,17 @@
 # Third-party asset provenance
 
+## UnsafeCollections 메모리 보조 부분 MIT 고지 보완 (2026-10-17, #42)
+
+2026-10-17 추가: Photon Fusion 공급자 선언과 실제 코드19 생성 입력에 대응하는 UnsafeCollections 메모리 보조 부분의 MIT 고지1건을 소스에 추가했습니다. 새 소스709,379B/SHA256 `F35330D344D7209A617A8CFC919E2A2FDC26E6BC30090E3EAA26B6D76EBB9790`의 기존707,770B prefix를 바이트 그대로 보존했고, 공식 고정 LICENSE 전문·pager197페이지 원문 round-trip·Editor TextAsset 바이트와 에셋 GUID 보존을 확인했습니다. 앱 UI·후속 AAB 포함·기기 표시는 미검증입니다. 코드19은 이전707,770B 고지의 검증용 무서명 AAB로 보존하며 서명/업로드0, 현재 Play 제공본은 코드18입니다. 원장195,0,19·다음 새코드20이상·전체 약92% 추정과 기기 검증 후순위 합의를 유지합니다.
+
+공식 [Photon OSS PDF](https://doc.photonengine.com/docs/content/OSS-Photon_Fusion.pdf)3쪽의 MIT/Fredrik Holmstrom2019 선언과 코드19 `Fusion.Common.cpp`의 `Expand`(15546)·`MemCpyFast`(15584) 구현/`Fusion.Common_CodeGen.c`(891/892) 등록을 [고정 upstream Native.cs](https://raw.githubusercontent.com/fholm/UnsafeCollections/aeff810906e78efe1b5184c5216495dddb328b8b/UnsafeCollections/Assets/UnsafeUtils/Native.cs)에 대조했습니다. 메모리 보조 부분의 직접 대응이며 전체 UnsafeCollections 패키지 포함·정확 로컬 버전/BOM·최종 네이티브 개별 함수의 링크 생존을 주장하지 않습니다.
+
+[공식 LICENSE](https://raw.githubusercontent.com/fholm/UnsafeCollections/aeff810906e78efe1b5184c5216495dddb328b8b/LICENSE)1083B/SHA256 `F28D78D6FB64034ABDC9174226915DDC93813EF53F64E99CBC446D34A4A49001`의 저작권·허가·면책 전문을 CRLF 개행만 정규화해1103B로 복사했습니다. 기존 전체 raw prefix와 문구를 보존했으며 저작권/고지 중복은 없습니다. 현재 upstream 트리에서 별도 NOTICE가 없던 확인을 과거 공급자 배포본 전체의 부재로 확대하지 않습니다.
+
+조건부 항목도 대조했습니다. Fody는 빈 `ProcessedByFody` 표식이고 InlineIL은 공식 설명상 IL을 삽입한 뒤 참조를 제거하는 빌드 도구이므로 앱 고지 필수 누락을 확정하지 않았습니다. Oswald는 Fusion EditorResources 경로이며 Android 포함 근거를 발견하지 못했습니다. WebSocketSharp는 WebGL 한정 asmdef와 별도 DLL의 Android 허용 importer를 구분했고 코드19의 생성/등록·독립 export 파일에서는 발견하지 못했습니다. 설정만으로 전체 제외를 단정하지 않으며 최종 packed/resource 범위는 별도입니다.
+
+검증 근거는 외부 `D:/codex/validation/sudden-force-fps/20261017-unsafe-native-notice-01/`의 sources.json·원문 사본·pager-validation.jsonl·editor-apply-result.json과 독립 검토입니다. 제품 pager 수정0, 현재 추가 빌드/서명/업로드/예약0입니다. 에셋22애니메이션·단종 LoadingIcons 원본/취득 대응과 남은 기기 확인 때문에 #42는 열림 유지합니다.
+
 ## 코드19 무서명 AAB의 새 고지 포함 (2026-10-17, #42)
 
 2026-10-17 코드19: Unity6000.3.25f1의 새 공식 Gradle export가 오류0·경고71·448.111초로 완료됐습니다. 이어 별도 C1 JVM·명시4GiB·processor1/worker1·parallelfalse 및 IL2CPP/Bee count1 조건의 offline Gradle bundleRelease가 exit0으로 끝나, 버전1.0.195/code19의 무서명 AAB 92,829,022B/SHA256 `EE26786D896B590FE5CDA48597BA240708EBBB7D2E18241991BE3A89C4C46693`를 생성했습니다. ZIP/bundletool·패키지·min25/target36·비개발·ARM64 SO7개 LOAD16KB와 새 고지707,770B의 본문 바이트 일치를 확인했습니다. 원장 `195,0,19`는 유지하며 다음 새 코드는20 이상입니다. **코드19 서명·업로드·기기 실행은 아직 미검증이고 현재 Play 제공본은 코드18**입니다. export와 별도 패키징의 성공이며 Unity의 단일 AAB 호출 안정화나 과거 충돌의 근본 해결로 확대하지 않습니다.
