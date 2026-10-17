@@ -11,6 +11,7 @@ PluginImporter:
   iconMap: {}
   executionOrder: {}
   defineConstraints:
+  - UNITY_EDM_DISABLED
   - UNITY_IOS
   isPreloaded: 0
   isOverridable: 0
@@ -21,7 +22,7 @@ PluginImporter:
       enabled: 0
       settings: {}
     Editor:
-      enabled: 1
+      enabled: 0
       settings:
         DefaultValueInitialized: true
     WindowsStoreApps:
