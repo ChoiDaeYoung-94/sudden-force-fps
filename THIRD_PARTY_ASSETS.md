@@ -1,5 +1,23 @@
 # Third-party asset provenance
 
+## 후속 소스: 자체 원형 HUD 검증 (2026-10-17, #42)
+
+CanvasJoyStick의 테두리 1개와 DesertHouse HUD의 테두리·손잡이 2개를 자체 `CircleGraphic` 메시로 대체했습니다. 기존 RectTransform·색상·활성 상태·레이캐스트·입력 바인딩을 보존했고, 두 자산의 Animated Loading Icons 의존성은 0건입니다. 이전 자체 로딩 표시와 함께 남은 직접 spritesheet 참조 3개를 제거한 소스 변경입니다.
+
+Unity 6 컴파일·저장 자산의 누락 스크립트 0건·분리된 Play 렌더링과 조이스틱 두 입력 경로의 합성 포인터 콜백을 확인했습니다. 실기기 터치·전체 경기·새 AAB 검증으로 확대하지 않습니다. 현재 Play 제공본은 **1.0.195 / 코드20**이며 이번 HUD와 이전 자체 로딩 변경은 포함되지 않았습니다. 새 빌드·서명·업로드·예약은 0건, 원장 `195,1,20`·다음 코드21 이상을 유지합니다.
+
+외부 원본 팩·고지는 보존했고 팩 전체의 배포 제외나 에셋 권리 검증 완료를 주장하지 않습니다. 다음 PC 우선순위는 플레이어 애니메이션 22클립의 당시 패키지 대응과 후속 소스 빌드입니다. 실기기 후순위·전체 약92% 작업 기준 추정은 유지하며 현재 사용자 조치는 없습니다. 아래 자체 로딩·코드20 기록은 각각 당시 범위입니다.
+
+### 검증 범위와 보존 근거
+
+- 자체 링은 64분할·내측 반지름 비율0.88, 손잡이는 채운 원이며 외부 sprite/texture/clip을 사용하지 않습니다. 링256정점/384인덱스와 원66정점/192인덱스의 실제 CanvasRenderer 메시·흰 기본 텍스처·350/200/100 크기 및 렌더 화면을 확인했습니다. 색상·마스킹·원래 raycast true/false를 보존했습니다.
+- 씬의 나머지1,139컴포넌트는 적용 전후 Editor JSON이 같고, 프리팹의 나머지16컴포넌트와 저장 YAML 블록도 보존했습니다. 프리팹 저장 중 현재 JoyStick 코드에 없는 과거 필드4개만 제거됐으며 현재 핸들·영역 참조와6개 EventTrigger 바인딩은 그대로입니다. 제거된 Image3개의 외부 컴포넌트 참조는 없습니다.
+- 실제 저장 프리팹을 격리 Play에 인스턴스화해 JoyStickSafeArea·Img_touchableArea 각각의 저장 PointerDown/Drag/PointerUp 콜백으로 캡처·이동·다른 포인터 무시·해제를 확인했습니다. public Cancel 및 비활성화 초기화도 확인했습니다. 물리적 터치·GraphicRaycaster 전달·Android·Fusion 경기의 직접 검증은 아닙니다.
+- 첫 적용 helper의 Editor JSON 루트 해석 오류는 저장 전 임시 프리팹에서 실패했고, preview scene 저장은 Unity가 거부해 일반 씬으로 적용했습니다. QA helper의 두 입력 경로를 하나라고 가정한 검사와 렌더러가 없는 임시 복사본도 실패 후 수정·재검증했습니다. 제품 원본 세 객체의 CanvasRenderer는 보존됐고 새 타입에는 RequireComponent도 명시했습니다. 실패를 통과 건수로 합산하지 않습니다.
+- 원래 깨끗한 빈 씬의 루트·컴포넌트 JSON 동일성·timeScale1·playModeStartScene 복원을 확인하고 임시 자산은 외부로 이동했습니다. Editor는 정상 종료했으며 자동 저장된 폰트·Player/SceneTemplate/Time 설정4개는 시작 사본으로 복원했습니다. 시작3,881파일 중 변경은 두 자산뿐, 추가는 자체 코드/meta2개, 누락0입니다. 기존 dirty·원본 팩·고지·예약 원장과 키 파일은 보존했고 키는 읽거나 해시하지 않았습니다.
+
+근거는 외부 `D:/codex/validation/sudden-force-fps/20261017-authored-hud-01/`의 inspection/apply-scene-result/saved-validation/render-validation/joystick-callback-result/serialized-preservation/preview-restored/preservation-result JSON 및 hud-preview.png입니다. 저장 시 생성된 새 YAML 이름 필드2줄은 공백만 정리해 `git diff --check`를 통과했습니다. 이전22클립 감사의 원본 대응 한계는 그대로이며 #42를 닫지 않습니다.
+
 ## 후속 소스: 자체 로딩 표시 검증 (2026-10-17, #42)
 
 LoginCanvas·Manager의 로딩 표시3개를 자체 `LoadingSpinnerGraphic`으로 대체하고 외부 로딩 Animation7개 참조를 제거했습니다. 외부 sprite/clip을 쓰지 않는270도 링이며 시간 정지에도 회전하고 raycast를 막지 않습니다. 두 프리팹의 나머지224컴포넌트·61오브젝트 바인딩/레이아웃/활성 상태를 보존했습니다.
