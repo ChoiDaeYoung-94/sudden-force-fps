@@ -1,5 +1,13 @@
 # Third-party asset provenance
 
+## 코드19 무서명 AAB의 새 고지 포함 (2026-10-17, #42)
+
+2026-10-17 코드19: Unity6000.3.25f1의 새 공식 Gradle export가 오류0·경고71·448.111초로 완료됐습니다. 이어 별도 C1 JVM·명시4GiB·processor1/worker1·parallelfalse 및 IL2CPP/Bee count1 조건의 offline Gradle bundleRelease가 exit0으로 끝나, 버전1.0.195/code19의 무서명 AAB 92,829,022B/SHA256 `EE26786D896B590FE5CDA48597BA240708EBBB7D2E18241991BE3A89C4C46693`를 생성했습니다. ZIP/bundletool·패키지·min25/target36·비개발·ARM64 SO7개 LOAD16KB와 새 고지707,770B의 본문 바이트 일치를 확인했습니다. 원장 `195,0,19`는 유지하며 다음 새 코드는20 이상입니다. **코드19 서명·업로드·기기 실행은 아직 미검증이고 현재 Play 제공본은 코드18**입니다. export와 별도 패키징의 성공이며 Unity의 단일 AAB 호출 안정화나 과거 충돌의 근본 해결로 확대하지 않습니다.
+
+후속 SDK 조사에서 UnsafeCollections 메모리 보조 부분의 공급자 MIT 고지1건을 추가로 확인했습니다. 따라서 코드19은 검증용으로 보존하고 서명·Play 업로드를 진행하지 않습니다. 공식 원문을 포함한709,379B 후보의 prefix 보존·pager197페이지 검사를 완료했으며, 소스 보완 후 새코드20이상에서 실제 고지 포함과 배포를 이어갑니다. 코드19의 생성 성공과 배포 준비 완료를 구분합니다.
+
+새 AAB의 UnityFS 데이터에서 정렬된 TextAsset 이름·길이·전체 본문을 확인했습니다. 새 고지 SHA256은 `1532E3839B916793EB7B746D331E6CB66FC1CDAB44549B6D8858783E1714C6D9`입니다. 이 검사는 전체 권리 출처·직접 UI 표시나 serialized object-table GUID 증명으로 확대하지 않습니다. 현재 Play 코드18의 고지694,428B는 그대로이며 나머지 에셋 원본/조건부 SDK 대응 때문에 #42는 열림 유지합니다. 아래 소스 보완 당시 추가 빌드0 기록과 이번 코드19 생성을 구분합니다.
+
 ## Rx.NET 차용 코드·Fusion BVH 고지 보완 (2026-10-17, #42)
 
 `Assets/Legal/ThirdPartyNotices.txt`에 확인된 런타임 고지2항목을 추가했습니다. 기존 고지 전체 문구와 Git 정규화 원본681,938B prefix를 보존한 새 소스는707,770B/SHA256 `1532E3839B916793EB7B746D331E6CB66FC1CDAB44549B6D8858783E1714C6D9`입니다. 현재 배포 코드18의 고지는694,428B 그대로이며 이번 소스 변경의 새 AAB·서명·업로드·버전 예약은0입니다. 원장194,10,18·다음 새 코드19 이상을 유지합니다.

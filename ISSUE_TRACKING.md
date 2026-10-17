@@ -1,5 +1,13 @@
 # GitHub 이슈와 PR 작업 관리
 
+## 코드19 진행과 공용 사전 검사 보완 (2026-10-17, #66/#42/#43)
+
+2026-10-17 코드19: Unity6000.3.25f1의 새 공식 Gradle export가 오류0·경고71·448.111초로 완료됐습니다. 이어 별도 C1 JVM·명시4GiB·processor1/worker1·parallelfalse 및 IL2CPP/Bee count1 조건의 offline Gradle bundleRelease가 exit0으로 끝나, 버전1.0.195/code19의 무서명 AAB 92,829,022B/SHA256 `EE26786D896B590FE5CDA48597BA240708EBBB7D2E18241991BE3A89C4C46693`를 생성했습니다. ZIP/bundletool·패키지·min25/target36·비개발·ARM64 SO7개 LOAD16KB와 새 고지707,770B의 본문 바이트 일치를 확인했습니다. 원장 `195,0,19`는 유지하며 다음 새 코드는20 이상입니다. **코드19 서명·업로드·기기 실행은 아직 미검증이고 현재 Play 제공본은 코드18**입니다. export와 별도 패키징의 성공이며 Unity의 단일 AAB 호출 안정화나 과거 충돌의 근본 해결로 확대하지 않습니다.
+
+후속 SDK 조사에서 UnsafeCollections 메모리 보조 부분의 공급자 MIT 고지1건을 추가로 확인했습니다. 따라서 코드19은 검증용으로 보존하고 서명·Play 업로드를 진행하지 않습니다. 공식 원문을 포함한709,379B 후보의 prefix 보존·pager197페이지 검사를 완료했으며, 소스 보완 후 새코드20이상에서 실제 고지 포함과 배포를 이어갑니다. 코드19의 생성 성공과 배포 준비 완료를 구분합니다.
+
+공식 export의 IL2CPP/build/deploy 실행 도구가 사전 검사 입력에서 빠지던 문제는 [PR92](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/92)로 수정·병합했습니다. 수정 전 새 회귀시험 실패 재현 후 전체14개 unit와 독립 검토를 통과했습니다. source 내부 도구·native 입력은 검사하고 실제 Gradle module 출력만 제외합니다. unit 통과와 코드19 실제 빌드 결과를 구분하며 관련 이슈는 남은 기준 때문에 열림 유지합니다.
+
 ## 최신 추가 작업 (2026-10-17, #42)
 
 UniRx의 역사적 Rx.NET 차용 코드와 Photon 공급자 선언에 따른 Simple Scene BVH 고지2항목을 소스에 추가했습니다. 기존 고지 전체 문구·정규화 원본 prefix 보존·새707,770B·실제 pager196페이지 원문 보존과 공식 원문/생성 코드 대응을 확인했습니다. 현재 코드18 배포 파일은 그대로이며 새 AAB·서명·업로드·버전 예약0입니다. 원장194,10,18·다음 코드19 이상, 새 고지의 Editor/Android 표시·후속 AAB 포함과 에셋 원본/조건부 고지는 미검증입니다. #42는 열림 유지하고 상세 근거는 THIRD_PARTY_ASSETS.md와 ANDROID_RELEASE_CHECKLIST.md를 따릅니다. 아래10월16일 운영·배포 기록은 당시 범위로 보존합니다.
