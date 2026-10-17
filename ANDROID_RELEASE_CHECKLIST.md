@@ -12,7 +12,9 @@
 
 근거: 외부 `D:/codex/validation/sudden-force-fps/20261017-code19-export-01/`의 export-result/package-actual-result/unsigned-static-validation/unsigned-notice-body-validation/unsigned-release-summary/restoration-result JSON. 전체 로그·암호·키 파일·AAB는 저장소에 추가하지 않습니다.
 
-### 현재 배포·검증 요약 (2026-10-17 정리)
+### 코드18 제공 당시 배포·검증 요약 (2026-10-17 정리, 이전 기록)
+
+이 블록의 원장·다음 코드는 코드18 제공 당시 값입니다. 최신 예약과 산출물 상태는 위 코드19 항목을 따릅니다.
 
 최신은 **코드18 서명 AAB92,840,760B 생성·검증 및 Google Play 내부 테스트 release5 제공 완료**입니다. 총괄이 지정 Console 탭에서 직접 업로드·출시했고10월16일16:37의 내부 테스터 제공 상태를 확인했습니다. 원장194,10,18·다음 새 코드19 이상이며 기존 코드12 파일과 검증 이력은 보존합니다. 실기기 검증 전반은 추가 사용자 결정으로 작업 PC 연결 가능 시점까지 후순위로 두고 코드18 Store 설치·실행은 아직 검증하지 않았습니다. 기존 성능 시험의 후속 범위 합의와 미실행 기록을 보존합니다.
 
