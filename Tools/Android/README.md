@@ -28,7 +28,7 @@ python Tools/Android/verify_gradle_export.py `
 - 실제 Gradle/AGP 버전, 패키지·기존 DSL 및 최종 release output 버전. 버전 대입이나 원장 예약 없음.
 - 메모리 내 release signingConfig 해제, signing flags와 정확한 무서명 finalizer의 signing data/files/code transparency 부재. AGP 내부 finalizer 검사는 위 버전에 한정하며 모양이 달라지면 실패합니다.
 - 요청 작업 고정, 알려지지 않은 signing task 차단, 실제 task 실행 감지 시 즉시 실패, CMake staging 루트 대조.
-- 실행 전후 Assets/Packages/ProjectSettings/BuildInfo·export 입력·export 내부의 기존 AAB 해시 보존. 외부 배포 폴더의 AAB는 별도 SHA 대조 대상입니다. 키 파일은 열거나 해시하지 않습니다. export의 build/.gradle/.cxx는 입력 비교에서 제외합니다.
+- 실행 전후 Assets/Packages/ProjectSettings/BuildInfo·export 입력·export 내부의 기존 AAB 해시 보존. 외부 배포 폴더의 AAB는 별도 SHA 대조 대상입니다. 키 파일은 열거나 해시하지 않습니다. Gradle root·launcher·unityLibrary 및 unityLibrary 바로 아래의 build.gradle이 있는 모듈에서만 build/.gradle/.cxx 출력 폴더를 제외합니다. 소스 내부의 IL2CPP/build/deploy 실행 도구와 기존 jniLibs는 이름에 관계없이 검사합니다. 이 구조 밖의 사용자 모듈 출력은 보수적으로 입력에 포함돼 변경 시 실패할 수 있습니다.
 - 상속 JVM 옵션·Gradle project 환경 속성·사용자/설치 init-script 충돌은 시작 전에 차단합니다. 비밀번호/token/secret 환경값 및 프로젝트의 알려진 서명 암호 환경값은 자식에 전달하지 않습니다.
 
 Gradle `--dry-run`은 **설정 단계 코드를 실행하고 Gradle 캐시를 바꿀 수 있습니다**. 신뢰하는 프로젝트·기존 export에만 사용하며 전체 파일 시스템 읽기 전용 도구로 취급하지 않습니다. 캐시·SDK·JDK 변경을 되돌리거나 프로젝트를 자동 복구하지 않습니다. 입력이 바뀌면 원인을 확인한 뒤 새 검증 폴더로 다시 실행합니다.
