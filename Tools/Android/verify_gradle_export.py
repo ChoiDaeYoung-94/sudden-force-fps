@@ -33,10 +33,10 @@ def sha(path):
 
 
 def snapshot(root, excluded=()):
-    """Hash inputs without opening signing keys or following directory links."""
+    """Hash inputs, excluding exact relative directories and signing keys."""
     result = {}
     for current, dirs, names in os.walk(root, followlinks=False):
-        dirs[:] = sorted(d for d in dirs if d not in excluded
+        dirs[:] = sorted(d for d in dirs if (Path(current) / d).relative_to(root).as_posix() not in excluded
                          and not (Path(current) / d).is_symlink()
                          and not os.path.isjunction(Path(current) / d))
         for name in sorted(names):
@@ -44,6 +44,19 @@ def snapshot(root, excluded=()):
             if path.suffix.lower() not in KEY_SUFFIXES and not path.is_symlink():
                 result[path.relative_to(root).as_posix()] = sha(path)
     return result
+
+
+def export_snapshot(export):
+    # IL2CPP/build/deploy is a shipped input, despite its directory name.
+    modules = {export, export / "launcher", export / "unityLibrary"}
+    library = export / "unityLibrary"
+    if library.is_dir() and not library.is_symlink() and not os.path.isjunction(library):
+        modules.update(child for child in library.iterdir()
+                       if child.is_dir() and not child.is_symlink() and not os.path.isjunction(child)
+                       and (child / "build.gradle").is_file())
+    excluded = {(module / name).relative_to(export).as_posix()
+                for module in modules for name in ("build", ".gradle", ".cxx")}
+    return snapshot(export, excluded)
 
 
 def project_snapshot(project):
@@ -160,7 +173,7 @@ def run(args):
     cmd = command(args)
     env = child_environment(os.environ, args, args.report_directory / "events.jsonl")
     before = project_snapshot(args.project)
-    export_before = snapshot(args.export, {"build", ".gradle", ".cxx"})
+    export_before = export_snapshot(args.export)
     bundles_before = {p.relative_to(args.export).as_posix(): sha(p) for p in args.export.rglob("*.aab")}
     args.report_directory.mkdir(parents=True)
     (args.report_directory / "inputs-before.json").write_text(
@@ -181,7 +194,7 @@ def run(args):
         result["gatesPassed"] = True
     finally:
         result["projectInputsPreserved"] = project_snapshot(args.project) == before
-        result["exportInputsPreserved"] = snapshot(args.export, {"build", ".gradle", ".cxx"}) == export_before
+        result["exportInputsPreserved"] = export_snapshot(args.export) == export_before
         result["existingBundlesPreserved"] = {
             p.relative_to(args.export).as_posix(): sha(p) for p in args.export.rglob("*.aab")} == bundles_before
         result["passed"] = (result.get("gatesPassed", False) and result["projectInputsPreserved"]

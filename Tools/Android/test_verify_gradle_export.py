@@ -153,6 +153,35 @@ class PreflightTests(unittest.TestCase):
             result = tool.project_snapshot(self.args.project)
         self.assertNotIn("private.keystore", result["Assets"])
 
+    def test_exported_il2cpp_tool_change_fails_preservation(self):
+        executable = self.args.export / "unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/il2cpp.exe"
+        executable.parent.mkdir(parents=True)
+        executable.write_bytes(b"original tool fixture")
+        def mutate(cmd, **kwargs):
+            result = self.fake_gradle(cmd, **kwargs)
+            executable.write_bytes(b"unexpected replacement fixture")
+            return result
+        with patch.object(tool.subprocess, "run", side_effect=mutate), \
+             patch.dict(tool.os.environ, {}, clear=True), self.assertRaises(tool.PreflightError):
+            tool.run(self.args)
+        self.assertFalse(json.loads((self.args.report_directory / "result.json").read_text())["exportInputsPreserved"])
+
+    def test_real_module_outputs_are_excluded_from_input_comparison(self):
+        def generate(cmd, **kwargs):
+            result = self.fake_gradle(cmd, **kwargs)
+            for name in ("launcher/build/intermediates/cache.bin", "unityLibrary/.cxx/cache.bin",
+                         ".gradle/cache.bin", "unityLibrary/GooglePlayGamesManifest.androidlib/build/cache.bin"):
+                path = self.args.export / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"generated fixture")
+            return result
+        module = self.args.export / "unityLibrary/GooglePlayGamesManifest.androidlib/build.gradle"
+        module.parent.mkdir(parents=True)
+        module.write_text("fixture")
+        with patch.object(tool.subprocess, "run", side_effect=generate), patch.dict(tool.os.environ, {}, clear=True):
+            result = tool.run(self.args)
+        self.assertTrue(result["exportInputsPreserved"])
+
 
 if __name__ == "__main__":
     unittest.main()
