@@ -1,5 +1,17 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 공식 Unity EDM 전환·코드22 export 검증 완료 (2026-10-17, #98/#66)
+
+구형 EDM4U1.2.182의 `packagingOptions` 재삽입을 막기 위해 공식 Registry `com.unity.external-dependency-manager@2.1.1`로 전환했습니다. PackageManager.Client.Add 결과와 선택/Resolver 설정을 저장하고, 구형5개 DLL은 원본·GUID·기존 제약을 보존한 채 Editor 비활성/전환 제약만 적용했습니다. 새 Resolver만 활성·컴파일 오류0·강제 Resolve2회 성공 및 템플릿/의존성 해시 동일을 확인했습니다.
+
+코드22(1.0.195)의 공식 증분 Android Gradle export는 오류0·경고71·160.177초로 완료됐고, 템플릿 갱신 안내 메시지와 총괄의 Yes 조작은0건입니다. 별도 offline C1 Gradle dry-run은 exit0, 4GiB/processor1/worker1/무서명/버전 게이트와 실행 태스크0·AAB 부재·입력 해시 보존을 확인했습니다. **코드22 AAB 생성·서명·업로드는0이며 현재 Play 제공본은 코드21**입니다. 원장은 `195,3,22`·다음 새예약23 이상입니다.
+
+export 임시3개 파일은 전환 후 기준으로 복원했고, properties의 줄바꿈 정규화도 기존 raw 바이트로 되돌렸습니다. 기존 dirty·GPGS/Fusion·구 DLL·다른 자산을 보존했습니다. 전환 초기 신구 DLL 혼재 상태에서 공식 메뉴/초기화가 대기해, 저장·소스 확인 후 소유 Editor3개를 각각 종료하고 재기동했습니다. 최종 성공 경로는 Editor가 닫힌 상태의 수동 importer 설정이며 공식 메뉴 자체가 완료됐다고 쓰지 않습니다. 최종 export 후 Editor는 정상 종료됐습니다.
+
+이는 현재 Unity6000.3.25f1/Android의 반복 안내 해결·export 검증이며, 깨끗한 캐시의 새 checkout·iOS·Unity 단일 AAB 호출 안정화·충돌 근본 해결·실기기 호환까지 완료한 것은 아닙니다. 기존 경고·RELRO·애니메이션22클립 출처 대응 및 기기 검증 후순위 합의는 유지합니다. 전체 약92% 작업 기준 추정과 현재 사용자 조치 없음도 유지합니다.
+
+근거는 외부 `D:/codex/validation/sudden-force-fps/20261017-edm-migration-01/`의 package-add-result/editor-state-official-active/resolve-01·02-result/export-result/package-dry-validation/restoration-result 및 독립 검토입니다. 원시 로그·산출물·키·암호는 커밋하지 않습니다. 아래 코드21·이전 기록은 각각 당시 범위입니다.
+
 ## 코드21 서명·Play 내부 테스트 제공 완료 (2026-10-17, #43/#66/#42)
 
 2026-10-17 **18:23**, 총괄이 기존 사용자 지정 작업용 Chrome 탭에서 코드21(1.0.195)을 직접 업로드·출시했고 release7의 **내부 테스터에게 제공됨**을 확인했습니다. 자체 로딩·원형 HUD(PR96/PR97)가 포함된 새 제공본이며 코드20과 이전 산출물은 보존했습니다. 참여 링크는 https://play.google.com/apps/internaltest/4701524132186452960 입니다.
