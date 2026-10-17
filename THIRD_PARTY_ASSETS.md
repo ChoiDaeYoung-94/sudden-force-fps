@@ -1,8 +1,25 @@
 # Third-party asset provenance
 
+## Rx.NET 차용 코드·Fusion BVH 고지 보완 (2026-10-17, #42)
+
+`Assets/Legal/ThirdPartyNotices.txt`에 확인된 런타임 고지2항목을 추가했습니다. 기존 고지 전체 문구와 Git 정규화 원본681,938B prefix를 보존한 새 소스는707,770B/SHA256 `1532E3839B916793EB7B746D331E6CB66FC1CDAB44549B6D8858783E1714C6D9`입니다. 현재 배포 코드18의 고지는694,428B 그대로이며 이번 소스 변경의 새 AAB·서명·업로드·버전 예약은0입니다. 원장194,10,18·다음 새 코드19 이상을 유지합니다.
+
+| 보완 항목 | 확인 근거와 적용 범위 |
+| --- | --- |
+| UniRx의 Rx.NET 차용 부분 | Microsoft Open Technologies 헤더가 있는 EventPattern·Notification·TimeInterval·Timestamped·CancellationDisposable·RefCountDisposable·ScheduledItem·CurrentThreadScheduler 8파일이 공식 UniRx7.1.0 대응 파일과 BOM/개행 정규화 텍스트 일치. 전체 패키지 버전 확정은 아님. 코드15 IL2CPP 생성 출력에 관련 구현·UniRx 모듈 등록을 확인했으며 개별 최종 네이티브 링크 생존 전수 검사는 아님 |
+| Simple Scene BVH — Photon Fusion 공급자 선언 | [Photon OSS PDF](https://doc.photonengine.com/docs/content/OSS-Photon_Fusion.pdf) 3쪽이 v1.0·upstream URL·Apache2.0을 명시. 코드15 Fusion.Runtime의 BVH/BVHNode 구현·메서드 등록과 대조. v1.0은 공급자 문서 표기로 한정하며 로컬 정확 버전·upstream master 바이트 동일성·Fusion2.0.13 전용 BOM을 확정하지 않음 |
+
+Rx.NET은 [고정 역사 리비전의 Source/license.txt](https://raw.githubusercontent.com/dotnet/reactive/c9cefc1b5606e4d2e3908fe68f62e9b5553144c3/Rx.NET/Source/license.txt) 전체730B/SHA256 `D6E3B2775B63D800D10B369D9FA1D9F7147AE61E32A0003CFE318A948BAA87EE`를 추가했습니다. Microsoft 저작권뿐 아니라 기여자 감사·CodePlex 링크·Apache2.0 안내·면책을 보존합니다. [2020년 MIT 전환](https://github.com/dotnet/reactive/commit/1a87246a90872a1046e4b8be347746862cbc528e)을 더 오래된 차용 코드에 소급 적용하지 않습니다. 정확한 최초 차용 리비전·mono 차용 코드 전체는 미확인 범위로 남깁니다.
+
+두 항목의 적용 범위를 명시하고 [Apache 공식 전문](https://www.apache.org/licenses/LICENSE-2.0.txt) 원문11,358B를 문구 변경 없이 함께 제공합니다. 추가한 두 원문은 기존 파일 형식에 맞춰 CRLF 개행만 정규화했습니다(Rx.NET 복사744B·Apache 복사11,560B). 기존 혼재 개행81개도 CRLF로 정리했으며 원문 문구와 Git 정규화 원본681,938B prefix는 그대로입니다. 원래 작업 사본694,428B는 외부 근거에 보존했습니다. Windows CRLF 작업 사본707,770B와 Git의 LF 정규화 blob694,963B를 구분하며, Git checkout 필터를 적용한 결과와 작업 사본의 바이트 일치도 검증합니다. 현재 SimpleScene upstream master의 David W. Jeske2014/public domain 헤더와 Photon 선언의 차이는 근거에 보존하며, 이를 공급자 오류·로컬 라이선스 변경으로 단정하거나 새 저작권/NOTICE를 만들지 않습니다. UnsafeCollections·Fody·InlineIL·Oswald와 WebSocket 등 공급자 목록 전체를 일괄 추가하지 않았습니다.
+
+변경 없는 실제 제품 pager 소스를 Unity 번들 Roslyn/Mono로 별도 컴파일해 최종 CRLF 고지196페이지의 전체 원문 round-trip·최대4089 UTF-16 units/93줄바꿈을 확인했습니다. 처음 `latest` 언어 옵션은 번들 구형 컴파일러의 CS8652로 실패했고 `preview`로 컴파일해 통과했습니다. 제품 pager 수정0이며 이 독립 검사를 Editor TextAsset/UI·Android 실행으로 확대하지 않습니다. 현재 Editor 미연결 상태로 새 UI 표시·새 배포 포함은 미검증입니다. 에셋 원본/취득 대응·조건부 구성요소·정확한 공급자 배포 NOTICE와 기기 확인 때문에 #42는 열림 유지합니다.
+
+근거: 외부 `D:/codex/validation/sudden-force-fps/20261017-runtime-oss-notices-01/`의 `sources.json`, `prepare-stable-result.json`, `upstream-unirx/`, `pager-stable-validation.jsonl`, `pager-compiler-scope.json`과 공급자 PDF3쪽 렌더·독립 읽기 검토입니다.
+
 ## 코드18 서명 AAB의 보완 고지 포함 확인 (2026-10-16, #42)
 
-기존 업로드 키로 서명한 코드18 AAB92,840,760B/SHA256 `83ADB6D168F787CF0419DD5141A6675B1105D99D4407FE6E4FF115A073DD7FD9`에서 고지 본문694,428B/SHA256 `D326402384AE8EA89BDFA8034F0B017BB8A198E8E9449616B9CAE60A1836267D`가 현재 소스와 정확히 일치함을 확인했습니다. 아래 MiniJSON·Newtonsoft.Json 보완이 실제 새 산출물에 포함됐으며 서명 전후 payload129개 바이트 차이0입니다. DEX1개도 코드12와 같아 기존 지정17개 광고·결제 SDK 조사 범위에 연결됩니다. 총괄이 직접 업로드·출시한 Play 내부 테스트 release5/code18의16:37 내부 테스터 제공을 확인했습니다. 앱 고지의 실제 기기 표시와 나머지 애니메이션·단종 로딩 팩의 원본 대응 등 #42의 남은 범위는 유지하며 새 Store 설치·실행 성공으로 확대하지 않습니다.
+기존 업로드 키로 서명한 코드18 AAB92,840,760B/SHA256 `83ADB6D168F787CF0419DD5141A6675B1105D99D4407FE6E4FF115A073DD7FD9`에서 고지 본문694,428B/SHA256 `D326402384AE8EA89BDFA8034F0B017BB8A198E8E9449616B9CAE60A1836267D`가 코드18 빌드 시점의 소스와 정확히 일치함을 확인했습니다. 아래 MiniJSON·Newtonsoft.Json 보완이 실제 새 산출물에 포함됐으며 서명 전후 payload129개 바이트 차이0입니다. DEX1개도 코드12와 같아 기존 지정17개 광고·결제 SDK 조사 범위에 연결됩니다. 총괄이 직접 업로드·출시한 Play 내부 테스트 release5/code18의16:37 내부 테스터 제공을 확인했습니다. 앱 고지의 실제 기기 표시와 나머지 애니메이션·단종 로딩 팩의 원본 대응 등 #42의 남은 범위는 유지하며 새 Store 설치·실행 성공으로 확대하지 않습니다.
 
 근거: 외부 `20261016-export-aab-code18-c1-01/`의 `signed-notice-body-validation.json`, `signed-static-validation.json`, `signed-release-summary.json`과 독립 서명 검토입니다.
 
