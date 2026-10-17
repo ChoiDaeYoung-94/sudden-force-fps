@@ -1,16 +1,21 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
-## 코드20 무서명 AAB 검증 완료 (2026-10-17, #66/#42/#43)
+## 코드20 서명·Play 내부 테스트 제공 완료 (2026-10-17, #66/#42/#43)
 
-코드20(1.0.195)의 공식 증분 export는 오류0·경고2·86.786초, 별도 offline Gradle 패키징은 exit0·59초로 완료했습니다. 무서명 AAB는92,829,388B/SHA256 `D1C7ED2D5A13940E6AD0CBB804A0C4C75B7738298C735475B163CF89C9EF7F79`이며 ZIP/bundletool·패키지·min25/target36·비개발·ARM64 SO7개 LOAD16KB·새 고지709,379B/F35330D344D7209A617A8CFC919E2A2FDC26E6BC30090E3EAA26B6D76EBB9790 본문 일치를 확인했습니다.
+2026-10-17 16:33, 총괄이 사용자 지정 작업용 Chrome의 Sudden Force/패키지·내부 테스트 트랙을 확인한 뒤 코드20(1.0.195)을 직접 업로드·출시했습니다. Console의 release6 **내부 테스터에게 제공됨** 상태를 확인했습니다. 현재 제공본은코드20이며 코드18/19 산출물과 이전 검증은 보존했습니다.
 
-코드19의 실제 컴파일 전 입력2,734개와 코드20의 전체 목록·해시, NDK7,935개 파일 해시가 일치해 검증된 IL2CPP 산출물을 재사용했습니다. 코드19에서 컴파일 후 생성된 compile-data.json1개만 과거 비교에서 분리하고 코드20은 추가 파일까지 엄격히 검사했습니다. 코드20 CMake/Swappy는 신규 실행했으며 최종 SO6개는 코드19과 같고 Swappy1개는 새 stripped 산출물과 일치합니다. DEX1개도 코드19과 같습니다. **코드20 새 IL2CPP 컴파일·Unity 단일 AAB 호출 안정화·충돌 근본 해결을 뜻하지 않습니다.**
+서명 AAB92,843,051B/SHA256 `7C051D98CB68E70878F4EFC18E50CFA67E5D192910DEA58802AE8EF908F9DA61`의 기존 업로드 인증서·전체129payload 무결성/무서명본 동일성·ZIP/bundletool·min25/target36·ARM64 SO7개 LOAD16KB·고지709,379B 본문 일치를 확인했습니다. 서명 후 시작 기준3,879개 소스/설정은 예약 원장 외 정확히 같으며 기존 dirty를 보존했습니다. 원장195,1,20·다음 새예약21 이상입니다.
 
-근거: 외부 `D:/codex/validation/sudden-force-fps/20261017-code20-export-01/`의 export-result/native-reuse-result/package-actual-result/unsigned-static-validation/unsigned-notice-body-validation/unsigned-release-summary/restoration-result JSON. 로그·AAB·암호·키는 소스 커밋에 포함하지 않습니다.
+서명 전 코드20 공식 증분 export는 오류0·경고2·86.786초, 별도 offline Gradle은 exit0·59초로 완료했습니다. 무서명 AAB92,829,388B/SHA256 `D1C7ED2D5A13940E6AD0CBB804A0C4C75B7738298C735475B163CF89C9EF7F79`를 외부 보존했고 서명본과129payload가 같습니다. 코드19에서 컴파일 후 생성된 compile-data.json1개만 과거 입력 비교에서 분리하고 코드20은 추가 파일까지 검사했습니다. 신규 backup2/meta는 외부 보존했으며 코드19 이전 임시 성능파일4개 복구를 뜻하지 않습니다.
 
-시작 기준3,879개 소스/설정은 예약 원장195,1,20만 달라지도록 복원했고 신규 backup2/meta는 외부 보존했습니다. 코드19 이전 임시 성능파일4개 복구를 뜻하지 않습니다. 다음 새 예약은21 이상입니다. 현재 코드20 서명·Play 업로드는 대기, 현재 제공본은코드18입니다. 기존 코드18/19 산출물은 보존합니다. RELRO 경고4건·실제16KB/기기 확인은 미검증으로 유지하고 실기기 후순위·성능측정 후속 합의와 전체 약92% 작업 기준 추정을 유지합니다.
+새 코드20 심볼 ZIP36,142,348B/SHA256 `8BEE7095E1D252E7D27DDA4E6B99A5B43C3F5C3B1B968C331F38F0B6CA755431`의6항목·CRC·Build ID/ALLOC 대응을 확인하고 실제 코드20 행의 심볼 첨부 표시를 확인했습니다. nanosockets 부재·Unity 핵심3개 소스 행번호 미지원은 유지됩니다. 출시 전 경고1개는 가독화 매핑 파일 안내이며 매핑 업로드·경고 해소를 주장하지 않습니다.
+
+증분 export·동일 입력2,734개/NDK7,935개 대조를 통한 코드19 IL2CPP 산출물 재사용·코드20 새 CMake/Swappy 패키징 결과입니다. 코드20 새 IL2CPP 컴파일·Unity 단일 AAB 호출 안정화·충돌 근본 해결이 아닙니다. RELRO4건·코드20 Store 설치/로그인/Fusion 경기·실제16KB는 후순위 미검증입니다. 실기기/장시간 성능 합의와 전체 약92% 작업 기준 추정을 유지하며 지금 추가 수동 시험·USB 연결을 요청하지 않습니다.
+
+근거: 외부 `D:/codex/validation/sudden-force-fps/20261017-code20-export-01/`의 signed-release-summary/post-sign-source-audit/play-upload-result JSON·배포 DOM/화면, `20261017-code20-native-symbols-01/`의 validation-summary/play-upload-result JSON. [PR95](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/95)에 관련 기록만 반영하며 로그·AAB·키·암호는 커밋하지 않습니다.
 
 아래 항목의 원장·다음 코드·미완료 표현은 각 시점의 이전 기록입니다.
+
 
 ### UnsafeCollections MIT 고지 반영과 후속 빌드 준비 (#42/#66, 2026-10-17)
 
