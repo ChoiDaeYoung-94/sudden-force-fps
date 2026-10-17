@@ -1,5 +1,11 @@
 # Third-party asset provenance
 
+## Editor 도구 변경: 공식 Unity EDM2.1.1 (2026-10-17, #98)
+
+공식 Unity Registry `com.unity.external-dependency-manager@2.1.1`를 Editor 도구로 추가했습니다. 공급자 패키지의 Unity Companion License와 포함 Google resolver의 Apache2/MiniJSON MIT 고지는 패키지 원문으로 보존합니다. 새 런타임 에셋이나 광고·결제 SDK 도입이 아니며 플레이어 고지 본문709,379B는 변경하지 않았습니다. 구형 EDM4U1.2.182 DLL 원본도 삭제·변조하지 않고 importer만 비활성화했습니다.
+
+현재 Play 코드21은 전환 전 빌드이며 코드22는 공식 export·별도 dry-run까지만 검증했습니다. 이 도구 변경을 기존 플레이어22애니메이션의 권리 대응 완료나 새 AAB 배포로 확대하지 않습니다. 실제 앱·기기 검증은 별도이며 아래 출처 기록은 각 자산의 기존 근거를 유지합니다.
+
 ## 코드21 서명·Play 내부 테스트 제공 완료 (2026-10-17, #43/#66/#42)
 
 2026-10-17 **18:23**, 총괄이 기존 사용자 지정 작업용 Chrome 탭에서 코드21(1.0.195)을 직접 업로드·출시했고 release7의 **내부 테스터에게 제공됨**을 확인했습니다. 자체 로딩·원형 HUD(PR96/PR97)가 포함된 새 제공본이며 코드20과 이전 산출물은 보존했습니다. 참여 링크는 https://play.google.com/apps/internaltest/4701524132186452960 입니다.
