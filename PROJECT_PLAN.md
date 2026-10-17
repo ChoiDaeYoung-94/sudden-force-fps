@@ -2,9 +2,9 @@
 
 ## 런타임 공급자 고지 최소 보완 (2026-10-17, #42)
 
-코드23 생성·등록 코드와 로컬 공급자 원문을 대조해 Burst의 .NET 숫자서식 차용 MIT, Unity Companion License v1.4 전문과 Burst1.8.30/Collections2.6.8/Mathematics1.3.3 저작권, Collections xxHash 파생 BSD2 고지를 추가했습니다. 설치 전용 패키지를 일괄 포함하지 않았으며 정확한 .NET/xxHash 원차용 리비전과 최종 네이티브 링크 생존 전수는 확정하지 않았습니다.
+코드23 생성·등록 코드와 로컬 공급자 원문을 대조해 Burst의 .NET 숫자서식 차용 MIT, Unity Companion License v1.4 전문과 Burst1.8.30/Collections2.6.8/Mathematics1.3.3 저작권, Collections xxHash 파생 BSD2 및 Mathematics Noise의 Ashima Arts/Stefan Gustavson MIT 고지를 추가했습니다. 설치 전용 패키지를 일괄 포함하지 않았으며 정확한 .NET/xxHash 원차용 리비전과 최종 네이티브 링크 생존 전수는 확정하지 않았습니다.
 
-기존 고지710,172B prefix와 제안 원문11,254B를 그대로 보존해 새 고지는721,426B/SHA256 `4E0845EAE8354478D10573D39ABFED28A4F0C99DF12B659E06882A3229550A70`입니다. 실제 Unity TextAsset 동일성·기존 pager200페이지 원문 재조합·최대 표시4,089 UTF16자/93줄·FF27 보존·컴파일 실패false를 확인했습니다. 새 UI 렌더링이나 기기 통과를 뜻하지 않습니다.
+기존 고지710,172B prefix와 제안 원문12,770B를 그대로 보존해 새 고지는722,942B/SHA256 `C5DE97CE407C5104B62869CA5090A076608FD26E9B6DB125A6267DBBA7D919CA`입니다. 실제 Unity TextAsset 동일성·기존 pager의 전체 페이지 원문 재조합·최대 표시4,089 UTF16자/93줄·FF27 보존·컴파일 실패false를 확인했습니다. 새 UI 렌더링이나 기기 통과를 뜻하지 않습니다.
 
 코드23 공식 export의 fresh packed 경로2,770개에는 새 CC0 플레이어2클립만 포함되고 옛22클립/controller·Loading Icons·EmojiOne 경로와 활성4씬의 두 팩 의존성은0입니다. 이는 BuildReport/씬 의존성 근거이며 AAB 객체/GUID 전수 판독이 아닙니다. 원본은 보존했습니다.
 
