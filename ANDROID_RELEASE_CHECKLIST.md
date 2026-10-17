@@ -1,5 +1,17 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+### 코드19 공식 export·별도 무서명 AAB 검증 (#66/#42/#43, 2026-10-17)
+
+2026-10-17 코드19: Unity6000.3.25f1의 새 공식 Gradle export가 오류0·경고71·448.111초로 완료됐습니다. 이어 별도 C1 JVM·명시4GiB·processor1/worker1·parallelfalse 및 IL2CPP/Bee count1 조건의 offline Gradle bundleRelease가 exit0으로 끝나, 버전1.0.195/code19의 무서명 AAB 92,829,022B/SHA256 `EE26786D896B590FE5CDA48597BA240708EBBB7D2E18241991BE3A89C4C46693`를 생성했습니다. ZIP/bundletool·패키지·min25/target36·비개발·ARM64 SO7개 LOAD16KB와 새 고지707,770B의 본문 바이트 일치를 확인했습니다. 원장 `195,0,19`는 유지하며 다음 새 코드는20 이상입니다. **코드19 서명·업로드·기기 실행은 아직 미검증이고 현재 Play 제공본은 코드18**입니다. export와 별도 패키징의 성공이며 Unity의 단일 AAB 호출 안정화나 과거 충돌의 근본 해결로 확대하지 않습니다.
+
+후속 SDK 조사에서 UnsafeCollections 메모리 보조 부분의 공급자 MIT 고지1건을 추가로 확인했습니다. 따라서 코드19은 검증용으로 보존하고 서명·Play 업로드를 진행하지 않습니다. 공식 원문을 포함한709,379B 후보의 prefix 보존·pager197페이지 검사를 완료했으며, 소스 보완 후 새코드20이상에서 실제 고지 포함과 배포를 이어갑니다. 코드19의 생성 성공과 배포 준비 완료를 구분합니다.
+
+공식 외부 export는 Gradle의 buildIl2Cpp로 네이티브 컴파일을 수행합니다. 기존 code15/18의 Bee Gradle·.utmp를 재사용하지 않고 짧은 외부 `D:/codex/e/sff19`/`.cxx` 경로를 사용했습니다. export 실행 도구·기존 jniLibs 포함2,797개 입력을 기록하고 CMake 실제 실행 직전 Ninja1개·Swappy·짧은 캐시 참조를 확인했습니다. 무서명 finalizer의 signing data/files/code transparency 부재를 설정 완료·실행 직전 모두 확인했으며 Gradle에 서명 암호를 전달하지 않았습니다.
+
+빌드가 자동 저장한3설정은 시작 사본의 해시로 복원했고 새 backup2/meta2개는 삭제 없이 외부 보존했습니다. 성능 테스트 패키지 postprocess가 기존 untracked 임시 JSON/meta4개를 삭제했으며 전체 원본 복구를 주장하지 않습니다. 원장만 의도한 기존 파일 변경으로 유지합니다. 기존 코드18 서명 AAB 해시는 보존됐고 이번 코드19에 대한 실기기 검증은 후순위 미실행입니다. 발열·장시간 성능 측정은 합의대로 이번 완료 조건에서 제외하고 전체 약92% 작업 기준 추정을 유지합니다.
+
+근거: 외부 `D:/codex/validation/sudden-force-fps/20261017-code19-export-01/`의 export-result/package-actual-result/unsigned-static-validation/unsigned-notice-body-validation/unsigned-release-summary/restoration-result JSON. 전체 로그·암호·키 파일·AAB는 저장소에 추가하지 않습니다.
+
 ### 현재 배포·검증 요약 (2026-10-17 정리)
 
 최신은 **코드18 서명 AAB92,840,760B 생성·검증 및 Google Play 내부 테스트 release5 제공 완료**입니다. 총괄이 지정 Console 탭에서 직접 업로드·출시했고10월16일16:37의 내부 테스터 제공 상태를 확인했습니다. 원장194,10,18·다음 새 코드19 이상이며 기존 코드12 파일과 검증 이력은 보존합니다. 실기기 검증 전반은 추가 사용자 결정으로 작업 PC 연결 가능 시점까지 후순위로 두고 코드18 Store 설치·실행은 아직 검증하지 않았습니다. 기존 성능 시험의 후속 범위 합의와 미실행 기록을 보존합니다.
