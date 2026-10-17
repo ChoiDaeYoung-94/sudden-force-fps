@@ -1,5 +1,22 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 코드20 서명·Play 내부 테스트 제공 완료 (2026-10-17, #66/#42/#43)
+
+2026-10-17 16:33, 총괄이 사용자 지정 작업용 Chrome의 Sudden Force/패키지·내부 테스트 트랙을 확인한 뒤 코드20(1.0.195)을 직접 업로드·출시했습니다. Console의 release6 **내부 테스터에게 제공됨** 상태를 확인했습니다. 현재 제공본은코드20이며 코드18/19 산출물과 이전 검증은 보존했습니다.
+
+서명 AAB92,843,051B/SHA256 `7C051D98CB68E70878F4EFC18E50CFA67E5D192910DEA58802AE8EF908F9DA61`의 기존 업로드 인증서·전체129payload 무결성/무서명본 동일성·ZIP/bundletool·min25/target36·ARM64 SO7개 LOAD16KB·고지709,379B 본문 일치를 확인했습니다. 서명 후 시작 기준3,879개 소스/설정은 예약 원장 외 정확히 같으며 기존 dirty를 보존했습니다. 원장195,1,20·다음 새예약21 이상입니다.
+
+서명 전 코드20 공식 증분 export는 오류0·경고2·86.786초, 별도 offline Gradle은 exit0·59초로 완료했습니다. 무서명 AAB92,829,388B/SHA256 `D1C7ED2D5A13940E6AD0CBB804A0C4C75B7738298C735475B163CF89C9EF7F79`를 외부 보존했고 서명본과129payload가 같습니다. 코드19에서 컴파일 후 생성된 compile-data.json1개만 과거 입력 비교에서 분리하고 코드20은 추가 파일까지 검사했습니다. 신규 backup2/meta는 외부 보존했으며 코드19 이전 임시 성능파일4개 복구를 뜻하지 않습니다.
+
+새 코드20 심볼 ZIP36,142,348B/SHA256 `8BEE7095E1D252E7D27DDA4E6B99A5B43C3F5C3B1B968C331F38F0B6CA755431`의6항목·CRC·Build ID/ALLOC 대응을 확인하고 실제 코드20 행의 심볼 첨부 표시를 확인했습니다. nanosockets 부재·Unity 핵심3개 소스 행번호 미지원은 유지됩니다. 출시 전 경고1개는 가독화 매핑 파일 안내이며 매핑 업로드·경고 해소를 주장하지 않습니다.
+
+증분 export·동일 입력2,734개/NDK7,935개 대조를 통한 코드19 IL2CPP 산출물 재사용·코드20 새 CMake/Swappy 패키징 결과입니다. 코드20 새 IL2CPP 컴파일·Unity 단일 AAB 호출 안정화·충돌 근본 해결이 아닙니다. RELRO4건·코드20 Store 설치/로그인/Fusion 경기·실제16KB는 후순위 미검증입니다. 실기기/장시간 성능 합의와 전체 약92% 작업 기준 추정을 유지하며 지금 추가 수동 시험·USB 연결을 요청하지 않습니다.
+
+근거: 외부 `D:/codex/validation/sudden-force-fps/20261017-code20-export-01/`의 signed-release-summary/post-sign-source-audit/play-upload-result JSON·배포 DOM/화면, `20261017-code20-native-symbols-01/`의 validation-summary/play-upload-result JSON. [PR95](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/95)에 관련 기록만 반영하며 로그·AAB·키·암호는 커밋하지 않습니다.
+
+아래 항목의 원장·다음 코드·미완료 표현은 각 시점의 이전 기록입니다.
+
+
 ### UnsafeCollections MIT 고지 반영과 후속 빌드 준비 (#42/#66, 2026-10-17)
 
 2026-10-17 추가: Photon Fusion 공급자 선언과 실제 코드19 생성 입력에 대응하는 UnsafeCollections 메모리 보조 부분의 MIT 고지1건을 소스에 추가했습니다. 새 소스709,379B/SHA256 `F35330D344D7209A617A8CFC919E2A2FDC26E6BC30090E3EAA26B6D76EBB9790`의 기존707,770B prefix를 바이트 그대로 보존했고, 공식 고정 LICENSE 전문·pager197페이지 원문 round-trip·Editor TextAsset 바이트와 에셋 GUID 보존을 확인했습니다. 앱 UI·후속 AAB 포함·기기 표시는 미검증입니다. 코드19은 이전707,770B 고지의 검증용 무서명 AAB로 보존하며 서명/업로드0, 현재 Play 제공본은 코드18입니다. 원장195,0,19·다음 새코드20이상·전체 약92% 추정과 기기 검증 후순위 합의를 유지합니다.
