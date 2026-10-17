@@ -147,7 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6199480201164636436}
   - component: {fileID: 6199480201164636438}
-  - component: {fileID: 6199480201164636439}
+  - component: {fileID: 1826268157687891110}
   m_Layer: 5
   m_Name: Img_handleArea
   m_TagString: Untagged
@@ -183,7 +183,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6199480201164636437}
   m_CullTransparentMesh: 1
---- !u!114 &6199480201164636439
+--- !u!114 &1826268157687891110
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -192,9 +192,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6199480201164636437}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: b6d138b481938e6488241a821ae7b83a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::CircleGraphic
   m_Material: {fileID: 0}
   m_Color: {r: 0.627451, g: 0.5882353, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -203,16 +203,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300032, guid: 408bf82142f60764089c9c12187ada3b, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  _innerRadiusRatio: 0.88
 --- !u!1 &6199480201225074905
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,10 +435,6 @@ MonoBehaviour:
   _mode: 0
   _handleTransform: {fileID: 6199480201585575306}
   _handleAreaTransform: {fileID: 6199480201164636436}
-  _touchableArea: {fileID: 202103501}
-  _playerObject: {fileID: 0}
-  _cameraArmTransform: {fileID: 0}
-  _speed: 1
 --- !u!114 &4975818252860625219
 MonoBehaviour:
   m_ObjectHideFlags: 0
