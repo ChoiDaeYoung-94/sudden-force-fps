@@ -13,7 +13,7 @@ public class RoomManage : MonoBehaviour
 
     [Header("--- RoomManage data ---")]
     [SerializeField] private GameObject _contentItem;
-    [SerializeField] private RectTransform _scrollViewParentRect; // 최대 사이즈(sizeDelta.y)
+    [SerializeField] private RectTransform _scrollViewParentRect; // 실제 표시 부모 높이(rect.height)
     [SerializeField] private RectTransform _contentRect;
     [SerializeField] private GridLayoutGroup _contentGridLayoutGroup;
     [SerializeField] private ContentSizeFitter _contentContentSizeFitter;
@@ -186,11 +186,15 @@ public class RoomManage : MonoBehaviour
         // narrower when ScrollRect expands/collapses its vertical scrollbar.
         float width = _scrollViewParentRect.rect.width;
         if (float.IsNaN(width) || float.IsInfinity(width) || width <= 0f) return false;
+        float height = _scrollViewParentRect.rect.height;
+        if (float.IsNaN(height) || float.IsInfinity(height) || height <= 0f) return false;
         var viewport = _contentRect.parent as RectTransform;
         if (viewport != null)
         {
             float viewportWidth = viewport.rect.width;
             if (float.IsNaN(viewportWidth) || float.IsInfinity(viewportWidth) || viewportWidth <= 0f) return false;
+            float viewportHeight = viewport.rect.height;
+            if (float.IsNaN(viewportHeight) || float.IsInfinity(viewportHeight) || viewportHeight <= 0f) return false;
             width = Mathf.Min(width, viewportWidth);
         }
         int columns = _contentGridLayoutGroup.constraintCount;
@@ -244,7 +248,10 @@ public class RoomManage : MonoBehaviour
     /// </summary>
     private void CreateContentItems()
     {
-        float height = _scrollViewParentRect.sizeDelta.y - _contentGridLayoutGroup.padding.top;
+        float height = _scrollViewParentRect.rect.height;
+        var viewport = _contentRect.parent as RectTransform;
+        if (viewport != null) height = Mathf.Min(height, viewport.rect.height);
+        height -= _contentGridLayoutGroup.padding.top;
 
         int minLine = Math.Max(2, (int)Math.Truncate(height / (_contentGridLayoutGroup.cellSize.y + _contentGridLayoutGroup.spacing.y)) + _minimumPlusLine);
 
