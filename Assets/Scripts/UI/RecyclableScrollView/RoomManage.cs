@@ -37,7 +37,10 @@ public class RoomManage : MonoBehaviour
     private int _activeItemLastIndex = 0;
 
     // Session
-    private List<SessionInfo> _sessionList = null;
+    private List<SessionInfo> _sessionList = new List<SessionInfo>();
+    private NetworkRunnerManager _manager;
+    private float _lastLayoutWidth = -1f;
+    private bool _waitingForWidth;
 
     private void Awake()
     {
@@ -46,34 +49,101 @@ public class RoomManage : MonoBehaviour
         _ctsMoveToTop = new CancellationTokenSource();
     }
 
+    private void OnEnable()
+    {
+        BindManager(NetworkRunnerManager.Instance);
+    }
+
+    private void OnDisable()
+    {
+        Unsubscribe();
+    }
+
+    private void BindManager(NetworkRunnerManager manager)
+    {
+        Unsubscribe();
+        _manager = manager;
+        if (_manager != null) _manager.LobbyStatusChanged += OnLobbyStatusChanged;
+        RefreshFromManager();
+    }
+
+    private void Unsubscribe()
+    {
+        // A destroyed Unity component can still own a managed event delegate.
+        if (!ReferenceEquals(_manager, null)) _manager.LobbyStatusChanged -= OnLobbyStatusChanged;
+        _manager = null;
+    }
+
+    private void OnLobbyStatusChanged(NetworkRunnerManager sender)
+    {
+        if (!isActiveAndEnabled || !ReferenceEquals(sender, _manager)
+            || !ReferenceEquals(sender, NetworkRunnerManager.Instance)) return;
+        RefreshFromManager();
+    }
+
+    private void RefreshFromManager()
+    {
+        if (_manager == null || _manager.IsRetired
+            || _manager.LobbyStatus != LobbyConnectionStatus.Connected
+            || !_manager.HasReceivedSessionList)
+        {
+            Init(null);
+            return;
+        }
+        Init(new List<SessionInfo>(_manager.SessionListSnapshot));
+    }
+
     private void OnDestroy()
     {
+        Unsubscribe();
         _ctsMoveToTop?.Cancel();
         _ctsMoveToTop?.Dispose();
         _ctsMoveToTop = null;
 
-        _instance = null;
+        if (ReferenceEquals(_instance, this)) _instance = null;
     }
 
     public void Init(List<SessionInfo> sessionList)
     {
-        if (sessionList.Count == 0 && _leastItemObjectList.Count == 0)
-            return;
-
+        // UI changes its own list; never insert/remove entries in a callback's list.
+        var snapshot = sessionList == null ? new List<SessionInfo>() : new List<SessionInfo>(sessionList);
         if (_leastItemObjectList.Count == 0)
         {
-            _sessionList = sessionList;
-
+            _sessionList = snapshot;
             Settings();
+            if (_sessionList.Count == 0)
+            {
+                _waitingForWidth = false;
+                ResetEmptyList();
+                return;
+            }
+            if (!TryUpdateGridWidth())
+            {
+                _waitingForWidth = true;
+                return;
+            }
+            _waitingForWidth = false;
             SetAnchorX();
             CreateContentItems();
         }
         else
-            RefreshSessionList(sessionList);
+        {
+            TryUpdateGridWidth();
+            RefreshSessionList(snapshot);
+        }
     }
 
     private void Update()
     {
+        var current = NetworkRunnerManager.Instance;
+        if (!ReferenceEquals(_manager, current)) BindManager(current);
+        bool widthReady = TryUpdateGridWidth();
+        if (_waitingForWidth && widthReady && _leastItemObjectList.Count == 0 && _sessionList.Count > 0)
+        {
+            _waitingForWidth = false;
+            Settings();
+            CreateContentItems();
+        }
         if (_contentRect.anchoredPosition.y >= 1000f)
             _moveToTop.SetActive(true);
         else
@@ -99,7 +169,7 @@ public class RoomManage : MonoBehaviour
         var lineCount = Math.Ceiling((float)_sessionList.Count / _contentGridLayoutGroup.constraintCount);
 
         float contentSize = (float)lineCount * _contentGridLayoutGroup.cellSize.y;
-        float contentSpacingSize = (float)(lineCount - 1) * _contentGridLayoutGroup.spacing.y;
+        float contentSpacingSize = (float)Math.Max(0, lineCount - 1) * _contentGridLayoutGroup.spacing.y;
         float GLGTopBotPadding = _contentGridLayoutGroup.padding.top + _contentGridLayoutGroup.padding.bottom;
 
         _contentHeight = contentSize + contentSpacingSize + GLGTopBotPadding;
@@ -110,8 +180,56 @@ public class RoomManage : MonoBehaviour
         _intervalHeight = _contentGridLayoutGroup.cellSize.y + _contentGridLayoutGroup.spacing.y;
     }
 
+    private bool TryUpdateGridWidth()
+    {
+        // The serialized parent is PanelRooms; the actual mask viewport can be
+        // narrower when ScrollRect expands/collapses its vertical scrollbar.
+        float width = _scrollViewParentRect.rect.width;
+        if (float.IsNaN(width) || float.IsInfinity(width) || width <= 0f) return false;
+        var viewport = _contentRect.parent as RectTransform;
+        if (viewport != null)
+        {
+            float viewportWidth = viewport.rect.width;
+            if (float.IsNaN(viewportWidth) || float.IsInfinity(viewportWidth) || viewportWidth <= 0f) return false;
+            width = Mathf.Min(width, viewportWidth);
+        }
+        int columns = _contentGridLayoutGroup.constraintCount;
+        if (columns <= 0) return false;
+        float cellWidth = (width - _contentGridLayoutGroup.padding.horizontal
+            - _contentGridLayoutGroup.spacing.x * (columns - 1)) / columns;
+        if (float.IsNaN(cellWidth) || float.IsInfinity(cellWidth) || cellWidth <= 0f) return false;
+        bool anchorsMatch = _anchorXList.Count == columns
+            && Mathf.Approximately(_anchorXList[0], _contentGridLayoutGroup.padding.left)
+            && (columns == 1 || Mathf.Approximately(_anchorXList[1],
+                _contentGridLayoutGroup.padding.left + cellWidth + _contentGridLayoutGroup.spacing.x));
+        if (Mathf.Approximately(_lastLayoutWidth, width) && anchorsMatch
+            && Mathf.Approximately(_contentGridLayoutGroup.cellSize.x, cellWidth)
+            && Mathf.Approximately(_contentRect.rect.width, width)) return true;
+
+        _contentGridLayoutGroup.cellSize = new Vector2(cellWidth, _contentGridLayoutGroup.cellSize.y);
+        SetAnchorX();
+        _contentRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+        _lastLayoutWidth = width;
+        ApplyGridWidthToPool();
+        return true;
+    }
+
+    private void ApplyGridWidthToPool()
+    {
+        if (_anchorXList.Count == 0) return;
+        foreach (var room in _leastItemObjectList)
+        {
+            room._thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _contentGridLayoutGroup.cellSize.x);
+            var position = room._thisRect.anchoredPosition;
+            int column = Math.Max(0, room._sessionIndex) % _anchorXList.Count;
+            room._thisRect.anchoredPosition = new Vector2(_anchorXList[column], position.y);
+        }
+        SetContentItems();
+    }
+
     private void SetAnchorX()
     {
+        _anchorXList.Clear();
         for (int i = 0; i < _contentGridLayoutGroup.constraintCount; i++)
         {
             float anchor = _contentGridLayoutGroup.padding.left + (_contentGridLayoutGroup.cellSize.x * i) + (_contentGridLayoutGroup.spacing.x * i);
@@ -128,7 +246,7 @@ public class RoomManage : MonoBehaviour
     {
         float height = _scrollViewParentRect.sizeDelta.y - _contentGridLayoutGroup.padding.top;
 
-        int minLine = (int)Math.Truncate(height / (_contentGridLayoutGroup.cellSize.y + _contentGridLayoutGroup.spacing.y)) + _minimumPlusLine;
+        int minLine = Math.Max(2, (int)Math.Truncate(height / (_contentGridLayoutGroup.cellSize.y + _contentGridLayoutGroup.spacing.y)) + _minimumPlusLine);
 
         int settingAmount = minLine * _contentGridLayoutGroup.constraintCount;
         for (int i = 0; i < settingAmount; i++)
@@ -169,6 +287,48 @@ public class RoomManage : MonoBehaviour
 
         _contentGridLayoutGroup.enabled = false;
         _contentContentSizeFitter.enabled = false;
+        ApplyGridWidthToPool();
+        SetContentItems();
+    }
+
+    private void ResetEmptyList()
+    {
+        _activeItemsList.Clear();
+        _inActiveItemsList.Clear();
+        foreach (var room in _leastItemObjectList)
+        {
+            room.gameObject.SetActive(false);
+            _inActiveItemsList.AddLast(room);
+        }
+        _activeItemFirstIndex = 0;
+        _activeItemLastIndex = -1;
+        _anchorXIndexOflastActiveItem = 0;
+        _activeItemFirstLineAnchorY = -_contentGridLayoutGroup.padding.top;
+        _activeItemLastLineAnchorY = _activeItemFirstLineAnchorY;
+        var scroll = _contentRect.GetComponentInParent<UnityEngine.UI.ScrollRect>();
+        if (scroll != null) scroll.StopMovement();
+        _contentRect.anchoredPosition = new Vector2(_contentRect.anchoredPosition.x, 0f);
+        if (_moveToTop != null) _moveToTop.SetActive(false);
+        if (_blockScroll != null) _blockScroll.SetActive(false);
+    }
+
+    private void RebindEmptyWindowFromTop()
+    {
+        // A shrink can remove the entire scrolled window while earlier rooms remain.
+        // Reuse the existing pool instead of leaving a nonempty snapshot with no rows.
+        ResetEmptyList();
+        int count = Math.Min(_leastItemObjectList.Count, _sessionList.Count);
+        for (int i = 0; i < count; i++)
+        {
+            var room = _inActiveItemsList.First.Value;
+            _inActiveItemsList.RemoveFirst();
+            room.SetRoom(_sessionList[i], i);
+            room._thisRect.anchoredPosition = new Vector2(_anchorXList[i % _anchorXList.Count],
+                -_contentGridLayoutGroup.padding.top - (i / _anchorXList.Count) * _intervalHeight);
+            room.gameObject.SetActive(true);
+            _activeItemsList.AddLast(room);
+        }
+        _activeItemLastIndex = count - 1;
     }
 
     #endregion
@@ -184,6 +344,7 @@ public class RoomManage : MonoBehaviour
         {
             _activeItemFirstLineAnchorY = _activeItemsList.First.Value._thisRect.anchoredPosition.y;
             _activeItemLastLineAnchorY = _activeItemsList.Last.Value._thisRect.anchoredPosition.y;
+            _anchorXIndexOflastActiveItem = _activeItemsList.Last.Value._sessionIndex % _anchorXList.Count;
         }
     }
 
@@ -248,53 +409,50 @@ public class RoomManage : MonoBehaviour
     /// </summary>
     void ScrollUp()
     {
-        if (_activeItemFirstIndex == 0)
-            return;
+        if (_activeItemsList.Count == 0 || _anchorXList.Count == 0) return;
+        int firstIndex = _activeItemsList.First.Value._sessionIndex;
+        if (firstIndex <= 0) return;
 
-        // _activeItemsList.First.Value가 화면의 아래로 내려가 위에 Item이 없을 경우에만 채우도록
-        if (_activeItemsList.First.Value._thisRect.anchoredPosition.y >= -_contentRect.anchoredPosition.y)
-            return;
+        int columns = _anchorXList.Count;
+        int firstColumn = firstIndex % columns;
+        float firstY = _activeItemsList.First.Value._thisRect.anchoredPosition.y;
+        // A partial first row needs only its missing prefix, at the SAME Y.
+        // A complete first row needs the preceding row only after it moves below
+        // the viewport top. Never prepend more items than exist before index 0.
+        if (firstColumn == 0 && firstY >= -_contentRect.anchoredPosition.y) return;
+        int count = Math.Min(firstIndex, firstColumn == 0 ? columns : firstColumn);
 
-        // _inActiveItemsList.Count를 _contentGridLayoutGroup.constraintCount와 맞춤 즉 아래 한 라인을 제거
-        while (_inActiveItemsList.Count >= _contentGridLayoutGroup.constraintCount == false)
+        while (_inActiveItemsList.Count < count && _activeItemsList.Count > 1)
         {
-            _activeItemsList.Last.Value.gameObject.SetActive(false);
-            _inActiveItemsList.AddLast(_activeItemsList.Last.Value);
+            var last = _activeItemsList.Last.Value;
             _activeItemsList.RemoveLast();
-            --_activeItemLastIndex;
+            last.gameObject.SetActive(false);
+            _inActiveItemsList.AddLast(last);
         }
-
-        for (int i = 0; i < _anchorXList.Count; i++)
+        if (_inActiveItemsList.Count < count)
         {
-            if (_anchorXList[i] == _activeItemsList.Last.Value._thisRect.anchoredPosition.x)
-            {
-                _anchorXIndexOflastActiveItem = i;
-                break;
-            }
+            // Preserve the remaining active row if an invalid undersized pool
+            // cannot supply the prefix. Normal pools contain at least two rows.
+            _activeItemLastIndex = _activeItemsList.Last.Value._sessionIndex;
+            SetContentItems();
+            return;
         }
 
-        if (_inActiveItemsList.Count >= _contentGridLayoutGroup.constraintCount)
+        int firstRow = firstIndex / columns;
+        for (int i = 0; i < count; i++)
         {
-            _activeItemFirstLineAnchorY += _intervalHeight;
-
-            int x = _contentGridLayoutGroup.constraintCount;
-            foreach (AD.Room item in _inActiveItemsList)
-            {
-                if (--x >= 0)
-                {
-                    _activeItemsList.AddFirst(item);
-
-                    --_activeItemFirstIndex;
-                    item.SetRoom(_sessionList[_activeItemFirstIndex], _activeItemFirstIndex);
-
-                    item._thisRect.anchoredPosition = new Vector2(_anchorXList[x], _activeItemFirstLineAnchorY);
-                    item.gameObject.SetActive(true);
-                }
-            }
-
-            foreach (AD.Room item in _activeItemsList)
-                _inActiveItemsList.Remove(item);
+            int index = firstIndex - i - 1;
+            var item = _inActiveItemsList.First.Value;
+            _inActiveItemsList.RemoveFirst();
+            item.SetRoom(_sessionList[index], index);
+            item._thisRect.anchoredPosition = new Vector2(_anchorXList[index % columns],
+                firstY + (firstRow - index / columns) * _intervalHeight);
+            item.gameObject.SetActive(true);
+            _activeItemsList.AddFirst(item);
         }
+        _activeItemFirstIndex = _activeItemsList.First.Value._sessionIndex;
+        _activeItemLastIndex = _activeItemsList.Last.Value._sessionIndex;
+        SetContentItems();
     }
 
     #endregion
@@ -335,7 +493,7 @@ public class RoomManage : MonoBehaviour
             bool isRemoved = true;
             for (int j = 0; j < newList.Count; j++)
             {
-                if (_sessionList[i].Name == newList[j].Name)
+                if (_sessionList[i]?.Name == newList[j]?.Name)
                 {
                     isRemoved = false;
                     break;
@@ -355,8 +513,11 @@ public class RoomManage : MonoBehaviour
             bool isAdd = true;
             for (int j = 0; j < _sessionList.Count; j++)
             {
-                if (newList[i].Name == _sessionList[j].Name)
+                if (newList[i]?.Name == _sessionList[j]?.Name)
                 {
+                    // Membership is unchanged, but counts/properties and the join
+                    // target must come from the latest snapshot object.
+                    _sessionList[j] = newList[i];
                     isAdd = false;
                     break;
                 }
@@ -370,9 +531,15 @@ public class RoomManage : MonoBehaviour
         }
 
         Settings();
-
+        if (_sessionList.Count == 0)
+        {
+            ResetEmptyList();
+            return;
+        }
+        if (_activeItemsList.Count == 0) RebindEmptyWindowFromTop();
         foreach (AD.Room room in _activeItemsList)
             room.SetRoom(_sessionList[room._sessionIndex], room._sessionIndex);
+        SetContentItems();
     }
 
     /// <summary>
@@ -411,7 +578,7 @@ public class RoomManage : MonoBehaviour
         else
         {
             _activeItemFirstIndex = 0;
-            _activeItemLastIndex = 0;
+            _activeItemLastIndex = -1;
         }
     }
 
@@ -498,7 +665,7 @@ public class RoomManage : MonoBehaviour
     {
         item._sessionIndex = item._sessionIndex + 1;
 
-        for (int j = -1; j < _anchorXList.Count; j++)
+        for (int j = 0; j < _anchorXList.Count; j++)
         {
             if (item._thisRect.anchoredPosition.x == _anchorXList[j])
             {

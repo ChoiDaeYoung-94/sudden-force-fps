@@ -10,6 +10,7 @@ namespace AD
         public int _sessionIndex = 0;
 
         private SessionInfo _sessionInfo;
+        private bool _hasMapName;
         [SerializeField] private TMP_Text _roomNameText;
         [SerializeField] private TMP_Text _gameSceneNameText;
         [SerializeField] private TMP_Text _roomPlayerCountText;
@@ -19,21 +20,29 @@ namespace AD
             _sessionInfo = sessionInfo;
             _sessionIndex = sessionIndex;
 
-            _roomNameText.text = _sessionIndex.ToString();
-
-            _roomNameText.text = _sessionInfo.Name;
-            _gameSceneNameText.text = _sessionInfo.Properties["MapName"];
-            _roomPlayerCountText.text = $"{_sessionInfo.PlayerCount} / {_sessionInfo.MaxPlayers}";
+            _roomNameText.text = _sessionInfo != null ? _sessionInfo.Name : "Unavailable room";
+            _hasMapName = false;
+            _gameSceneNameText.text = "Unknown map";
+            if (_sessionInfo != null && _sessionInfo.Properties != null
+                && _sessionInfo.Properties.TryGetValue("MapName", out var map)
+                && map != null && map.IsString)
+            {
+                string mapName = map;
+                _hasMapName = !string.IsNullOrEmpty(mapName);
+                if (_hasMapName) _gameSceneNameText.text = mapName == "DesertHouse" ? "Desert House" : mapName;
+            }
+            _roomPlayerCountText.text = _sessionInfo != null
+                ? $"{_sessionInfo.PlayerCount} / {_sessionInfo.MaxPlayers}" : "0 / 0";
         }
 
         public void JoinRoom()
         {
-            if (_sessionInfo.PlayerCount == _sessionInfo.MaxPlayers)
+            if (_sessionInfo == null || !_hasMapName || _sessionInfo.PlayerCount >= _sessionInfo.MaxPlayers)
             {
                 return;
             }
 
-            NetworkRunnerManager.Instance.JoinRoom(_sessionInfo);
+            if (NetworkRunnerManager.Instance != null) NetworkRunnerManager.Instance.JoinRoom(_sessionInfo);
         }
     }
 }

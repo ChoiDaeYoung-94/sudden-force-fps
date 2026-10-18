@@ -23,3 +23,7 @@ Liberation Sans2.00.1의 SIL OFL1.1 및 DungGeunMo1.301의 Public Domain 표기�
 메뉴 배경 `Assets/Art/UI/MapPreviews/DesertHouseBackdrop.png`는 같은 기존 DesertHouse 촬영의 alley 시점 PNG입니다. 카메라는 `(0,2.4,-8)`에서 `(0,1.5,5)`를 보며 FOV52/1536×864입니다. 원본 PNG SHA256은 `7AE53834FFF98BA294B3232BE3D9038E8E60DBDCC610709CD38946D45D4D71C4`입니다. 외부 사진이나 AI 이미지가 아니며 기존 Low Poly FPS Map Lite의 출처·조건을 유지합니다. 폰트 연결 후 가독성·혼합 언어 baseline·줄바꿈과 실제 기기 검증은 별도 확인합니다.
 
 최종 연결 후1920×1080/1280×720/2400×1080의7종 화면(총21장)과 한국어·긴 방 이름 표본을 확인했습니다. 영문·한국어 UI 표본의 HasCharacters 누락0, 동적 글리프45개/1024 한 페이지를 확인한 뒤 새 fallback만0글리프/1×1로 비워 저장했습니다. 실제 Play 합성 포인터의 메뉴·고지·맵 선택 검증은 README의 #107 기록을 따릅니다. 실기기와 전체 CJK·전체 고지 문자 지원은 별도입니다.
+
+## 방 카드의 가변 폭 (2026-10-18, #108)
+
+목록은 PanelRooms와 실제 Viewport 중 좁은 폭에서 padding·열 간격을 뺀 뒤 열 수로 나눕니다. 폭 변경 때 기존 풀의 가로폭/X만 갱신하며 Y·행 인덱스·세션·객체 ID를 유지합니다. 방 이름은 일반 굵기/Ellipsis, 인원은18–30 자동 크기로 둡니다. 별도 bold typeface가 없는 TMP의 Bold700 ellipsis 검색은 Truncate로 바뀔 수 있어 새 atlas나 원본 material 변경 대신 제목 설정만 조정했습니다. 실제 메뉴 해상도 검증과640 UI 단위의 인위적 좁은 마스크 표본을 구분합니다. 기존 풀 생성 높이의 sizeDelta 사용은 이번에 바꾸지 않았습니다.
