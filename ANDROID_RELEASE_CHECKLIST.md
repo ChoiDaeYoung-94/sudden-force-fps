@@ -1,5 +1,12 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## Windows 검증 빌드와 Android 배포 구분 (2026-10-18, #121)
+
+별도 Windows64/Mono 개발용 Player가 Succeeded/오류0/경고5로 생성됐고360파일 SHA·입력3914개·원본font8·원장195,7,26 보존을 확인했습니다. [Windows 검증과 제한](README.md)을 따릅니다. Windows 로그인 우회/로비 연결은 Android GPGS·Store 설치·두 피어 경기의 통과 근거가 아닙니다.
+
+Android 코드26 AAB와 심볼은 변경 없이 미서명·미업로드이며 Play 마지막 확인본은 코드21입니다. 새 Android 예약·서명은 없고 기기/장시간 성능 후순위 합의를 유지합니다. 아래는 각각 당시 상태입니다.
+
+
 ## 코드 26 UI 무서명 AAB와 심볼 검증 완료 (2026-10-18, #66/#42/#43)
 
 빌드 소스 HEAD는 `bb635d8c4091f40b076f87bbda964bbae40b36d4`입니다. PR109/110/112/113/114/117/119/120의 UI·기존 CC0 소총 클립 2개·고지를 포함한1.0.195/코드 26을 실제 생성했습니다. 공식 Android Gradle export는 오류0·경고71·187.6687632초, 별도 offline C1 Gradle 실제 패키징은 종료0입니다. 새 buildIl2Cpp 작업 didWork와18개 UI/게임 기능 marker·최종 stripped native payload 일치를 확인했고 코드 25 libil2cpp를 재사용하지 않았습니다. Unity 단일 AAB 호출 안정화·충돌 근본 해결 주장은 아닙니다.
