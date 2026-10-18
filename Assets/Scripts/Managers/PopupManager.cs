@@ -215,7 +215,11 @@ namespace AD
             }
             else
             {
-                NetworkRunnerManager.Instance.SaveNickName(nickName.text);
+                var manager = NetworkRunnerManager.Instance;
+                if (manager != null && !manager.IsRetired)
+                    manager.SaveNickName(nickName.text);
+                else
+                    Managers.SavedNickName = nickName.text ?? string.Empty;
                 _popupSetNickName.SetActive(false);
             }
         }

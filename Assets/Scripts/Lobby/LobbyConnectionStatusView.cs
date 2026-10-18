@@ -96,7 +96,7 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
     {
         if (_manager == null)
         {
-            return "Not connected to the lobby.";
+            return "Not connected. Select FIND MATCH to reconnect.";
         }
 
         switch (_manager.LobbyStatus)
@@ -104,7 +104,7 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
             case LobbyConnectionStatus.Connecting:
                 return "Connecting to the lobby...";
             case LobbyConnectionStatus.Failed:
-                return "Unable to connect to the lobby.";
+                return "Unable to connect. Select FIND MATCH to retry.";
             case LobbyConnectionStatus.Connected:
                 if (!_manager.HasReceivedSessionList)
                 {
@@ -114,7 +114,7 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
                 return _manager.SessionCount > 0 ? string.Empty : "No public rooms available.";
             case LobbyConnectionStatus.Disconnected:
             default:
-                return "Not connected to the lobby.";
+                return "Not connected. Select FIND MATCH to reconnect.";
         }
     }
 }
