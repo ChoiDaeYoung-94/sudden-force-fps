@@ -11,12 +11,16 @@ public class RoomPlayerUI : MonoBehaviour
 
     public void UpdateTeamUI(int team)
     {
-        _teamImage.color = team == 0 ? new Color(1f, 0f, 0f, 0.5f) : new Color(0f, 0f, 1f, 0.5f);
+        _teamImage.color = team == 0
+            ? new Color(58f / 255f, 40f / 255f, 44f / 255f, 1f)
+            : new Color(35f / 255f, 53f / 255f, 69f / 255f, 1f);
     }
 
     public void SetNickName(string nickName)
     {
-        _nickName.text = nickName;
+        _nickName.richText = false;
+        _nickName.parseCtrlCharacters = false;
+        _nickName.text = (nickName ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ');
     }
 
     public void SetReadyState(bool active)

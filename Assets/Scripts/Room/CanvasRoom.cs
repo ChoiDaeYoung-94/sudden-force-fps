@@ -57,7 +57,9 @@ public class CanvasRoom : NetworkBehaviour
 
     private void SetRoomOptions(RoomOptions roomOptions)
     {
-        _roomNameText.text = roomOptions.RoomName;
+        _roomNameText.richText = false;
+        _roomNameText.parseCtrlCharacters = false;
+        _roomNameText.text = (roomOptions.RoomName ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ');
         _mapNameText.text = FormatMapName(roomOptions.MapName);
         _playerCountText.text = roomOptions.Players;
 

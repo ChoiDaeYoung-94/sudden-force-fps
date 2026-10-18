@@ -35,7 +35,10 @@ public class ChatManager : MonoBehaviour
     {
         GameObject message = AD.Managers.PoolM.PopFromPool(AD.GameConstants.PoolObjects.Message.ToString());
         message.transform.SetParent(_content, false);
-        message.GetComponent<TMP_Text>().text = text;
+        var label = message.GetComponent<TMP_Text>();
+        label.richText = false;
+        label.parseCtrlCharacters = false;
+        label.text = text ?? string.Empty;
         Canvas.ForceUpdateCanvases();
         _scrollRect.verticalNormalizedPosition = 0;
     }
