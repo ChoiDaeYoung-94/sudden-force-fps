@@ -24,6 +24,7 @@ namespace AD
         private int _activeSceneHandle;
         private bool _busy;
         private bool _started;
+        private bool _sceneHandoffInProgress;
 #if UNITY_ANDROID
         private bool _googleAuthenticationPending;
         private int _googleRequestId;
@@ -72,7 +73,14 @@ namespace AD
         private void OnActiveSceneChanged(UnityEngine.SceneManagement.Scene previous,
             UnityEngine.SceneManagement.Scene next)
         {
+            // Our additive handoff changes the active scene before Login unloads.
+            // Also allow a failed handoff to restore the still-loaded Login scene.
+            string lobby = GameConstants.Scene.Lobby.ToString();
+            if (_sceneHandoffInProgress
+                && ((previous.handle == _activeSceneHandle && next.name == lobby)
+                    || (next.handle == _activeSceneHandle && previous.name == lobby))) return;
             CancelAttempt();
+            if (_loading != null) _loading.SetActive(false);
         }
 
         public void RetryConnection() => TryStartLogin(true);
@@ -194,8 +202,15 @@ namespace AD
 
         private async UniTask GoLobbyScene(int attempt, CancellationToken token)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(3), cancellationToken: token);
-            if (IsCurrentAttempt(attempt)) Managers.SceneM.ChangeScene(GameConstants.Scene.Lobby);
+            token.ThrowIfCancellationRequested();
+            if (!IsCurrentAttempt(attempt)) return;
+            _sceneHandoffInProgress = true;
+            // SceneManager owns the loading presentation from this point onward.
+            if (_loading != null) _loading.SetActive(false);
+            bool changed;
+            try { changed = await Managers.SceneM.TryChangeSceneAsync(GameConstants.Scene.Lobby); }
+            finally { _sceneHandoffInProgress = false; }
+            if (!changed) RecoverAttempt(attempt, "Unable to open the lobby. Please retry.");
         }
 
         private bool IsCurrentAttempt(int attempt) => this != null && isActiveAndEnabled && _busy

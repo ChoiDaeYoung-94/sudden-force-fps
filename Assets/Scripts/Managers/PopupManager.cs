@@ -32,6 +32,10 @@ namespace AD
         /// </summary>
         private bool _isException = true;
         private bool _isFlow = false;
+        private bool _loadingRequested;
+        private bool _sceneLoadingRequested;
+
+        public bool IsLoading => _loadingRequested || _sceneLoadingRequested;
 
         /// <summary>
         /// Managers - Awake() -> Init()
@@ -58,7 +62,7 @@ namespace AD
 
         private void OnUpdate()
         {
-            if (MatchHudView.OwnsBackInput) return;
+            if (IsLoading || MatchHudView.OwnsBackInput) return;
             if (Application.platform == RuntimePlatform.Android)
             {
                 if (Input.GetKeyDown(KeyCode.Escape) && !_isFlow)
@@ -84,6 +88,7 @@ namespace AD
         /// </summary>
         public void DisablePop()
         {
+            if (IsLoading) return;
             AD.Managers.SoundM.UI_Click();
 
             if (_isException)
@@ -117,11 +122,41 @@ namespace AD
             }
         }
 
-        internal void PopupLoading() => _popupLoading.SetActive(true);
-        internal void ClosePopupLoading() => _popupLoading.SetActive(false);
+        internal void PopupLoading()
+        {
+            _loadingRequested = true;
+            RefreshLoading();
+        }
 
-        public void PopupSceneLoading() => _popupSceneLoading.SetActive(true);
-        public void ClosePopupSceneLoading() => _popupSceneLoading.SetActive(false);
+        internal void ClosePopupLoading()
+        {
+            _loadingRequested = false;
+            RefreshLoading();
+        }
+
+        public void PopupSceneLoading()
+        {
+            _sceneLoadingRequested = true;
+            RefreshLoading();
+        }
+
+        public void ClosePopupSceneLoading()
+        {
+            _sceneLoadingRequested = false;
+            RefreshLoading();
+        }
+
+        private void RefreshLoading()
+        {
+            bool showScene = _sceneLoadingRequested;
+            bool showGeneral = _loadingRequested && !showScene;
+            // Disable the previous visual before enabling its replacement. PopupObject
+            // releases its exception flag on disable, then the new visual sets it again.
+            if (!showGeneral && _popupLoading != null) _popupLoading.SetActive(false);
+            if (!showScene && _popupSceneLoading != null) _popupSceneLoading.SetActive(false);
+            if (showGeneral && _popupLoading != null) _popupLoading.SetActive(true);
+            if (showScene && _popupSceneLoading != null) _popupSceneLoading.SetActive(true);
+        }
 
         internal void PopupMessage(string message)
         {
