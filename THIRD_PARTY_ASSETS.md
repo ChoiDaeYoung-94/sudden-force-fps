@@ -1,5 +1,16 @@
 # Third-party asset provenance
 
+## 코드26의 기존 오디오·Font2 포함 경로 재분류 (2026-10-18, #42)
+
+실제 코드26 packed source path 2,768개와 현재 파일 목록을 대조했습니다. Assets/Audios의 현재 음원63개 중 자체 합성 Authored2개는 모두 packed에 있고, 나머지 기존 후보61개는 정확한 경로 기준0개입니다. mixer1개는 별도 포함됩니다. 과거2026-10-07의 개별61목록은 이번 범위에서 복원하지 못했으므로 현재61개가 당시와 같은 개별 원본이라고 단정하지 않습니다.
+
+SimplePixelUI의 정확한 Font2 TTF 경로 Assets/ThirdPartyAssets/UI/SimplePixelUI/fonts/Font2/pixelfont2.ttf와 SimplePixelUI 전체 prefix도 packed0입니다. 기존 Font2의 동봉OFL/내부표기 문제를 해결한 것은 아니며 현재 메뉴용 폰트2개라는 수량과 구분합니다. 옛22클립/controller·Loading Icons·EmojiOne packed0, 새CC0클립2 포함이라는 기존 코드26 결과도 유지합니다.
+
+캐릭터·무기·맵 경로와 사용자 제작 확인 HUD7개는 packed 목록에 남습니다. 기존 취득/제작 확인을 미확인으로 되돌리지 않습니다. 경로 부재는 복사·이름 변경·내장 payload 전수 부재나 원본 취득/저장소 공개 재배포 권리 확인이 아니며, 이번에는 미디어 binary·TTF내부·AAB객체를 다시 읽지 않았습니다. 제품·고지·원본 파일과 AAB는 변경하지 않았고 #42 전체는 열림 유지합니다.
+
+기계 목록·근거 SHA·분류 한계는 외부 D:/codex/validation/sudden-force-fps/20261018-code26-provenance-reconciliation-01/의 reconciliation.json/REPORT.md에 보존합니다. 아래 기록은 각각 당시 상태입니다.
+
+
 ## 코드 26의 UI·고지·제외 경로 확인 (2026-10-18, #42)
 
 기존 맵에서 촬영한 메뉴배경/맵카드2개와메뉴font2개를 포함한 코드 26 무서명AAB에서 고지 722,942B 전문일치·fresh packed2,768경로·새 CC0 플레이어 클립 2개·옛22클립/controller·Loading Icons·EmojiOne0을 확인했습니다. 새 외부 이미지 팩은 반입하지 않았고 기존 Map Lite와 글꼴의 취득/조건·원본 고지를 유지합니다. [UI자료](Tools/UI/README.md)와[코드 26검증](ANDROID_RELEASE_CHECKLIST.md)을따릅니다.
