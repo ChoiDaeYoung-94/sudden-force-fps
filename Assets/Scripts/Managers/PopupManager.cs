@@ -53,11 +53,12 @@ namespace AD
         /// </summary>
         public void SetPopup()
         {
-            foreach (GameObject popup in _popupStack)
-            {
-                popup.SetActive(false);
-            }
-            _popupStack.Clear();
+            // Drain the current registrations before lifecycle callbacks run.
+            // A callback may register a new popup; that new request is not this reset's target.
+            var closing = new List<GameObject>();
+            while (_popupStack.Count > 0) closing.Add(_popupStack.Pop());
+            foreach (var popup in closing)
+                if (popup != null) popup.SetActive(false);
         }
 
         private void OnUpdate()
@@ -78,13 +79,14 @@ namespace AD
         /// </summary>
         public void EnablePop(GameObject popup)
         {
+            if (popup == null || _popupStack.Contains(popup)) return;
             _popupStack.Push(popup);
             AD.DebugLogger.Log("PopupManager", $"_popupStack.Count: {_popupStack.Count}, 팝업 스택에 푸시됨");
         }
 
         /// <summary>
-        /// 팝업이 비활성화될 때 스택에서 제거
-        /// 팝업이 없으면 씬 상태에 따라 종료 팝업 또는 로비 전환 팝업을 표시
+        /// 명시적 닫기 요청으로 최상위 활성 팝업 한 개만 닫습니다.
+        /// 생명주기의 비활성 알림은 NotifyPopupDisabled에서 별도로 처리합니다.
         /// </summary>
         public void DisablePop()
         {
@@ -97,29 +99,38 @@ namespace AD
                 return;
             }
 
-            if (_popupStack.Count > 0)
+            while (_popupStack.Count > 0)
             {
                 GameObject popup = _popupStack.Pop();
+                if (popup == null || !popup.activeSelf) continue;
                 AD.DebugLogger.Log("PopupManager", $"_popupStack.Count: {_popupStack.Count} 팝업 스택에서 팝업 제거됨");
                 popup.SetActive(false);
+                return;
             }
-            else
+        }
+
+        // Explicit request from a popup's own close button. Unlike Back, this
+        // closes the specified object even if another normal popup is above it.
+        public void ClosePopup(GameObject popup)
+        {
+            if (IsLoading || popup == null) return;
+            AD.Managers.SoundM.UI_Click();
+            if (_isException) return;
+            NotifyPopupDisabled(popup);
+            popup.SetActive(false);
+        }
+
+        // Lifecycle bookkeeping only: never request another close or play a sound.
+        public void NotifyPopupDisabled(GameObject popup)
+        {
+            if (ReferenceEquals(popup, null)) return;
+            var retained = new Stack<GameObject>();
+            while (_popupStack.Count > 0)
             {
-                //if (!AD.Managers.GameM.IsGame)
-                //{
-                //    AD.DebugLogger.Log("PopupManager", "lobby scene -> quit popup");
-
-                //    if (!_popupExit.activeSelf)
-                //        PopupExit();
-                //}
-                //else
-                //{
-                //    AD.DebugLogger.Log("PopupManager", "game scene-> go lobby popup");
-
-                //    if (!_popupLobby.activeSelf)
-                //        PopupGoLobby();
-                //}
+                var current = _popupStack.Pop();
+                if (current != null && !ReferenceEquals(current, popup)) retained.Push(current);
             }
+            while (retained.Count > 0) _popupStack.Push(retained.Pop());
         }
 
         internal void PopupLoading()
@@ -227,7 +238,20 @@ namespace AD
 
         public void SetFlow() => _isFlow = true;
 
-        public void ReleaseFlow() => _isFlow = false;
+        public void ReleaseFlow()
+        {
+            _isFlow = false;
+            foreach (var popup in _popupStack)
+            {
+                if (popup == null || !popup.activeInHierarchy) continue;
+                var state = popup.GetComponent<PopupObject>();
+                if (state != null && state.IsFlowPopup)
+                {
+                    _isFlow = true;
+                    break;
+                }
+            }
+        }
 
         public void BGM()
         {
