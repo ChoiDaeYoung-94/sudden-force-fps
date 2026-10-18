@@ -1,5 +1,11 @@
 # Sudden Force FPS
 
+## 현재 작업 요약 (2026-10-18)
+
+메뉴·로딩·맵 이미지·로비/대기실 UI 8개 작업, 코드26 무서명 AAB 정적 검증, Windows 검증 Player 빌드, Android export 검증기의 Python CI를 완료했습니다. 코드26은 **미서명·미업로드**이며 Play의 마지막 확인 제공본은 **1.0.195/코드21**입니다. Python CI는 Unity 빌드·서명·배포 자동화가 아닙니다.
+
+완료 근거와 다음 순서는 [현재 작업 계획](PROJECT_PLAN.md)의 첫 표를 따릅니다. Windows 두 피어 경기와 최신 Android 기기 검증은 미완료이고, 실기기·장시간 성능 후순위 합의를 유지합니다. 아래 날짜별 기록은 각각 당시 상태입니다.
+
 ## Windows 검증 빌드 복구 완료 (2026-10-18, #121)
 
 Standalone의 기존 scripting define 끝에 URP_COMPATIBILITY_MODE 한 항목만 추가했습니다. Android define과 URP 모드·패키지·다른 설정은 이번 커밋에서 바꾸지 않습니다. 새 Editor의 실제 Windows64/Mono 컴파일 오류0과 loaded URP validator의 호환 분기 반영을 확인한 뒤 기존 MultiplayerValidationBuild.BuildWindows64로 별도 개발용 Player를 생성했습니다.
