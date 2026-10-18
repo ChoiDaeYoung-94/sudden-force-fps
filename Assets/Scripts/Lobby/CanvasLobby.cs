@@ -14,12 +14,29 @@ public class CanvasLobby : MonoBehaviour
     [SerializeField] private TMP_Text _mapNameText;
     [SerializeField] private GameObject _selectedMapIndicator;
     [SerializeField] private TMP_Text _privateRoomNameText;
+    [SerializeField] private TMP_Text _sectionTitle;
+    [SerializeField] private TMP_Text _sectionDescription;
+    [SerializeField] private GameObject[] _navigationIndicators;
 
     private int _panelIndex = 0;    // 0 - Rooms, 1 - Create Room, 2 - JoinPrivateRoom
     private string _selectedMapName = string.Empty;
 
     private const string _roomNameMessage = "Please enter the room name...";
     private const string _mapNameMessage = "Please select a map...";
+
+    private void OnEnable() => RefreshNavigation();
+
+    private void RefreshNavigation()
+    {
+        if (_navigationIndicators != null)
+            for (int i = 0; i < _navigationIndicators.Length; i++)
+                if (_navigationIndicators[i] != null) _navigationIndicators[i].SetActive(i == _panelIndex);
+        if (_sectionTitle != null)
+            _sectionTitle.text = _panelIndex == 1 ? "CREATE MATCH" : _panelIndex == 2 ? "PRIVATE ROOM" : "PUBLIC ROOMS";
+        if (_sectionDescription != null)
+            _sectionDescription.text = _panelIndex == 1 ? "Choose your map and squad size."
+                : _panelIndex == 2 ? "Enter the room name shared by your host." : "Join a room or create your own.";
+    }
 
     #region Functions
 
@@ -54,6 +71,7 @@ public class CanvasLobby : MonoBehaviour
 
     private void UpdatePanelMain(int index)
     {
+        RefreshNavigation();
         switch (index)
         {
             case 0:

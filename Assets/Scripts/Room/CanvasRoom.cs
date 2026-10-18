@@ -58,7 +58,7 @@ public class CanvasRoom : NetworkBehaviour
     private void SetRoomOptions(RoomOptions roomOptions)
     {
         _roomNameText.text = roomOptions.RoomName;
-        _mapNameText.text = roomOptions.MapName;
+        _mapNameText.text = FormatMapName(roomOptions.MapName);
         _playerCountText.text = roomOptions.Players;
 
         if (roomOptions.IsServer)
@@ -74,8 +74,10 @@ public class CanvasRoom : NetworkBehaviour
 
     public void ChangeMapName(string mapName)
     {
-        _mapNameText.text = mapName;
+        _mapNameText.text = FormatMapName(mapName);
     }
+
+    private static string FormatMapName(string mapName) => mapName == "DesertHouse" ? "DESERT HOUSE" : mapName;
 
     #region UI button click
     public void MapChangeButton()
