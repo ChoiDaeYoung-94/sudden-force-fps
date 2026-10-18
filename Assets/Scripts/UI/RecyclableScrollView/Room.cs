@@ -20,8 +20,12 @@ namespace AD
             _sessionInfo = sessionInfo;
             _sessionIndex = sessionIndex;
 
-            _roomNameText.text = _sessionInfo != null ? _sessionInfo.Name : "Unavailable room";
+            _roomNameText.richText = false;
+            _roomNameText.parseCtrlCharacters = false;
+            _roomNameText.text = ToDisplayLine(_sessionInfo != null ? _sessionInfo.Name : "Unavailable room");
             _hasMapName = false;
+            _gameSceneNameText.richText = false;
+            _gameSceneNameText.parseCtrlCharacters = false;
             _gameSceneNameText.text = "Unknown map";
             if (_sessionInfo != null && _sessionInfo.Properties != null
                 && _sessionInfo.Properties.TryGetValue("MapName", out var map)
@@ -29,10 +33,15 @@ namespace AD
             {
                 string mapName = map;
                 _hasMapName = !string.IsNullOrEmpty(mapName);
-                if (_hasMapName) _gameSceneNameText.text = mapName == "DesertHouse" ? "Desert House" : mapName;
+                if (_hasMapName) _gameSceneNameText.text = ToDisplayLine(mapName == "DesertHouse" ? "Desert House" : mapName);
             }
             _roomPlayerCountText.text = _sessionInfo != null
                 ? $"{_sessionInfo.PlayerCount} / {_sessionInfo.MaxPlayers}" : "0 / 0";
+        }
+
+        private static string ToDisplayLine(string value)
+        {
+            return (value ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ');
         }
 
         public void JoinRoom()
