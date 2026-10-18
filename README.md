@@ -1,5 +1,16 @@
 # Sudden Force FPS
 
+## Windows 검증 빌드 복구 완료 (2026-10-18, #121)
+
+Standalone의 기존 scripting define 끝에 URP_COMPATIBILITY_MODE 한 항목만 추가했습니다. Android define과 URP 모드·패키지·다른 설정은 이번 커밋에서 바꾸지 않습니다. 새 Editor의 실제 Windows64/Mono 컴파일 오류0과 loaded URP validator의 호환 분기 반영을 확인한 뒤 기존 MultiplayerValidationBuild.BuildWindows64로 별도 개발용 Player를 생성했습니다.
+
+실제 BuildReport는 **Succeeded·오류0·경고5·114.978초**입니다. 새 실행 파일을 포함한 **360파일/267,892,143B**의 전체 목록·SHA256을 대조했습니다. 빌드 전 입력3,914개와 원본font8·Android 예약원장 195,7,26을 보존했습니다. 빌드가 만든 자체CJK font의 빈 YAML 값 뒤 공백만 별도 보존·대조한 뒤 정상 Editor 종료 상태에서 원래 바이트로 복원했습니다. 런타임 Pipeline 서버 설정은 비활성 상태였고 helper의 직접 global Save 호출·Android 예약·서명은 없습니다. 다른 Unity hook의 자동 쓰기0을 뜻하지 않습니다.
+
+실행 후 Photon kr 로비 접속·첫 빈 목록 수신을 확인했습니다. Windows 방화벽 요청 창은 도구에서 별도 대상으로 접근되지 않아 허용하지 않았고, 해당 테스트 프로세스에는 정상 종료를 요청했습니다. **두 PC 창 참가·READY/START·경기·새 UI 전체 시각 검증은 미완료**입니다. Windows의 Google 인증 우회 경로이므로 Android/GPGS·Store 설치 검증도 아닙니다.
+
+기존 미커밋 변경을 보존한 워크트리에서 검증했으며 새 checkout 재현은 별도입니다. 검증용 Player는 D:/codex/validation/sudden-force-fps/20261018-windows-peer-qa-01/player-plain-01/에 있으며 배포용 APK/AAB가 아닙니다. 코드26 무서명 AAB·심볼은 그대로 보존하고 Play 마지막 확인 제공본은 코드21입니다. 기기/장시간 성능 후순위 합의와 기존 전체 약92% 기준 추정도 유지합니다. 다음 우선순위는 코드26 서명·내부 테스트 반영(#43)과 가능한 시점의 PC/기기 실제 경기 검증입니다.
+
+
 ## UI 개선과 코드 26 무서명 검증 완료 (2026-10-18)
 
 중복 로딩 안내, 실제 DesertHouse 맵 이미지·메뉴 배경, 메뉴 글꼴·배치, 로비 목록·팝업 종료, 대기실 이름/READY/채팅과 방 카드 표시를 PR109/110/112/113/114/117/119/120으로 나눠 검토·main에 반영했습니다. [화면과 작업 모음](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/1#issuecomment-6246970062)을 확인하실 수 있습니다. 기존 맵을 Unity에서 촬영했고 새 외부 이미지 팩은 추가하지 않았습니다.
