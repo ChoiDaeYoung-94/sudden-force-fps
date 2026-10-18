@@ -31,3 +31,9 @@ Liberation Sans2.00.1의 SIL OFL1.1 및 DungGeunMo1.301의 Public Domain 표기�
 ## 초기 카드 풀의 실제 높이 (2026-10-18, #116)
 
 후속 #116에서는 초기 높이만 부모와 실제 마스크의 rect.height 중 작은 값에서 top padding을 뺀 값으로 바꿨습니다. stretch 배치의 sizeDelta.y=-160은 표시 높이가 아니므로 초기 풀을 8개로 과소 생성했습니다. 같은 실제 프리팹·CanvasScaler·12개 합성 목록의 1024×768 렌더에서 풀은16개, 1920×1080/2400×1080에서는12개가 생성됐으며 세 화면 모두 보이는 행 누락이 없었습니다. 최초 높이0은 최신 snapshot을 보관한 채 대기하고 복구 후 표시합니다. 기존 생성 후 풀 성장·SafeArea·실기기·실제 SDK 세션 검증을 추가한 것은 아닙니다.
+
+## 대기실 동적 표시와 입력 글꼴 (2026-10-18, #115)
+
+RoomPlayer의 이름/READY와 Message, CanvasRoom·CanvasLobby의 TMP_InputField global/text/placeholder는 같은 MenuFont와 한국어 fallback을 사용합니다. 이름은18–30 자동 크기/NoWrap/Ellipsis이며 오른쪽170 UI 단위를 예약합니다. READY는150×44의 오른쪽 중앙 배지,18–28 글꼴, 금색 배경과 어두운 글자입니다. 닉네임 부모의 회색 배경을 투명하게 하고 기존15 UI 단위 안쪽 여백을 유지합니다. 기존 팀 번호0/1과 READY 활성 상태·참조는 유지합니다.
+
+RoomPlayerUI·CanvasRoom은 single-line 표시 사본만 만들고 ChatManager는 실제 줄바꿈을 유지합니다. richText/parseCtrlCharacters를 false로 적용하므로 `<b>`/`<size>`와 literal backslash 제어 문자가 레이아웃 명령이 되지 않습니다. 이는 네트워크 원문 제한을 바꾸거나 모든 유니코드 글리프를 지원한다는 뜻이 아닙니다. 저장 프리팹의 보호 필드·persistent ID와 Fusion의 숨겨진 importer 데이터도 구분해 검사했습니다. 1024×768/1920×1080/2400×1080의 실제 프리팹 렌더312검사·기존 로비 실제 풀 AddMessage31검사는 README의 범위와 한계를 따릅니다.
