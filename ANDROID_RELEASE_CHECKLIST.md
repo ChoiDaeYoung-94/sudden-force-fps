@@ -1,5 +1,22 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 코드 26 UI 무서명 AAB와 심볼 검증 완료 (2026-10-18, #66/#42/#43)
+
+빌드 소스 HEAD는 `bb635d8c4091f40b076f87bbda964bbae40b36d4`입니다. PR109/110/112/113/114/117/119/120의 UI·기존 CC0 소총 클립 2개·고지를 포함한1.0.195/코드 26을 실제 생성했습니다. 공식 Android Gradle export는 오류0·경고71·187.6687632초, 별도 offline C1 Gradle 실제 패키징은 종료0입니다. 새 buildIl2Cpp 작업 didWork와18개 UI/게임 기능 marker·최종 stripped native payload 일치를 확인했고 코드 25 libil2cpp를 재사용하지 않았습니다. Unity 단일 AAB 호출 안정화·충돌 근본 해결 주장은 아닙니다.
+
+- 무서명 AAB: `92,462,021B`, SHA256 `3573C17AC03006E0799318864F4F9E31044256E86F6E9A621299727B08137A85`. ZIP CRC·bundletool·패키지com.AeDeong.SuddenForceFPS·코드 26/1.0.195·min25/target36·비개발·무서명·ARM64 SO 7개의 LOAD16KB와 PAGE_ALIGNMENT_16K 요청을 확인했습니다.
+- 고지 722,942B/SHA256 `C5DE97CE407C5104B62869CA5090A076608FD26E9B6DB125A6267DBBA7D919CA` 전문을 실제 AAB UnityFS TextAsset 본문과 대조했습니다. 모든 DEX의 지정 광고/결제17네임스페이스 type 참조·class 정의0입니다. 전체 동작/모든 SDK 권리 검증으로 확대하지 않습니다.
+- fresh packed 경로2,768개: 메뉴 폰트 2개/실제 맵 이미지 2개 포함, 새 CC0 플레이어 클립 2개 포함, 기존 클립 22개/controller·Loading Icons·EmojiOne0. 코드 25 대비 추가5경로는UI4자산과UniRx ObservableMouseTrigger MonoScript이며 제외된 기존 경로는0입니다. 객체/GUID 전수 판독은 아닙니다.
+- 심볼 ZIP: `46,094,207B`, SHA256 `DE1DA4F7794550817D588D86A18DBEC6E2B7585D5635A8E2B725C30D02465F03`. 실제AAB의 BuildID/ALLOC 및 debuglink CRC 또는 전체 allocated bytes와 대응하는6/7개이며 누락은libnanosockets.so입니다. libunity는 debug_line을 포함하며 전체 ALLOC 바이트가 AAB 대응본과 일치하는 unstripped 원본을 사용했습니다. 파일 검증과 Console 첨부는 구분합니다.
+- 원래 입력3,914개·이전 release AAB4개 보존을 확인했습니다. export 중 공개19개 차이(예약원장1+파생18)를 먼저 별도 기록했습니다. Editor의 원본SDF native6객체/importer는dirty0이고 원본TTF2의 정확한 NotEditable imported texture dirty는 관찰값으로 구분했습니다. 정상 Editor 종료 후 font8 exact를 재확인하고, 파생18은 기존before5개+정확한원래SHA를 재현한EOL/BOM 표현13개로 복원했습니다. 원래before사본이13개 있었다고 표현하지 않습니다. 최종 source는원장외exact, export 입력2,797개 불변·명시compile-data1개 추가뿐입니다. PS.asset은 정상종료후이미baseline exact여서수동PS원복쓰기는없습니다.
+
+코드 26 첫 준비 시도는 root-owned EditorUserBuildSettings dirty를 기존immutable 예외와혼동하지않고 global Save/예약/Build 전에 차단했습니다. 실패 근거를 보존한 새02시도에서 정확한 소유객체·공개세bool/phase·이전실패근거를 별도고정했습니다. 원본native/importer/unknown dirty의 포괄허용이나flag강제해제는하지않았습니다. actual builder source/frozenconfig SHA와 각 단일실행 근거는 외부 `D:/codex/validation/sudden-force-fps/20261018-code26-ui-export-02/`에 있습니다.
+
+무서명 원본 `SuddenForceFPS.1.0.195.code26.unsigned.aab`와별도 `20261018-code26-native-symbols-01/`은 보존합니다. 원장 `195,7,26`·다음 새 코드 27 이상을 유지합니다. 키·암호·AAB·원시 로그는 커밋하지 않습니다.
+
+현재 Play 마지막 확인 제공본은 **1.0.195/코드 21**이며 코드 26은 미서명·미업로드입니다. 최신 Android UI·Store 설치·Fusion 전체 경기·실제 16KB 기기는 별도 미검증입니다. 실기기 검증 후순위·장시간 성능 후속 합의를 유지하고 수동 시험이나 USB 연결을 지금 요청하지 않습니다. RELRO 정적 경고 5건도 남습니다. 실제 16KB 실행·최신 전체 권리·새 UI 기기 검증을 통과로 합산하지 않습니다. 다음은 #121 PC빌드와서명/내부테스트반영이며아래기록은각각당시상태입니다.
+
+
 ## 코드25 무서명 AAB 검증 완료 (2026-10-17, #66/#42/#43)
 
 PR102의 CC0 소총 조준·사망 클립 2개와 PR103의 런타임 고지를 포함한 1.0.195/코드25 AAB를 생성하고 정적 검증했습니다. 공식 증분 export는 오류 0·경고 2·55.573초로 완료됐습니다. 버전 설정을 메모리와 디스크에 저장한 뒤 다음 Editor update에서 다시 확인하고 코드를 예약했으며, 생성된 Gradle의 실제 버전도 25/1.0.195로 확인했습니다. 별도 offline C1 Gradle의 새 IL2CPP 작업·종료 0·최종 native payload 일치를 확인했습니다. Unity 단일 AAB 호출 안정화나 충돌 근본 해결을 뜻하지 않습니다.
