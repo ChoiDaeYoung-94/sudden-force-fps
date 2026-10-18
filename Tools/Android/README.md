@@ -46,3 +46,15 @@ python -m unittest discover -s Tools/Android -p 'test_*.py' -v
 실제 Gradle JVM과 AGP 검증은 별도 현장 dry-run으로 확인합니다. 단위 검사의 가상 이벤트 성공을 실제 Gradle 통과로 대체하지 않습니다.
 
 공식 참고: [Gradle dry-run](https://docs.gradle.org/9.3.1/userguide/command_line_interface.html#sec:command_line_execution_options), [Unity Gradle export](https://docs.unity3d.com/6000.3/Documentation/Manual/android-export-process.html), [Gradle JVM 구성](https://docs.gradle.org/9.3.1/userguide/build_environment.html#sec:configuring_jvm_memory).
+
+## PR용 Python 단위 검사
+
+`.github/workflows/android-export-verifier.yml`은 `Tools/Android/**` 또는 해당 workflow가 바뀌는 PR과 main push, 수동 실행에서 Python3.12 단위 검사만 수행합니다. GitHub-hosted Windows runner를 사용하며 checkout/setup-python은 검토된 공식 commit SHA로 고정합니다.
+
+```powershell
+python -B -m unittest discover -s Tools/Android -p test_verify_gradle_export.py -v
+```
+
+현재 stdlib 기반14개 테스트는 임시 fixture와 mocked Gradle 이벤트로 기대값·실패 거부·입력 보존 로직을 확인합니다. pip 설치나 custom secret, Unity license, SDK/JDK·Gradle 실행이 필요하지 않습니다. 실제 Gradle/AGP·init script, Unity 빌드·AAB·서명·배포·기기 실행은 검증 범위에 포함되지 않습니다.
+
+실제 GitHub Actions 실행 상태와 로그는 workflow를 추가한 PR의 checks 결과에서 확인합니다. 로컬 unittest 결과와 GitHub 실행 결과는 별도로 기록합니다. CI 실행이 성공해도 기존 export의 현장 dry-run 및 실제 Android 산출물 검증은 각각 필요합니다.
