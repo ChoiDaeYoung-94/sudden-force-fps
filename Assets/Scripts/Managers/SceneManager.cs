@@ -5,14 +5,11 @@ using UnityEngine;
 
 namespace AD
 {
-    /// <summary>
-    /// Scene 전환을 관리
-    /// 목표 씬을 additive로 로드한 후, 현재 씬을 언로드하는 방식
-    /// </summary>
+    /// <summary>Loads a new scene additively, then unloads the previous scene.</summary>
     public class SceneManager : MonoBehaviour
     {
-        private AD.GameConstants.Scene _targetScene;
         private CancellationTokenSource _ctsSceneChange;
+        private bool _sceneChangeInProgress;
 
         private void Awake()
         {
@@ -26,54 +23,113 @@ namespace AD
             _ctsSceneChange = null;
         }
 
-        public void ChangeScene(AD.GameConstants.Scene targetScene)
+        public void ChangeScene(GameConstants.Scene targetScene)
         {
-            AD.DebugLogger.Log("SceneManager", "targetScene으로 전환");
-
-            AD.Managers.PopupM.PopupSceneLoading();
-            AD.Managers.SoundM.PauseBGM();
-
-            _targetScene = targetScene;
-
-            ChangeSceneAsync(_ctsSceneChange.Token).Forget();
+            TryChangeSceneAsync(targetScene).Forget();
         }
 
-        private async UniTask ChangeSceneAsync(CancellationToken token)
+        public async UniTask<bool> TryChangeSceneAsync(GameConstants.Scene targetScene)
         {
-            UnityEngine.SceneManagement.Scene currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-
-            AsyncOperation loadAsyncOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(_targetScene.ToString(), UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            loadAsyncOp.allowSceneActivation = false;
-
-            while (!loadAsyncOp.isDone && !token.IsCancellationRequested)
+            if (_sceneChangeInProgress || _ctsSceneChange == null
+                || _ctsSceneChange.IsCancellationRequested) return false;
+            _sceneChangeInProgress = true;
+            CancellationToken token = _ctsSceneChange.Token;
+            string targetName = targetScene.ToString();
+            var currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            var popup = Managers.Instance != null ? Managers.PopupM : null;
+            var sound = Managers.Instance != null ? Managers.SoundM : null;
+            bool loadingShown = false;
+            bool bgmPaused = false;
+            bool sourceUnloadStarted = false;
+            bool targetLoadStarted = false;
+            try
             {
-                AD.DebugLogger.Log("SceneManager", $"{loadAsyncOp.progress} - load progress");
+                if (!currentScene.IsValid() || !currentScene.isLoaded
+                    || !Application.CanStreamedLevelBeLoaded(targetName)) return false;
+                if (currentScene.name == targetName) return true;
+                var existingTarget = UnityEngine.SceneManagement.SceneManager.GetSceneByName(targetName);
+                if (existingTarget.IsValid() && existingTarget.isLoaded) return false;
 
-                if (loadAsyncOp.progress >= 0.9f)
+                if (popup != null)
                 {
-                    await UniTask.Delay(TimeSpan.FromSeconds(1d), cancellationToken: token);
-                    loadAsyncOp.allowSceneActivation = true;
+                    popup.PopupSceneLoading();
+                    loadingShown = true;
                 }
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
+                if (sound != null)
+                {
+                    sound.PauseBGM();
+                    bgmPaused = true;
+                }
+                token.ThrowIfCancellationRequested();
+                var loading = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(
+                    targetName, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                if (loading == null) throw new InvalidOperationException("Scene loading did not start.");
+                targetLoadStarted = true;
+                // Cancellation ends our wait, not Unity's native operation. Leave scene
+                // activation enabled so a cancelled owner cannot stall Unity's queue.
+                while (!loading.isDone) await UniTask.Yield(PlayerLoopTiming.Update, token);
+                token.ThrowIfCancellationRequested();
+                var loadedScene = UnityEngine.SceneManagement.SceneManager.GetSceneByName(targetName);
+                if (!loadedScene.IsValid() || !loadedScene.isLoaded
+                    || !UnityEngine.SceneManagement.SceneManager.SetActiveScene(loadedScene))
+                    throw new InvalidOperationException("The target scene is not ready.");
 
-            UnityEngine.SceneManagement.Scene targetScene = UnityEngine.SceneManagement.SceneManager.GetSceneByName(_targetScene.ToString());
-            if (targetScene.IsValid())
+                var unloading = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(currentScene);
+                if (unloading == null) throw new InvalidOperationException("Source scene unloading did not start.");
+                sourceUnloadStarted = true;
+                while (!unloading.isDone) await UniTask.Yield(PlayerLoopTiming.Update, token);
+                token.ThrowIfCancellationRequested();
+                // The scene transition is committed once the old scene is unloaded.
+                // Optional unused-asset cleanup must not turn it into a login retry.
+                try { await Resources.UnloadUnusedAssets().ToUniTask(cancellationToken: token); }
+                catch (OperationCanceledException) when (token.IsCancellationRequested) { return false; }
+                catch (Exception exception)
+                {
+                    Debug.LogWarning($"[Scene] Unused asset cleanup failed: {exception.GetType().Name}");
+                }
+                return true;
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
-                UnityEngine.SceneManagement.SceneManager.SetActiveScene(targetScene);
+                return false;
             }
-
-            AsyncOperation unloadAsyncOp = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(currentScene);
-            while (!unloadAsyncOp.isDone && !token.IsCancellationRequested)
+            catch (Exception exception)
             {
-                AD.DebugLogger.Log("SceneManager", $"{unloadAsyncOp.progress} - unload progress");
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
+                Debug.LogWarning($"[Scene] Transition failed: {exception.GetType().Name}");
+                // Before source unloading starts, restore the original active scene so
+                // the still-live Login can show retry. Never unload an existing target.
+                if (!sourceUnloadStarted && currentScene.IsValid() && currentScene.isLoaded)
+                {
+                    try
+                    {
+                        UnityEngine.SceneManagement.SceneManager.SetActiveScene(currentScene);
+                        var failedTarget = UnityEngine.SceneManagement.SceneManager.GetSceneByName(targetName);
+                        if (targetLoadStarted && failedTarget.IsValid() && failedTarget.isLoaded)
+                        {
+                            var cleanup = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(failedTarget);
+                            if (cleanup != null)
+                                while (!cleanup.isDone) await UniTask.Yield(PlayerLoopTiming.Update, token);
+                        }
+                    }
+                    catch (Exception cleanupException)
+                    {
+                        Debug.LogWarning($"[Scene] Failed scene cleanup: {cleanupException.GetType().Name}");
+                    }
+                }
+                return false;
             }
-
-            await Resources.UnloadUnusedAssets().ToUniTask(cancellationToken: token);
-
-            AD.Managers.PopupM.ClosePopupSceneLoading();
-            AD.Managers.SoundM.UnpauseBGM();
+            finally
+            {
+                try
+                {
+                    if (loadingShown && popup != null) popup.ClosePopupSceneLoading();
+                }
+                finally
+                {
+                    try { if (bgmPaused && sound != null) sound.UnpauseBGM(); }
+                    finally { _sceneChangeInProgress = false; }
+                }
+            }
         }
     }
 }
