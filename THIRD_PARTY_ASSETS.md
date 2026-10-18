@@ -1,5 +1,12 @@
 # Third-party asset provenance
 
+## 코드 26의 UI·고지·제외 경로 확인 (2026-10-18, #42)
+
+기존 맵에서 촬영한 메뉴배경/맵카드2개와메뉴font2개를 포함한 코드 26 무서명AAB에서 고지 722,942B 전문일치·fresh packed2,768경로·새 CC0 플레이어 클립 2개·옛22클립/controller·Loading Icons·EmojiOne0을 확인했습니다. 새 외부 이미지 팩은 반입하지 않았고 기존 Map Lite와 글꼴의 취득/조건·원본 고지를 유지합니다. [UI자료](Tools/UI/README.md)와[코드 26검증](ANDROID_RELEASE_CHECKLIST.md)을따릅니다.
+
+지정 광고/결제 17개 네임스페이스의 DEX 참조/정의는 0이며 전체 권리·객체 GUID 전수·모든 SDK 동작 검증 완료는 아닙니다. 현재 Play 마지막 확인 제공본은 **1.0.195/코드 21**이며 코드 26은 미서명·미업로드입니다. 최신 Android UI·Store 설치·Fusion 전체 경기·실제 16KB 기기는 별도 미검증입니다. 실기기 검증 후순위·장시간 성능 후속 합의를 유지하고 수동 시험이나 USB 연결을 지금 요청하지 않습니다. 따라서 #42는 유지하고 이전 문서는 당시 근거로 보존합니다.
+
+
 ## 기존 맵의 UI 촬영 이미지 (2026-10-18, #106)
 
 `Assets/Art/UI/MapPreviews/DesertHouse.png`는 기존 DesertHouse 씬을 Unity에서 촬영한 파생 UI 이미지입니다. 새 외부 이미지 팩이나 AI 생성 이미지를 반입하지 않았고, 기존 Low Poly FPS Map Lite 취득·원본 대응 기록과 조건을 유지합니다. 원본 씬·모델·재질은 변경하지 않았습니다. 촬영 좌표·해시·import 설정은 [UI 자료](Tools/UI/README.md)에 기록했습니다. 맵 원본을 새 CC0 자산으로 분류하거나 #42 전체 권리 검증을 완료한 것은 아닙니다.

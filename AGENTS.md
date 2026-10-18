@@ -34,7 +34,7 @@
 
 ## 현재 PC와 브라우저
 
-- 현재 Unity/Fork 프로젝트는 `D:/codex/worktrees/sudden-force-fps`입니다. `D:/codex/repositories/sudden-force-fps`는 공용 저장소이며 중복 프로젝트를 만들거나 그곳에 제품 파일을 체크아웃하지 않습니다. 채팅 작업 공간·과거 자료는 `C:/Users/user/Documents/ChatGPT/sudden-force-fps`입니다.
+- 2026-10-18 현재 활성 Unity/Fork 프로젝트는 `D:/codex/worktrees/sudden-force-fps-ui-20261018`입니다. 원래 `D:/codex/worktrees/sudden-force-fps`는 기존 변경·과거 Editor 연결을 보존하므로 임의 삭제/정리하지 않습니다. `D:/codex/repositories/sudden-force-fps`는 공용 저장소이며 중복 프로젝트를 만들거나 그곳에 제품 파일을 체크아웃하지 않습니다. 채팅 작업 공간·과거 자료는 `C:/Users/user/Documents/ChatGPT/sudden-force-fps`입니다.
 - 정상인 `C:/Users/pc_17` 호환 연결을 삭제하거나 이전 경로를 일괄 치환하지 않습니다. 필요한 도구·설치·로그인·비공개 자료가 이전됐다고 가정하지 않습니다.
 - Chrome은 사용자가 지정한 작업 전용 창만 사용합니다. 실제 창과 조작 대상 일치를 확인한 뒤 제어하고 개인 창·다른 프로젝트 창·작업표시줄 순서·같은 프로필/브라우저 ID로 대상을 추정하지 않습니다. 명시된 특정 탭의 허용을 다른 탭 전체로 확대하지 않습니다.
 - Chrome 확장 API를 우선 사용하며 Windows URL 판독 실패를 반복하거나 내부 검사·보안 설정을 우회하지 않습니다. `@` 탭 메뉴가 없으면 강요하지 않고, 사용자가 작업용 창의 특정 탭이라고 명시한 정확한 URL과 유일한 기존 탭을 대조한 뒤 서비스·앱·패키지를 확인합니다.
