@@ -46,6 +46,13 @@ public class CanvasLobby : MonoBehaviour
     {
         _panelIndex = 0;
         UpdatePanelMain(_panelIndex);
+
+        // Retry only on this explicit menu action, never from a per-frame/status callback.
+        var manager = NetworkRunnerManager.Instance;
+        if (manager == null)
+            AD.Managers.CreateNetworkRunner();
+        else if (!manager.IsRetired && manager.SessionPhase == NetworkSessionPhase.Lobby)
+            manager.JoinSessionLobby();
     }
 
     public void CreateRoom()
@@ -116,6 +123,13 @@ public class CanvasLobby : MonoBehaviour
 
     public void Confirm()
     {
+        var manager = NetworkRunnerManager.Instance;
+        if (manager == null || manager.IsRetired)
+        {
+            AD.Managers.PopupM.PopupMessage("Lobby connection was lost. Select FIND MATCH to reconnect, then try again.");
+            return;
+        }
+
         if (!AD.Utility.IsInvalid(_roomNameText, _roomNameMessage))
         {
             return;
@@ -136,7 +150,7 @@ public class CanvasLobby : MonoBehaviour
             { "IsPrivateRoom", !_privateRoomToggle.isOn },
         };
 
-        NetworkRunnerManager.Instance.CreateRoom(roomOption);
+        manager.CreateRoom(roomOption);
     }
 
     public void SelectMap(string mapName)
