@@ -460,3 +460,9 @@ QA 전후 19개 보존 대상의 존재·해시가 정확히 같고 임시 객�
 Play=false 임시 prefab/deep font 복사본에서 로비 일반 label과 고지 마지막 187페이지 slice, 채팅의 TMP 대입과 동등한 일반 한글·영문·기호 문자열 표시를 확인했습니다. ChatManager.AddMessage 자체나 실제 네트워크/사용자 채팅은 실행하지 않았습니다. 명시적 sprite 태그 3종은 문자 그대로 표시됐고, 폰트에 없는 😀는 □와 글리프 경고1개로 대체됐습니다. 이모지·sprite 표시가 기존과 완전히 같거나 채팅에서 쓰이지 않는다고 주장하지 않습니다. 일반 문자 검사의 경고0과 이모지 테스트의 예상 경고를 구분합니다.
 
 원본 폰트·아틀라스·고지·prefab·기존 dirty 등 보존 대상을 대조하고 임시 객체를 정리했습니다. 외부 근거는 `D:\meee\git\sudden-force-fps-backups\20261008-emojione-resource-exclusion\`의 apply-result.json, ui-verification.json, preservation.json 및 HANDOFF.md입니다. 롤백은 AssetDatabase.MoveAsset로 기존 Resources 경로로 되돌리고 TMP 기본 참조를 원래 GUID로 복원합니다. 새 GUID를 생성하거나 원본 PNG를 재임포트하지 않습니다. #42는 최종 빌드 포함 여부와 남은 출처 확인까지 유지합니다.
+
+## 기존 폰트 기반 메뉴 자산과 촬영 배경 (2026-10-18, #107)
+
+메뉴용 `SuddenForceMenuFont.asset`는 기존 LiberationSans SDF의 static atlas·material을 공유하고, `SuddenForceMenuCjk.asset`는 기존 DungGeunMo.ttf에서 만든 별도 dynamic fallback입니다. 새 글꼴 다운로드 없이 원본 두 SDF·두 TTF와 각 meta의8개 SHA256을 생성 전후 동일하게 보존했습니다. Liberation Sans2.00.1의 copyright·SIL OFL1.1 전문과 DungGeunMo1.301의 Public Domain·저자·출처 고지는 기존 `Assets/Legal/ThirdPartyNotices.txt`에 포함되어 있습니다. 원본 폰트 조건을 유지하며 전체 CJK 지원을 뜻하지 않습니다. 설정·보존 범위는 [UI 자료](Tools/UI/README.md)에 기록합니다.
+
+`DesertHouseBackdrop.png`는 기존 DesertHouse 씬 촬영의 alley 시점을 메뉴 배경으로 재사용한 파생 이미지입니다. 새 외부 이미지·AI 생성 자산이나 CC0 전환으로 분류하지 않으며 Low Poly FPS Map Lite의 기존 취득·원본 대응 근거를 유지합니다. 이 추가가 #42 전체 권리 검증 완료나 새 Android 배포 검증을 뜻하지는 않습니다.
