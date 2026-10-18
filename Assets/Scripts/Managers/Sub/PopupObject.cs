@@ -16,20 +16,24 @@ namespace AD
         }
 
         [SerializeField] private CheckType _checkType = CheckType.Normal;
+        private PopupManager _owner;
+        internal bool IsFlowPopup => _checkType == CheckType.Flow;
 
         private void OnEnable()
         {
+            _owner = AD.Managers.Instance != null ? AD.Managers.PopupM : null;
+            if (_owner == null) return;
             switch (_checkType)
             {
                 case CheckType.Normal:
-                    AD.Managers.PopupM.EnablePop(gameObject);
+                    _owner.EnablePop(gameObject);
                     break;
                 case CheckType.Exception:
-                    AD.Managers.PopupM.SetException();
+                    _owner.SetException();
                     break;
                 case CheckType.Flow:
-                    AD.Managers.PopupM.EnablePop(gameObject);
-                    AD.Managers.PopupM.SetFlow();
+                    _owner.EnablePop(gameObject);
+                    _owner.SetFlow();
                     break;
             }
         }
@@ -39,25 +43,30 @@ namespace AD
         /// </summary>
         public void DisablePop()
         {
-            if (_checkType == CheckType.Normal)
+            if (_checkType == CheckType.Normal && _owner != null)
             {
-                AD.Managers.PopupM.DisablePop();
+                _owner.ClosePopup(gameObject);
             }
         }
 
         private void OnDisable()
         {
+            // Use the manager that registered this popup, even during teardown.
+            var owner = _owner;
+            _owner = null;
+            if (owner == null) return;
             if (_checkType == CheckType.Normal)
             {
-                AD.Managers.PopupM.DisablePop();
+                owner.NotifyPopupDisabled(gameObject);
             }
             else if (_checkType == CheckType.Exception)
             {
-                AD.Managers.PopupM.ReleaseException();
+                owner.ReleaseException();
             }
             else if (_checkType == CheckType.Flow)
             {
-                AD.Managers.PopupM.ReleaseFlow();
+                owner.NotifyPopupDisabled(gameObject);
+                owner.ReleaseFlow();
             }
         }
     }
