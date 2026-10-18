@@ -29,6 +29,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     public string LastLobbyError { get; private set; } = string.Empty;
     public bool HasReceivedSessionList { get; private set; }
     public int SessionCount => _sessionList.Count;
+    // Return a copy: a UI consumer cannot mutate the Runner's cached snapshot.
+    public IReadOnlyList<SessionInfo> SessionListSnapshot => _sessionList.ToArray();
     public event Action<NetworkRunnerManager> LobbyStatusChanged;
 
     private Task _lobbyJoinTask;
@@ -699,12 +701,6 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         if (!CanConnect) return;
         Debug.Log($"[Lobby] Session list received. Count: {SessionCount}");
 
-        string name = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-
-        if (CanConnect && name == AD.GameConstants.Scene.Lobby.ToString() && RoomManage.Instance != null)
-        {
-            RoomManage.Instance.Init(sessionList);
-        }
     }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
