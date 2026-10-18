@@ -12,9 +12,11 @@ public class CanvasLobby : MonoBehaviour
     [SerializeField] private TMP_Dropdown _maxPlayerDropdown;
     [SerializeField] private Toggle _privateRoomToggle;
     [SerializeField] private TMP_Text _mapNameText;
+    [SerializeField] private GameObject _selectedMapIndicator;
     [SerializeField] private TMP_Text _privateRoomNameText;
 
     private int _panelIndex = 0;    // 0 - Rooms, 1 - Create Room, 2 - JoinPrivateRoom
+    private string _selectedMapName = string.Empty;
 
     private const string _roomNameMessage = "Please enter the room name...";
     private const string _mapNameMessage = "Please select a map...";
@@ -101,7 +103,7 @@ public class CanvasLobby : MonoBehaviour
             return;
         }
 
-        if (string.IsNullOrEmpty(_mapNameText.text) || _mapNameText.text == "none...")
+        if (string.IsNullOrEmpty(_selectedMapName))
         {
             AD.Managers.PopupM.PopupMessage(_mapNameMessage);
             return;
@@ -112,7 +114,7 @@ public class CanvasLobby : MonoBehaviour
         Dictionary<string, object> roomOption = new Dictionary<string, object>(){
             { "RoomName", _roomNameText.text },
             { "MaxPlayers", maxPlayer },
-            { "MapName", _mapNameText.text },
+            { "MapName", _selectedMapName },
             { "IsPrivateRoom", !_privateRoomToggle.isOn },
         };
 
@@ -121,7 +123,11 @@ public class CanvasLobby : MonoBehaviour
 
     public void SelectMap(string mapName)
     {
-        _mapNameText.text = mapName;
+        // Keep the Fusion scene key separate from the readable label.
+        _selectedMapName = mapName == "DesertHouse" ? mapName : string.Empty;
+        bool selected = _selectedMapName.Length > 0;
+        _mapNameText.text = selected ? "Desert House" : "Choose a map below";
+        if (_selectedMapIndicator != null) _selectedMapIndicator.SetActive(selected);
     }
 
     public void EnterPrivateRoom()

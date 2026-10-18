@@ -1,5 +1,9 @@
 # Third-party asset provenance
 
+## 기존 맵의 UI 촬영 이미지 (2026-10-18, #106)
+
+`Assets/Art/UI/MapPreviews/DesertHouse.png`는 기존 DesertHouse 씬을 Unity에서 촬영한 파생 UI 이미지입니다. 새 외부 이미지 팩이나 AI 생성 이미지를 반입하지 않았고, 기존 Low Poly FPS Map Lite 취득·원본 대응 기록과 조건을 유지합니다. 원본 씬·모델·재질은 변경하지 않았습니다. 촬영 좌표·해시·import 설정은 [UI 자료](Tools/UI/README.md)에 기록했습니다. 맵 원본을 새 CC0 자산으로 분류하거나 #42 전체 권리 검증을 완료한 것은 아닙니다.
+
 ## 코드25 무서명 AAB 검증 완료 (2026-10-17, #66/#42/#43)
 
 PR102의 CC0 소총 조준·사망 클립 2개와 PR103의 런타임 고지를 포함한 1.0.195/코드25 AAB를 생성하고 정적 검증했습니다. 공식 증분 export는 오류 0·경고 2·55.573초로 완료됐습니다. 버전 설정을 메모리와 디스크에 저장한 뒤 다음 Editor update에서 다시 확인하고 코드를 예약했으며, 생성된 Gradle의 실제 버전도 25/1.0.195로 확인했습니다. 별도 offline C1 Gradle의 새 IL2CPP 작업·종료 0·최종 native payload 일치를 확인했습니다. Unity 단일 AAB 호출 안정화나 충돌 근본 해결을 뜻하지 않습니다.
