@@ -207,21 +207,37 @@ namespace AD
 
         public void PopupSetNickName() => _popupSetNickName.SetActive(true);
         
-        public void CheckNickName(TMP_Text nickName)
+        public void CheckNickName(TMP_InputField input)
         {
-            if (!AD.Utility.IsInvalid(nickName, "Warning: Nickname cannot be empty. Please enter your nickname."))
+            string nickName = (input != null ? input.text : string.Empty).Trim();
+            if (!IsValidNickName(nickName))
             {
+                PopupMessage("Enter a nickname using 1 to 32 characters.");
                 return;
             }
+
+            var manager = NetworkRunnerManager.Instance;
+            if (manager != null && !manager.IsRetired)
+                manager.SaveNickName(nickName);
             else
+                Managers.SavedNickName = nickName;
+            _popupSetNickName.SetActive(false);
+        }
+
+        private static bool IsValidNickName(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.Length > 32) return false;
+            for (int i = 0; i < value.Length; i++)
             {
-                var manager = NetworkRunnerManager.Instance;
-                if (manager != null && !manager.IsRetired)
-                    manager.SaveNickName(nickName.text);
-                else
-                    Managers.SavedNickName = nickName.text ?? string.Empty;
-                _popupSetNickName.SetActive(false);
+                char character = value[i];
+                if (char.IsControl(character)) return false;
+                if (char.IsHighSurrogate(character))
+                {
+                    if (++i >= value.Length || !char.IsLowSurrogate(value[i])) return false;
+                }
+                else if (char.IsLowSurrogate(character)) return false;
             }
+            return true;
         }
 
         public void GoLobby()
