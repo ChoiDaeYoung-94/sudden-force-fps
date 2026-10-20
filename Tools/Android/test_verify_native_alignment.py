@@ -169,6 +169,19 @@ class NativeAlignmentTests(unittest.TestCase):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(tool.main([str(path)]), 2)
 
+    def test_invalid_utf8_zip_filename_returns_json_input_error(self):
+        path = self.bundle([("base/lib/arm64-v8a/n.so", elf())])
+        data = bytearray(path.read_bytes())
+        central = data.index(b"PK\x01\x02")
+        struct.pack_into("<H", data, 6, 0x800)
+        struct.pack_into("<H", data, central + 8, 0x800)
+        data[30] = data[central + 46] = 0xff
+        path.write_bytes(data)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(tool.main([str(path)]), 2)
+        self.assertFalse(json.loads(output.getvalue())["passed"])
+
 
 if __name__ == "__main__":
     unittest.main()

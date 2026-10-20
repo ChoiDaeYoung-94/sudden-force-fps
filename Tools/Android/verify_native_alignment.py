@@ -125,7 +125,7 @@ def main(argv=None):
                 "Report must not replace the artifact")
         report = inspect_bundle(args.artifact)
         code = 0 if report["passed"] else 1
-    except (InvalidInput, OSError, zipfile.BadZipFile, RuntimeError, EOFError,
+    except (InvalidInput, OSError, UnicodeError, zipfile.BadZipFile, RuntimeError, EOFError,
             NotImplementedError, zlib.error) as error:
         report, code = {"schemaVersion": 1, "passed": False, "error": str(error)}, 2
     if args.output is not None:
