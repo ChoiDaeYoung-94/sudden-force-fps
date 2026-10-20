@@ -1,4 +1,20 @@
-# Gradle export 사전 검사
+# Android 검증 도구
+
+## ARM64 ELF LOAD·RELRO 정렬 검사
+
+`verify_native_alignment.py`는 Python3.12 이상에서 AAB의 모든 모듈 또는 APK에 들어 있는 `lib/arm64-v8a/*.so`를 추출 없이 읽습니다. LOAD alignment·주소/파일 오프셋 congruence·GNU_RELRO 끝 주소의16KB 정렬을 검사합니다. 원본과 기존 보고서를 덮어쓰지 않고 Unity·Gradle·서명 도구를 실행하지 않습니다.
+
+```powershell
+python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' --output '<새 외부 JSON 보고서>'
+```
+
+종료0은 선택한 ARM64 ELF 검사 통과,1은 잘못된 ELF 또는 정렬 실패,2는 ZIP/입력/보고서 처리 오류입니다. RELRO가 없는 라이브러리는 정렬 실패로 보지 않지만 보안 강화가 됐다는 뜻도 아닙니다. ZIP CRC는 선택한 native entry에 대해 검사하며 전체 ZIP 엔트리 CRC 검사가 아닙니다. ELF64 little-endian ARM64 ET_DYN만 지원하고, 라이브러리128개/각256MiB 한도를 넘으면 실패합니다.
+
+**APK ZIP alignment·BundleConfig·서명·기기 실행은 검사하지 않습니다.** ELF 정렬 통과만으로 전체16KB 호환을 확정하지 않습니다. [Android 공식 LOAD·RELRO 조건](https://developer.android.com/guide/practices/page-sizes#relro)과 실제16KB 환경 검증을 함께 적용합니다.
+
+코드27 무서명 AAB SHA256 `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16`을 실제 검사한 결과 LOAD는7개 모두 통과, RELRO는 libc++_shared.so·libil2cpp.so·libmain.so·libswappywrapper.so·libunity.so의5개가 실패하여 종료1입니다. 실패를 재현한 도구 검증이며 해당 binary 수정이나 배포 호환 통과가 아닙니다. 기존 AAB·공급자 파일은 그대로 보존합니다.
+
+## Gradle export 사전 검사
 
 `verify_gradle_export.py`는 Unity가 이미 생성한 Android Gradle 프로젝트를 **offline bundleRelease dry-run**으로 검사합니다. Python3.12 이상, Gradle9.3.1/AGP9.0.0을 대상으로 합니다. Unity Editor 빌드·Gradle 실제 패키징·서명·버전 예약 기능은 없습니다.
 
@@ -52,9 +68,9 @@ python -m unittest discover -s Tools/Android -p 'test_*.py' -v
 `.github/workflows/android-export-verifier.yml`은 `Tools/Android/**` 또는 해당 workflow가 바뀌는 PR과 main push, 수동 실행에서 Python3.12 단위 검사만 수행합니다. GitHub-hosted Windows runner를 사용하며 checkout/setup-python은 검토된 공식 commit SHA로 고정합니다.
 
 ```powershell
-python -B -m unittest discover -s Tools/Android -p test_verify_gradle_export.py -v
+python -B -m unittest discover -s Tools/Android -p 'test_*.py' -v
 ```
 
-현재 stdlib 기반14개 테스트는 임시 fixture와 mocked Gradle 이벤트로 기대값·실패 거부·입력 보존 로직을 확인합니다. pip 설치나 custom secret, Unity license, SDK/JDK·Gradle 실행이 필요하지 않습니다. 실제 Gradle/AGP·init script, Unity 빌드·AAB·서명·배포·기기 실행은 검증 범위에 포함되지 않습니다.
+Gradle 검사14개와 ELF/ZIP 검사19개는 임시 fixture와 mocked Gradle 이벤트로 기대값·실패 거부·입력 보존 로직을 확인합니다. pip 설치나 custom secret, Unity license, SDK/JDK·Gradle 실행이 필요하지 않습니다. 실제 Gradle/AGP·init script, Unity 빌드·AAB·서명·배포·기기 실행은 CI 검증 범위에 포함되지 않습니다.
 
 실제 GitHub Actions 실행 상태와 로그는 workflow를 추가한 PR의 checks 결과에서 확인합니다. 로컬 unittest 결과와 GitHub 실행 결과는 별도로 기록합니다. CI 실행이 성공해도 기존 export의 현장 dry-run 및 실제 Android 산출물 검증은 각각 필요합니다.

@@ -33,4 +33,4 @@ jobs:
         with:
           python-version: '3.12'
       - name: Run verifier unit tests
-        run: python -B -m unittest discover -s Tools/Android -p test_verify_gradle_export.py -v
+        run: python -B -m unittest discover -s Tools/Android -p 'test_*.py' -v
