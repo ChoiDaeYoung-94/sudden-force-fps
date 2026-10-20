@@ -1,5 +1,21 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 코드27 최신 UI 통합 무서명 검증 (2026-10-20, #136)
+
+빌드 소스 HEAD는`a54d6d0d4446c2a2b46dabeb3d48e3cc059b3eda`이며 기존dirty15를 보존한 P2 워크트리입니다. PR129/131/134/135를 포함합니다. 공식 Android Gradle export Succeeded·오류0·경고2·269.793644초, 별도 offline C1 Gradle은23분11초·exit0·153개 작업 실행입니다. 실제 새 buildIl2Cpp didWork=true/upToDate=false/skipped=false와 최종 stripped native/AAB payload 동일성을 확인했습니다. Unity 단일 AAB 호출 안정화·충돌 근본 해결로 확대하지 않습니다.
+
+- 무서명 AAB: **92,362,210B**, SHA256 `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16`. ZIP CRC/bundletool·com.AeDeong.SuddenForceFPS·코드27/1.0.195·min25/target36·비개발·무서명·ARM64 SO7 LOAD16KB/PAGE_ALIGNMENT_16K를 확인했습니다. RELRO 정적 경고5와 실제16KB 기기 검증 미완료를 유지합니다.
+- 생성 코드: 기존 기능 marker와 원본C#4핀·실제 C++9메서드 본문의 제한 검사 및 독립 분기/값 전달 검토입니다. 완전한 CFG/dataflow·모든 함수의 최종 링크 생존이나 기기 실행 증명은 아닙니다.
+- 고지 전문722,942B/SHA256`C5DE97CE407C5104B62869CA5090A076608FD26E9B6DB125A6267DBBA7D919CA`를 실제 AAB UnityFS TextAsset 본문과 exact 대조했습니다. 모든 DEX의 지정 광고/결제17네임스페이스 참조·정의0, AD_ID/BILLING 권한0입니다. 전체 SDK 동작·전체 취득 권리 판정과 구분합니다.
+- 최신 BuildReport packed 경로2,765개: 메뉴font2/맵이미지2·새CC0 클립2 포함, 옛22클립/controller·Loading Icons·EmojiOne0입니다. 코드26 대비 추가0/제외3은 DungGeunMo SDF·ObservableMouseTrigger.cs·TMP_SDF.shader 경로입니다. 객체/GUID 전수 판독은 아닙니다. report GUID`9687d879c1d34185a7297f68a0c9681e`·E27 output·269.793644초·디스크 SHA를 대조했습니다. 별도 관측의 ToUniversalTime 변환 시각은9시간 오차로 제외하고 원문/한계 기록을 보존했습니다.
+- 심볼 ZIP: **46,094,477B**, SHA256 `31B16B6744B5C51A505772F624090DF21902A65F92C42BF140EF76ABBEA443CE`. 실제 AAB BuildID/ALLOC·debuglink CRC 또는 전체 allocated bytes와 대응한6/7개이며 libnanosockets.so가 누락입니다. libunity debug_line과 전체 ALLOC 일치를 확인했습니다. Console 첨부는 미실행입니다.
+- 보존: 전체3,914개 입력 직접 재해시로 원장195,8,27 외 exact, 원본font8·기존dirty15·이전AAB5 보존입니다. export 입력2,797개 불변·명시 compile-data.json1개 추가뿐입니다. 보고서 읽기용 Editor 재기동 후 기존 복원v2가 source gate에서 중단됐으며 attempt/archive/제품쓰기0을 보존했습니다. 새v3는 원래18범위·raw5/유한encoding13 후보와 별도 mainTemplate CRLF59→LF59 exact 근거를 고정해17개 쓰기/이미baseline1개 no-op으로 복원했습니다. 모든 after/candidate36blob·승인/검토/실패 근거를 보존했고 frozen config와 원래 strict audit는 수정하지 않았습니다. 다른 프로젝트 Editor는 제어하지 않았습니다.
+
+검증 자료는`D:/codex/validation/sudden-force-fps/20261020-code27-ui-export-01/`, 심볼은`20261020-code27-native-symbols-01/`, 배포 인계는`20261020-code27-release-kit-01/`입니다. 키·암호·AAB·원시 로그는 커밋하지 않습니다. 새 C# 서명 준비 후보는 정적 독립 검토를 마쳤으나 실제 입력 고정·컴파일·바인딩·서명은 별도입니다.
+
+**코드27은 미서명·미업로드입니다.** 기존 업로드 키를 유지하고 서명 결과·최신 Console 중복/제공 상태를 확인한 뒤 내부 테스트에 반영해야 합니다. Play 마지막 확인본은 과거21/release7이며 오늘 새 조회가 아닙니다. 최신 Store/기기/UI/경기·실제16KB·전체 권리 미검증, 기기/장시간 성능 후순위와 약92% 작업 기준 추정을 유지합니다. 원장195,8,27·다음 새 예약28 이상이며 아래는 각각 당시 기록입니다.
+
+
 ## Windows 검증 빌드와 Android 배포 구분 (2026-10-18, #121)
 
 별도 Windows64/Mono 개발용 Player가 Succeeded/오류0/경고5로 생성됐고360파일 SHA·입력3914개·원본font8·원장195,7,26 보존을 확인했습니다. [Windows 검증과 제한](README.md)을 따릅니다. Windows 로그인 우회/로비 연결은 Android GPGS·Store 설치·두 피어 경기의 통과 근거가 아닙니다.
