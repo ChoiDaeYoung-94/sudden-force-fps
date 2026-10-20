@@ -136,7 +136,8 @@ def main(argv=None):
         except OSError as error:
             print(json.dumps({"passed": False, "error": str(error)}))
             return 2
-    print(json.dumps(report, ensure_ascii=False, indent=2))
+    # Keep stdout valid JSON even on legacy Windows consoles (for example cp949).
+    print(json.dumps(report, ensure_ascii=True, indent=2))
     return code
 
 

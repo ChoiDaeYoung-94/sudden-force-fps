@@ -182,6 +182,17 @@ class NativeAlignmentTests(unittest.TestCase):
             self.assertEqual(tool.main([str(path)]), 2)
         self.assertFalse(json.loads(output.getvalue())["passed"])
 
+    def test_unicode_entry_prints_json_on_cp949_stdout(self):
+        name = "base/lib/arm64-v8a/native_\U0001f600.so"
+        path = self.bundle([(name, elf())])
+        raw = io.BytesIO()
+        output = io.TextIOWrapper(raw, encoding="cp949", write_through=True)
+        report = self.root / "unicode.json"
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(tool.main([str(path), "--output", str(report)]), 0)
+        self.assertEqual(json.loads(raw.getvalue().decode("ascii"))["libraries"][0]["entry"], name)
+        self.assertEqual(json.loads(report.read_text(encoding="utf-8"))["libraries"][0]["entry"], name)
+
 
 if __name__ == "__main__":
     unittest.main()
