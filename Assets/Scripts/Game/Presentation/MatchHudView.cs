@@ -146,7 +146,8 @@ public sealed class MatchHudView : MonoBehaviour
             var name = _rosterNames[index];
             name.transform.parent.gameObject.SetActive(true);
             name.richText = false;
-            name.text = entry.Name.ToString().Replace('\n', ' ').Replace('\r', ' ');
+            name.parseCtrlCharacters = false;
+            name.text = DisplayName(entry.Name.ToString());
             name.color = entry.Connected ? Color.white : new Color(.6f, .65f, .7f);
             if (_rosterStats != null && index < _rosterStats.Length && _rosterStats[index] != null)
                 _rosterStats[index].text = entry.Kill + " / " + entry.Death;
@@ -167,12 +168,14 @@ public sealed class MatchHudView : MonoBehaviour
             if (index < 0) continue;
             var entry = _snapshot.KillFeed[index];
             killer.richText = false;
-            killer.text = entry.KillerName.ToString().Replace('\n', ' ').Replace('\r', ' ');
+            killer.parseCtrlCharacters = false;
+            killer.text = DisplayName(entry.KillerName.ToString());
             killer.color = TeamColor(entry.KillerTeam);
             if (_feedVictims != null && i < _feedVictims.Length && _feedVictims[i] != null)
             {
                 _feedVictims[i].richText = false;
-                _feedVictims[i].text = entry.VictimName.ToString().Replace('\n', ' ').Replace('\r', ' ');
+                _feedVictims[i].parseCtrlCharacters = false;
+                _feedVictims[i].text = DisplayName(entry.VictimName.ToString());
                 _feedVictims[i].color = TeamColor(entry.VictimTeam);
             }
             if (_feedKinds != null && i < _feedKinds.Length && _feedKinds[i] != null)
@@ -182,6 +185,9 @@ public sealed class MatchHudView : MonoBehaviour
             }
         }
     }
+
+    private static string DisplayName(string value) =>
+        (value ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ');
 
     private void ObserveGap(KillFeedObservation observation)
     {
