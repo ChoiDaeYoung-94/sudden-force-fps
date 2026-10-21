@@ -1,5 +1,7 @@
 # Sudden Force FPS 작업 규칙
 
+2026-10-21 체크아웃 정리: HEAD/raw/filtered blob이 같은8개 파일은 내용 변경 없이 인덱스 상태만 갱신했습니다. 실제 archive 부재·ignore 적용·Assets/Packages/ProjectSettings GUID 타참조0을 확인한 orphan unitypackage.meta3개만 추적에서 정리했습니다. 원본 meta는 Git 이력과 외부 검증 사본에 보존합니다. 나머지 로컬 변경4개(URP-Balanced/URP GlobalSettings/EDM ResolverSettings/PlayerSettings)는 유지하며 Unity6 필수 변경이나 clean build 성공으로 판정하지 않습니다. PlayerSettings 디스크의 AndroidBundleVersionCode는 기존 HEAD5/로컬10 차이이며 실제 제공본27·원장195,8,27·다음 예약28 이상과 혼동하거나 로컬10을 새 배포 값으로 채택하지 않습니다. 과거dirty15/3914 감사 기록은 해당 시점의 근거로 보존합니다.
+
 2026-10-21 최신 배포 상태: 코드27/1.0.195를 기존 키로 서명·독립 검토 후 지정 작업용 Console에서 내부 테스트 release8에 직접 제공했습니다(11:56). 대응심볼6/7과 Play 서명 APK 검증·기존 비공개 Drive 테스트 폴더 전달도 완료했습니다. 실제 최신 기기/Store/경기·16KB 기기·전체 권리·clean checkout·단일 Unity 빌드 안정화는 별도입니다. 원장195,8,27/다음 새 예약28 이상, 빌드 소스a54d6d0+기존dirty15/원본3914 입력과 과거 실패 보존, 기존 키 유지·백업 위치 후속·실기기/성능 후순위 합의를 유지합니다. 기존 RELRO 실패5는 PR143의 검사 오탐 정정/동일 native7 정적 통과와 구분합니다. 자세한 실제 SHA·검증 범위는 배포 점검표를 읽습니다. 사용자 당일 작업 마감은17시KST이며 당일에만 적용합니다.
 
 항상 자연스럽고 공손한 한국어 존댓말로 답변합니다. 작업 전 README.md, ISSUE_TRACKING.md, PROJECT_PLAN.md, ANDROID_RELEASE_CHECKLIST.md의 최신 상태를 읽고 과거 기록과 구분합니다.
