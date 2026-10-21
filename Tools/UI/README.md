@@ -1,5 +1,20 @@
 # 메뉴 미리보기 이미지
 
+## 자체 안전 영역 컴포넌트 통일 (2026-10-21, #157)
+
+`CanvasLobby`·`CanvasRoom`의 안전 영역을 기존 자체 `ScreenSafeArea`로 통일했습니다. 두 대상은 full-stretch·offset0, ConformX/Y=true·Logging=false였고 외부 컴포넌트의 코드 참조·씬 override는 없었습니다. Unity `LoadPrefabContents`·`AddComponent`·대상 컴포넌트 제거·프리팹별 저장을 사용했습니다. 컴포넌트 ID 두 개는 새로 생성됐으며 프리팹 GUID·나머지 계층/이벤트·Canvas 직렬화 모드·카메라 바인딩·씬·자체 스크립트 meta는 유지합니다.
+
+자체 코드는 NaN/Infinity·0/음수·화면 밖·float 정밀도로 사라지는 영역을 적용하지 않고 이전 배치/캐시를 보존합니다. 유효한 영역은 기존 anchor 계산과 offset0을 유지하고, 적용한 뒤에만 입력 캐시를 갱신합니다.
+
+- 계산 31종: 유효7(전체·좌/우 노치·세로 상하 여백·양축 여백·1픽셀·와이드), 거부24(화면/영역 크기·음수/화면 밖·NaN/Infinity·float 퇴화/정규화 underflow).
+- 실제 두 프리팹의 격리 contents와 DesertHouse preview의 기존 HUD에서 각각 같은31종을 적용했습니다. 잘못된 입력의 anchor/offset/cache 변경0, 정상 값 복귀, 현재 Screen 값의 Update/OnEnable 직접 호출을 확인했습니다. 하니스는 자산을 저장하지 않고 preview를 닫습니다.
+- 벡터 비교 허용 오차는 거리 `1e-4`입니다. 실제 터치·렌더·기기 노치·화면 회전 시험을 뜻하지 않습니다. 이번 변경은 제공 APK27에 미포함입니다.
+- 최종 C# 컴파일 오류/경고0. 프리팹441/203객체에서 대상 컴포넌트 교체와 부모의 component 참조 외 직렬화 내용을 보존했습니다. Unity 저장본과 원본을 외부 보존하고 empty scalar 표현만 정리했습니다.
+
+첫 비활성 부모 조회의 NullReference, 존재하지 않는 CLI refresh 명령, filtered CRLF와 원래 native LF 바이트를 혼동한 첫 formatter 중단은 실패 이력으로 보존합니다. 첫 formatter는 제품 바이트 쓰기 전에 중단됐고, 원래 hash에 일치하는 Git blob으로 재검증했습니다. 초기29종 검증도 최종31종과 구분해 보존합니다. 근거는 외부 `20261021-safearea-source-audit-01/`의 최종 하니스·구조 감사·원본/저장본입니다.
+
+## 실제 맵 미리보기
+
 `Assets/Art/UI/MapPreviews/DesertHouse.png`는 외부 사진이나 AI 그림이 아니라 제품의 실제 `Assets/Scenes/Game/DesertHouse.unity`를 Unity 6000.3.25f1/URP에서 촬영한 이미지입니다. 원본 씬·모델·재질·조명은 변경하지 않았습니다.
 
 - 카메라 위치 `(8,13,-11)`, 시선 대상 `(0,2,3)`, 수직 FOV52도,16:9, near0.1/far250, HDR 및 FXAA.
