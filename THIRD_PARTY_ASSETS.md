@@ -1,5 +1,18 @@
 # Third-party asset provenance
 
+## Perfect DOS 글꼴의 원본 허용문·고지 보강 (2026-10-21, #155/#42)
+
+실제 코드27 packed source에 포함된 Core17.3.0 Debug UI의 `PerfectDOSVGA437.ttf`에 대응하는 저자·출처와 허용·조건 관련 절을 앱 고지에 추가했습니다. 기존 722,942B 고지 prefix와 폰트·GUID·프리팹·씬은 유지합니다. 이 고지 변경은 이미 제공한 코드27/Drive APK에 소급 반영되지 않으며 다음 Android 산출물에서 전문 포함을 확인해야 합니다.
+
+현재 작업 폴더의 고지는 724,028B/SHA256 `45C8F5A84BBB3B89EB2BB1509E97D3F1C6B0C379868EA7FC0211D59D9F0A5018`입니다. 실제 Unity TextAsset 바이트 일치와 기존 pager의 200페이지 원문 재조합, 최대 표시 4,089 UTF16자·93줄·FF27 보존을 확인했습니다. 폰트/UI 렌더·새 Android 포함 검증은 별도입니다.
+
+Core의 81,192B/SHA256 `AB5F7798CE9D05AA09380FCE2142B11690BA3216A73208954F87C6C63A035102`는 [저자 표시 배포 페이지](https://www.dafont.com/perfect-dos-vga-437.font)가 연결한 원본 ZIP의 비 Win `Perfect DOS VGA 437.ttf`와 바이트가 일치합니다. 동봉 `dos437.txt`는 게임 사용·배포 허용과 폰트 판매 금지, release-form 관련 안내를 함께 담고 있습니다. [저자 직접 답변](https://www.dafont.com/font-comment.php?file=perfect_dos_vga_437)도 무료 사용 취지를 확인합니다. CC0/OFL·공용영역으로 재분류하거나 폰트 상품화 허용으로 확대하지 않습니다.
+
+원본 ZIP50,530B/SHA256 `7B4AB0E257309EF6B2D4643DAFFDB7525F5B78A1E817A34F998A24DC8D865E24`, `dos437.txt`4,957B/SHA256 `2965098E9A46569D6B7E51E5C72F94D3FCC9DFF202965AA8F2791684EC7425B9`를 외부 감사 자료와 대조했습니다. Core DebugUI prefab26개의149필드는 legacy Font 참조이며 이번 작업은 폰트 교체가 아닙니다.
+
+전체 #42 권리 확인은 유지합니다. `Crystal.SafeArea.cs`의 정확한 원 제공본·조건 대응과 기존 팩의 남은 원본/조건 범위는 별도입니다. 이전 사용자 제작/취득 확인을 미확인으로 되돌리거나 현재 packed에 없는 옛 자산을 새 앱 고지 누락으로 집계하지 않습니다. 근거는 외부 `20261021-remaining-license-gaps-01/`의 원본 배포 ZIP/readme, 실제 packed 경로와 폰트/GUID 대조, 적용·pager 검증 기록입니다.
+
+
 ## 코드27 고지의 실제 내부 배포·APK 전달 (2026-10-21, #42/#43)
 
 고지722,942B/SHA256 `C5DE97CE407C5104B62869CA5090A076608FD26E9B6DB125A6267DBBA7D919CA` 전문을 실제 코드27 서명 AAB에서 재파싱해 원문과 대조했습니다. 해당 AAB를 내부 테스트 release8에 제공하고 Play 서명 APK도 기존 비공개 테스트 Drive 폴더에 전달했습니다. APK의 assets13개가 원래 AAB와 집합·payload SHA 모두 같으므로 동일 고지가 연결됩니다. APK TextAsset 전문을 새로 재파싱하거나 실제 기기 고지 화면을 확인한 결과로 확대하지 않습니다.
