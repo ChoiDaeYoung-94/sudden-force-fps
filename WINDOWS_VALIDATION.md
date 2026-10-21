@@ -1,5 +1,24 @@
 # Windows 검증 Player
 
+## 종료 재시험 최신 상태 · 2026-10-21 (#154)
+
+**종료 문제는 미해결입니다.** 기존 W3 Windows64/Mono/Development1.0.194(source `1d7ca5f6e143aa9bccb17fbd9837f815278f122c`)와 같은359개 payload/267,928,697B를 전수 SHA 대조해 경로·bytes 변경/추가/누락0을 확인한 뒤 재시험했습니다. 현재 Android28이나 최신 제품 전체 실행 결과로 합산하지 않습니다.
+
+최초 W3 실행에서는 종료 후 창 조회/AltF4와 겹친 client `Crash!!!`1건·UIAutomationCore/WindowPattern 관련 스택을 관측했습니다. 후속 repro02는 양쪽1280×720의5분 경기·결과·복귀·재참가 뒤 종료 요청 후 창 조회/AltF4 없이 양쪽 exit0/선택 Crash 문자열0이었습니다. 창 크기 등 조건이 달라졌으므로 원인을 특정하거나 최초 실패를 해결한 것으로 처리하지 않았습니다.
+
+이번 repro03은 원래 크기(host1728×729/client1280×720)로 실제 방 참가·READY/START·양쪽 사격/재장전·5분 DRAW·양쪽 결과/로비 복귀·새 방 재참가를 확인했습니다. 재참가 도중 Loading을 저장한 사진은 완료 증거에서 제외하고 후속 실제 완료 화면을 구분했습니다.
+
+| 종료 단계 | 실제 결과 | 판정 한계 |
+| --- | --- | --- |
+| client 첫 EXIT/확인 입력 뒤 대기 | 208.818초 동안 창 조회/AltF4 없이 프로세스만 기다렸으나 남아 있었음 | 실제 OK onClick/Application.Quit 도달은 미확인 |
+| 별도 recovery | 이후 창 조회와2입력, PopupExit 부재/Lobby 표시만 확인 | 최초 무창조회 대기와 별도; 배경/Cancel도 Quit 없이 팝업을 닫을 수 있음 |
+| 최종 종료 | host exit0, 정확한 소유 client만 강제 종료한 exit-1 | 양쪽 정상 종료 PASS 아님 |
+
+닫힌 로그의 고정 `Crash!!!`·`Exception` 문자열은 양쪽0이며 선택 패턴 범위입니다. client `code:104`2회/`LeaveRequest`3회는 별도 관측이고 전체 오류0·사건 수·새 native crash 부재 전수 증명이 아닙니다. 이번0건은 최초 crash1건을 상쇄하지 않습니다. 실제 OK 도달·종료 취소·SDK/native teardown·UI 도구 영향 중 특정 원인을 확정하지 않습니다. serialized OK target/script/localID/CallState를 읽은 범위에서는 정적 결함을 찾지 못했지만 실제 콜백 실행 증거는 아닙니다.
+
+fixture `exit.public.json`의 `forcedTermination:false`는 잘못된 고정값입니다. 원본을 보존하고 root cleanup의 true·host0/client-1과 `EXIT_FIXTURE_CORRECTION.public.json`으로 정정했습니다. `.png` 이름의 저장사진17개도 실제 JPEG/JFIF 바이트이며 원본 이름·bytes를 보존하고 문서에서 포맷을 정정했습니다.
+
+독립 검토 근거는 외부 `20261021-windows-exit-crash-01/repro-03-original-window-sizes/independent-static-exit-path-review-01/FINAL_REVIEW.ko.md`, `FINAL_REVIEW.public.json`, `EXIT_FIXTURE_CORRECTION.public.json`, `final-bounded-verification.public.json`입니다. 원시 로그·Player·사진은 Git에 올리지 않습니다. 다음 PC 후보는 별도 진단 빌드의 OK handler/Quit/quitting 단계 관측이며 아직 구현·빌드·실행하지 않았습니다. 사용자 조치·질문은 없습니다. 아래는 각 시점의 기록입니다.
 ## 새 체크아웃 빌드 · 2026-10-21 (#147)
 
 main `ef51c22da32f23cfe6fe382e91b28158a95e4c80`에서 별도 Git worktree를 만들고, 기존 서명 키 경로 한 개는 sparse 규칙으로 처음부터 제외했습니다. 공개 tracked 입력3,926개·실행 전 clean 상태와 새 Library를 기준으로 Unity6000.3.25f1의 기존 `MultiplayerValidationBuild.BuildFromCommandLine`을 실행했습니다. 키 내용 조회·해시·복사, Android 예약/서명은 하지 않았습니다.
