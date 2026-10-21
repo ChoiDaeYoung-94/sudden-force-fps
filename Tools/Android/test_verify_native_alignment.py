@@ -23,6 +23,30 @@ def elf(alignment=16384, relro_end=16384, include_relro=True):
     return result
 
 
+def isolated_elf(extra_loads=(), *, own_address=0x4680, own_size=0x980,
+                 relro_address=0x4680, relro_size=0x980, own_flags=6,
+                 own_alignment=16384, relro_first=False):
+    # Android's documented dedicated-LOAD example ends at 0x5000, not 0x4000.
+    headers = [(tool.PT_LOAD, 5, 0, 0, 0, 0x680, 0x680, 16384),
+               (tool.PT_LOAD, own_flags, own_address % own_alignment, own_address,
+                own_address, 0x1d8, own_size, own_alignment),
+               *extra_loads]
+    relro = (tool.PT_GNU_RELRO, 4, 0x680, relro_address, relro_address,
+             0x1d8, relro_size, 1)
+    headers.insert(0 if relro_first else len(headers), relro)
+    result = bytearray(32768)
+    result[:16] = b"\x7fELF\x02\x01\x01" + bytes(9)
+    struct.pack_into("<HHIQQQIHHHHHH", result, 16, 3, 183, 1, 0, 64, 0, 0,
+                     64, 56, len(headers), 0, 0, 0)
+    for index, header in enumerate(headers):
+        struct.pack_into("<IIQQQQQQ", result, 64 + index * 56, *header)
+    return result
+
+
+def writable_load(address, size=0x100, flags=6):
+    return tool.PT_LOAD, flags, address % 16384, address, address, 0, size, 16384
+
+
 class NativeAlignmentTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -46,6 +70,50 @@ class NativeAlignmentTests(unittest.TestCase):
         result = tool.inspect_elf(elf(relro_end=12288))
         self.assertEqual(result["failures"], ["RELRO_END_ALIGNMENT"])
         self.assertEqual(result["relroSegments"][0]["remainder"], 12288)
+
+    def test_official_isolated_load_example_passes_despite_nonzero_modulo(self):
+        result = tool.inspect_elf(isolated_elf())
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["relroSegments"][0]["remainder"], 0x1000)
+        self.assertEqual(result["relroSegments"][0]["alignmentBasis"], "ISOLATED_LOAD")
+
+    def test_isolated_load_accepts_later_writable_page_boundary(self):
+        self.assertTrue(tool.inspect_elf(isolated_elf([writable_load(0x8000)]))["passed"])
+
+    def test_isolated_load_rejects_later_writable_data_in_same_page(self):
+        result = tool.inspect_elf(isolated_elf([writable_load(0x7000)]))
+        self.assertEqual(result["failures"], ["RELRO_END_ALIGNMENT"])
+        self.assertEqual(result["relroSegments"][0]["overlappingWritableLoadIndices"], [2])
+
+    def test_isolated_load_rejects_earlier_writable_data_in_same_page(self):
+        self.assertFalse(tool.inspect_elf(isolated_elf([writable_load(0x4000)]))["passed"])
+
+    def test_isolated_load_ignores_separate_prior_and_zero_size_loads(self):
+        result = tool.inspect_elf(isolated_elf([writable_load(0x2000), writable_load(0x7000, 0)]))
+        self.assertTrue(result["passed"])
+
+    def test_isolated_load_does_not_treat_readonly_load_as_writable(self):
+        self.assertTrue(tool.inspect_elf(isolated_elf([writable_load(0x7000, flags=4)]))["passed"])
+
+    def test_relro_subrange_is_not_entire_load_exception(self):
+        self.assertFalse(tool.inspect_elf(isolated_elf(own_size=0x1980))["passed"])
+
+    def test_same_size_with_different_address_is_not_entire_load_exception(self):
+        self.assertFalse(tool.inspect_elf(isolated_elf(relro_address=0x5680))["passed"])
+
+    def test_load_after_relro_header_is_considered(self):
+        self.assertTrue(tool.inspect_elf(isolated_elf(relro_first=True))["passed"])
+        self.assertFalse(tool.inspect_elf(isolated_elf([writable_load(0x7000)], relro_first=True))["passed"])
+
+    def test_isolated_exception_never_bypasses_load_alignment_failure(self):
+        result = tool.inspect_elf(isolated_elf(own_alignment=4096))
+        self.assertEqual(result["failures"], ["LOAD_ALIGNMENT"])
+
+    def test_duplicate_own_load_is_not_unambiguous(self):
+        self.assertFalse(tool.inspect_elf(isolated_elf([writable_load(0x4680, 0x980)]))["passed"])
+
+    def test_non_writable_matching_load_is_not_accepted_as_exception(self):
+        self.assertFalse(tool.inspect_elf(isolated_elf(own_flags=4))["passed"])
 
     def test_absent_relro_is_reported_without_security_claim(self):
         result = tool.inspect_elf(elf(include_relro=False))
