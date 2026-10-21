@@ -89,6 +89,6 @@ python -m unittest discover -s Tools/Android -p 'test_*.py' -v
 python -B -m unittest discover -s Tools/Android -p 'test_*.py' -v
 ```
 
-Gradle 검사14개와 ELF/ZIP 검사19개는 임시 fixture와 mocked Gradle 이벤트로 기대값·실패 거부·입력 보존 로직을 확인합니다. pip 설치나 custom secret, Unity license, SDK/JDK·Gradle 실행이 필요하지 않습니다. 실제 Gradle/AGP·init script, Unity 빌드·AAB·서명·배포·기기 실행은 CI 검증 범위에 포함되지 않습니다.
+Gradle 검사14개와 ELF/ZIP 검사31개는 임시 fixture와 mocked Gradle 이벤트로 기대값·실패 거부·입력 보존 로직을 확인합니다. pip 설치나 custom secret, Unity license, SDK/JDK·Gradle 실행이 필요하지 않습니다. 실제 Gradle/AGP·init script, Unity 빌드·AAB·서명·배포·기기 실행은 CI 검증 범위에 포함되지 않습니다.
 
 실제 GitHub Actions 실행 상태와 로그는 workflow를 추가한 PR의 checks 결과에서 확인합니다. 로컬 unittest 결과와 GitHub 실행 결과는 별도로 기록합니다. CI 실행이 성공해도 기존 export의 현장 dry-run 및 실제 Android 산출물 검증은 각각 필요합니다.
