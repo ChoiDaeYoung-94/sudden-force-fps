@@ -1,5 +1,24 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 최신 통합 후보: 코드28 무서명 검증 (2026-10-21, #159)
+
+오늘 결과 표 열 정렬/가로 배치(PR151/153), Perfect DOS 글꼴 고지(PR156), 자체 ScreenSafeArea로 메뉴 교체(PR158)를 포함한 source HEAD `a446794607e4f9e0b377a3b92f6835bedebe2f2b`에서 새 후보를 생성했습니다. 현재 Play/Drive 제공본은 아래 과거 코드27/release8이며28의 서명·업로드·기기 실행은 아직입니다.
+
+| 산출물 | 바이트 | SHA256 |
+| --- | ---: | --- |
+| 코드28 무서명 AAB | 92,814,965 | `0B273FB4A9A4E06F3BBFFEA31CD66409A054D4A9DEA59661F0AF72D3236B0559` |
+| 현재28 대응 심볼 ZIP | 46,091,207 | `4B99F249AD1EF8877D57374B6A1B86EF673A316850BD2B68F3965AB3F3FE008A` |
+
+- 생성/예약: P4 키 제외 별도 체크아웃·공개 입력3925개에서 공식 Unity6000.3.25f1 Android export Succeeded/오류0·경고71, report GUID `ad45bab9a5f94c15b1696d2bce7cc093`입니다. IL2CPP/ARM64/non-Development/min25/target36/1.0.195/code28입니다. canonical P2만195,8,27→195,9,28 단1회 CAS 예약했고 P4의 복사 원장195,8,27은 수정하지 않았습니다. 다음 새 예약29 이상이며 실패 시 코드 재사용/원장 되돌림 금지입니다.
+- 실제 패키징: 별도 offline C1 Gradle actual exit0·allGatesPassed·176태스크 시작/종료·실패0, buildIl2Cpp didWork=true/skipped=false/upToDate=false입니다. 실제 AGP9.0.0/JDK17/worker1·unsigned finalizer gate를 확인했습니다. Unity 단일 AAB 호출 안정화나 전체 엔진 cold 재컴파일로 확대하지 않습니다.
+- 정적 산출물: 실제 AAB129개 ZIP 엔트리 CRC·bundletool validate와 package `com.AeDeong.SuddenForceFPS`/28/1.0.195/min25/target36/비개발/무서명, ARM64 SO7/PAGE_ALIGNMENT_16K를 확인했습니다. 현재 저장소 검사기로 LOAD/RELRO7개 통과(끝 주소 정렬2·독립 LOAD 예외5)이며 실제16KB 기기 실행은 아닙니다.
+- 고지/DEX: 실제 UnityFS의 TextAsset 이름·길이·고지 전문724,052B/SHA `77AA09C767FFD29D4A64CE94E1F189A5A47479400E805D4D5D8F93A0E33AB1F0`가 현재 P4 source와 exact입니다. 객체 테이블/GUID 전수 판독이나 전체 권리 판정은 아닙니다. 전체 DEX1개/3696클래스에서 지정 광고·결제 네임스페이스17종의 type 참조/클래스 정의0과 Google Play Games/Unity 양성 대조를 확인했습니다. 난독화/native/원격 동작까지 모든 광고·결제 부재를 증명한 것은 아닙니다.
+- native/심볼: actual stripped native7개의 경로·bytes·SHA가 AAB payload와 exact입니다. 현재 AAB와 BuildID/ALLOC layout/정의 함수 및 debuglink CRC 또는 전체 ALLOC를 대조한6개 대응 심볼을 새 ZIP으로 만들고 엔트리 CRC/payload SHA를 재검증했습니다. libnanosockets.so는 누락이며7/7·전체 DWARF/함수 coverage·Play 수락으로 처리하지 않습니다.
+- 생성/packed 한계: 자체 ScreenSafeArea C#과 실제 생성 C++의5기능 메서드+생성자 본문을 읽었고 legacy Crystal 표식은 지정 C#/생성 C++ 범위0입니다. 개별 메서드의 최종 native 링크 생존·기기 동작은 미검증입니다. BuildReport2771 unique nonempty descriptor 중2769개는 알려진 공개 경로이고2개는 원문을 내보내지 않은 unknown입니다. 전부 공개 경로/권리 확인으로 합산하지 않습니다. 알려진 경로의 코드27 대비추가7개는 기존 URP BlueNoise이며 삭제1개는 legacy SafeArea.cs입니다.
+- 보존/차이: source3925개 중3919rawexact/6개는 EOL·빈 YAML 값 끝공백만입니다. raw source exact=false 결과와 원본 시도를 보존했고 전역 저장·setter·dirty clear로 덮지 않았습니다. 6개 전image는 공개HEAD blob의 LF/CRLF 재구성과 준비 SHA 일치 근거이며 실제 prefile archive라고 표현하지 않습니다. 패키징 전후 source3925/원래 export2797개 exact, 새 compile-data.json4044B 한 개만 별도 분류했습니다. P2 dirty5·코드27 무서명/서명 AAB·APK·심볼4개를 보존했습니다. 키 제외 checkout은 공개 입력 기준이며 기존dirty P2와 전체 원래 프로젝트가 clean이라는 판정은 아닙니다.
+
+근거는 외부 `20261021-android28-readiness-01/`의 actual export/raw source 분류, 단일 CAS, `packaging-v2/independent-runtime-review-01/`, `artifact-validation-candidate-02/`, `root-code28-stripped-native-aab-link.public.json`, `native-symbols-candidate-02/run-01/`과 독립 검토입니다. 별도 로컬 `D:/codex/releases/sudden-force-fps/1.0.195-code28/`에 AAB/심볼을 원본 SHA로 보존했습니다. 산출물·원시 로그·키·비밀번호는 Git에 올리지 않습니다. 서명/Play/최신기기·#41/#42/#43/#44/#66/#132/#140과 장시간 성능 후순위 합의를 유지합니다. 아래는 각 시점의 기록입니다.
+
 ## 코드27 서명·내부 테스트 release8·APK 전달 완료 (2026-10-21, #43)
 
 총괄이 지정 작업용 Console에서 전체 업로드7개/최대21/코드27 부재를 새로 확인한 뒤 **1.0.195/코드27**을 직접 업로드하고 출시했습니다. 내부 테스트 release8의 **10월21일11:56 내부 테스터 제공**과 해당27 행의 네이티브 심볼 첨부를 확인했습니다. 한국어·영어 출시 노트2개를 반영했고 이전21 대비 지원 기기 증감은0입니다. 참여 링크는 https://play.google.com/apps/internaltest/4701524132186452960 입니다. 공개 프로덕션 출시나 실제 Store 설치 확인은 아닙니다.
