@@ -1,5 +1,25 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 코드27 서명·내부 테스트 release8·APK 전달 완료 (2026-10-21, #43)
+
+총괄이 지정 작업용 Console에서 전체 업로드7개/최대21/코드27 부재를 새로 확인한 뒤 **1.0.195/코드27**을 직접 업로드하고 출시했습니다. 내부 테스트 release8의 **10월21일11:56 내부 테스터 제공**과 해당27 행의 네이티브 심볼 첨부를 확인했습니다. 한국어·영어 출시 노트2개를 반영했고 이전21 대비 지원 기기 증감은0입니다. 참여 링크는 https://play.google.com/apps/internaltest/4701524132186452960 입니다. 공개 프로덕션 출시나 실제 Store 설치 확인은 아닙니다.
+
+| 산출물 | 바이트 | SHA256 |
+| --- | --- | --- |
+| 기존 무서명 AAB | 92,362,210 | `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16` |
+| 업로드 서명 AAB | 92,375,875 | `31018749FFC48B11AD7465F8B06C7435057BE66496485D087D43B8BB520B4159` |
+| Play 서명 범용 APK | 98,823,730 | `7FEE92D8179812E532ACF1B6686B9E166AA20A7924CBDC6F10521CCB444D612C` |
+| 실제27 대응 네이티브 심볼 ZIP | 46,094,477 | `31B16B6744B5C51A505772F624090DF21902A65F92C42BF140EF76ABBEA443CE` |
+
+- 서명 AAB: 기존 업로드 인증서 SHA256 `4D072592228C991D3F6A0EDA768C8CBEE40895C3B1F4A6FB9379540F048965E0`, 공식 jarsigner 검증·전체129개 payload의 암호 무결성/무서명 원본 바이트 exact, 서명metadata3개만 추가, ZIP CRC/bundletool/manifest·고지722,942B 전문 재파싱 exact를 확인했습니다. 독립 공개 산출물 검토도 통과했습니다. 초기 서명 실패/실행 전 중단은 별도 보존하며 원인을 암호 오류로 단정하지 않습니다.
+- 설치 APK: Play 공개 인증서 SHA256 `01B2846B34835CD145264048DD5C642B6F112D35AA8F0B601DBA11F49E100D86`와 실제 APK v2 서명을 확인했습니다. package27/1.0.195·min25/target36·비개발, ZIP CRC, 원본 assets13/native7/DEX1의 집합과 payload SHA exact를 독립 대조했습니다. 고지는 APK의 assets 전체 동일성으로 연결하며 APK TextAsset 본문을 다시 파싱한 검사는 아닙니다. SDK36 aapt2의 `minSdkVersion` 표기를 받지 못했던 최초 검사 중단은 스크립트/이유를 보존하고 행 고정 별칭만 수정해 재검증했습니다.
+- 페이지 정렬: 실제 서명 AAB와 APK의 같은 native7개를 수정 검사기로 재파싱해 LOAD/RELRO7/7 통과(끝 정렬2·독립 LOAD 예외5)를 확인했습니다. Console의16KB 지원 표시는 별도 관측입니다. 범용 APK의 `zipalign -c -P16 4`도 통과했지만 native7개가 모두 ZIP 압축되어 stored SO는0개입니다. 이를7개 SO의 직접 mmap용 ZIP16KB 오프셋 검사나 실제16KB 실행 통과로 확대하지 않습니다.
+- 심볼: 원래 ZIP의6개 대응 BuildID·CRC/해시를 확인해27에 첨부했습니다. libnanosockets.so 심볼 누락과6/7 범위를 유지합니다. Console의 ReTrace/R8·ProGuard 매핑 파일 미첨부 경고1개도 남으며 전체 권고 해소로 처리하지 않습니다.
+- 전달·보존: 위 APK를 `SuddenForceFPS-1.0.195-code27-PlaySigned.apk` 이름으로 기존 비공개 테스트 Drive 폴더에 업로드했고 완료 표시와 파일 행을 확인했습니다. 이전 코드5 APK를 덮어쓰지 않았으며 공유 권한은 바꾸지 않았습니다. 로컬 `Downloads/27.apk`와 원본 AAB·심볼도 보존했습니다. 기존 키 교체·생성·이동·Drive 키 백업은0이며 서명 직후 Editor 암호 칸 비우기를 요청했습니다.
+- 소스 범위: 빌드 소스는 여전히 `a54d6d0d4446c2a2b46dabeb3d48e3cc059b3eda`+기존dirty15이고 오늘 새 AAB 빌드/예약은0입니다. 서명 후 기존 source-before3914개 전체를 재해시한 결과 Assets/Packages/ProjectSettings 차이는0, 원장과 후속 문서6개만 달랐습니다. 현재 새 파일까지 열거한 clean checkout 전수 감사는 아닙니다. 원장195,8,27·다음 새 예약28 이상을 유지합니다.
+
+근거는 외부 `20261021-apk-delivery-01/`와 `20261021-code27-signing-preparation-01/v7/`의 실제 서명/검증·독립 검토·Console/Drive 화면입니다. 민감정보·키·원시 로그·산출물은 Git에 올리지 않습니다. 최신 기기/UI/경기·실제16KB·전체 권리·clean checkout·Unity 단일 AAB 호출 안정화는 미검증이며 실기기/장시간 성능 후순위 합의와 #41/#42/#43/#44/#66/#132의 남은 범위를 유지합니다. 아래는 각 시점의 기록입니다.
+
 ## RELRO 검사 오탐 정정 (2026-10-21, #142)
 
 공식 Android 문서는 GNU_RELRO가 자체 LOAD 전체와 일치하고 보호 페이지가 다른 writable LOAD와 겹치지 않으면 끝 주소 나머지가0이 아니어도 허용합니다. 이전 검사기의 예외 누락을 수정하고 동일 코드27 AAB를 새 보고서로 재검사했습니다. LOAD/RELRO 제한 정적 검사7/7 통과: 끝 주소 정렬2개·독립 LOAD 예외5개입니다. AAB SHA256 `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16`과 원장195,8,27은 그대로입니다.
