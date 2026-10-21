@@ -43,3 +43,9 @@ RoomPlayerUI·CanvasRoom은 single-line 표시 사본만 만들고 ChatManager�
 AD.Room.SetRoom은 재사용할 때마다 방 이름·맵의 richText/parseCtrlCharacters를 false로 적용합니다. 실제 CR/LF/tab만 UI 사본에서 공백으로 바꾸며 원문·SessionInfo 참조·MapName 유효성·세션 인덱스·인원과 JoinRoom 본문을 보존합니다. null/알 수 없는 맵의 기존 안내도 유지합니다. 프리팹이나 네트워크 입력 규칙을 바꾸지 않습니다.
 
 실제 저장된 로비 프리팹의 풀 카드에10가지 합성 사례를 적용해307검사와3해상도 PNG9장을 확인했습니다. 기존2668개 목록 검사는 변경하지 않은 하니스로 재실행했습니다. 합성 setter 표시와 실제 참가·SDK 세션 수신·기기 검증은 구분합니다.
+
+## 경기 결과·점수판의 열 제목 (2026-10-21, #148)
+
+공백으로 정렬하던 단일 Columns 텍스트를 PLAYER/K / D/STATUS의 독립 제목으로 나눕니다. 기존 Columns2개는 PLAYER로 재사용하고 나머지 장식 제목4개만 추가합니다. 제목은 기존 행의 이름380·KD120·상태85 폭과 동일한 X/정렬을 사용하고 raycast는0입니다. 기존32행/96개 TMP·RectTransform과 MatchHudView의 배열/네트워크 데이터·입력·버튼은 보존합니다.
+
+1024×768·1920×1080·2560×1080의 Results/Scoreboard와1920×1080의 UI최대32행 합성 표본, 총7렌더/672열 좌표 비교의 최대 오차는0px입니다. 긴 이름의 기존 생략·literal 태그/백슬래시 표시·LEFT와 여러 자리 KD를 확인했습니다. 합성32행은 실제32인 네트워크 경기가 아니며, 실제 새 Windows Player·Android 포함/배포는 별도입니다. 기존 결과 패널의 넓은 화면 테두리 여유는 #150으로 분리합니다. 근거는 외부 `20261021-result-columns-01/`입니다.
