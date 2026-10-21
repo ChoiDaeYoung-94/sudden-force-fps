@@ -5063,7 +5063,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7508151032643139963}
   - component: {fileID: 3664196123648621274}
-  - component: {fileID: 848028609395247972}
+  - component: {fileID: 946885319953559334}
   m_Layer: 5
   m_Name: CanvasRoom
   m_TagString: Untagged
@@ -5100,7 +5100,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8839316150240108724}
   m_CullTransparentMesh: 1
---- !u!114 &848028609395247972
+--- !u!114 &946885319953559334
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5109,9 +5109,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8839316150240108724}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a6c7a6cfe1c6d641a79d4799cd85398, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConformX: 1
-  ConformY: 1
-  Logging: 0
+  m_Script: {fileID: 11500000, guid: 4214a0f7d14ee7b4694122d8ac81c1fa, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ScreenSafeArea
