@@ -8163,7 +8163,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4585516884239277749}
   - component: {fileID: 3836881302371138857}
-  - component: {fileID: 7355947453779881917}
+  - component: {fileID: 4429119910976056015}
   m_Layer: 5
   m_Name: CanvasLobby
   m_TagString: Untagged
@@ -8201,7 +8201,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6668037224631891045}
   m_CullTransparentMesh: 1
---- !u!114 &7355947453779881917
+--- !u!114 &4429119910976056015
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8210,12 +8210,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6668037224631891045}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a6c7a6cfe1c6d641a79d4799cd85398, type: 3}
+  m_Script: {fileID: 11500000, guid: 4214a0f7d14ee7b4694122d8ac81c1fa, type: 3}
   m_Name:
-  m_EditorClassIdentifier:
-  ConformX: 1
-  ConformY: 1
-  Logging: 0
+  m_EditorClassIdentifier: Assembly-CSharp::ScreenSafeArea
 --- !u!1 &6710625758587920272
 GameObject:
   m_ObjectHideFlags: 0

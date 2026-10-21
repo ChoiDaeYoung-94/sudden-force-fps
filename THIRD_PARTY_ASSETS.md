@@ -1,5 +1,13 @@
 # Third-party asset provenance
 
+## 로비·대기실 안전 영역을 자체 구현으로 통일 (2026-10-21, #157/#42)
+
+로비·대기실 프리팹의 외부 `Crystal.SafeArea` 두 컴포넌트를 프로젝트 자체 `ScreenSafeArea`로 교체하고, 참조가 없어진 `Assets/ThirdPartyAssets/SafeArea.cs`와 meta를 제거했습니다. 기존 자체 스크립트의 GUID·경기 HUD 참조는 유지합니다. 새 의존성이나 외부 구현을 추가하지 않았습니다.
+
+기존 파일은 공식 Safe Area Helper 상품과 동일한 지원 글 identifier를 갖지만, 정확한 원본 버전·조건 대응까지 확인된 것은 아닙니다. 기존 사용의 위반을 단정하거나 사용자님의 무료 취득·배포 가능 기억을 번복한 조치가 아닙니다. 이미 제공한 Android27의 packed source에는 해당 파일이 1개 포함돼 있으며 이번 소스 변경이 소급 반영되지 않습니다. 다음 Android 산출물에서 제외를 별도 확인해야 합니다.
+
+유효 영역 7종과 잘못된 입력 24종, 두 프리팹·기존 경기 HUD의 격리 Editor 검증을 수행했습니다. 실제 노치·화면 회전·최신 Android 실행이나 전체 #42의 권리 확인 완료는 아닙니다. 구체적 범위는 [UI 검증 기록](Tools/UI/README.md)의 안전 영역 항목과 외부 `20261021-safearea-source-audit-01/`을 따릅니다. 이하 항목은 각 작업 시점의 기록입니다.
+
 ## Perfect DOS 글꼴의 원본 허용문·고지 보강 (2026-10-21, #155/#42)
 
 실제 코드27 packed source에 포함된 Core17.3.0 Debug UI의 `PerfectDOSVGA437.ttf`에 대응하는 저자·출처와 허용·조건 관련 절을 앱 고지에 추가했습니다. 기존 722,942B 고지 prefix와 폰트·GUID·프리팹·씬은 유지합니다. 이 고지 변경은 이미 제공한 코드27/Drive APK에 소급 반영되지 않으며 다음 Android 산출물에서 전문 포함을 확인해야 합니다.
