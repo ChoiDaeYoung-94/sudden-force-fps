@@ -14,6 +14,20 @@ python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' 
 
 코드27 무서명 AAB SHA256 `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16`을 실제 검사한 결과 LOAD는7개 모두 통과, RELRO는 libc++_shared.so·libil2cpp.so·libmain.so·libswappywrapper.so·libunity.so의5개가 실패하여 종료1입니다. 실패를 재현한 도구 검증이며 해당 binary 수정이나 배포 호환 통과가 아닙니다. 기존 AAB·공급자 파일은 그대로 보존합니다.
 
+### RELRO 분리 재링크 후보 (2026-10-20, #140)
+
+외부 검증 폴더의 기존 link 입력을 사용해 common-page-size=16384·linker threads1을 추가하고 출력만 별도 경로로 바꿨습니다. IL2CPP는 기존 response file, Unity는 실제 Bee DAG의 엔진 link node, Swappy는 CMake Ninja의 link 명령을 대조했습니다. 전체 C++ 소스를 새로 컴파일한 결과가 아닙니다.
+
+| 외부 후보 | 크기(B) | SHA256 | LOAD/RELRO | 원본과 동일한 defined dynamic export 수 |
+| --- | ---: | --- | --- | ---: |
+| libil2cpp.so | 972878432 | `8108D70064242B13C1ADB644E2A5AC46BC38FE1B606F88F66D2F8C3F0F18C1E5` | 4개/끝 정렬 통과 | 2416 |
+| libunity.so | 32456552 | `9A71F9EF5CCE247F0E8B4727B24F1CCCF2F5463F02CADD6307E72F525C462AA9` | 4개/끝 정렬 통과 | 7 |
+| libswappywrapper.so | 4693632 | `23F469E290E72EB2953E268954ADE0C42B7320EB78E23712EF6C6932187F4E20` | 3개/끝 정렬 통과 | 497 |
+
+후보는 심볼 제거 전 파일이며 특히 IL2CPP 약973MB는 배포용 교체 파일이 아닙니다. 이 표는 standalone ELF의 프로그램 헤더·명시된 동적 심볼 이름/타입/binding/visibility 검사입니다. AAB/APK 전용 CLI에 raw SO를 전달해 통과시킨 것이 아닙니다. 큰 후보는 전체 stream SHA와 header/dynamic metadata seek를 사용했고, 원본 AAB·Gradle 출력·공급자 파일·소스/설정은 수정하지 않았습니다. 실행 중인 다른 프로젝트나 키/암호에 접근하지 않았습니다.
+
+각 실행은 소유 JobObject 안의 stdin gate 이후에만 linker를 시작하고 종료/예외 시 해당 job을 닫았습니다. 선택19개 원본 핀을 전후 대조했지만 모든 object·archive·toolchain 전이 입력을 고정한 것은 아닙니다. 분리 후보의 정렬/심볼 대조는 ABI·실제 실행·새 source build·패키징·서명·16KB 기기 통과가 아닙니다. 원본 AAB의5개 실패는 유지하며 libmain/libc++ 수정, 실제 빌드 경로 적용·새 BuildID 심볼·새 패키징과 실행 검증은 [#140](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/140)에서 이어갑니다. 후보 SO·일회성 절대 경로 계획·원문 명령/환경은 저장소에 반입하지 않습니다.
+
 ## Gradle export 사전 검사
 
 `verify_gradle_export.py`는 Unity가 이미 생성한 Android Gradle 프로젝트를 **offline bundleRelease dry-run**으로 검사합니다. Python3.12 이상, Gradle9.3.1/AGP9.0.0을 대상으로 합니다. Unity Editor 빌드·Gradle 실제 패키징·서명·버전 예약 기능은 없습니다.

@@ -1,5 +1,16 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 서명 준비와 RELRO 후속 상태 (2026-10-20 저녁, #43/#140)
+
+현재 배포 후보는 아래 코드27 무서명 AAB이며 SHA256 `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16`과 원장195,8,27을 유지합니다. 새 AAB·코드28 예약·서명·업로드는 하지 않았습니다. Play 마지막 확인21/release7은 과거 기록입니다.
+
+- 서명 준비 v4: JSON 날짜 자동 변환 문제를 수정하고 실제 Unity 순수 합성41사례·원문3본문의 미호출 컴파일·독립 검토·실제 공개 입력 바인딩 대조를 완료했습니다. 새 Editor의 기존키 경로는 맞지만 별칭이 비어 있어 전체 준비 검사는 차단됐습니다. 설정창만 별도로 열었고 키/별칭 설정은 변경하지 않았으며 암호나 키 내용도 조회하지 않았습니다. 사용자 직접 입력/기존 별칭 선택 후 서명·공개 인증서·payload·고지 검증이 필요합니다. 기존 키 유지 결정은 완료됐으며 새 키 생성/교체/이동/Drive 백업은 하지 않습니다.
+- PR139: ARM64 AAB/APK LOAD·RELRO 검사와 단위 검사33개를 반영했습니다. PR/main GitHub CI 모두 통과했습니다. 실제 코드27은 LOAD7개 통과·RELRO5개 실패로 종료1이며 전체16KB 호환 통과가 아닙니다.
+- #140 분리 재링크: 기존 객체/정적 라이브러리에 common-page-size=16384를 추가한 IL2CPP·Unity·Swappy 후보3개가 각각 ELF 정렬과 기존 defined dynamic export 이름/타입/binding/visibility 대조를 통과했습니다. 후보는 외부 검증 폴더에만 있고 배포본이나 Unity 캐시에 반영하지 않았습니다. 각 실험의 선택19개 원본 해시를 대조했지만 전체 링크 입력을 모두 고정한 재현 빌드나 ABI/실행 동등성 검증은 아닙니다.
+- libmain.so와 libc++_shared.so는 수정 후보가 없으며 공급/생성 경로에 맞는 별도 해결이 필요합니다. 현재 AAB의5개 실패는 그대로입니다. 후보의 새 BuildID에 맞는 심볼·새 패키징/서명·실제16KB 실행 확인도 별도입니다. 자세한 후보/한계는 [Android 도구 기록](Tools/Android/README.md)을 따릅니다.
+
+검증 근거는 외부 `20261020-code27-signing-preparation-01/v4/`와 `20261020-native-alignment-cli-01/`입니다. 실기기 검증 후순위와 장시간 성능 후속 합의를 유지합니다. 아래 동일 날짜의 문장은 각각 이전 단계 기록입니다.
+
 ## 코드27 최신 UI 통합 무서명 검증 (2026-10-20, #136)
 
 빌드 소스 HEAD는`a54d6d0d4446c2a2b46dabeb3d48e3cc059b3eda`이며 기존dirty15를 보존한 P2 워크트리입니다. PR129/131/134/135를 포함합니다. 공식 Android Gradle export Succeeded·오류0·경고2·269.793644초, 별도 offline C1 Gradle은23분11초·exit0·153개 작업 실행입니다. 실제 새 buildIl2Cpp didWork=true/upToDate=false/skipped=false와 최종 stripped native/AAB payload 동일성을 확인했습니다. Unity 단일 AAB 호출 안정화·충돌 근본 해결로 확대하지 않습니다.
