@@ -2,7 +2,7 @@
 
 ## ARM64 ELF LOAD·RELRO 정렬 검사
 
-`verify_native_alignment.py`는 Python3.12 이상에서 AAB의 모든 모듈 또는 APK에 들어 있는 `lib/arm64-v8a/*.so`를 추출 없이 읽습니다. LOAD alignment·주소/파일 오프셋 congruence·GNU_RELRO 끝 주소의16KB 정렬을 검사합니다. 원본과 기존 보고서를 덮어쓰지 않고 Unity·Gradle·서명 도구를 실행하지 않습니다.
+`verify_native_alignment.py`는 Python3.12 이상에서 AAB의 모든 모듈 또는 APK에 들어 있는 `lib/arm64-v8a/*.so`를 추출 없이 읽습니다. LOAD alignment·주소/파일 오프셋 congruence와 GNU_RELRO를 검사합니다. RELRO 끝 주소가16KB 정렬되거나, RELRO가 자체 writable LOAD의 전체 VA/메모리 구간과 일치하고 보호 페이지가 다른 writable LOAD의 페이지와 겹치지 않을 때 통과합니다. 모든 프로그램 헤더를 모은 뒤 판정하므로 헤더 순서에 의존하지 않습니다. 원본과 기존 보고서를 덮어쓰지 않고 Unity·Gradle·서명 도구를 실행하지 않습니다.
 
 ```powershell
 python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' --output '<새 외부 JSON 보고서>'
@@ -12,7 +12,11 @@ python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' 
 
 **APK ZIP alignment·BundleConfig·서명·기기 실행은 검사하지 않습니다.** ELF 정렬 통과만으로 전체16KB 호환을 확정하지 않습니다. [Android 공식 LOAD·RELRO 조건](https://developer.android.com/guide/practices/page-sizes#relro)과 실제16KB 환경 검증을 함께 적용합니다.
 
-코드27 무서명 AAB SHA256 `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16`을 실제 검사한 결과 LOAD는7개 모두 통과, RELRO는 libc++_shared.so·libil2cpp.so·libmain.so·libswappywrapper.so·libunity.so의5개가 실패하여 종료1입니다. 실패를 재현한 도구 검증이며 해당 binary 수정이나 배포 호환 통과가 아닙니다. 기존 AAB·공급자 파일은 그대로 보존합니다.
+### 독립 LOAD 예외 누락 정정 (2026-10-21, #142)
+
+보고서 schemaVersion2는 각 LOAD의 VA/메모리 크기/flags와 RELRO의 alignmentBasis·ownLoadIndex·overlappingWritableLoadIndices를 기록합니다. 기존 schemaVersion1은 끝 주소의 나머지만 검사해 [공식 문서의 독립 LOAD 예외](https://developer.android.com/guide/practices/page-sizes#relro)를 누락했습니다. 부분 RELRO나 다른 writable LOAD가 같은 보호 페이지를 사용하는 경우에는 이 예외를 허용하지 않습니다. 예외 통과가 LOAD 정렬 실패를 무시하지도 않습니다.
+
+동일 코드27 무서명 AAB SHA256 `4FD0420B1DA57A426A638A0A143386C894F65B7A352AE738DA31E5509507EC16`을 새로 읽은 결과, ARM64 라이브러리7개 모두 LOAD/RELRO 제한 정적 검사를 통과했습니다. Burst/NanoSockets2개는 끝 주소 정렬, libc++_shared·IL2CPP·main·Swappy·Unity5개는 자체 LOAD 전체와 일치하고 다른 writable LOAD의 보호 페이지 겹침이 없어 예외 통과입니다. 원본 파일은 변경하지 않았습니다. 이전 도구의 종료1/실패5 보고서는 보존하며 현재 플랫폼 실패5로 해석하지 않습니다. 실제16KB 실행·APK ZIP 정렬·서명·배포 검증은 별도입니다.
 
 ### RELRO 분리 재링크 후보 (2026-10-20, #140)
 
@@ -26,7 +30,7 @@ python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' 
 
 후보는 심볼 제거 전 파일이며 특히 IL2CPP 약973MB는 배포용 교체 파일이 아닙니다. 이 표는 standalone ELF의 프로그램 헤더·명시된 동적 심볼 이름/타입/binding/visibility 검사입니다. AAB/APK 전용 CLI에 raw SO를 전달해 통과시킨 것이 아닙니다. 큰 후보는 전체 stream SHA와 header/dynamic metadata seek를 사용했고, 원본 AAB·Gradle 출력·공급자 파일·소스/설정은 수정하지 않았습니다. 실행 중인 다른 프로젝트나 키/암호에 접근하지 않았습니다.
 
-각 실행은 소유 JobObject 안의 stdin gate 이후에만 linker를 시작하고 종료/예외 시 해당 job을 닫았습니다. 선택19개 원본 핀을 전후 대조했지만 모든 object·archive·toolchain 전이 입력을 고정한 것은 아닙니다. 분리 후보의 정렬/심볼 대조는 ABI·실제 실행·새 source build·패키징·서명·16KB 기기 통과가 아닙니다. 원본 AAB의5개 실패는 유지하며 libmain/libc++ 수정, 실제 빌드 경로 적용·새 BuildID 심볼·새 패키징과 실행 검증은 [#140](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/140)에서 이어갑니다. 후보 SO·일회성 절대 경로 계획·원문 명령/환경은 저장소에 반입하지 않습니다.
+각 실행은 소유 JobObject 안의 stdin gate 이후에만 linker를 시작하고 종료/예외 시 해당 job을 닫았습니다. 선택19개 원본 핀을 전후 대조했지만 모든 object·archive·toolchain 전이 입력을 고정한 것은 아닙니다. 분리 후보의 정렬/심볼 대조는 ABI·실제 실행·새 source build·패키징·서명·16KB 기기 통과가 아닙니다. 이는10월20일의 실험 이력이며10월21일 공식 예외 재평가에 따라 원본5개를 필수 교체 대상으로 간주하지 않습니다. 후보를 제품에 적용하지 않으며 [#140](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/140)의 판정 정정과 후속 범위를 따릅니다. 후보 SO·일회성 절대 경로 계획·원문 명령/환경은 저장소에 반입하지 않습니다.
 
 ## Gradle export 사전 검사
 

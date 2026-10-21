@@ -16,6 +16,12 @@ PAGE_SIZE = 16384
 MAX_ELF_BYTES = 256 * 1024 * 1024
 PT_LOAD = 1
 PT_GNU_RELRO = 0x6474E552
+PF_W = 2
+
+
+def page_interval(address, size):
+    """Half-open memory pages touched by a nonempty segment."""
+    return address // PAGE_SIZE * PAGE_SIZE, (address + size + PAGE_SIZE - 1) // PAGE_SIZE * PAGE_SIZE
 
 
 class InvalidInput(ValueError):
@@ -52,18 +58,40 @@ def inspect_elf(data):
                     "LOAD alignment must be a nonzero power of two")
             require((address - offset) % alignment == 0, "LOAD address/offset incongruent")
             aligned = alignment >= PAGE_SIZE
-            loads.append({"index": index, "alignment": alignment, "passed": aligned})
+            loads.append({"index": index, "alignment": alignment, "passed": aligned,
+                          "virtualAddress": address, "memorySize": memory_size,
+                          "flags": flags})
             if not aligned:
                 failures.append("LOAD_ALIGNMENT")
         else:
             end = address + memory_size
-            aligned = end % PAGE_SIZE == 0
             relros.append({"index": index, "virtualAddress": address,
                            "memorySize": memory_size, "end": end,
-                           "remainder": end % PAGE_SIZE, "passed": aligned})
-            if not aligned:
-                failures.append("RELRO_END_ALIGNMENT")
+                           "remainder": end % PAGE_SIZE})
     require(loads, "ELF has no LOAD segments")
+    # Inspect after collecting every LOAD: program-header order is not significant.
+    # Android documents an exception to the end-modulo rule when RELRO occupies
+    # an entire LOAD and rounding its protection cannot cover other writable data.
+    for relro in relros:
+        own = [load for load in loads
+               if load["virtualAddress"] == relro["virtualAddress"]
+               and load["memorySize"] == relro["memorySize"]
+               and load["flags"] & PF_W and relro["memorySize"] > 0]
+        protected_start, protected_end = page_interval(relro["virtualAddress"], relro["memorySize"])
+        overlapping = [load["index"] for load in loads
+                       if load["flags"] & PF_W and load["memorySize"] > 0
+                       and (len(own) != 1 or load["index"] != own[0]["index"])
+                       and page_interval(load["virtualAddress"], load["memorySize"])[0] < protected_end
+                       and page_interval(load["virtualAddress"], load["memorySize"])[1] > protected_start]
+        end_aligned = relro["remainder"] == 0
+        isolated = len(own) == 1 and not overlapping
+        relro.update(passed=end_aligned or isolated,
+                     alignmentBasis="END_ALIGNED" if end_aligned else
+                     "ISOLATED_LOAD" if isolated else "UNALIGNED_SHARED_OR_OVERLAPPING_LOAD",
+                     ownLoadIndex=own[0]["index"] if len(own) == 1 else None,
+                     overlappingWritableLoadIndices=overlapping)
+        if not relro["passed"]:
+            failures.append("RELRO_END_ALIGNMENT")
     return {"passed": not failures, "loadSegments": loads, "relroSegments": relros,
             "failures": sorted(set(failures)),
             "relroAbsent": not relros}
@@ -106,7 +134,7 @@ def inspect_bundle(path):
         source.seek(0)
         require(hashlib.file_digest(source, "sha256").hexdigest().upper() == digest,
                 "Artifact changed during inspection")
-    return {"schemaVersion": 1, "artifact": str(path.resolve()), "sha256": digest,
+    return {"schemaVersion": 2, "artifact": str(path.resolve()), "sha256": digest,
             "pageSize": PAGE_SIZE, "abi": "arm64-v8a",
             "passed": all(item["passed"] for item in libraries), "libraries": libraries,
             "limits": ["ARM64 ELF program headers only; no library changes or extraction",
