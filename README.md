@@ -415,3 +415,5 @@ APK 메뉴는 Development/LZ4, AAB 메뉴는 non-Development/LZ4HC/CleanBuildCac
 - [Android 빌드·서명·Google Play 테스트 배포 점검](ANDROID_RELEASE_CHECKLIST.md)
 - [외부 에셋과 라이선스](THIRD_PARTY_ASSETS.md)
 - [기존 이슈와 현재 작업 연결](ISSUE_TRACKING.md)
+
+- 2026-10-22 #166: 전투 HUD·조준점·눌림 피드백을 개선했습니다. 4해상도 렌더와 실제 2피어의 합성 입력 소유권 검사를 통과했으며 실제 기기 터치·새 Android 빌드는 별도입니다. 상세 범위는 Tools/UI/README.md를 따릅니다.
