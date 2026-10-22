@@ -11,3 +11,5 @@ Android Adaptive·Round·Legacy는 공식 `AndroidPlatformIconKind` 식별자로
 실제 Editor의 PrepareImport는 PlayerSettings 접근 없이 PNG3개와 meta를 만들었으며 ApplyIcons는 메모리 슬롯을 설정·검사한 뒤 root가 File/Save Project를 한 번 실행했습니다. 전체 공개 입력3960개를 사전에 별도 보존했고 저장 전후 차이는 ProjectSettings.asset 한 파일입니다. index에는 m_BuildTargetIcons/m_BuildTargetPlatformIcons 두 필드만 HEAD 위에 반영해 기존 버전·서명·다른 설정 변경을 섞지 않았습니다. 첫 긴 백업 경로의 Windows 경로 길이 오류는 보존하고 짧은 새 경로에서3960개 전체 SHA 일치 백업 뒤 저장했습니다. 불완전한 첫 백업을 성공으로 합산하지 않습니다.
 
 기존 APK27/AAB28에는 이 아이콘이 없습니다. Android 빌드의 실제 mipmap 출력·launcher의 원형/적응형 마스크·Play 설치 업데이트 검증은 후속입니다. 키·암호 getter/서명/버전 예약은 수행하지 않았습니다. 외부 검증 근거는 `20261022-quality/icon-candidate/revision-03/`입니다.
+
+추가로 실제 import된 텍스처를 Unity UI의 사각·원형·적응형 원형·적응형 squircle 마스크로 합성 렌더해 확인했습니다. 저장된 preview는 외부 icon-ui-mask-preview.png이며 Android launcher 실행 화면이 아닙니다. 이 렌더는 제품 이미지/에셋을 저장하지 않습니다.
