@@ -1,5 +1,11 @@
 # Third-party asset provenance
 
+## URP BlueNoise256 7개의 원저자 대응 보강 (2026-10-22, #42)
+
+코드28 known-public packed 목록의 추가7경로인 `Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_[0..6].png`에 대해, 현재 설치 URP17.3.0의7개 파일과 [Christoph Peters의 공식 원본 ZIP](https://momentsingraphics.de/Media/BlueNoise/FreeBlueNoiseTextures.zip) 내 `Data/256_256/` 동명7개의 바이트·SHA256 일치를 확인했습니다. [원저자 페이지](https://momentsingraphics.de/BlueNoise.html)는 해당 texture database를 CC0로 공개한다고 명시합니다. 자세한 경로·해시·조건 범위는 [에셋 원본 대응 기록](Tools/AssetLicenses/README.md)과 [공개 대응표](Tools/AssetLicenses/urp-blue-noise-256-provenance.json)에 있습니다.
+
+전체42,288,737B ZIP을 받지 않고 exact HTTP206범위로 중앙1743항목과 선택7개만947,003B 읽었으며, 파일명·복원 크기·CRC32를 검사했습니다. 전체 ZIP SHA·전체 아카이브 무결성, 코드28 AAB의 개별 image payload identity·모든 URP texture의 권리를 확인한 것은 아닙니다. 새 필수 고지 누락을 발견한 판정이 아니므로 제품 고지는 변경하지 않았습니다. 코드29의 Military7개는 별도 정적 참조 후보이며 실제 packed 포함은 새 빌드로 확인해야 합니다. 전체 #42는 남은 범위를 유지합니다.
+
 ## 로비·대기실 안전 영역을 자체 구현으로 통일 (2026-10-21, #157/#42)
 
 로비·대기실 프리팹의 외부 `Crystal.SafeArea` 두 컴포넌트를 프로젝트 자체 `ScreenSafeArea`로 교체하고, 참조가 없어진 `Assets/ThirdPartyAssets/SafeArea.cs`와 meta를 제거했습니다. 기존 자체 스크립트의 GUID·경기 HUD 참조는 유지합니다. 새 의존성이나 외부 구현을 추가하지 않았습니다.
