@@ -12,6 +12,9 @@ public sealed class CombatVisualEffects : MonoBehaviour
     private ParticleSystem _muzzle, _impact;
     private bool _wasReloading;
     public int ObservedShotCount { get; private set; }
+    public int PresentedLocalShotCount { get; private set; }
+    public int PresentedRemoteShotCount { get; private set; }
+    public int ConfirmedImpactCount { get; private set; }
 
     private void OnEnable()
     {
@@ -25,21 +28,57 @@ public sealed class CombatVisualEffects : MonoBehaviour
         Detach();
         _presentation = presentation;
         _presentation.ShotObserved += OnShot;
+        _presentation.LocalShot += OnLocalShot;
+        WarmEffects();
         _presentation.LocalVitalsChanged += OnVitals;
         if (_presentation.TryGetSnapshot(out var snapshot)) _wasReloading = snapshot.IsReloading;
     }
     private void OnShot(ShotObservedSnapshot shot)
     {
         ObservedShotCount++;
-        if (_muzzle == null && _muzzlePrefab != null) _muzzle = Instantiate(_muzzlePrefab);
-        if (_impact == null && _impactPrefab != null) _impact = Instantiate(_impactPrefab);
-        Burst(_muzzle, shot.VisualMuzzlePosition, shot.Direction);
-        if (shot.HasHit) Burst(_impact, shot.HitPoint + shot.HitNormal * .015f, shot.HitNormal);
-        if (_audioSource != null && _shotClip != null)
+        // The owner already heard/saw its forward prediction (including host).
+        // Authoritative observations still supply every impact and remote shot.
+        if (!_owner.Object.HasInputAuthority)
         {
-            _audioSource.spatialBlend = _owner.Object.HasInputAuthority ? 0f : 1f;
-            _audioSource.PlayOneShot(_shotClip, .5f);
+            PresentedRemoteShotCount++;
+            PlayMuzzleAndSound(shot.VisualMuzzlePosition, shot.Direction, false);
         }
+        if (shot.HasHit)
+        {
+            ConfirmedImpactCount++;
+            Burst(_impact, shot.HitPoint + shot.HitNormal * .015f, shot.HitNormal);
+        }
+    }
+    private void OnLocalShot(LocalShotSnapshot shot)
+    {
+        if (_owner == null || _owner.Object == null || !_owner.Object.IsValid
+            || !_owner.Object.HasInputAuthority || shot.RespawnVersion != _owner.RespawnVersion) return;
+        PresentedLocalShotCount++;
+        var muzzle = _owner.ViewMuzzle;
+        PlayMuzzleAndSound(muzzle != null ? muzzle.position : shot.Origin, shot.Direction, true);
+    }
+    private void WarmEffects()
+    {
+        if (_muzzle == null && _muzzlePrefab != null)
+        {
+            _muzzle = Instantiate(_muzzlePrefab);
+            _muzzle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+        if (_impact == null && _impactPrefab != null)
+        {
+            _impact = Instantiate(_impactPrefab);
+            _impact.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+        // The authored PCM clip has preloadAudioData=false. Move first-use work
+        // to binding instead of the first accepted shot; no importer rewrite.
+        if (_shotClip != null && _shotClip.loadState == AudioDataLoadState.Unloaded) _shotClip.LoadAudioData();
+    }
+    private void PlayMuzzleAndSound(Vector3 position, Vector3 direction, bool local)
+    {
+        Burst(_muzzle, position, direction);
+        if (_audioSource == null || _shotClip == null) return;
+        _audioSource.spatialBlend = local ? 0f : 1f;
+        _audioSource.PlayOneShot(_shotClip, .5f);
     }
     private static void Burst(ParticleSystem effect, Vector3 position, Vector3 direction)
     {
@@ -66,6 +105,7 @@ public sealed class CombatVisualEffects : MonoBehaviour
         if (!ReferenceEquals(_presentation, null))
         {
             _presentation.ShotObserved -= OnShot;
+            _presentation.LocalShot -= OnLocalShot;
             _presentation.LocalVitalsChanged -= OnVitals;
         }
         _presentation = null;

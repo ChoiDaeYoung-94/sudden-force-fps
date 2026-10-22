@@ -13,10 +13,15 @@ public sealed class CombatPresentation : MonoBehaviour
     public event Action<CombatPresentationSnapshot> LocalVitalsChanged;
     public event Action<ConfirmedHitSnapshot> ConfirmedHit;
     public event Action<ShotObservedSnapshot> ShotObserved;
+    public event Action<LocalShotSnapshot> LocalShot;
     public GamePlayerNetworkData Owner { get; private set; }
     private readonly CombatSequenceCursor _cursor = new CombatSequenceCursor();
     private CombatPresentationSnapshot _lastVitals;
     private bool _bound;
+    private int _localShotLife, _lastLocalShotTick;
+    private bool _hasLocalShotTick;
+    private bool _hasLocalShot;
+    private LocalShotSnapshot _pendingLocalShot;
 
     public void Bind(GamePlayerNetworkData owner)
     {
@@ -25,6 +30,7 @@ public sealed class CombatPresentation : MonoBehaviour
         Owner = owner;
         _bound = true;
         _cursor.Reset(owner.ShotSequence, owner.HitSequence);
+        ResetLocalShots(owner.RespawnVersion);
         Notify(PresentationBound, this);
         if (owner.Object.HasInputAuthority)
         {
@@ -45,10 +51,53 @@ public sealed class CombatPresentation : MonoBehaviour
         return true;
     }
 
+    // Called by simulation, but never invokes render subscribers. Latest-state
+    // coalescing avoids a catch-up burst after a stalled frame, matching remote FX.
+    public void QueueLocalShot(int life, int tick, Vector3 origin, Vector3 direction)
+    {
+        if (!_bound || Owner == null || Owner.Object == null || !Owner.Object.IsValid
+            || !Owner.Object.HasInputAuthority || Owner.Runner == null || !Owner.Runner.IsForward
+            || life != Owner.RespawnVersion || !CombatShotQuery.IsFinite(origin)
+            || !CombatShotQuery.IsFinite(direction)) return;
+        var weapon = Owner.WeaponDefinition;
+        if (weapon == null || !CombatShotQuery.TryDurationTicks(weapon.ShotInterval,
+            Owner.Runner.TickRate, out var shotIntervalTicks)) return;
+        if (_localShotLife != life) ResetLocalShots(life);
+        // Reconciliation can rewind the predicted recoil timer and accept another
+        // forward tick for an already-presented cadence slot. Keep this cosmetic
+        // high-water independent of rollback. Rejected ticks never advance it.
+        if (_hasLocalShotTick && (long)tick - _lastLocalShotTick < shotIntervalTicks) return;
+        _lastLocalShotTick = tick;
+        _hasLocalShotTick = true;
+        _pendingLocalShot = new LocalShotSnapshot(Owner.Object.InputAuthority, life, tick,
+            origin, direction, _hasLocalShot ? _pendingLocalShot.SequenceDelta + 1 : 1);
+        _hasLocalShot = true;
+    }
+
+    private void ResetLocalShots(int life)
+    {
+        _localShotLife = life;
+        _lastLocalShotTick = 0;
+        _hasLocalShotTick = false;
+        _hasLocalShot = false;
+        _pendingLocalShot = default;
+    }
+
     public void RenderState()
     {
         if (!TryGetSnapshot(out var snapshot)) { Unbind(); return; }
         bool local = Owner.Object.HasInputAuthority;
+        if (_localShotLife != snapshot.RespawnVersion) ResetLocalShots(snapshot.RespawnVersion);
+        if (_hasLocalShot)
+        {
+            var shot = _pendingLocalShot;
+            _hasLocalShot = false;
+            // This shot already passed simulation acceptance. The same tick can
+            // end the match or kill the shooter; neither cancels accepted FX.
+            // Binding/life validity still prevents replay into another life.
+            if (local && shot.RespawnVersion == snapshot.RespawnVersion)
+                Notify(LocalShot, shot);
+        }
         if (local && (snapshot.Health != _lastVitals.Health || snapshot.Ammo != _lastVitals.Ammo
             || snapshot.Capacity != _lastVitals.Capacity || snapshot.IsReloading != _lastVitals.IsReloading
             || snapshot.IsDead != _lastVitals.IsDead || snapshot.RespawnPending != _lastVitals.RespawnPending
@@ -73,7 +122,8 @@ public sealed class CombatPresentation : MonoBehaviour
         Notify(PresentationUnbound, this);
         Owner = null;
         _cursor.Reset(0, 0);
-        LocalVitalsChanged = null; ConfirmedHit = null; ShotObserved = null;
+        ResetLocalShots(0);
+        LocalVitalsChanged = null; ConfirmedHit = null; ShotObserved = null; LocalShot = null;
     }
 
     private static void Notify<T>(Action<T> handlers, T value)

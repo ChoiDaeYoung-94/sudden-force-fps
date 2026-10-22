@@ -21,6 +21,20 @@ public readonly struct CombatPresentationSnapshot
     }
 }
 
+// Cosmetic owner-only prediction. Contains no hit claim and grants no damage.
+public readonly struct LocalShotSnapshot
+{
+    public readonly PlayerRef Shooter;
+    public readonly int RespawnVersion, Tick, SequenceDelta;
+    public readonly Vector3 Origin, Direction;
+    public LocalShotSnapshot(PlayerRef shooter, int respawnVersion, int tick,
+        Vector3 origin, Vector3 direction, int sequenceDelta)
+    {
+        Shooter = shooter; RespawnVersion = respawnVersion; Tick = tick;
+        Origin = origin; Direction = direction; SequenceDelta = sequenceDelta;
+    }
+}
+
 public readonly struct ShotObservedSnapshot
 {
     public readonly PlayerRef Shooter;
