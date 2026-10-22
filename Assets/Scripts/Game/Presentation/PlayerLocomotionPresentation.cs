@@ -35,7 +35,7 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
 
     // Stance is supplied by the owner, keeping this candidate independent of
     // any new Networked stance property and of the owner's simulation code.
-    public void RenderPresentation(bool crouched)
+    public void RenderPresentation(bool crouched, bool climbing = false)
     {
         // Direct owner calls still reach disabled MonoBehaviours.
         // Reset before the same-frame guard so disable/re-enable can seed safely.
@@ -73,7 +73,14 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
             return;
         }
         float actualSpeed = horizontal / dt;
-        bool grounded = _controller.Grounded;
+        // Grounded may be true during rail alignment: ladder motion is not walking.
+        // Preserve look sway/reload presentation while removing distance/bob history.
+        if (climbing)
+        {
+            _distance = _phase = _blend = _speed = 0f;
+            if (_source != null) _source.Stop();
+        }
+        bool grounded = _controller.Grounded && !climbing;
         bool moving = grounded && actualSpeed > .15f;
         float follow = 1f - Mathf.Exp(-18f * dt);
         _speed = Mathf.Lerp(_speed, moving ? Mathf.Min(actualSpeed, 8f) : 0f, follow);

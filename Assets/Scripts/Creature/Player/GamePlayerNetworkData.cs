@@ -28,6 +28,8 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         && NetworkRunnerManager.Instance.SessionPhase == NetworkSessionPhase.Game && NetworkMatchState.AllowsCombatFor(Runner);
     private PlayerInputSource _inputSource;
     private PlayerCrouchGeometry _crouchGeometry;
+    private PlayerLadderMotor _ladderMotor;
+    public bool PresentationClimbing => _ladderMotor != null && _ladderMotor.PresentationClimbing;
     private NetworkBehaviour.PropertyReader<NetworkBool> _crouchReader;
     [Networked] public NetworkBool IsCrouching { get; set; }
     public bool PresentationCrouched => ReadPresentationCrouch();
@@ -158,6 +160,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
             if (_inputSource == null) _inputSource = gameObject.AddComponent<PlayerInputSource>();
             _inputSource.Bind(this, AimYaw, AimPitch);
         }
+        _ladderMotor = GetComponent<PlayerLadderMotor>();
         _crouchReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(IsCrouching));
         _crouchGeometry = GetComponent<PlayerCrouchGeometry>();
         if (_crouchGeometry == null) _crouchGeometry = gameObject.AddComponent<PlayerCrouchGeometry>();
@@ -208,7 +211,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         if (_inputSource != null) _inputSource.SynchronizeRespawn();
         ApplyLocalPresentation();
         if (_crouchGeometry != null) _crouchGeometry.Apply(ReadPresentationCrouch(), !IsDead && Health > 0);
-        if (_locomotionPresentation != null) _locomotionPresentation.RenderPresentation(PresentationCrouched);
+        if (_locomotionPresentation != null) _locomotionPresentation.RenderPresentation(PresentationCrouched, PresentationClimbing);
         if (_cameraRoot != null) _cameraRoot.localRotation = CombatRecoil.ViewRotation(AimPitch, RecoilOffset);
         if (_viewModelRoot != null && Object.HasInputAuthority)
         {
@@ -236,6 +239,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         if (Object.HasStateAuthority && match != null && match.IsCurrent && match.Runner == Runner) match.EvaluateBoundary();
         if (!NetworkMatchState.AllowsCombatFor(Runner))
         {
+            if (_ladderMotor != null) _ladderMotor.ResetSimulation();
             _movementController.Velocity = Vector3.zero;
             PreviousButtons = default; ReloadTimer = default; NextShotTimer = default;
             RecoilShotTimer = default; RecoilReloadTimer = default;
@@ -262,6 +266,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         }
         if (IsDead || Health <= 0)
         {
+            if (_ladderMotor != null) _ladderMotor.ResetSimulation();
             IsCrouching = false;
             if (_crouchGeometry != null) _crouchGeometry.Apply(false, false);
             _movementController.Velocity = Vector3.zero;
@@ -270,7 +275,10 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
             if (Object.HasStateAuthority && IsDead) TryRespawn();
             return;
         }
-        bool requestCrouch = hasInput && input.Buttons.IsSet(PlayerInputButton.Crouch);
+        // Enter only from a standing stance; Ctrl is ignored while attached.
+        // A retained crouch under a ceiling still uses CanStand and never force-stands.
+        bool alreadyClimbing = _ladderMotor != null && _ladderMotor.IsClimbing;
+        bool requestCrouch = !alreadyClimbing && hasInput && input.Buttons.IsSet(PlayerInputButton.Crouch);
         if (_crouchGeometry != null && _crouchGeometry.Configured)
         {
             // Input/state authority run the same prediction and headroom query.
@@ -280,15 +288,20 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         }
         else IsCrouching = false;
         transform.rotation = Quaternion.Euler(0f, AimYaw, 0f);
-        // SDK Move normalizes direction, so maxSpeed carries analog magnitude.
-        if (IsCrouching)
+        // Exactly one movement path per owner simulation tick, including resimulation.
+        bool climbingTick = _ladderMotor != null && _ladderMotor.TrySimulate(input, hasInput, IsCrouching);
+        if (!climbingTick)
         {
-            var velocity = _movementController.Velocity;
-            var planar = Vector2.ClampMagnitude(new Vector2(velocity.x, velocity.z), PlayerCrouchGeometry.CrouchSpeed);
-            _movementController.Velocity = new Vector3(planar.x, velocity.y, planar.y);
+            // SDK Move normalizes direction, so maxSpeed carries analog magnitude.
+            if (IsCrouching)
+            {
+                var velocity = _movementController.Velocity;
+                var planar = Vector2.ClampMagnitude(new Vector2(velocity.x, velocity.z), PlayerCrouchGeometry.CrouchSpeed);
+                _movementController.Velocity = new Vector3(planar.x, velocity.y, planar.y);
+            }
+            _movementController.maxSpeed = (IsCrouching ? PlayerCrouchGeometry.CrouchSpeed : sprint ? 7.5f : 5f) * move.magnitude;
+            _movementController.Move(transform.rotation * new Vector3(move.x, 0f, move.y));
         }
-        _movementController.maxSpeed = (IsCrouching ? PlayerCrouchGeometry.CrouchSpeed : sprint ? 7.5f : 5f) * move.magnitude;
-        _movementController.Move(transform.rotation * new Vector3(move.x, 0f, move.y));
         if (Object.HasStateAuthority) UpdateCombat(hasInput, input);
         else if (Object.HasInputAuthority) PredictRecoil(hasInput, input);
     }
@@ -421,6 +434,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         ResetRecoilPreview(); RecoilPreviewAmmo = Ammo;
         RespawnTimer = default; RespawnRetryTimer = default;
         RespawnVersion++; IsDead = false; IsCrouching = false;
+        if (_ladderMotor != null) _ladderMotor.ResetSimulation();
         ApplyLifeCollision();
     }
 
