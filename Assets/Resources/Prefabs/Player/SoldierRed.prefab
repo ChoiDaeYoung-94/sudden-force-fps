@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4413373047502154853}
   m_Layer: 11
-  m_Name: foot_l
+  m_Name: SFF_FP_foot_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -466,7 +466,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2726133039188404556}
   m_Layer: 11
-  m_Name: ring_02_l
+  m_Name: SFF_FP_ring_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -498,7 +498,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6674648127654381576}
   m_Layer: 11
-  m_Name: clavicle_r
+  m_Name: SFF_FP_clavicle_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -530,7 +530,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2799993942778725160}
   m_Layer: 11
-  m_Name: ring_01_r
+  m_Name: SFF_FP_ring_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -562,7 +562,7 @@ GameObject:
   m_Component:
   - component: {fileID: 321861929558484362}
   m_Layer: 11
-  m_Name: pinky_02_r
+  m_Name: SFF_FP_pinky_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -875,7 +875,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3085984351347144807}
   m_Layer: 11
-  m_Name: index_02_r
+  m_Name: SFF_FP_index_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1382,7 +1382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3580146795150462318}
   m_Layer: 11
-  m_Name: calf_r
+  m_Name: SFF_FP_calf_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1461,7 +1461,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1099645609146780752}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 0e55d5c42cc96404f872b45455603f8b, type: 3}
+  m_Avatar: {fileID: 9000000, guid: bbd79e50c952fbe4488e4f82787ef296, type: 2}
   m_Controller: {fileID: 9100000, guid: 4db9023922989c14ab869fb83136993a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -1567,7 +1567,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8016736655824067266}
   m_Layer: 11
-  m_Name: middle_03_l
+  m_Name: SFF_FP_middle_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1696,7 +1696,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3166052996799426936}
   m_Layer: 11
-  m_Name: thigh_l
+  m_Name: SFF_FP_thigh_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1760,7 +1760,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4085264347602813085}
   m_Layer: 11
-  m_Name: thigh_r
+  m_Name: SFF_FP_thigh_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1793,7 +1793,7 @@ GameObject:
   m_Component:
   - component: {fileID: 803629163511120743}
   m_Layer: 11
-  m_Name: upperarm_twist_01_r
+  m_Name: SFF_FP_upperarm_twist_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1954,7 +1954,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1762500055871368344}
   m_Layer: 11
-  m_Name: lowerarm_l
+  m_Name: SFF_FP_lowerarm_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2581,7 +2581,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2678388726215410427}
   m_Layer: 11
-  m_Name: thumb_01_r
+  m_Name: SFF_FP_thumb_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2613,7 +2613,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6479919046022869804}
   m_Layer: 11
-  m_Name: spine_03
+  m_Name: SFF_FP_spine_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2679,7 +2679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6315082679300951380}
   m_Layer: 11
-  m_Name: lowerarm_r
+  m_Name: SFF_FP_lowerarm_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2712,7 +2712,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7391666293164171233}
   m_Layer: 11
-  m_Name: calf_l
+  m_Name: SFF_FP_calf_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2745,7 +2745,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2736213924615843275}
   m_Layer: 11
-  m_Name: index_03_r
+  m_Name: SFF_FP_index_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3091,7 +3091,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5468522137335986684}
   m_Layer: 11
-  m_Name: thumb_03_l
+  m_Name: SFF_FP_thumb_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3306,7 +3306,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5068420020477361105}
   m_Layer: 11
-  m_Name: index_02_l
+  m_Name: SFF_FP_index_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3338,7 +3338,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2131468180890185139}
   m_Layer: 11
-  m_Name: pelvis
+  m_Name: SFF_FP_pelvis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3372,7 +3372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8119561854964213661}
   m_Layer: 11
-  m_Name: thumb_03_r
+  m_Name: SFF_FP_thumb_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3500,7 +3500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2051814242471108768}
   m_Layer: 11
-  m_Name: head
+  m_Name: SFF_FP_head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3685,7 +3685,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7868698934570726350}
   m_Layer: 11
-  m_Name: middle_01_r
+  m_Name: SFF_FP_middle_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3748,7 +3748,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4102862014348222331}
   m_Layer: 11
-  m_Name: middle_02_l
+  m_Name: SFF_FP_middle_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3913,7 +3913,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4472464986085645694}
   m_Layer: 11
-  m_Name: root
+  m_Name: SFF_FP_root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4011,7 +4011,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1881634615684672409}
   m_Layer: 11
-  m_Name: spine_01
+  m_Name: SFF_FP_spine_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4043,7 +4043,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8150501955513583186}
   m_Layer: 11
-  m_Name: ball_r
+  m_Name: SFF_FP_ball_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4335,7 +4335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 73596029046877301}
   m_Layer: 11
-  m_Name: pinky_03_l
+  m_Name: SFF_FP_pinky_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4366,7 +4366,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8032068677426420942}
   m_Layer: 11
-  m_Name: pinky_03_r
+  m_Name: SFF_FP_pinky_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4397,7 +4397,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4975721530335711391}
   m_Layer: 11
-  m_Name: ring_02_r
+  m_Name: SFF_FP_ring_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4461,7 +4461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4924103555744076611}
   m_Layer: 11
-  m_Name: foot_r
+  m_Name: SFF_FP_foot_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4493,7 +4493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6508667806052980789}
   m_Layer: 11
-  m_Name: ring_03_r
+  m_Name: SFF_FP_ring_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5248,7 +5248,7 @@ GameObject:
   m_Component:
   - component: {fileID: 196274209536364719}
   m_Layer: 11
-  m_Name: ball_l
+  m_Name: SFF_FP_ball_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5279,7 +5279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1851749382743512851}
   m_Layer: 11
-  m_Name: ring_03_l
+  m_Name: SFF_FP_ring_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5463,7 +5463,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5623672283081781990}
   m_Layer: 11
-  m_Name: middle_01_l
+  m_Name: SFF_FP_middle_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5594,7 +5594,7 @@ GameObject:
   m_Component:
   - component: {fileID: 142010439120268882}
   m_Layer: 11
-  m_Name: pinky_02_l
+  m_Name: SFF_FP_pinky_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5879,7 +5879,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5109634109583024072}
   m_Layer: 11
-  m_Name: pinky_01_r
+  m_Name: SFF_FP_pinky_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5911,7 +5911,7 @@ GameObject:
   m_Component:
   - component: {fileID: 704718460859611296}
   m_Layer: 11
-  m_Name: thumb_02_r
+  m_Name: SFF_FP_thumb_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5943,7 +5943,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6290194628591673620}
   m_Layer: 11
-  m_Name: index_01_r
+  m_Name: SFF_FP_index_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5975,7 +5975,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3700237943986131818}
   m_Layer: 11
-  m_Name: calf_twist_01_r
+  m_Name: SFF_FP_calf_twist_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6038,7 +6038,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4938506635277193513}
   m_Layer: 11
-  m_Name: thumb_02_l
+  m_Name: SFF_FP_thumb_02_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6172,7 +6172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5205670835534697608}
   m_Layer: 11
-  m_Name: thigh_twist_01_r
+  m_Name: SFF_FP_thigh_twist_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6422,7 +6422,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4577022717006344628}
   m_Layer: 11
-  m_Name: neck_01
+  m_Name: SFF_FP_neck_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6549,7 +6549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 448057342516852182}
   m_Layer: 11
-  m_Name: ring_01_l
+  m_Name: SFF_FP_ring_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6581,7 +6581,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1390257734179903299}
   m_Layer: 11
-  m_Name: spine_02
+  m_Name: SFF_FP_spine_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6613,7 +6613,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6030586473064079091}
   m_Layer: 11
-  m_Name: upperarm_r
+  m_Name: SFF_FP_upperarm_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6709,7 +6709,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2678357805922270277}
   m_Layer: 11
-  m_Name: middle_02_r
+  m_Name: SFF_FP_middle_02_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6927,7 +6927,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6207828351330341454}
   m_Layer: 11
-  m_Name: middle_03_r
+  m_Name: SFF_FP_middle_03_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7057,7 +7057,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6182242141432848809}
   m_Layer: 11
-  m_Name: pinky_01_l
+  m_Name: SFF_FP_pinky_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7089,7 +7089,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7898036856919081010}
   m_Layer: 11
-  m_Name: calf_twist_01_l
+  m_Name: SFF_FP_calf_twist_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7120,7 +7120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 690974347405461174}
   m_Layer: 11
-  m_Name: clavicle_l
+  m_Name: SFF_FP_clavicle_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7440,7 +7440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8193274996401669274}
   m_Layer: 11
-  m_Name: index_01_l
+  m_Name: SFF_FP_index_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7597,7 +7597,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3269067752104349223}
   m_Layer: 11
-  m_Name: hand_l
+  m_Name: SFF_FP_hand_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7633,7 +7633,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6694367388791791925}
   m_Layer: 11
-  m_Name: hand_r
+  m_Name: SFF_FP_hand_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7702,7 +7702,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7240123767582335142}
   m_Layer: 11
-  m_Name: thigh_twist_01_l
+  m_Name: SFF_FP_thigh_twist_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7733,7 +7733,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5454866948806862211}
   m_Layer: 11
-  m_Name: index_03_l
+  m_Name: SFF_FP_index_03_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7948,7 +7948,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5734006967388982393}
   m_Layer: 11
-  m_Name: thumb_01_l
+  m_Name: SFF_FP_thumb_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7980,7 +7980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7105006079521928392}
   m_Layer: 11
-  m_Name: lowerarm_twist_01_l
+  m_Name: SFF_FP_lowerarm_twist_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8196,7 +8196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2649085468751556767}
   m_Layer: 11
-  m_Name: upperarm_l
+  m_Name: SFF_FP_upperarm_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8463,7 +8463,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8116360671132421686}
   m_Layer: 11
-  m_Name: upperarm_twist_01_l
+  m_Name: SFF_FP_upperarm_twist_01_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8746,7 +8746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2318719096327601497}
   m_Layer: 11
-  m_Name: lowerarm_twist_01_r
+  m_Name: SFF_FP_lowerarm_twist_01_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
