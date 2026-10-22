@@ -300,6 +300,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         LastShotRecoilOffset = RecoilOffset;
         LastShotOrigin = transform.position + Vector3.up * 1.75f;
         LastShotDirection = CombatRecoil.ShotDirection(AimYaw, AimPitch, RecoilOffset);
+        QueueLocalShot(LastShotOrigin, LastShotDirection);
         LastShotHit = _shotQuery.TryCast(Runner, Object.InputAuthority, LastShotOrigin, LastShotDirection, _weaponDefinition.Range, out var hit);
         LastShotHitPoint = LastShotHit ? hit.Point : LastShotOrigin + LastShotDirection * _weaponDefinition.Range;
         LastShotHitNormal = LastShotHit ? hit.Normal : Vector3.zero;
@@ -416,9 +417,21 @@ public class GamePlayerNetworkData : NetworkBehaviour
         }
         if (!input.Buttons.IsSet(PlayerInputButton.Fire) || RecoilReloadTimer.IsRunning || RecoilPreviewAmmo <= 0
             || !RecoilShotTimer.ExpiredOrNotRunning(Runner)) return;
+        if (!CombatShotQuery.IsFinite(transform.position)) return;
         RecoilPreviewAmmo--;
         ApplyRecoilShot();
-        // No actual Ammo/HP/ShotSequence changes, hit query or effects here.
+        QueueLocalShot(transform.position + Vector3.up * 1.75f,
+            CombatRecoil.ShotDirection(AimYaw, AimPitch, RecoilOffset));
+        // No actual Ammo/HP/ShotSequence changes or hit query. This queues a
+        // cosmetic observation only; Unity effects remain in RenderState.
+    }
+
+    private void QueueLocalShot(Vector3 origin, Vector3 direction)
+    {
+        // Prediction state still updates during resimulation. Irreversible
+        // audio/VFX observations are only queued for a fresh forward tick.
+        if (!Object.HasInputAuthority || !Runner.IsForward || _presentation == null) return;
+        _presentation.QueueLocalShot(RespawnVersion, Runner.Tick.Raw, origin, direction);
     }
 
     public bool TryGetCombatSnapshot(out CombatStateSnapshot snapshot)

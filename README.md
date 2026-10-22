@@ -1,5 +1,10 @@
 # Sudden Force FPS
 
+## 2026-10-22 발사·로비 품질 개선 소스
+
+채팅 전송/START 안내(PR165)와 로컬 예측 발사 효과 개선(#162)은 새 소스 변경입니다. [발사 검증과 한계](Tools/Combat/README.md)를 따릅니다. 기존 Play/Drive APK27과 무서명 AAB28에는 미포함이며 아래 배포 기록과 구분합니다.
+
+
 ## 최신 통합 후보: 코드28 무서명 검증 (2026-10-21, #159)
 
 오늘 결과 표 정렬(PR151/153), Perfect DOS 글꼴 고지(PR156), 자체 Safe Area 처리(PR158)를 포함한 **1.0.195/코드28 무서명 AAB**를 생성했습니다. 키를 제외한 별도 체크아웃에서 Unity export 오류0·경고71, 별도 Gradle176개 작업과 새 IL2CPP 컴파일, manifest/ZIP/bundletool·고지 전문·지정 광고/결제 DEX·native7개 정적 정렬·대응 심볼6/7 검증을 확인했습니다. [산출물·보존과 한계](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
