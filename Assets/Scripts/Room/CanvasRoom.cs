@@ -102,13 +102,30 @@ public class CanvasRoom : NetworkBehaviour
         RoomManager.Instance.OnReadyButtonClicked();
     }
 
+    private void Update()
+    {
+        // Keep unavailable prerequisites clickable so the host can learn what is missing.
+        // Only a real transition disables the control, and returning to Room restores it.
+        var manager = NetworkRunnerManager.Instance;
+        if (_startButton != null)
+            _startButton.interactable = manager == null || manager.SessionPhase != NetworkSessionPhase.LoadingGame;
+    }
+
     public void StartButtonClick()
     {
-        if (RoomManager.Instance.IsReady())
+        var room = RoomManager.Instance;
+        var manager = NetworkRunnerManager.Instance;
+        var runner = manager != null ? manager.GetNetworkRunner() : null;
+        string reason = room == null ? "Player details are syncing. Please try again shortly." : room.GetStartBlockedReason();
+        if (reason == null && (runner == null || !runner.IsServer))
+            reason = "Only the host can start the match.";
+        if (reason != null)
         {
-            _startButton.enabled = false;
-            RoomManager.Instance.OnStartButtonClicked();
+            if (AD.Managers.Instance != null && AD.Managers.PopupM != null)
+                AD.Managers.PopupM.PopupMessage(reason);
+            return;
         }
+        room.OnStartButtonClicked();
     }
 
     public void ExitButtonClick()

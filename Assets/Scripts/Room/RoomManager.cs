@@ -97,17 +97,32 @@ public class RoomManager : NetworkBehaviour
         }
     }
 
-    public bool IsReady()
+    public bool IsReady() => GetStartBlockedReason() == null;
+
+    // Presentation uses the same prerequisites as the authoritative start guard.
+    public string GetStartBlockedReason()
     {
         var manager = NetworkRunnerManager.Instance;
-        if (manager == null || manager.SessionPhase != NetworkSessionPhase.Room) return false;
+        if (manager == null || manager.IsRetired || manager.SessionPhase != NetworkSessionPhase.Room)
+            return "Please wait until the room connection is ready.";
         var runner = manager.GetNetworkRunner();
+        if (runner == null || !runner.IsRunning)
+            return "The room connection is unavailable. Please return to the lobby and reconnect.";
         var active = new HashSet<PlayerRef>(runner.ActivePlayers);
+        if (RoomPlayers.Any(p => p != null && (p.Object == null || !p.Object.IsValid)))
+            return "Player details are syncing. Please try again shortly.";
         var players = RoomPlayers.Where(p => p != null && active.Contains(p.Object.InputAuthority)).ToArray();
-        return players.Length >= 2 && players.Length == active.Count
-            && players.Any(p => p.Team == 0) && players.Any(p => p.Team == 1)
-            && players.All(p => (p.Team == 0 || p.Team == 1) && !string.IsNullOrWhiteSpace(p.NickName))
-            && players.All(p => p.Object.InputAuthority == runner.LocalPlayer || p.IsReady);
+        if (players.Length < 2)
+            return "At least 2 players are needed. Invite another player before starting.";
+        if (players.Length != active.Count)
+            return "Player details are syncing. Please try again shortly.";
+        if (players.Any(p => (p.Team != 0 && p.Team != 1) || string.IsNullOrWhiteSpace(p.NickName)))
+            return "Player details are syncing. Please try again shortly.";
+        if (!players.Any(p => p.Team == 0) || !players.Any(p => p.Team == 1))
+            return "Both RED TEAM and BLUE TEAM need at least one player. Use a team button to switch.";
+        if (players.Any(p => p.Object.InputAuthority != runner.LocalPlayer && !p.IsReady))
+            return "Waiting for the other players to select READY. Switching teams resets READY.";
+        return null;
     }
 
     public void OnTeamSwitchButtonClicked(int teamId)
