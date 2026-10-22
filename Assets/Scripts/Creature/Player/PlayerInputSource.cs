@@ -10,6 +10,7 @@ public sealed class PlayerInputSource : MonoBehaviour
     private GamePlayerNetworkData _owner;
     private Vector2 _move;
     private bool _sprint;
+    private bool _crouch, _physicalCrouchHeld, _crouchReleaseRequired;
     private bool _fire;
     private bool _physicalFireHeld;
     private bool _fireReleaseRequired;
@@ -35,6 +36,13 @@ public sealed class PlayerInputSource : MonoBehaviour
         _respawnVersion = owner.RespawnVersion;
         _physicalFireHeld = false;
         _fireReleaseRequired = false;
+        // A new owner/Runner must not treat an already-held Ctrl as a fresh press.
+        // On mobile retain known held state; only a new pointer Down may release
+        // that gate through its explicit SetCrouch(false) -> SetCrouch(true).
+        bool crouchHeld = Application.isMobilePlatform ? _physicalCrouchHeld
+            : Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+        _physicalCrouchHeld = crouchHeld;
+        _crouchReleaseRequired = crouchHeld || !Application.isFocused;
         _yaw = Mathf.Repeat(yaw, 360f);
         _pitch = Mathf.Clamp(pitch, -85f, 85f);
         ResetInput();
@@ -54,6 +62,12 @@ public sealed class PlayerInputSource : MonoBehaviour
     }
 
     public void SetSprint(bool sprint) => _sprint = sprint;
+    public void SetCrouch(bool crouch)
+    {
+        _physicalCrouchHeld = crouch;
+        if (!crouch) _crouchReleaseRequired = false;
+        _crouch = crouch && !_crouchReleaseRequired && !_menuInputBlocked;
+    }
     public void SetFire(bool fire)
     {
         _physicalFireHeld = fire;
@@ -73,10 +87,12 @@ public sealed class PlayerInputSource : MonoBehaviour
     public void SeedAim(float yaw, float pitch)
     {
         bool held = Application.isMobilePlatform ? _physicalFireHeld : Input.GetMouseButton(0);
+        bool crouchHeld = Application.isMobilePlatform ? _physicalCrouchHeld : Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
         ResetInput();
         _yaw = Mathf.Repeat(yaw, 360f);
         _pitch = Mathf.Clamp(pitch, -85f, 85f);
         _fireReleaseRequired = held;
+        _physicalCrouchHeld = crouchHeld; _crouchReleaseRequired = crouchHeld;
     }
 
     public void SynchronizeRespawn()
@@ -103,6 +119,8 @@ public sealed class PlayerInputSource : MonoBehaviour
     {
         _move = Vector2.zero;
         _sprint = false;
+        _crouch = false;
+        _crouchReleaseRequired |= _physicalCrouchHeld;
         _fire = false;
         _reloadRequested = false;
         _reloadSubmittedFrame = -1;
@@ -122,6 +140,7 @@ public sealed class PlayerInputSource : MonoBehaviour
         data.AimYaw = _yaw;
         data.AimPitch = _pitch;
         data.Buttons.Set(PlayerInputButton.Sprint, _sprint);
+        data.Buttons.Set(PlayerInputButton.Crouch, _crouch);
         data.Buttons.Set(PlayerInputButton.Fire, _fire);
         data.Buttons.Set(PlayerInputButton.Reload, _reloadRequested);
         data.Fire = _fire;
@@ -157,6 +176,7 @@ public sealed class PlayerInputSource : MonoBehaviour
             (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) ? 1f : 0f) - (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) ? 1f : 0f));
         SetMove(keyboard != Vector2.zero ? keyboard : joystick != null ? joystick.NormalizedMove : Vector2.zero);
         SetSprint(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+        SetCrouch(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
         if (Input.GetKeyDown(KeyCode.Escape)) ReleaseCursor();
         else if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !IsPointerOverControl(Input.mousePosition)) CaptureCursor();
         if (_capturedCursor) AddLookDelta(new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * 2f);
@@ -216,13 +236,13 @@ public sealed class PlayerInputSource : MonoBehaviour
 
     private void OnApplicationFocus(bool focused)
     {
-        if (!focused) { ResetInput(); ReleaseCursor(); }
+        if (!focused) { ResetInput(); _crouchReleaseRequired = true; ReleaseCursor(); }
     }
 
     private void OnApplicationPause(bool paused)
     {
         _paused = paused;
-        if (paused) { ResetInput(); ReleaseCursor(); }
+        if (paused) { ResetInput(); _crouchReleaseRequired = true; ReleaseCursor(); }
     }
 
     private void OnDisable() => Unbind();

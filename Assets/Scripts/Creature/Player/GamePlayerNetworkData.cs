@@ -2,7 +2,7 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class GamePlayerNetworkData : NetworkBehaviour
+public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
 {
     [SerializeField] private Transform _cameraRoot;
     [SerializeField] private Camera _localCamera;
@@ -27,6 +27,29 @@ public class GamePlayerNetworkData : NetworkBehaviour
         && NetworkRunnerManager.Instance != null && !NetworkRunnerManager.Instance.IsRetired
         && NetworkRunnerManager.Instance.SessionPhase == NetworkSessionPhase.Game && NetworkMatchState.AllowsCombatFor(Runner);
     private PlayerInputSource _inputSource;
+    private PlayerCrouchGeometry _crouchGeometry;
+    private NetworkBehaviour.PropertyReader<NetworkBool> _crouchReader;
+    [Networked] public NetworkBool IsCrouching { get; set; }
+    public bool PresentationCrouched => ReadPresentationCrouch();
+    public Vector3 SimulationShotOrigin => transform.TransformPoint(
+        _crouchGeometry != null && _crouchGeometry.Configured
+            ? _crouchGeometry.EyeLocalPosition(IsCrouching) : Vector3.up * 1.75f);
+
+    private bool ReadPresentationCrouch()
+    {
+        if (Object == null || !Object.IsValid) return false;
+        // Proxies are displayed/captured on their remote render timeline.
+        if (!Object.HasInputAuthority && !Object.HasStateAuthority
+            && TryGetSnapshotsBuffers(out var from, out var to, out var alpha))
+            return alpha < 1f ? _crouchReader.Read(from) : _crouchReader.Read(to);
+        return IsCrouching;
+    }
+
+    void IBeforeHitboxRegistration.BeforeHitboxRegistration()
+    {
+        if (_spawned && Object != null && Object.IsValid && _crouchGeometry != null)
+            _crouchGeometry.Apply(ReadPresentationCrouch(), !IsDead && Health > 0);
+    }
     private ShadowCastingMode[] _originalShadowModes;
     private bool _spawned;
     private CombatPresentation _presentation;
@@ -119,7 +142,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
             Ammo = CombatConfigured ? _weaponDefinition.MagazineCapacity : 30;
             Kill = 0;
             Death = 0;
-            IsDead = false; RespawnVersion = 0; DeathSequence = 0; LastKiller = PlayerRef.None;
+            IsDead = false; IsCrouching = false; RespawnVersion = 0; DeathSequence = 0; LastKiller = PlayerRef.None;
             RespawnTimer = default; RespawnRetryTimer = default; LastHitKilled = false;
             AimYaw = transform.eulerAngles.y;
             AimPitch = 0f;
@@ -135,6 +158,11 @@ public class GamePlayerNetworkData : NetworkBehaviour
             if (_inputSource == null) _inputSource = gameObject.AddComponent<PlayerInputSource>();
             _inputSource.Bind(this, AimYaw, AimPitch);
         }
+        _crouchReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(IsCrouching));
+        _crouchGeometry = GetComponent<PlayerCrouchGeometry>();
+        if (_crouchGeometry == null) _crouchGeometry = gameObject.AddComponent<PlayerCrouchGeometry>();
+        if (!_crouchGeometry.Initialize(this, _characterController, _cameraRoot))
+            Debug.LogError("[Crouch] Public humanoid/12-hitbox stance configuration is incomplete.");
         ApplyLocalPresentation();
         _locomotionPresentation = GetComponent<PlayerLocomotionPresentation>();
         _presentation = GetComponent<CombatPresentation>();
@@ -179,7 +207,8 @@ public class GamePlayerNetworkData : NetworkBehaviour
     {
         if (_inputSource != null) _inputSource.SynchronizeRespawn();
         ApplyLocalPresentation();
-        if (_locomotionPresentation != null) _locomotionPresentation.RenderPresentation(false);
+        if (_crouchGeometry != null) _crouchGeometry.Apply(ReadPresentationCrouch(), !IsDead && Health > 0);
+        if (_locomotionPresentation != null) _locomotionPresentation.RenderPresentation(PresentationCrouched);
         if (_cameraRoot != null) _cameraRoot.localRotation = CombatRecoil.ViewRotation(AimPitch, RecoilOffset);
         if (_viewModelRoot != null && Object.HasInputAuthority)
         {
@@ -233,15 +262,32 @@ public class GamePlayerNetworkData : NetworkBehaviour
         }
         if (IsDead || Health <= 0)
         {
+            IsCrouching = false;
+            if (_crouchGeometry != null) _crouchGeometry.Apply(false, false);
             _movementController.Velocity = Vector3.zero;
             if (Object.HasStateAuthority) { PreviousButtons = default; ReloadTimer = default; }
             ResetRecoilPreview();
             if (Object.HasStateAuthority && IsDead) TryRespawn();
             return;
         }
+        bool requestCrouch = hasInput && input.Buttons.IsSet(PlayerInputButton.Crouch);
+        if (_crouchGeometry != null && _crouchGeometry.Configured)
+        {
+            // Input/state authority run the same prediction and headroom query.
+            // Releasing under a solid ceiling retains crouch until it is safe.
+            IsCrouching = requestCrouch || (IsCrouching && !_crouchGeometry.CanStand(Runner));
+            _crouchGeometry.Apply(IsCrouching, true);
+        }
+        else IsCrouching = false;
         transform.rotation = Quaternion.Euler(0f, AimYaw, 0f);
         // SDK Move normalizes direction, so maxSpeed carries analog magnitude.
-        _movementController.maxSpeed = (sprint ? 7.5f : 5f) * move.magnitude;
+        if (IsCrouching)
+        {
+            var velocity = _movementController.Velocity;
+            var planar = Vector2.ClampMagnitude(new Vector2(velocity.x, velocity.z), PlayerCrouchGeometry.CrouchSpeed);
+            _movementController.Velocity = new Vector3(planar.x, velocity.y, planar.y);
+        }
+        _movementController.maxSpeed = (IsCrouching ? PlayerCrouchGeometry.CrouchSpeed : sprint ? 7.5f : 5f) * move.magnitude;
         _movementController.Move(transform.rotation * new Vector3(move.x, 0f, move.y));
         if (Object.HasStateAuthority) UpdateCombat(hasInput, input);
         else if (Object.HasInputAuthority) PredictRecoil(hasInput, input);
@@ -303,7 +349,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         RecoilPreviewAmmo = Ammo;
         LastShotRecoilIndex = RecoilIndex;
         LastShotRecoilOffset = RecoilOffset;
-        LastShotOrigin = transform.position + Vector3.up * 1.75f;
+        LastShotOrigin = SimulationShotOrigin;
         LastShotDirection = CombatRecoil.ShotDirection(AimYaw, AimPitch, RecoilOffset);
         QueueLocalShot(LastShotOrigin, LastShotDirection);
         LastShotHit = _shotQuery.TryCast(Runner, Object.InputAuthority, LastShotOrigin, LastShotDirection, _weaponDefinition.Range, out var hit);
@@ -374,7 +420,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         PreviousButtons = default; ReloadTimer = default; NextShotTimer = default;
         ResetRecoilPreview(); RecoilPreviewAmmo = Ammo;
         RespawnTimer = default; RespawnRetryTimer = default;
-        RespawnVersion++; IsDead = false;
+        RespawnVersion++; IsDead = false; IsCrouching = false;
         ApplyLifeCollision();
     }
 
@@ -425,7 +471,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
         if (!CombatShotQuery.IsFinite(transform.position)) return;
         RecoilPreviewAmmo--;
         ApplyRecoilShot();
-        QueueLocalShot(transform.position + Vector3.up * 1.75f,
+        QueueLocalShot(SimulationShotOrigin,
             CombatRecoil.ShotDirection(AimYaw, AimPitch, RecoilOffset));
         // No actual Ammo/HP/ShotSequence changes or hit query. This queues a
         // cosmetic observation only; Unity effects remain in RenderState.

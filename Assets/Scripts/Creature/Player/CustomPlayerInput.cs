@@ -4,7 +4,8 @@ public enum PlayerInputButton
 {
     Sprint = 0,
     Fire = 1,
-    Reload = 2
+    Reload = 2,
+    Crouch = 3
 }
 
 public struct CustomPlayerInput : INetworkInput

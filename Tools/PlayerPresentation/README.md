@@ -54,3 +54,40 @@ FPS skin joint61개에만 SFF_FP_ 이름을 부여하고 기존 human map·bindp
 추가로 별도 미병합 crouch 소스를 함께 import한 Editor에서, 독립 body registry와 원본 Avatar map을 측정 기준으로 양 캐릭터10회 crouch/stand 반복·총42pose를 검사했습니다. 카메라/발높이/hip 반복오차0, 발목 최대4.09e-7m, FPS local91개 및188 Transform scale 보존,11Box+HeadSphere의 broad containment를 확인했습니다. 이 결과는 rig PR 단독 clean checkout이나 실제 Runner physics/늦은 접속·연속Idle/Death·실제기기 검증이 아닙니다. 기존 standing head sphere가1.8m CC 상단을 벗어나는 advisory는 숨기지 않습니다. 실제 런타임·CanStand·새 Windows 경기의 후속 결과는 별도 기록합니다.
 
 근거는 외부20261022-quality/arms-binding-candidate/revision-02/·apply-02/ 및 crouch-pose-01/pose-observation.v5.json·독립 리뷰입니다. 최초 Avatar 생성 실패와 미실행 Apply01·Posev4 검토 중 발견한 잘못된 guard도 보존합니다. APK27/AAB28에는 이번 변경이 없습니다.
+
+## 앉기 자세·머리 위 공간·터치 조작 (2026-10-22)
+
+아래 검증 자료의 기준 경로는 외부 `D:/codex/validation/sudden-force-fps/20261022-quality/`입니다.
+
+앉기는 `CustomPlayerInput`, `GamePlayerNetworkData`, `PlayerInputSource`, `PlayerCrouchGeometry`, `CombatHudView`, `CombatPointerControl`의 C#6개와 새 CROUCH 조작으로 연결했습니다. NetworkButtons의 Crouch와 터치 Control은 모두3이며 Networked `IsCrouching`을 추가했습니다. 네트워크 schema39의 새 Windows 검증 빌드를 사용하며 기존 schema의 Player와 혼용한 통과는 아닙니다. Ctrl 또는 CROUCH 요청을 처리하고 앉은 상태가 달리기보다 우선하며, 소스의 속도 설정은 앉기2.5m/s·일반 이동5m/s입니다. 이 값은 실제 속도 비교 측정 결과가 아닙니다.
+
+실제 자세는 몸 전체 scale을 줄이지 않고 원본 Humanoid 몸체 골격의 Hips 하강과 양쪽 허벅지·종아리 IK로 구성합니다. 실제 캡슐 높이는1.8→1.3m, 로컬 eye Y는1.75→1.15m이며 뒤로 .08m 이동합니다. SimulationShotOrigin도 같은 stance eye 계산을 사용합니다. 골격은 원본 body skin registry와 Avatar map으로 선택하고 FPS 리그를 제외하며 실제 Hips 대응은 이름이 pelvis인 자식이 아닌 `root`입니다. Animator를 끄는 회피 없이 본체 Animator와 일치하는7개 bone을 요구하고 hitbox 등록 전/표시 단계에서 자세를 적용합니다. 원래12 hitbox의11Box+1HeadSphere 형상과 피해 판정 경로를 임의 변환하지 않습니다.
+
+머리 위 공간은 자기 Runner의 실제 PhysicsScene에서 서기 위한 상단 swept capsule을 조회합니다. 자기 CharacterController·자기 하위 collider·CombatHitbox·trigger를 제외하고 실제 collision matrix의 solid mask를 사용하며 포화는 안전하게 거절합니다. 장애물이 있으면 Ctrl/CROUCH를 놓거나 입력 Reset·메뉴 진입이 발생해도 앉기를 유지하고 공간이 생기면 서기로 복귀합니다. 메뉴·수명주기 입력 초기화는 물리적으로 키/손가락을 놓았다고 가정하지 않으며 새로운 유효 입력을 요구하는 소스 gate를 유지합니다. 이 gate의 실제 물리 Ctrl·터치 수명주기 검증은 아래 합성 검증과 별도입니다.
+
+첫 격리 pose v2는 몸체/FPS에 같은 bone 이름과 Avatar가 있던 상태에서 본체 Animator가 FPS bone을 선택해42자세 계약이 실패했습니다. 잘못된 cache가 camera를 복원하고 FPS hips를 누적 이동시키던 관측과 원문을 보존했습니다. FPS 복제 골격에 고유 prefix와 별도 `FirstPersonArmsPrefixedAvatar.asset`를 적용하고, 원본 body registry/Avatar 및 두 Animator의 bone identity를 각각 확인하도록 보완했습니다. 원본 모델 FBX를 일괄 수정하거나 본체 Animator를 비활성화하지 않았습니다. v4의 정상 head skin rootBone을 거절하던 fixture guard 오류도 보존하고 v5에서 actor 직계 body root 기준으로 고쳤습니다.
+
+최종 Edit 격리 pose v5는 두 prefab 각21자세, 총42자세에서 checks=true/contractFailures0입니다. FPS local91 Transform·전체188 Transform scale을 보존하고 eye/hip/repeat 오차0, 양발 위치 오차 최대4.09e-7m를 확인했습니다. 원본 형상별 Box8모서리·Sphere broad containment와 crouch head containment도 통과했습니다. 기존 standing head sphere가1.8m capsule 밖에 있는 자세의 advisory는 별도 보존하며 이번에 해결했다고 쓰지 않습니다. 이 검사는 임시 prefab contents의 Save0/Networked getter0인 격리 검사이며 실제 FUN·천장·예측·피격·death/respawn 검증을 대신하지 않습니다. 작성자 분석과 별도 독립 pose 검토도 구분합니다. 근거는 `crouch-pose-01/pose-observation.v5.json`과 `independent-v5-review.md`입니다.
+
+원본 구현5개에 붙었던 UTF-8 BOM·여분의 파일 끝 줄바꿈으로 발생한 형식 검사 실패를 보존했습니다. `crouch-apply-01/source-format-01/`의 before/after SHA와 원문 대조에서 BOM 제거·최종 newline1개 외 본문 동일을 확인했고 Geometry673D는 그대로 유지했습니다. 새 HUD fixture의 현재8핀은 형식 정리5개를 모두 포함하며 이전 후보/핀을 덮지 않았습니다. 실제 schema39 Windows02 development 빌드는 Succeeded/오류0·경고2/72.3299322초입니다. 첫 Windows01의 Pipeline 요청 timeout 실패는 별도로 남기고, delayCall에 queue한 것 자체가 성공이라는 뜻으로 쓰지 않습니다. 성공 근거는 `crouch-windows-02/Player/validation-build.json`이며 추가 APK/Android 빌드 검증은 아닙니다.
+
+실제 Photon2피어 경기의 로컬 호스트 입력 소유자에서 `crouch-headroom-runtime-01`의6단계가 통과했습니다. 새 source/prefab/scene/DLL10핀과 실제7 bone registry·12 hitbox·root Animator enabled를 확인한 뒤, 합성 NetworkEvents.OnInput186회(Crouch31회)를 실제 FUN에 전달했습니다. 같은 Runner physics scene에만 QA BoxCollider를 바닥1.45m/중심1.6m/높이.3m/폭1.2m로 만들고 자기 crouch CC/head와2.5cm 여유·다른 actor 근접·mask·실제 query 반환을 검사했습니다.
+
+| 실제 단계 | IsCrouching | CC 높이 / eye Y | CanStand / 메뉴 |
+|---|---|---|---|
+| 초기 서기 | false | 1.8m / 1.75m | true / Closed |
+| 앉기 요청 | true | 1.3m / 1.15m | true / Closed |
+| QA 천장 아래 SetCrouch(false) | true | 1.3m / 1.15m | false / Closed |
+| QA 천장 아래 ResetInput | true | 1.3m / 1.15m | false / Closed |
+| QA 천장 아래 메뉴 | true | 1.3m / 1.15m | false / Menu |
+| QA 박스 제거·메뉴 복귀 | false | 1.8m / 1.75m | true / Closed |
+
+총158표본에서 geometry와 stance가 일치했습니다. 각 단계는 정상 관측 사이30tick 이상 span을 요구하지만 Editor.update에서 중간 tick을 건너뛴 구간도 있으므로 모든 FUN tick을 개별 검사한 것은 아닙니다. QA 박스는 호스트 전용이며 원격에 복제되지 않습니다. 검증 fixture의 Networked/actor Transform 직접 setter·Teleport·Physics.Simulate·Save는0이고 최종 QA 박스/fixture 제거·callback 해제·실제 입력 중립·메뉴 Closed/unblocked·10핀 일치를 확인했습니다. errors/cleanupErrors는 모두0입니다. 이 결과는 합성 NetworkInput을 통한 실제 host FUN/CC/headroom 경로의 근거이며 물리 Ctrl gate·클라이언트 예측/재시뮬레이션·지속 누르기·피격 lag compensation·이동 속도 비교로 확대하지 않습니다. 독립 대조는 `crouch-headroom-runtime-01/independent-review.md`에 보존합니다.
+
+CROUCH 터치 버튼은 기존 styled SPRINT를 새 복제본으로 만들고 Control3·자기 feedback pointer·흰 앉은 사람 실루엣을 부여했습니다. 기존 세 control/joystick/HUD 연결은 보존했고, 저장 씬의 기존1,245레코드 중1,244개는 바이트 동일합니다. 기존 변경1개는 TouchControls 자식 목록에 새 버튼을 추가한 것뿐이며 삭제0·신규45개는 새 버튼 하위입니다. 새 장식은 raycast를 차단하지 않습니다. 1280×720·1920×1080·2340×1080·2560×1080의4해상도/3화면비 렌더에서 TMP overflow0을 확인했고 2340만 합성 안전 여백입니다. 실제 기기 safe area 검증은 아닙니다.
+
+실제2피어 host의 `crouch-hud-runtime-01/revision-02/state.json`은 4 pointer+joystick·메뉴5캡처 검사를 통과했습니다. Crouch3이 sprint 대신 crouch 입력을 세우고 소유자의 Up/Cancel과 다른 포인터 거절·색/장식 크기·메뉴 해제 및 최종 중립을 확인했습니다. 보호 객체31개/Rect46개의 diff0·검사 source8핀 동일·네트워크 관측 불변이며 단일 콜백의 Fusion tick은9498→9498입니다. direct callbacks/ExecuteEvents와 private Update175회는 합성 호출이며 물리 터치·native input module·경과 프레임 응답 시간 검증이 아닙니다. 터치 미리보기는 원래 false를 보관해 먼저 켜고 실제 프레임 경과 뒤 검사했으며 별도 복구 응답에서 원래 false 복원을 확인했습니다. 실제3040×1440 화면은 같은 폴더 `actual-screen-touch.png`에 있고 Android 화면이 아닙니다. 독립 HUD 검토와 실제 화면 대조도 같은 자료 폴더에 보존합니다. 물리 터치 통과로 확대하지 않습니다.
+
+추가 `crouch-client-key-01`의 호스트 읽기 전용 관측은 원격 client stance의 true1표본(tick13351) 뒤 false(tick13352)를 기록했으며 host input/Networked/actor Transform/collider 쓰기는0입니다. 해당 구간에 새 Windows client 창으로 네이티브 Control_L 입력을 전달한 기록과 독립 대조했습니다. 따라서 원격 native client 입력에 따른 host authoritative stance의 짧은 전환 근거이며, client 화면에서 수신 stance를 측정하거나 긴 키 유지·예측 지연을 통과한 것은 아닙니다. 실제 물리 키의 긴 held/release gate, client 화면·예측 지연·지속 복제·속도 비교와 death/respawn·경기 종료 조합은 미검증입니다. 기존 APK27/AAB28에는 이번 앉기·prefix Avatar·새 HUD가 미포함이며 추가 APK/Android/실기기 통과를 주장하지 않습니다.
+
+Editor와 Windows Player는 각각 열린 process handle로 정상 ExitCode0을 확인했습니다. 종료 후 생성 CJK/설정 원문을 외부에 보존하고 CAS 사전검사로 복원했습니다. 공개3,959개 최종 원장에서 제품 변경10개와 기존 dirty5개 외 차이가 없는지 별도 감사합니다. 원래 설정4개는 최초 raw 바이트와 같고 PlayerSettings는 의도해 병합한 아이콘 목록2필드 외 최초 raw 바이트를 유지합니다. key 내용 조회·새 버전 예약·서명·업로드는0입니다. 근거는 `crouch-apply-01/final-restoration-proof.json`, `public-after-restoration.json`과 종료 handle 기록입니다.
