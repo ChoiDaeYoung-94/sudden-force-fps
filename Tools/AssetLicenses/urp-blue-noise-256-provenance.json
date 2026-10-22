@@ -1,0 +1,92 @@
+{
+  "schema": "URP_BLUE_NOISE_256_PROVENANCE_V1",
+  "observedUtc": "2026-10-22T07:39:39.128313+00:00",
+  "scope": "Seven current installed URP17.3.0 PNG source files, previously listed as known-public packed paths in Android code28. Not the AAB image payload identity or code29 packed inclusion.",
+  "package": {
+    "id": "com.unity.render-pipelines.universal",
+    "installedVersion": "17.3.0",
+    "versionProof": "Installed package.json and existing Android code28 records; seven local texture bytes independently compared here."
+  },
+  "primaryAuthor": {
+    "name": "Christoph Peters",
+    "pageURL": "https://momentsingraphics.de/BlueNoise.html",
+    "databaseLicenseDeclaration": "CC0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "authorPageSection": "A database of blue noise textures"
+  },
+  "sourceArchive": {
+    "url": "https://momentsingraphics.de/Media/BlueNoise/FreeBlueNoiseTextures.zip",
+    "headContentLength": 42288737,
+    "wholeArchiveDownloaded": false,
+    "wholeArchiveSHA256Computed": false,
+    "centralDirectoryEntryCount": 1743,
+    "networkBytesFetched": 947003,
+    "method": "Exact HTTP206 byte ranges with Content-Range/length checks; central and local entry names; compression method; uncompressed length/CRC32; selected payload SHA256 and byte comparison."
+  },
+  "selectedFiles": [
+    {
+      "packagePath": "Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_0.png",
+      "authorArchiveEntry": "Data/256_256/LDR_LLL1_0.png",
+      "bytes": 99216,
+      "sha256": "90564273ED872DA744AA7CC87D81B0090C7103EAB2F223225C357909B41DA803",
+      "zipCRC32": "07DC6090",
+      "byteExact": true
+    },
+    {
+      "packagePath": "Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_1.png",
+      "authorArchiveEntry": "Data/256_256/LDR_LLL1_1.png",
+      "bytes": 99204,
+      "sha256": "7360C0D8880110EC841114C6AEA59C39123D1FB8B261E6BF9FC9573B65B0D0EA",
+      "zipCRC32": "DD6612BF",
+      "byteExact": true
+    },
+    {
+      "packagePath": "Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_2.png",
+      "authorArchiveEntry": "Data/256_256/LDR_LLL1_2.png",
+      "bytes": 99123,
+      "sha256": "D7DB3110BD3F60169E09066E061E161E522625B013A557E923EB384A97316D5F",
+      "zipCRC32": "8FC1EE5B",
+      "byteExact": true
+    },
+    {
+      "packagePath": "Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_3.png",
+      "authorArchiveEntry": "Data/256_256/LDR_LLL1_3.png",
+      "bytes": 99283,
+      "sha256": "19C67A1256B2C20C779470719386737AAA3366BD2058197BBFC3EBEA71E5DE29",
+      "zipCRC32": "AE1902D6",
+      "byteExact": true
+    },
+    {
+      "packagePath": "Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_4.png",
+      "authorArchiveEntry": "Data/256_256/LDR_LLL1_4.png",
+      "bytes": 99205,
+      "sha256": "2C928BFFFC64C339F980C02A022BF0AC2E3B37DF29B079E44625B97FDDE76058",
+      "zipCRC32": "080F344A",
+      "byteExact": true
+    },
+    {
+      "packagePath": "Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_5.png",
+      "authorArchiveEntry": "Data/256_256/LDR_LLL1_5.png",
+      "bytes": 99194,
+      "sha256": "5C9977B8FC9B7C83D00CA60937977824BADC5EB2CE3C744539F96CB22796157B",
+      "zipCRC32": "12E0460B",
+      "byteExact": true
+    },
+    {
+      "packagePath": "Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_6.png",
+      "authorArchiveEntry": "Data/256_256/LDR_LLL1_6.png",
+      "bytes": 99248,
+      "sha256": "E35AF946A68313AD0973BC298BFB2DB18238F885EE04B4A7E760C75ACAFC777A",
+      "zipCRC32": "43CF36A3",
+      "byteExact": true
+    }
+  ],
+  "allSevenByteExact": true,
+  "limits": [
+    "Not full archive integrity or a fixed archive version claim.",
+    "Not every URP texture, full asset/SDK rights, or a new mandatory notice finding.",
+    "Not AAB individual PNG payload identity, Android device results, or code29 build/inclusion approval.",
+    "Keeps issue42 open for remaining scopes."
+  ],
+  "productChanges": 0
+}
