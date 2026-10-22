@@ -40,3 +40,17 @@ walk/sprint/시선/reload fixture04는673 frame과24.04203m 이동, Ammo19→30�
 원래 각234 prefab record 중233개는 줄바꿈 정규화 후 동일하고 기존 ViewModelRoot의 자식1줄만 추가했습니다. 새172 record에 별도 리그가 들어가며, 후속 재질 보완은 해당 FPS Shirt3의 material 참조1곳씩만 바꿨습니다. 원 source material·texture·기존 prefab meta는 유지합니다.
 
 명시 저장 API만 호출했어도 실제 디스크 감사에서 자체 CJK의 infinity glyph/atlas, 기존 Android alias flush, URP 설정 줄끝 변화3개가 함께 발견됐습니다. 생성본을 보존하고 Editor 정상 종료 요청·프로세스 부재를 확인한 뒤 전체 CAS 사전검사로 원래 raw3개를 복원했습니다. 종료가 글꼴 캐시를 비운 뒤 첫 CAS가 거절된 이력도 보존했습니다. 마지막 공개3941→3944개 감사에서 의도한 prefab2개와 material/folder/meta3개만 바뀌고 기존 dirty 설정5개는 처음 raw 바이트와 같습니다. 종료 watcher 보고 형식 오류로 ExitCode는 확보하지 못했으며 정상 종료 요청/부재를 ExitCode0으로 확대하지 않습니다.
+
+## 본체와 1인칭 팔 Humanoid 바인딩 분리 (2026-10-22, #166)
+
+별도의 팔 리그에 원본 본체와 같은 bone 이름·Avatar를 쓰면 root Animator.GetBoneTransform이 FPS 쪽 bone을 반환했습니다. 양 캐릭터의 격리 재개방에서7개 관측 bone이 모두 잘못된 FPS 계층을 가리켰고 root Rebind+Update0만으로 회복되지 않았습니다. 이 상태에서 준비 중이던 앉기는 잘못된 골격을 선택해 카메라·hip 누적 오차가 발생했으므로 첫42pose 실패를 보존했습니다.
+
+FPS skin joint61개에만 SFF_FP_ 이름을 부여하고 기존 human map·bindpose로 전용 Humanoid Avatar를 새로 만들었습니다. 원본 FBX/Avatar·본체 Animator·기존 Idle/Death clip과 controller는 바꾸지 않습니다. Transform과 SMR bone 참조/pose·무기/그립/카메라·피격 판정의 IDs는 유지합니다. 잘못된 binding을 숨기려고 본체 Animator를 끄지 않습니다.
+
+첫 AvatarBuilder 후보는 HumanDescription의 SkeletonBone을 복사하면서 원 FBX 부모 이름이 남아 valid human 검사를 실패했습니다. 새 후보는 원 bindpose를 적용한 독립 top-most clone의 실제 계층에서 SkeletonBone을 새로 구성합니다. Save0 검사에서 양 리그61/61 registry와 각 GetBone7 분리를 확인한 뒤 새 Avatar1개·대상 prefab2개만 저장하고 fresh contents로 다시 열었습니다. 비교 대상 Animator native JSON wrapper 내부의 Avatar1필드만 허용하며, probe의 sampled pose를 저장하지 않도록 저장용 contents를 새로 엽니다. global/scene Save0입니다.
+
+독립 직렬화 감사에서 각 prefab의 기존395 record ID를 보존했습니다. rig PR의333 record는 LF정규화 바이트 동일,62변경은 FPS GameObject 이름61개와 FPS Animator Avatar 참조1개뿐입니다. 모든 Transform/SMR/기존 hitbox/본체 Animator record 및 기존 meta2개는 보존합니다. 현재 Editor에 준비 중인 crouch schema의 _IsCrouching 기본값2줄도 저장됐으나 이 rig PR index에서는 제외해 후속 crouch 변경으로 따로 둡니다. 공개3961→3963 전수 감사에서 이 저장 단계의 차이는 prefab2개·새 Avatar/meta2개뿐입니다.
+
+추가로 별도 미병합 crouch 소스를 함께 import한 Editor에서, 독립 body registry와 원본 Avatar map을 측정 기준으로 양 캐릭터10회 crouch/stand 반복·총42pose를 검사했습니다. 카메라/발높이/hip 반복오차0, 발목 최대4.09e-7m, FPS local91개 및188 Transform scale 보존,11Box+HeadSphere의 broad containment를 확인했습니다. 이 결과는 rig PR 단독 clean checkout이나 실제 Runner physics/늦은 접속·연속Idle/Death·실제기기 검증이 아닙니다. 기존 standing head sphere가1.8m CC 상단을 벗어나는 advisory는 숨기지 않습니다. 실제 런타임·CanStand·새 Windows 경기의 후속 결과는 별도 기록합니다.
+
+근거는 외부20261022-quality/arms-binding-candidate/revision-02/·apply-02/ 및 crouch-pose-01/pose-observation.v5.json·독립 리뷰입니다. 최초 Avatar 생성 실패와 미실행 Apply01·Posev4 검토 중 발견한 잘못된 guard도 보존합니다. APK27/AAB28에는 이번 변경이 없습니다.
