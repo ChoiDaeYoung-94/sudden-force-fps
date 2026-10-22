@@ -2217,6 +2217,7 @@ GameObject:
   - component: {fileID: 4625268923571683474}
   - component: {fileID: 81616316238672860}
   - component: {fileID: 8895120202030258409}
+  - component: {fileID: 498398619859088652}
   m_Layer: 9
   m_Name: SoldierBlue
   m_TagString: Untagged
@@ -2468,6 +2469,31 @@ MonoBehaviour:
   _owner: {fileID: 878779400724752510}
   _animator: {fileID: 8836430150297808867}
   _applyLegacyDeathGrounding: 0
+--- !u!114 &498398619859088652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4219630284990525383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604377863be76d84b9820e4c9d4238e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLocomotionPresentation
+  _stepClips:
+  - {fileID: 8300000, guid: f4c7a4cc0ab5722459cc26079797b3dd, type: 3}
+  - {fileID: 8300000, guid: b10f716793824914c895b45fe1f4036e, type: 3}
+  - {fileID: 8300000, guid: d3c1b95ca2540ea4b982b45207a910a8, type: 3}
+  - {fileID: 8300000, guid: bc4f8da6fbdec784d959ce74b4fd5b50, type: 3}
+  _sfxGroup: {fileID: 6722602206125860508, guid: b47b64c85f9926b45b0646f6ec585f5f,
+    type: 2}
+  _walkStepDistance: 1.65
+  _runStepDistance: 2.1
+  _crouchStepDistance: 1.25
+  _localStepVolume: 0.2
+  _remoteStepVolume: 0.65
+  _audibleDistance: 20
 --- !u!1 &4300730483838093069
 GameObject:
   m_ObjectHideFlags: 0

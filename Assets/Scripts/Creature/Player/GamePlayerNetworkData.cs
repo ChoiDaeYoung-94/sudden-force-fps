@@ -30,6 +30,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
     private ShadowCastingMode[] _originalShadowModes;
     private bool _spawned;
     private CombatPresentation _presentation;
+    private PlayerLocomotionPresentation _locomotionPresentation;
     private Vector3 _viewModelBasePosition;
     private Quaternion _viewModelBaseRotation;
     public CombatPresentation Presentation => _presentation;
@@ -135,6 +136,7 @@ public class GamePlayerNetworkData : NetworkBehaviour
             _inputSource.Bind(this, AimYaw, AimPitch);
         }
         ApplyLocalPresentation();
+        _locomotionPresentation = GetComponent<PlayerLocomotionPresentation>();
         _presentation = GetComponent<CombatPresentation>();
         if (_presentation == null) _presentation = gameObject.AddComponent<CombatPresentation>();
         _presentation.Bind(this);
@@ -177,13 +179,16 @@ public class GamePlayerNetworkData : NetworkBehaviour
     {
         if (_inputSource != null) _inputSource.SynchronizeRespawn();
         ApplyLocalPresentation();
+        if (_locomotionPresentation != null) _locomotionPresentation.RenderPresentation(false);
         if (_cameraRoot != null) _cameraRoot.localRotation = CombatRecoil.ViewRotation(AimPitch, RecoilOffset);
         if (_viewModelRoot != null && Object.HasInputAuthority)
         {
             // ViewModelRoot is a CameraRoot child and inherits its recoil rotation
             // once. Only a small visual kickback is applied in local space.
-            _viewModelRoot.localRotation = _viewModelBaseRotation;
-            _viewModelRoot.localPosition = _viewModelBasePosition + Vector3.back * Mathf.Min(Mathf.Max(RecoilOffset.y, 0f) * 0.01f, 0.06f);
+            _viewModelRoot.localRotation = _viewModelBaseRotation
+                * (_locomotionPresentation != null ? _locomotionPresentation.LocalWeaponRotationOffset : Quaternion.identity);
+            _viewModelRoot.localPosition = _viewModelBasePosition + Vector3.back * Mathf.Min(Mathf.Max(RecoilOffset.y, 0f) * 0.01f, 0.06f)
+                + (_locomotionPresentation != null ? _locomotionPresentation.LocalWeaponPositionOffset : Vector3.zero);
         }
         if (_presentation != null && _presentation.isActiveAndEnabled)
         {
