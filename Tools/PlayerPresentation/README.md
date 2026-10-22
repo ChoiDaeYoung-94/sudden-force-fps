@@ -49,7 +49,7 @@ FPS skin joint61개에만 SFF_FP_ 이름을 부여하고 기존 human map·bindp
 
 첫 AvatarBuilder 후보는 HumanDescription의 SkeletonBone을 복사하면서 원 FBX 부모 이름이 남아 valid human 검사를 실패했습니다. 새 후보는 원 bindpose를 적용한 독립 top-most clone의 실제 계층에서 SkeletonBone을 새로 구성합니다. Save0 검사에서 양 리그61/61 registry와 각 GetBone7 분리를 확인한 뒤 새 Avatar1개·대상 prefab2개만 저장하고 fresh contents로 다시 열었습니다. 비교 대상 Animator native JSON wrapper 내부의 Avatar1필드만 허용하며, probe의 sampled pose를 저장하지 않도록 저장용 contents를 새로 엽니다. global/scene Save0입니다.
 
-독립 직렬화 감사에서 각 prefab의 기존395 record ID를 보존했습니다. rig PR의333 record는 LF정규화 바이트 동일,62변경은 FPS GameObject 이름61개와 FPS Animator Avatar 참조1개뿐입니다. 모든 Transform/SMR/기존 hitbox/본체 Animator record 및 기존 meta2개는 보존합니다. 현재 Editor에 준비 중인 crouch schema의 _IsCrouching 기본값2줄도 저장됐으나 이 rig PR index에서는 제외해 후속 crouch 변경으로 따로 둡니다. 공개3961→3963 전수 감사에서 이 저장 단계의 차이는 prefab2개·새 Avatar/meta2개뿐입니다.
+독립 직렬화 감사에서 각 prefab의 기존406 record ID를 보존했습니다. rig PR의344 record는 LF정규화 바이트 동일,62변경은 FPS GameObject 이름61개와 FPS Animator Avatar 참조1개뿐입니다. 모든 Transform/SMR/기존 hitbox/본체 Animator record 및 기존 meta2개는 보존합니다. 현재 Editor에 준비 중인 crouch schema의 _IsCrouching 기본값2줄도 저장됐으나 이 rig PR index에서는 제외해 후속 crouch 변경으로 따로 둡니다. 공개3961→3963 전수 감사에서 이 저장 단계의 차이는 prefab2개·새 Avatar/meta2개뿐입니다.
 
 추가로 별도 미병합 crouch 소스를 함께 import한 Editor에서, 독립 body registry와 원본 Avatar map을 측정 기준으로 양 캐릭터10회 crouch/stand 반복·총42pose를 검사했습니다. 카메라/발높이/hip 반복오차0, 발목 최대4.09e-7m, FPS local91개 및188 Transform scale 보존,11Box+HeadSphere의 broad containment를 확인했습니다. 이 결과는 rig PR 단독 clean checkout이나 실제 Runner physics/늦은 접속·연속Idle/Death·실제기기 검증이 아닙니다. 기존 standing head sphere가1.8m CC 상단을 벗어나는 advisory는 숨기지 않습니다. 실제 런타임·CanStand·새 Windows 경기의 후속 결과는 별도 기록합니다.
 
