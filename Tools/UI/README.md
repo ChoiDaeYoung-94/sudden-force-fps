@@ -1,5 +1,11 @@
 # 메뉴 미리보기 이미지
 
+## 팀 변경 거절 안내 (2026-10-22, #179)
+
+대기실에서 선택한 팀에 빈자리가 없으면 기존 공통 팝업으로 `RED TEAM is full` 또는 `BLUE TEAM is full` 안내를 표시합니다. 자기 플레이어/방 정보가 아직 준비되지 않은 경우에도 재시도 안내를 표시합니다. 로컬 버튼 경로와 기존 서버 `CanChangeTeam` 검사는 같은 사유 함수를 사용하며, 서버 sender·정원 검증과 같은 팀 선택 시 READY 유지, 다른 팀으로 실제 이동할 때 READY 해제 정책은 유지합니다.
+
+안내는 현재 복제된 방 인원에 대한 사전 검사입니다. 로컬 검사 이후 서버에서 발생한 슬롯 경쟁의 거절 응답을 보장하지 않으며, 일시적으로 오래된 roster에서는 요청이 로컬에서 차단될 수도 있습니다. 새 RPC·Networked 필드·프리팹 변경은 없습니다. 제공 APK27 및 무서명 AAB28에는 포함되지 않습니다.
+
 ## 자체 안전 영역 컴포넌트 통일 (2026-10-21, #157)
 
 `CanvasLobby`·`CanvasRoom`의 안전 영역을 기존 자체 `ScreenSafeArea`로 통일했습니다. 두 대상은 full-stretch·offset0, ConformX/Y=true·Logging=false였고 외부 컴포넌트의 코드 참조·씬 override는 없었습니다. Unity `LoadPrefabContents`·`AddComponent`·대상 컴포넌트 제거·프리팹별 저장을 사용했습니다. 컴포넌트 ID 두 개는 새로 생성됐으며 프리팹 GUID·나머지 계층/이벤트·Canvas 직렬화 모드·카메라 바인딩·씬·자체 스크립트 meta는 유지합니다.
