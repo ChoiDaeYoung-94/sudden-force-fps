@@ -1,10 +1,18 @@
 # Third-party asset provenance
 
+## 코드29 packed 관측과 아이콘 정적 포함 (2026-10-22, #185/#42)
+
+실제 코드29 BuildReport의 known-public unique2787개를 이전28과 같은 Assets/Packages 범위로 대조했습니다.2768→2787의 추가19/삭제0은 Military7개·자체 발소리4개·전용 팔Avatar1개·파생재질1개·자체C#6개입니다. Military는67→74이며 앞서 정적 참조 후보였던7개가 실제 목록에 포함됐습니다. 원문을 내보내지 않은 unknown unique3개와 empty entry5개는 별도이며 전체 경로/권리 확인으로 합산하지 않습니다.
+
+BlueNoise7·무기3·맵17·사용자 제작 확인 HUD7은 목록에 남고, 옛23클립/controller·Loading Icons·EmojiOne·기존61음원·문제 Font2·외부SafeArea의 정확 경로는0입니다. 경로 부재가 이름 변경/내장 payload 전수 부재나 기존 취득 권리의 해결이라는 뜻은 아닙니다. 자체 아이콘3PNG의 packed 경로0은 native Android res와 별개이며, 실제 AAB의 PNG24/일반·원형 참조 및 투명 RGB만의 차이 분류는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+
+고지724,052B 전문 포함과 지정 DEX 검사는 확인했으나 전체 에셋 취득·조건·객체 대응은 미완료이므로 #42는 유지합니다. 근거는 외부 `20261022-evening/code29-packed-rights-review/`와 새 AAB 정적 검사이며, 기존 제공27에 소급 반영되지 않습니다. 아래는 각 시점의 기록입니다.
+
 ## URP BlueNoise256 7개의 원저자 대응 보강 (2026-10-22, #42)
 
 코드28 known-public packed 목록의 추가7경로인 `Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_[0..6].png`에 대해, 현재 설치 URP17.3.0의7개 파일과 [Christoph Peters의 공식 원본 ZIP](https://momentsingraphics.de/Media/BlueNoise/FreeBlueNoiseTextures.zip) 내 `Data/256_256/` 동명7개의 바이트·SHA256 일치를 확인했습니다. [원저자 페이지](https://momentsingraphics.de/BlueNoise.html)는 해당 texture database를 CC0로 공개한다고 명시합니다. 자세한 경로·해시·조건 범위는 [에셋 원본 대응 기록](Tools/AssetLicenses/README.md)과 [공개 대응표](Tools/AssetLicenses/urp-blue-noise-256-provenance.json)에 있습니다.
 
-전체42,288,737B ZIP을 받지 않고 exact HTTP206범위로 중앙1743항목과 선택7개만947,003B 읽었으며, 파일명·복원 크기·CRC32를 검사했습니다. 전체 ZIP SHA·전체 아카이브 무결성, 코드28 AAB의 개별 image payload identity·모든 URP texture의 권리를 확인한 것은 아닙니다. 새 필수 고지 누락을 발견한 판정이 아니므로 제품 고지는 변경하지 않았습니다. 코드29의 Military7개는 별도 정적 참조 후보이며 실제 packed 포함은 새 빌드로 확인해야 합니다. 전체 #42는 남은 범위를 유지합니다.
+전체42,288,737B ZIP을 받지 않고 exact HTTP206범위로 중앙1743항목과 선택7개만947,003B 읽었으며, 파일명·복원 크기·CRC32를 검사했습니다. 전체 ZIP SHA·전체 아카이브 무결성, 코드28 AAB의 개별 image payload identity·모든 URP texture의 권리를 확인한 것은 아닙니다. 새 필수 고지 누락을 발견한 판정이 아니므로 제품 고지는 변경하지 않았습니다. 이 대응을 정리한 시점의 Military7개는 정적 참조 후보였으며, 이후 코드29 실제 packed 관측은 위 최신 기록을 따릅니다. 전체 #42는 남은 범위를 유지합니다.
 
 ## 로비·대기실 안전 영역을 자체 구현으로 통일 (2026-10-21, #157/#42)
 
