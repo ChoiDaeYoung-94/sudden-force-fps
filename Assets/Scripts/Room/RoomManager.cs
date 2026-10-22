@@ -129,10 +129,25 @@ public class RoomManager : NetworkBehaviour
     {
         if (teamId != 0 && teamId != 1) return;
 
-        if (LocalPlayerData != null && LocalPlayerData.Object.HasInputAuthority)
+        var player = LocalPlayerData;
+        if (player == null || player.Object == null || !player.Object.IsValid || !player.Object.HasInputAuthority)
         {
-            LocalPlayerData.RpcChangeTeam(teamId);
+            ShowTeamChangeMessage("Player details are syncing. Please try again shortly.");
+            return;
         }
+        string reason = GetTeamChangeBlockedReason(player, teamId);
+        if (reason != null)
+        {
+            ShowTeamChangeMessage(reason);
+            return;
+        }
+        player.RpcChangeTeam(teamId);
+    }
+
+    private static void ShowTeamChangeMessage(string message)
+    {
+        if (AD.Managers.Instance != null && AD.Managers.PopupM != null)
+            AD.Managers.PopupM.PopupMessage(message);
     }
 
     public Transform GetTeamPosition()
@@ -141,12 +156,21 @@ public class RoomManager : NetworkBehaviour
         return red <= blue ? RedTeam : BlueTeam;
     }
 
-    public bool CanChangeTeam(RoomPlayerNetworkData player, int team)
+    public bool CanChangeTeam(RoomPlayerNetworkData player, int team) => GetTeamChangeBlockedReason(player, team) == null;
+
+    // Local feedback and the existing authoritative RPC guard share the same prerequisites.
+    public string GetTeamChangeBlockedReason(RoomPlayerNetworkData player, int team)
     {
         var manager = NetworkRunnerManager.Instance;
-        return manager != null && manager.SessionPhase == NetworkSessionPhase.Room
-            && (team == 0 || team == 1) && RoomPlayers.Contains(player)
-            && RoomPlayers.Count(p => p != null && p != player && p.Team == team) < manager.GetRoomOptions().PlayerCount;
+        if (manager == null || manager.SessionPhase != NetworkSessionPhase.Room)
+            return "Please wait until the room connection is ready.";
+        if (team != 0 && team != 1)
+            return "Choose RED TEAM or BLUE TEAM.";
+        if (!RoomPlayers.Contains(player))
+            return "Player details are syncing. Please try again shortly.";
+        if (RoomPlayers.Count(p => p != null && p != player && p.Team == team) >= manager.GetRoomOptions().PlayerCount)
+            return team == 0 ? "RED TEAM is full. Please wait for a free slot." : "BLUE TEAM is full. Please wait for a free slot.";
+        return null;
     }
 
     private (int, int) GetTeamCount()
