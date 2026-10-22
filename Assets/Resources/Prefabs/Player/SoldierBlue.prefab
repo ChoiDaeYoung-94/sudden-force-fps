@@ -4198,6 +4198,8 @@ MonoBehaviour:
   _viewModelRoot: {fileID: 7892533549128385464}
   _viewMuzzle: {fileID: 5083036682820345202}
   _worldMuzzle: {fileID: 8977923544556972747}
+  _IsCrouching:
+    _value: 0
   _NickName: 
   _Team: 0
   _Health: 0

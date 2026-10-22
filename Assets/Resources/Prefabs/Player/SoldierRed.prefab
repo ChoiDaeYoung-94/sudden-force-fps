@@ -206,6 +206,8 @@ MonoBehaviour:
   _viewModelRoot: {fileID: 4591078724532576235}
   _viewMuzzle: {fileID: 3475814133073988336}
   _worldMuzzle: {fileID: 7334530813476782593}
+  _IsCrouching:
+    _value: 0
   _NickName: 
   _Team: 0
   _Health: 0

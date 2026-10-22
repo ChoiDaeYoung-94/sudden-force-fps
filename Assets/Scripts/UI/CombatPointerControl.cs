@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ICancelHandler
 {
-    public enum Control { Fire, Reload, Sprint }
+    public enum Control { Fire = 0, Reload = 1, Sprint = 2, Crouch = 3 }
     [SerializeField] private Control _control;
     private int? _pointer;
     private PlayerInputSource _source;
@@ -24,6 +24,12 @@ public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, I
             _source.SynchronizeRespawn();
             _source.SetFire(false);
             _source.SetFire(true);
+        }
+        else if (_control == Control.Crouch)
+        {
+            _source.SynchronizeRespawn();
+            _source.SetCrouch(false);
+            _source.SetCrouch(true);
         }
         else if (_control == Control.Sprint) _source.SetSprint(true);
         else _source.RequestReload();
@@ -47,6 +53,11 @@ public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, I
                 else _source.ResetInput();
             }
             if (_control == Control.Sprint) _source.SetSprint(false);
+            if (_control == Control.Crouch)
+            {
+                if (physicalRelease) _source.SetCrouch(false);
+                else _source.ResetInput();
+            }
         }
         _pointer = null;
         _source = null;
