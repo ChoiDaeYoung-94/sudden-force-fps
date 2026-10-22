@@ -1,5 +1,7 @@
 # 기존 사다리 이동
 
+2026-10-22 오후 후속의 두 번째 사다리 왕복·첫 사다리 좌우 해제, 원격 관측과 실패·최종 보존 범위는 [PC 경계 관측](PC_BOUNDARY_VALIDATION.md)을 따릅니다. 아래 첫 구현 시점의 검증과 구분합니다.
+
 DesertHouse의 기존 `Stairs_01` 두 개를 사용합니다. 원 사다리 mesh/solid collider와 맵 배치는 유지하고, 각 인스턴스에 `LadderVolume`과 layer2의 진단용 trigger 자식만 추가했습니다. 진입 판단은 trigger callback이 아닌 고정 기하·시선·이동 입력을 사용합니다.
 
 ## 조작과 이동 권한
