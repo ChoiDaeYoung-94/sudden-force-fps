@@ -38,7 +38,7 @@ DesertHouse의 기존 `Stairs_01` 두 개를 사용합니다. 원 사다리 mesh
 
 route 뒤 root stop 요청으로 자동 client가 정상 로비 복귀 후 열린 process handle ExitCode0으로 종료했습니다. bootstrap의 passed=false는 의도된 기록이며 route 검증과 별개입니다. host는 결과 상태에 남아 있었고, 명시적 ReturnToLobbyAsync 후 LobbyConnected/actor0/QA객체0을 확인했습니다. 자동 복귀로 확대하지 않습니다. 첫 Windows01의 겹친 Pipeline 요청/3 errors 실패와 추가 readback timeout도 보존합니다.
 
-두 번째 사다리·A/D 탈출·죽음/respawn·천장/상단 장애물·client 입력 권한 예측·모바일 실제 입력은 후속입니다. side-release는 외부 후보/부분 컴파일만 완료했고 독립 검토와 실제 실행은 하지 않았습니다. 이번 결과는 기존 dirty 설정이 있는 P2의 PC 검증이며 깨끗한 체크아웃/Android 서명·제공·기기 통과가 아닙니다. APK27/AAB28에는 미포함입니다.
+두 번째 사다리·A/D 탈출·죽음/respawn·천장/상단 장애물·client 입력 권한 예측·모바일 실제 입력은 후속입니다. side-release는 외부 후보/부분 컴파일 뒤 독립 정적 검토를 완료했지만 실제 실행은 하지 않았습니다. 합성 옆 입력 공급 후 detach와 관측 tick 간격을 검사하는 후보이며 내부 해제 원인·입력 소비의 인과를 증명하는 시험은 아닙니다. 이번 결과는 기존 dirty 설정이 있는 P2의 PC 검증이며 깨끗한 체크아웃/Android 서명·제공·기기 통과가 아닙니다. APK27/AAB28에는 미포함입니다.
 
 route fixture v3는 실제 Running2피어/own input authority/동일 Runner/standing/own physics/source pins를 먼저 확인한 뒤 합성 이동 입력만 제공합니다. 종료에도 source9/context5를 다시 확인하고, 마지막 하강 attached 관측→첫 detached 관측의 tick 차이가0..1일 때만 하단 거리·요청 id 조건과 함께 route 완료로 수락합니다. Editor update 공백으로 이를 증명하지 못하면 incomplete입니다. route 완료는 모든 기능이나 native 원격 로그 수신의 통과가 아닙니다. Transform/Teleport/직접 CC.Move/직접 network state setter로 접근이나 결과를 만들지 않습니다.
 
