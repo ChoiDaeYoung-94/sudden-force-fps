@@ -100,8 +100,11 @@ public sealed class CombatHudView : MonoBehaviour
         }
         if (_desktopHint != null)
         {
-            _desktopHint.enabled = !Application.isMobilePlatform && _presentation != null && !_isDead && !_matchSuppressed;
-            _desktopHint.text = touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CTRL CROUCH   CLICK AIM / FIRE   R RELOAD   ESC MENU";
+            bool climbing = _presentation != null && _presentation.Owner != null && _presentation.Owner.PresentationClimbing;
+            _desktopHint.enabled = (!Application.isMobilePlatform || climbing) && _presentation != null && !_isDead && !_matchSuppressed;
+            _desktopHint.text = climbing
+                ? (touch ? "LADDER  STICK UP / DOWN  SIDE RELEASE" : "LADDER  W UP / S DOWN  A / D RELEASE")
+                : touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CTRL CROUCH   CLICK AIM / FIRE   R RELOAD   ESC MENU";
         }
     }
 
