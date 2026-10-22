@@ -1,5 +1,13 @@
 # PC 이동·사다리 경계 검증
 
+## 추가 격리 충돌 질의 검사
+
+실제 제품 SoldierBlue 프리팹의 비활성 복제본을 독립 Preview PhysicsScene에 만들고, 모든 Behaviour·Renderer·기존 Collider를 비활성화한 상태에서 `PlayerLadderMotor.Clear/SweepClear`만 호출했습니다. 복제본의 `_cc`·`_owner` 캐시 두 개만 초기화하며 Spawned/FUN/Render·Networked 접근자·CC.Move·Photon·자산 저장은 검사 코드에서 호출하지 않았습니다. 이는 Unity/Fusion 내부 전체 getter를 계측했다는 뜻은 아닙니다.
+
+12조건은 빈 공간/경로 통과, 천장 겹침 거부/비활성 천장 통과, 목적지는 비었지만 경로의 실체 장애물 거부, trigger/layer2 무시, 자기 하위 충돌체63개가 모두 무시될 때 통과/64개로 overlap 버퍼가 포화되면 거부입니다. 모두 기대값과 일치했고 별도 독립11조건 대조도 일치했습니다. preview 정리·원래 scene identity/count/dirty 보존·제품 source9/context5 및 프리팹/meta 일치, 검사 Editor41708의 열린 handle ExitCode0을 확인했습니다. 시작 과정의 PlayerSettings 변경1개만 새 외부 사본에 보존·복원해 직전 공개3967개 입력과 raw exact를 확인했습니다.
+
+고정 함수의 합성 질의 검사이며 실제 이동하는 CC/막힌 상단 탈출/네트워크 검증은 아닙니다. 막힌 목적지에서 SweepClear를 호출하는 분기와 CapsuleCast 배열 자체64-hit 포화도 이번 조건에 없습니다. 근거는 외부 `20261022-quality/extension-1500/ladder-guard-runtime-01/`, `ladder-guard-candidate/independent-runtime-review.md`와 `final-guard-restoration-proof.json`입니다.
+
 ## 2026-10-22 PC 이동 경계 후속 관측
 
 P2의 **headless Editor host(pid4740, batch/graphics Null)**와 별도 headless Windows Development Player를 실제 Photon 방에 연결해 합성 이동 입력을 관측했습니다. GUI 키보드/터치·화면 렌더·오디오 실청취 시험과 구분합니다. 프로토콜은 `sff-q20261022-ladder-v1`이며 native client bootstrap은 정상 nickname/Join/팀 선택/READY 뒤 **게임 입력을 공급하지 않는 관찰자**입니다. Bootstrap의 `passed=false`는 그대로 유지하고 각 이동 fixture의 결과와 별도로 읽습니다.
