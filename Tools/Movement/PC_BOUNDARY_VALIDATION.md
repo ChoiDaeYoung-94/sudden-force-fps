@@ -1,5 +1,31 @@
 # PC 이동·사다리 경계 검증
 
+## 2026-10-22 저녁: 클라이언트 입력 권한 경로와 추가 충돌 경계
+
+같은 제품 schema/protocol의 별도 Windows host와 P2 Editor client를 실제 Photon 방에 연결했습니다. 이 절은 headless PC와 합성 NetworkEvents 입력의 관측입니다. 화면·키보드·터치·실청취·Android 조작 및 정량적인 예측 보정 시험으로 확대하지 않습니다.
+
+F2에서 client Red는 `IsClient=true/IsServer=false`, 자기 actor의 InputAuthority=true/StateAuthority=false였습니다. host Blue는 두 actor 모두 StateAuthority=true였고, client에서 보는 원격 Blue는 두 권한이 없는 proxy였습니다. host가 단독 방에서 Blue/READY를 먼저 게시한 뒤 client를 참가시켜 READY/START를 진행했습니다.
+
+| 관측 | 실제 결과 |
+| --- | --- |
+| client Red의 첫 사다리 접근 | 실제 spawn(-5.625,0,-13.5)에서652표본·699입력, BottomEntry=true/grounded/중립 상태로 완료 |
+| 첫 사다리 왕복 | 337표본·362입력, 요청 LadderId1의 상승→상단 착지→하강→하단 해제 |
+| 하단 해제 | 마지막 attached6079→첫 detached6080, gap1; 중립 입력38회, HP100/ammo30·발걸음 증가0 |
+| 별도 host의 수신 | 원격 Red climbing/PresentationClimbing 각각96표본과 위치 왕복 수신 |
+| 정리 | callback 제거/핀·cleanup 오류0, 비활성 포함 QA 객체0, 정상 LobbyConnected·기존 닉네임 정상 API 복원, 두 host와 P2 Editor의 열린 process handle ExitCode0 |
+
+fixture는 Transform/Teleport/직접 CC.Move/Networked setter로 위치나 결과를 만들지 않았습니다. 같은 tick의 client/host 위치 읽기 대조는 보정 진폭이나 모든 tick의 동등성을 뜻하지 않습니다. 왕복의 관측 시계는 Editor.update이며 제품 FUN/Render 내부 순서 계측이 아닙니다.
+
+첫 F 접근은 목표 .83m와 마지막 허용 오차 .1m의 조합 때문에 실제 .9m 진입 거리 밖에서 도착으로 처리돼 최종 BottomEntry 검사에 실패했습니다. 실패 원문을 보존했고 F2의 별도 후보에서 목표 .65m/허용 오차 .04m로 수정했습니다. 원 F의 뒤이은 짧은 재접근은 경기 종료 가드에서 입력 등록 전에 거절됐으며 왕복 성공으로 합산하지 않습니다. 반복 Route05 후보는 실행하지 않았습니다.
+
+선택적 QA SimulationBehaviour의 FUN/Resim/Render 콜백은 왕복과 다른 시간대에만 관측됐습니다. F2 probe는 저장 표본24000 상한으로 중단됐고 cleanup은 완료됐습니다. before/after tick·prediction reset·AfterRender는 관측0이며, 이를 해당 SDK 콜백 전체 통과나 사다리 왕복 중 직접 계측으로 표현하지 않습니다.
+
+추가 격리 Preview PhysicsScene에서는 제품 Behaviour와 기존 Collider를 비활성화한 SoldierBlue 복제본의 실제 Clear/SweepClear 질의12조건이 기대값과 일치했습니다. 실체 벽으로 sweep buffer를 먼저 채운 뒤 막힌 목적지에서 SweepClear=false와 이전 buffer 유지가 관측됐고, 고정 소스의 early-return과 대조했습니다. 엔진 CapsuleCast 호출 횟수는 계측하지 않았습니다. 자기 하위 collider63개의 실제 CapsuleCast는 모두 무시되어 통과했고,64개로 cast buffer가 포화되면 거부됐습니다. preview 종료·scene/dirty·소스/프리팹 보존과 product writes0을 확인했으며 실제 움직이는 CC나 막힌 상단 탈출 시험은 아닙니다.
+
+Windows09와11은 각각 오류0·경고2, 실제360파일 SHA가 해당 manifest와 일치했습니다. Windows10 실패(오류5)는 그대로 보존합니다. 해당 BuildReport에는 빌드 중 Pipeline의 `editor status`/요청 timeout 오류가 기록됐고 다른 프로젝트를 대상으로 한 상태 조회와 시각이 겹쳤습니다. 조회 waiter를 종료하고 빌드 중 모든 Unity CLI 요청을 멈춘 뒤 새 Windows11을 생성했지만, 이 한 번의 성공만으로 도구 오류의 모든 인과나 단일 빌드 안정화를 해결했다고 하지 않습니다.
+
+근거는 외부 `20261022-evening/`의 client-route-04/independent-runtime-review, extra-guard-runtime-01, host-F2-after-client-route, 각 요청/종료 handle와 Windows09/10/11 manifest·검증 기록입니다. 원시 로그·Player·전체 표본은 Git에 전재하지 않습니다. 원격 수신과 입력 권한 경로를 확인했으며, client의 두 번째 사다리·사망/리스폰·등반 중 경기 종료·동적 장애물·손실/지연/정량 correction·전체 spawn·실제 UI/기기/오디오는 남아 있습니다. 아래는 이전 시점의 기록입니다.
+
 ## 추가 격리 충돌 질의 검사
 
 실제 제품 SoldierBlue 프리팹의 비활성 복제본을 독립 Preview PhysicsScene에 만들고, 모든 Behaviour·Renderer·기존 Collider를 비활성화한 상태에서 `PlayerLadderMotor.Clear/SweepClear`만 호출했습니다. 복제본의 `_cc`·`_owner` 캐시 두 개만 초기화하며 Spawned/FUN/Render·Networked 접근자·CC.Move·Photon·자산 저장은 검사 코드에서 호출하지 않았습니다. 이는 Unity/Fusion 내부 전체 getter를 계측했다는 뜻은 아닙니다.

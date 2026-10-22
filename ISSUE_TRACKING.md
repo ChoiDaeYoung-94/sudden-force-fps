@@ -2,6 +2,8 @@
 
 ## 2026-10-22 품질 개선 후속
 
+저녁 #166 후속의 실제 client 첫 사다리 왕복·host 수신과 추가 격리 질의12조건을 [PC 경계 관측](Tools/Movement/PC_BOUNDARY_VALIDATION.md)에 기록했습니다. 실패·probe 상한·미실행과 실제 성공을 구분하며, 정량 보정·client 두 번째 사다리·등반 중 생명주기·Android/실청취는 남겨 둡니다. #166 전체 완료나 새 Android 제공으로 처리하지 않습니다.
+
 발사 반응#162·로비 사용성#163·앱 아이콘#164·이동/팔/HUD/앉기/사다리#166은 PR165/167/168/169/170/171/172/173/175/176으로 목적별 반영했습니다. 팀 만석·준비 안내 #179는 PR180으로 반영했습니다. 이슈별 실제 완료 범위와 남은 Android·입력·네트워크 경계 검증을 분리합니다. 구현 PR 병합만으로 넓은 품질 이슈를 닫지 않습니다. [현재 계획](PROJECT_PLAN.md)과 각 `Tools/*/README.md`의 근거·제한을 따릅니다.
 
 현재 접속 버전은 `sff-q20261022-ladder-v1`이며 이전 crouch/blank binary와 섞어 시험하지 않습니다. 같은 새 schema Editor host와 별도 headless Windows client에서 방/READY/START와 첫 사다리 왕복·원격 상태 수신을 관측했습니다. 후속 두 번째 사다리 왕복·원격 상태 수신과 첫 사다리 좌우 입력 후 해제·착지는 [PC 경계 관측](Tools/Movement/PC_BOUNDARY_VALIDATION.md)에 기록했습니다. client 예측·생명주기·장애물·Android 입력은 후속입니다. 실패·대기·미실행을 성공으로 합산하지 않습니다.
