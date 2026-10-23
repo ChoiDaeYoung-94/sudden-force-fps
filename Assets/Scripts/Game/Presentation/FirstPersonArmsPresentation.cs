@@ -12,6 +12,7 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
     [SerializeField] private Transform _weaponFrame;
     [SerializeField] private Transform _weaponAnchor;
     [SerializeField] private SkinnedMeshRenderer[] _visibleRenderers;
+    private Transform _leftShoulder;
     private Transform _leftUpperArm;
     private Transform _leftLowerArm;
     private Transform _leftHand;
@@ -20,7 +21,8 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
     private Transform _magazineParent, _cachedMagazine, _cachedWeaponFrame;
     private Vector3 _magazineBasePosition, _magazineBaseScale;
     private Quaternion _magazineBaseRotation;
-    private bool _hasMagazineBase, _hasReloadPose;
+    private bool _hasMagazineBase, _hasReloadPose, _hasSupportPose;
+    private Vector3 _baseShoulderPosition, _appliedShoulderPosition;
     private Quaternion _baseUpper, _baseLower, _baseHand, _appliedUpper, _appliedLower, _appliedHand;
     private int _reloadLife = int.MinValue, _reloadFrame = -1;
     private static readonly int IdleState = Animator.StringToHash("Base Layer.Idle_Aiming");
@@ -101,19 +103,20 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         }
         var weapon = _owner.WeaponDefinition;
         float duration = weapon != null ? weapon.ReloadDuration : 0f;
-        if (!snapshot.IsReloading || !Finite(duration) || duration <= 0f
+        if (!Finite(duration) || duration <= 0f
             || !Finite(snapshot.ReloadRemaining) || snapshot.ReloadRemaining < 0f)
         {
             ResetReloadPose(); return;
         }
-        ApplyReloadPose(Mathf.Clamp01(1f - snapshot.ReloadRemaining / duration));
+        ApplyReloadPose(snapshot.IsReloading ? Mathf.Clamp01(1f - snapshot.ReloadRemaining / duration) : 0f);
     }
 
     private void ResolveReloadBones()
     {
-        _leftUpperArm = _leftLowerArm = _leftHand = null;
+        _leftShoulder = _leftUpperArm = _leftLowerArm = _leftHand = null;
         if (_armsAnimator == null || _armsAnimator.transform != transform || !_armsAnimator.isHuman
             || _armsAnimator.avatar == null || !_armsAnimator.avatar.isValid) return;
+        _leftShoulder = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftShoulder);
         _leftUpperArm = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
         _leftLowerArm = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
         _leftHand = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftHand);
@@ -124,8 +127,9 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         return _owner != null && _owner.ViewModelRoot != null
             && _armsAnimator != null && _armsAnimator.transform == transform
             && _weaponFrame != null && _weaponFrame.IsChildOf(_owner.ViewModelRoot) && !_weaponFrame.IsChildOf(transform)
-            && _leftUpperArm != null && _leftUpperArm.IsChildOf(transform) && _leftUpperArm.name == "SFF_FP_upperarm_l"
-            && _weaponAnchor != null && !_weaponAnchor.IsChildOf(_leftUpperArm)
+            && _leftShoulder != null && _leftShoulder.parent != null && _leftShoulder.IsChildOf(transform) && _leftShoulder.name == "SFF_FP_clavicle_l"
+            && _leftUpperArm != null && _leftUpperArm.parent == _leftShoulder && _leftUpperArm.name == "SFF_FP_upperarm_l"
+            && _weaponAnchor != null && !_weaponAnchor.IsChildOf(_leftShoulder)
             && _leftLowerArm != null && _leftLowerArm.parent == _leftUpperArm && _leftLowerArm.name == "SFF_FP_lowerarm_l"
             && _leftHand != null && _leftHand.parent == _leftLowerArm && _leftHand.name == "SFF_FP_hand_l"
             && _viewMagazine != null && _weaponFrame.Find("Model/Weapon_02_2") == _viewMagazine;
@@ -145,33 +149,52 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         return true;
     }
 
-    // Render-only pose function. The normal caller supplies a copied snapshot phase.
-    // Kept separate for isolated reflection tests; never writes simulation or an Animator.
+    // One render-only solve combines idle shoulder framing and the copied reload phase.
+    // Support tracking is separate: an idle correction never reports a reload pose.
     private void ApplyReloadPose(float normalizedPhase)
     {
         ResetReloadPose();
-        if (!Finite(normalizedPhase) || normalizedPhase <= 0f || normalizedPhase >= 1f || !TryCacheMagazineBase()) return;
+        if (!Finite(normalizedPhase) || normalizedPhase < 0f || normalizedPhase > 1f || !TryCacheMagazineBase()) return;
         float phase = Mathf.Clamp01(normalizedPhase);
         float handWeight = Window(.04f, .20f, phase) * (1f - Window(.80f, .97f, phase));
         float magazineWeight = Window(.22f, .43f, phase) * (1f - Window(.55f, .80f, phase));
         Vector3 frameOffset = Vector3.down * (.18f * magazineWeight);
-        // Model has its own rotation. Translate in weapon-frame axes, then convert to the unchanged parent.
-        Vector3 parentOffset = _magazineParent.InverseTransformVector(_weaponFrame.TransformVector(frameOffset));
-        if (!Finite(parentOffset.x) || !Finite(parentOffset.y) || !Finite(parentOffset.z)) return;
-        _viewMagazine.localPosition = _magazineBasePosition + parentOffset;
-        _viewMagazine.localRotation = _magazineBaseRotation;
-        _viewMagazine.localScale = _magazineBaseScale;
-        if (handWeight <= 0f) return;
-        _baseUpper = _leftUpperArm.localRotation; _baseLower = _leftLowerArm.localRotation; _baseHand = _leftHand.localRotation;
+        Vector3 magazineOffset = _magazineParent.InverseTransformVector(_weaponFrame.TransformVector(frameOffset));
+        Vector3 shoulderOffset = _leftShoulder.parent.InverseTransformVector(_weaponFrame.TransformVector(Vector3.back * .10f));
+        Vector3 handPosition = _leftHand.position;
         Quaternion handRotation = _leftHand.rotation;
-        // Initial authored palm target: magazine's left side, in the existing weapon frame.
-        // Source pivot + mesh bounds place its centre near (0,-.046,.144); visual acceptance is required.
         Vector3 grip = _weaponFrame.TransformPoint(new Vector3(-.035f, -.055f, .145f) + frameOffset);
-        Vector3 target = Vector3.Lerp(_leftHand.position, grip, handWeight);
-        if (!SolveReloadArm(target)) { ResetReloadPose(); return; }
-        _leftHand.rotation = Quaternion.AngleAxis(25f * handWeight, _weaponFrame.forward) * handRotation;
-        _appliedUpper = _leftUpperArm.localRotation; _appliedLower = _leftLowerArm.localRotation; _appliedHand = _leftHand.localRotation;
-        _hasReloadPose = true;
+        Vector3 target = Vector3.Lerp(handPosition, grip, handWeight);
+        if (!FiniteVector(magazineOffset) || !FiniteVector(shoulderOffset) || !FiniteVector(target)
+            || !FiniteRotation(handRotation) || !FiniteVector(_magazineBasePosition) || !FiniteVector(_magazineBaseScale) || !FiniteRotation(_magazineBaseRotation)) return;
+        _baseShoulderPosition = _leftShoulder.localPosition;
+        _baseUpper = _leftUpperArm.localRotation; _baseLower = _leftLowerArm.localRotation; _baseHand = _leftHand.localRotation;
+        if (!FiniteVector(_baseShoulderPosition) || !FiniteRotation(_baseUpper) || !FiniteRotation(_baseLower) || !FiniteRotation(_baseHand)) return;
+        bool committed = false;
+        try
+        {
+            // Capture the original idle grip before moving the clavicle; solve once for that grip or the reload target.
+            _leftShoulder.localPosition = _baseShoulderPosition + shoulderOffset;
+            _viewMagazine.localPosition = _magazineBasePosition + magazineOffset;
+            _viewMagazine.localRotation = _magazineBaseRotation; _viewMagazine.localScale = _magazineBaseScale;
+            if (!SolveReloadArm(target)) return;
+            _leftHand.rotation = Quaternion.AngleAxis(25f * handWeight, _weaponFrame.forward) * handRotation;
+            _appliedShoulderPosition = _leftShoulder.localPosition;
+            _appliedUpper = _leftUpperArm.localRotation; _appliedLower = _leftLowerArm.localRotation; _appliedHand = _leftHand.localRotation;
+            _hasSupportPose = true;
+            _hasReloadPose = phase > 0f && phase < 1f;
+            committed = true;
+        }
+        finally
+        {
+            // A failed solve or setter must not leave the clavicle shifted. No Animator can update inside this call.
+            if (!committed)
+            {
+                _leftShoulder.localPosition = _baseShoulderPosition;
+                _leftUpperArm.localRotation = _baseUpper; _leftLowerArm.localRotation = _baseLower; _leftHand.localRotation = _baseHand;
+                ResetReloadPose();
+            }
+        }
     }
 
     private bool SolveReloadArm(Vector3 target)
@@ -198,13 +221,14 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
 
     private void ReleasePreviousReloadPose()
     {
-        if (!_hasReloadPose) return;
+        if (!_hasSupportPose) { if (_hasReloadPose) _hasReloadPose = false; return; }
         // Animator normally supplied this frame's base. Restore only a bone still carrying our last output.
         // This also makes repeated calls without a fresh Animator sample absolute rather than cumulative.
+        if (_leftShoulder != null && _leftShoulder.IsChildOf(transform) && (_leftShoulder.localPosition - _appliedShoulderPosition).sqrMagnitude < .0000000001f) _leftShoulder.localPosition = _baseShoulderPosition;
         if (_leftUpperArm != null && _leftUpperArm.IsChildOf(transform) && Quaternion.Angle(_leftUpperArm.localRotation, _appliedUpper) < .001f) _leftUpperArm.localRotation = _baseUpper;
         if (_leftLowerArm != null && _leftLowerArm.IsChildOf(transform) && Quaternion.Angle(_leftLowerArm.localRotation, _appliedLower) < .001f) _leftLowerArm.localRotation = _baseLower;
         if (_leftHand != null && _leftHand.IsChildOf(transform) && Quaternion.Angle(_leftHand.localRotation, _appliedHand) < .001f) _leftHand.localRotation = _baseHand;
-        _hasReloadPose = false;
+        _hasSupportPose = false; _hasReloadPose = false;
     }
 
     private void ResetReloadPose()
@@ -223,6 +247,8 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         return t * t * (3f - 2f * t);
     }
     private static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
+    private static bool FiniteVector(Vector3 value) => Finite(value.x) && Finite(value.y) && Finite(value.z);
+    private static bool FiniteRotation(Quaternion value) => Finite(value.x) && Finite(value.y) && Finite(value.z) && Finite(value.w);
 
     // Rotate the independent rig about its right-hand weapon anchor. This keeps
     // the existing rifle fixed while the known idle's breathing animates bones.

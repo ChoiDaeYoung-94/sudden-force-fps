@@ -1,5 +1,19 @@
 # 1인칭 팔 표현과 검증 범위
 
+## 왼쪽 소매 프레이밍과 재장전 합성 (2026-10-23, #190)
+
+독립 FPS 왼쪽 쇄골을 무기 기준 뒤로.10m 이동하고, 왼손은 원래 Idle 그립 또는 재장전 목표로 한 번만 IK 계산합니다. 화면 아래쪽의 열린 소매 입구가 덜 드러나도록 한 보정이며 geometry 밀봉·새 모델/클립 추가는 아닙니다. 새 serialized 필드·prefab 저장 없이 C# 한 개만 변경합니다. 오른손 anchor·무기/총구·본체/피격/네트워크는 유지합니다.
+
+Idle 보정 상태와 재장전 상태를 분리해 idle/phase0·1은 support=true/reload=false입니다. 이전 출력과 같은 쇄골 위치/팔 회전만 선택 복원해 누적을 막고 fresh Animator 값을 보존합니다. 명시 Reset·잘못된 참조·disable·실패한 IK는 원래 쇄골/팔/탄창으로 복구합니다. 정상 재장전 완료는 원래 그립의 idle 보정으로 돌아옵니다. 새 쇄골 대응이 없는 리그는 보정/재장전을 거절하고 기존 Idle 팔 표시로 남습니다.
+
+두 팀7단계×3화면비(1024×768/1280×720/1728×729)의 CPU BakeMesh42장과 반복100회6조건·fresh clone30조건을 확인했습니다. 기존 보호 범위에서 의도한 쇄골 localposition 하나를 추가 허용한183 Transform의 오차0, 원복0, source/meta/기존 설정15파일과 scene 보존을 확인했습니다. 기존 helper의 Dictionary key 형식 오류는 실행 전에 발견해 원본을 보존하고 새 revision02에서 수정했습니다. 미호출 컴파일과 실제 검사를 구분합니다.
+
+새 Windows 빌드는 오류0/경고2·22.0313716초이며360파일 SHA를 확인했습니다. 실제 predicting client의272표본에서 support272, idle153개 모두 idle 보정, 최대 offset 오차 약1.02e-6m,4발→재장전30→26→30·탄창 약.18m 하강·오른손 그립 최대 약1.44e-6m를 확인했습니다. 원격 host도 탄약 순서를 수신했습니다. 실행 중 URP 카메라의1280×960 idle/중간2장을 직접 관찰했지만 손/탄창 일부가 화면 밖이므로 전체 접촉·모든 자세의 시각 품질은 미수락입니다.
+
+메뉴는 `PlayerInputSource`의 로컬 입력을 막고 화면의 idle 보정은 유지합니다. `CanProvideInput` 자체가 false가 된다는 첫 검증기 기대값은 틀려 보존했습니다. 실제 후속 한 표본씩에서 Menu/inputBlocked=true와 정상 Resume/Closed·idle support/탄창 원위치를 확인했으며 물리 키·지속 누르기 통과는 아닙니다. 사망/리스폰·Android·장치 성능은 후속입니다. 코드29에는 미포함이며 다음 Android 통합은30 이상입니다.
+
+정상 Lobby/닉네임 복원·actor/QA0·소유 host와 Editor의 열린 handle ExitCode0 이후 생성4파일을 보존·복원하고 임시 QA source/meta만 외부 보존 후 제거했습니다. 기존 dirty5는 시작 raw 바이트와 같고 공개3968개 중 의도한 당일 제품/문서6개 외3962개가 일치합니다(.env1개는 후속 감사에서 조회 제외). 빌드 Running 중 조기 읽기 거부는 성공으로 세지 않았습니다. 근거는 외부 `20261023-work/shoulder-framing-validation/`, `shoulder-runtime-01/`, `shoulder-camera-runtime-01/`, `Shoulder-host-final-summary.public.json`, `final-pc-restoration-01/`과 독립 검토입니다.
+
 ## 왼손·탄창 재장전 (2026-10-23, #188)
 
 로컬 FPS 리그의 왼팔 IK와 기존 소총의 탄창 mesh를 실제 `ReloadRemaining/ReloadDuration`에 맞춰 움직입니다. 오른손 그립과 무기·총구, 본체 골격, 발사/피해/탄약 규칙은 바꾸지 않습니다. 두 player prefab에는 기존 탄창 Transform 참조만 추가했습니다. 기존 CC0 Idle 이외의 출처 미확인 재장전 clip은 사용하지 않습니다.
