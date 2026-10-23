@@ -1,5 +1,17 @@
 # 1인칭 팔 표현과 검증 범위
 
+## 왼손·탄창 재장전 (2026-10-23, #188)
+
+로컬 FPS 리그의 왼팔 IK와 기존 소총의 탄창 mesh를 실제 `ReloadRemaining/ReloadDuration`에 맞춰 움직입니다. 오른손 그립과 무기·총구, 본체 골격, 발사/피해/탄약 규칙은 바꾸지 않습니다. 두 player prefab에는 기존 탄창 Transform 참조만 추가했습니다. 기존 CC0 Idle 이외의 출처 미확인 재장전 clip은 사용하지 않습니다.
+
+이전 출력과 같은 팔 자세만 선택 복원해 새로운 Animator 자세를 보존하며, 완료·잘못된 참조·표시 불가·비활성화에서는 탄창과 팔을 복구합니다. 격리된 두 팀의7단계·반복100회·잘못된 참조/비활성화 검사에서 보호 Transform184개의 변화0과 복원을 확인했습니다. 첫 Edit GPU 미리보기는 IK가 이미지에 반영되지 않아 시각 통과로 쓰지 않습니다. 후속 CPU BakeMesh 미리보기14개와 실제 경기의 GPU 카메라 캡처를 별도 근거로 둡니다.
+
+새 Windows 검증 빌드는 오류0/경고2이며360개 출력 파일의 SHA를 확인했습니다. 실제 Photon 두 피어 경기의 Blue predicting client에서 합성 입력으로 두 번 각각4발 발사→재장전하여 탄약30→26→30을 관측했습니다. 각272/273표본에서 탄창 최대 하강 약.18m·왼손 이동·오른손 그립 최대 오차 약1.27e-6m를 확인했고 별도 Red host도 두 탄약 순서를 수신했습니다. 정상 로비 복귀·QA 입력/객체 제거·닉네임 복원과 소유 host ExitCode0을 확인했습니다.
+
+실행 중인1280×960 카메라의 idle/중간 캡처에서도 왼손 이동이 보입니다. 일부 손과 탄창이 화면 밖으로 내려가므로 모든 손가락 접촉·전체 교환 동작의 완성도를 통과한 것은 아닙니다. 실제 사망/리스폰·물리 터치·Android 화면과 다른 화면비는 후속입니다. 코드29는 이 변경 전 산출물이며 다음 Android 통합은30 이상입니다. 빌드가 함께 flush한 CJK/기존 설정 생성본은 별도로 보존하고 제품 변경과 분리합니다.
+
+근거는 외부 `20261023-work/reload-implementation/`, `reload-pose-validation/revision-01/02`, `reload-windows-01/`, `reload-runtime-01/02`, `reload-camera-runtime-01/`, `Reload-host-final-summary.public.json`, `reload-actual-review-01/`입니다. 최초 미리보기의 한계와 실패한 외부 검증 helper도 보존합니다.
+
 PR169는 1인칭 팔의 소스 개선입니다. 기존 Play/Drive APK27·무서명 AAB28에는 미포함이며 Android 빌드·서명·기기 검증은 후속입니다.
 
 ## 리그·무기·물리 분리

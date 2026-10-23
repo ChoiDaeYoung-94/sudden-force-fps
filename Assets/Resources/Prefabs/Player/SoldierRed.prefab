@@ -1516,6 +1516,7 @@ MonoBehaviour:
   _visibleRenderers:
   - {fileID: 753970633126675864}
   - {fileID: 1120594935019091478}
+  _viewMagazine: {fileID: 8318956550333547324}
 --- !u!1 &1113161645165883472
 GameObject:
   m_ObjectHideFlags: 0
@@ -9058,6 +9059,12 @@ Transform:
 --- !u!4 &6278622069745261817 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8075159069907661460, guid: 7e442b916db7a534a91414e7fe0a7192,
+    type: 3}
+  m_PrefabInstance: {fileID: 2824495709737627245}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8318956550333547324 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6070923809908387153, guid: 7e442b916db7a534a91414e7fe0a7192,
     type: 3}
   m_PrefabInstance: {fileID: 2824495709737627245}
   m_PrefabAsset: {fileID: 0}
