@@ -130,8 +130,9 @@ public class CanvasLobby : MonoBehaviour
             return;
         }
 
-        if (!AD.Utility.IsInvalid(_roomNameText, _roomNameMessage))
+        if (!TryReadRoomName(_roomNameText, out string roomName, out string roomNameError))
         {
+            AD.Managers.PopupM.PopupMessage(roomNameError);
             return;
         }
 
@@ -144,13 +145,65 @@ public class CanvasLobby : MonoBehaviour
         int maxPlayer = int.Parse(_maxPlayerDropdown.options[_maxPlayerDropdown.value].text);
 
         Dictionary<string, object> roomOption = new Dictionary<string, object>(){
-            { "RoomName", _roomNameText.text },
+            { "RoomName", roomName },
             { "MaxPlayers", maxPlayer },
             { "MapName", _selectedMapName },
             { "IsPrivateRoom", !_privateRoomToggle.isOn },
         };
 
         manager.CreateRoom(roomOption);
+    }
+
+    internal static bool TryReadRoomName(TMPro.TMP_Text label, out string roomName, out string error)
+    {
+        roomName = string.Empty;
+        error = "Room name input is unavailable. Please reopen CREATE MATCH.";
+        TMPro.TMP_InputField input = label != null
+            ? label.GetComponentInParent<TMPro.TMP_InputField>(true) : null;
+        if (input == null || input.textComponent != label) return false;
+
+        // TMP's rendered label adds a caret sentinel; only input.text is user data.
+        return TryNormalizeRoomName(input.text, out roomName, out error);
+    }
+
+    internal static bool TryNormalizeRoomName(string text, out string roomName, out string error)
+    {
+        roomName = (text ?? string.Empty).Trim();
+        error = null;
+        if (roomName.Length == 0)
+        {
+            error = _roomNameMessage;
+            return false;
+        }
+        // The limit is UTF-16 code units; never truncate a surrogate pair.
+        if (roomName.Length > 64)
+        {
+            error = "Keep the room name within 64 characters.";
+            return false;
+        }
+        for (int i = 0; i < roomName.Length; i++)
+        {
+            char character = roomName[i];
+            if (char.IsControl(character))
+            {
+                error = "Please write the room name on a single line without control characters.";
+                return false;
+            }
+            if (char.IsHighSurrogate(character))
+            {
+                if (++i >= roomName.Length || !char.IsLowSurrogate(roomName[i]))
+                {
+                    error = "The room name contains an unsupported character. Please edit it and try again.";
+                    return false;
+                }
+            }
+            else if (char.IsLowSurrogate(character))
+            {
+                error = "The room name contains an unsupported character. Please edit it and try again.";
+                return false;
+            }
+        }
+        return true;
     }
 
     public void SelectMap(string mapName)
