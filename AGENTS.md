@@ -1,5 +1,12 @@
 # Sudden Force FPS 작업 규칙
 
+## 2026-10-23 코드31 중간 상태
+
+- 기본 Unity/Fork 경로 P2는 유지하며 공개 빌드용 P7은 `D:/codex/worktrees/sudden-force-fps-android31-20261023`입니다. source aefb1f97a7903273bbabffe037a01a16434ee961/공개3969·개인2 sparse 제외·기존 P2 dirty5를 보존합니다.
+- P2 권위원장195,12,31은 단1회 소비됐고 P7 복사본195,11,30은 source snapshot입니다. actual CAS receipt17CA402AC2C3329B4F97145AE1B8FB87007A4695A2119C85B7545DE89C263FC5·동일handle readback과 독립 검토를 기준으로 합니다. 외부 PSwrapper의 LASTEXITCODE 오판 throw는 별도 실패이며 비교값 미확보/초기숫자추론 정정02를 보존합니다. 재예약·복원0입니다.
+- Unity31 export 오류0·경고71/GUID44ef66c5e3ef4dbd8738dc39d34ae872, prepared3969 대비23변화/3946rawexact의 실제 전후 보관·독립 검토를 완료했습니다. 최초 source-exact=false/긴 외부 경로 실패/Gradle R02 dry VerifyError와 캐시 이동 보관을 보존하고 새 R03 dry만 별도 성공으로 구분합니다. AAB·서명·업로드 성공으로 확대하지 않습니다.
+- 현재 #196 통합 기록은 진행 중입니다. 실제 Play/Drive 제공27/release8·기존 키 유지·기기/장시간 성능 후순위·사용자 조치/질문22시 취합을 유지합니다. 키/암호·원시 로그·바이너리는 공개 기록에 넣지 않습니다. 이후 최신 결과는 Android 점검표 상단과 해당 PR의 확정 기록을 확인합니다.
+
 2026-10-23 코드30 기록(#192): 빌드source15196b8의 별도 P6 `D:/codex/worktrees/sudden-force-fps-android30-20261023`에서 공개3968개·명시 설정/단1회 CAS195,11,30을 바탕으로 무서명 AAB98,416,094B/SHA4FFF5986E9EFFD593CA4C5B6E4B64AD5660818E782F2BFA0B5A2E82DFA261E82와 심볼6/7 ZIP46,139,487B/SHA58F0DDC6979CF414788EE9B205AC6ECB96737BD983FF96CB7CE9C20F324CFC8C를 확인했습니다. export0오류71경고/Gradle176·freshIL2CPP/ZIP150·고지724052B·지정DEX17종0/native7정적·아이콘24를 구분합니다. 원장30되돌림/재예약금지·다음31이상/실제제공27release8·새30서명/업로드/APK/기기0입니다. 기본Unity/Fork는P2그대로이며P6는산출물근거경로입니다.
 
 post-export25차이는EOL20+CJK공백1+resolver3+URP_FPSLite migration1로실제전후보존/분류했고 rawexactfalse·runtime동등성미증명입니다. P6Editor46424부재/ExitCode·원인미확보이며정상종료PASS아닙니다. 그후공개3968/pathset차이0, 새packed/미호출compile연결실패를통과로합산하지않습니다. 배포점검표·외부20261023-work/를따르고 P2dirty5·기존worktree/미반영35·36을보존합니다.
