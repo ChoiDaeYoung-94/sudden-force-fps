@@ -1,5 +1,24 @@
 # PC 이동·사다리 경계 검증
 
+## 2026-10-23: 입력 권한 client의 두 번째 사다리 왕복
+
+기존 Windows11 검증용 Red host를 실제360파일 SHA와 현재 schema/context14핀으로 다시 확인한 뒤 새 process로 실행했습니다. P2 Editor Blue client는 정상 Join/READY 후 실제 두 피어 Game에서 `IsClient=true/IsServer=false`, 자기 actor `InputAuthority=true/StateAuthority=false`였습니다. protocol은 `sff-q20261022-ladder-v1`입니다. 소스28개·실제 loaded 제품 DLL을 미호출 후보 컴파일 뒤 별도 바인딩하고 독립 대조했습니다. 이전 성공 JSON을 이번 실행 근거로 재사용하지 않았습니다.
+
+| 관측 | 이번 실제 결과 |
+| --- | --- |
+| 정상 spawn에서 L2 접근 | (1.875,0,13.5)에서530표본·565합성입력/4waypoint, 최종 목표 오차.0328796059m·BottomEntry/grounded/standing/중립 정지 |
+| L2 왕복 | 338표본·363입력, 상승 등반124/하강 등반121표본 모두 LadderId2, 최대Y3.596605m |
+| 상단·하단 | 상단 settle grounded/속도0·landing거리.05103198m, 하단 해제 오차 수평.00116348267m/수직.0258683246m·마지막 attached9224→첫 detached9225 gap1 |
+| 마지막 상태 | 하단 중립38입력·grounded/속도0/climbingfalse, 표본 HP100/ammo30·crouchfalse·발걸음 증가0 |
+| 별도 host 수신 | 새 고정5544표본 중 Blue3209개, 원격 actor IA=false/SA=true·climbing/PresentationClimbing 각각96개와 위치 왕복 |
+| 정리·보존 | callback 제거 보고/cleanup오류0, 다음 frame QA0, 정상 LobbyConnected/게임 actor0/닉네임 정상 API복원, 직접 연 host handle ExitCode0. 문서 전 baseline3969행 중 `.env`1개는 읽지 않고 나머지3968개 rawexact·기존 dirty5 보존 |
+
+입력은 합성 NetworkEvents이며 fixture의 Transform/Teleport/직접 CC.Move/Networked setter로 위치나 결과를 만들지 않았습니다. source 핀·DLL 파일 일치는 모든 런타임 메모리/캐시 무변화 증명이 아닙니다. 관찰 시계는 Editor.update와 별도 host의 약30Hz이며, 같은 숫자의 tick이나 위치 대조를 정량 prediction/correction 오차·모든 simulation tick의 동일성으로 해석하지 않습니다. owner life/shot은 fixture의 불변 guard와 종료 후 owner life0 조회를 구분하고 모든 tick 직접 계측으로 표현하지 않습니다. bootstrap의 `passed=false`는 그대로 보존하며 별도 route 관측값과 섞지 않습니다.
+
+미호출 컴파일·원본 값 대조·다른 검토자의 핵심 결과 교차 확인을 구분합니다. 근거는 외부 `20261023-work/`의 gameplay-boundary/revision-01/manifest-l2, compile/late-binding, runtime-l2-approach-01/runtime-l2-route-01, Host-G-route-end-snapshot, client-G-returned-lobby/Host-G-exit와 post-l2-source-audit입니다. 전체 표본·원시 로그·검증 Player는 Git에 올리지 않습니다.
+
+이제 client의 두 사다리 입력 경로를 각각 관측했지만, 모든 spawn/장애물·사망/리스폰/경기 종료·지연/손실/정량 보정·물리 UI/키·실제 오디오·Android/LD플레이어·기기/성능은 별도입니다. L2 검증 때문에 제품 코드·키·원장·Android 산출물을 바꾸지 않았고 현재 제공/Drive APK는27, 코드29는 미서명입니다. 아래는 각 과거 시점의 기록입니다.
+
 ## 2026-10-22 저녁: 클라이언트 입력 권한 경로와 추가 충돌 경계
 
 같은 제품 schema/protocol의 별도 Windows host와 P2 Editor client를 실제 Photon 방에 연결했습니다. 이 절은 headless PC와 합성 NetworkEvents 입력의 관측입니다. 화면·키보드·터치·실청취·Android 조작 및 정량적인 예측 보정 시험으로 확대하지 않습니다.
