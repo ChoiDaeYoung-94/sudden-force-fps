@@ -1,5 +1,25 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 최신 무서명 후보: 재장전·소매 개선 코드30 (2026-10-23, #192)
+
+빌드 source `15196b8a93fa46ac72432ed2b301337e9cd62687`의 키·개인 fastlane 설정 제외 P6에서 PR189/191을 포함한 후보를 생성했습니다. P2 원장만195,10,29→195,11,30 단1회 CAS로 소비했고 P6 복사 원장은195,10,29를 유지합니다. 다음 새 예약31 이상이며30 서명에서 재예약하지 않습니다. 지정 Console의 새 읽기 전용 관측도 **실제 제공27/release8/1.0.195·내부 테스터 제공**입니다. 전체 업로드 최대값 전수 조회·새 draft·업로드는 하지 않았습니다.
+
+| 산출물 | 바이트 | SHA256 |
+| --- | ---: | --- |
+| 코드30 무서명 AAB | 98,416,094 | `4FFF5986E9EFFD593CA4C5B6E4B64AD5660818E782F2BFA0B5A2E82DFA261E82` |
+| 코드30 대응 심볼 ZIP | 46,139,487 | `58F0DDC6979CF414788EE9B205AC6ECB96737BD983FF96CB7CE9C20F324CFC8C` |
+
+- 생성: Unity6000.3.25f1 export Succeeded/오류0·경고71/report GUID `ef06eb249ca145b6a8a0f52fb36304b7`, 별도 offline C1 Gradle actual exit0·176작업 시작/종료·실패0입니다. buildIl2Cpp didWork=true/skipped=false/upToDate=false·새 native2개·compile-data4071B를 확인했습니다. 전체 엔진 cold 재컴파일·단일 Unity AAB 호출 안정화는 아닙니다.
+- 입력 분류: 공개3968개 중3943rawexact/25변경은 EOL20·CJK 빈 YAML 값 끝공백1·Android resolver3·URP_FPSLite schema migration1입니다. 실제 전후25쌍과 source-exact=false/실패를 보존했습니다. 마지막4개를 서식으로 처리하지 않고 격리 무서명 패키징 입력으로만 수용했습니다. URP 런타임 동등성·제품 설정 채택·clean checkout 전체 재현은 미증명입니다.
+- 보존: post-export source3968·원 export2819·IL2CPP2732/직접CPP576·도구/AGP·P2 기존dirty5+소비 원장·이전29 AAB/심볼8파일을 보존했습니다. compile-data1개만 별도 분류했습니다. root는 보존8개 전부 직접 재해시했고 독립 검토는7개 직접+P2 PlayerSettings1개 root 고정 감사 근거로 한정합니다. P6 key/fastlane.env는 sparse 제외·부재/읽기·해시·사용0입니다.
+- AAB 정적:150 ZIP 엔트리 전체CRC·중복/unsafe경로·무서명, bundletool validate·package `com.AeDeong.SuddenForceFPS`/30/1.0.195/min25/target36/nondebug·ARM64 native7/PAGE_ALIGNMENT_16K를 확인했습니다. 현행 LOAD/RELRO7개와 실제 바이트/PHDR 교차 검토이며 APK ZIP 정렬·실제16KB 실행·Play 수락은 아닙니다.
+- 고지/DEX: UnityFS/LZ4 고지 전문724,052B/SHA `77AA09C767FFD29D4A64CE94E1F189A5A47479400E805D4D5D8F93A0E33AB1F0`가 source와 exact입니다. DEX1/4849type/3696class의 header·SHA1/Adler32, 지정 광고/결제17prefix 참조/정의0·GPGS/Unity 양성 대조·AD_ID/BILLING 권한0을 확인했습니다. 난독화/native/원격 동작 전체 부재·전체 권리·고지 UI 실행 증명은 아닙니다.
+- native/심볼: stripped7개와 AAB payload의 bytes/SHA가 일치합니다. BuildID/ALLOC layout/정의 함수 및 debuglink CRC 또는 ALLOC payload가 대응한6개로 새 ZIP을 만들고 entry CRC/payload SHA를 재검사했습니다. `libnanosockets.so`는 누락이며7/7·전체 DWARF·Play 첨부 수락은 아닙니다.
+- 아이콘/대표 코드: PNG24개 중18개 decoded RGBA exact, 전경6개는 알파·비영 알파 RGB exact이고 완전 투명 RGB13,294픽셀만 다릅니다. color-space5종 chunk도 대응하며 adaptive XML2개 존재만 확인했습니다. binary XML 의미·실제 launcher는 미검증입니다. 생성 C++의 재장전/소매11대표 본문을 독립 검토했지만 최종 native 함수 생존·GPU/Android 실행은 아닙니다.
+- Editor 경계: 후속 P6 PID46424 부재/CLI EDITOR_NOT_RUNNING, 원래 handle ExitCode·종료 원인 미확보입니다. 소유 로그의 선택 crash/exit marker0을 정상 종료로 선언하지 않습니다. 그 후 공개3968/pathset 재해시 차이0입니다. 기존 owner가 필요한 packed 관측·새 C# 미호출 컴파일은 미실행이며29 packed 수치를 복사하지 않습니다.
+
+근거는 외부 `20261023-work/`의 actual CAS03/export01·s30p01/s30class01, packaging revision04, artifact revision01/actual01, native revision03/run01, icon revision02/run01과 각 독립 검토입니다. `D:/codex/releases/sudden-force-fps/1.0.195-code30/`에 두 파일을 원본 해시로 복사 검증했습니다. 키·암호·원시 로그·산출물은 Git에 넣지 않습니다. **서명/업로드/APK/Drive/최신 기기0**이며 기존 키 유지·실기기/성능 후순위·열린 #41/#42/#43/#44/#66/#132/#140/#154/#162/#163/#166/#188을 유지합니다. 아래는 각 시점의 이전 기록입니다.
+
 ## 최신 통합 후보: 품질 개선 코드29 무서명 검증 (2026-10-22, #185)
 
 소스 `73dc07f9ec4e0da56b7b201abaa7b1c8b2560c2d`의 키 제외 P5에서 오늘 품질 개선을 통합했습니다. 이후 문서/원장 커밋과 빌드 소스를 구분하며 실제 제공/Drive APK는 계속27/release8입니다. 새29의 서명·Play 업로드·설치 APK·기기 실행은 아직 없습니다.

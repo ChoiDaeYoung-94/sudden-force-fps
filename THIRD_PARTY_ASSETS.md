@@ -1,5 +1,11 @@
 # Third-party asset provenance
 
+## 코드30 고지 전문과 정적 검사 범위 (2026-10-23, #192/#42)
+
+재장전·소매 후속 포함 코드30 AAB에서 고지724,052B 전문이 source와 exact이며 지정 광고/결제 DEX17prefix 참조/정의0·양성 대조·native7 LOAD/RELRO와 앱 아이콘24개의 알파/보이는 RGB를 확인했습니다. [산출물과 검사 한계](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다. 기존 제공27과 구분하며 키·원시 로그·산출물은 Git에 넣지 않습니다.
+
+새 BuildReport packed 실관측은 Editor 부재로 미실행이고29의 known/unknown 수를30 결과로 복사하지 않습니다. 개별 에셋/AAB 객체 대응·취득/공개 재배포 조건·전체 권리는 미완료라 #42를 유지합니다. 기존 사용자 제작/취득 확인을 미확인으로 되돌리지 않습니다. 아래는 각 시점의 이전 기록입니다.
+
 ## 코드29 packed 관측과 아이콘 정적 포함 (2026-10-22, #185/#42)
 
 실제 코드29 BuildReport의 known-public unique2787개를 이전28과 같은 Assets/Packages 범위로 대조했습니다.2768→2787의 추가19/삭제0은 Military7개·자체 발소리4개·전용 팔Avatar1개·파생재질1개·자체C#6개입니다. Military는67→74이며 앞서 정적 참조 후보였던7개가 실제 목록에 포함됐습니다. 원문을 내보내지 않은 unknown unique3개와 empty entry5개는 별도이며 전체 경로/권리 확인으로 합산하지 않습니다.

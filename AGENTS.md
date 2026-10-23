@@ -1,5 +1,11 @@
 # Sudden Force FPS 작업 규칙
 
+2026-10-23 코드30 기록(#192): 빌드source15196b8의 별도 P6 `D:/codex/worktrees/sudden-force-fps-android30-20261023`에서 공개3968개·명시 설정/단1회 CAS195,11,30을 바탕으로 무서명 AAB98,416,094B/SHA4FFF5986E9EFFD593CA4C5B6E4B64AD5660818E782F2BFA0B5A2E82DFA261E82와 심볼6/7 ZIP46,139,487B/SHA58F0DDC6979CF414788EE9B205AC6ECB96737BD983FF96CB7CE9C20F324CFC8C를 확인했습니다. export0오류71경고/Gradle176·freshIL2CPP/ZIP150·고지724052B·지정DEX17종0/native7정적·아이콘24를 구분합니다. 원장30되돌림/재예약금지·다음31이상/실제제공27release8·새30서명/업로드/APK/기기0입니다. 기본Unity/Fork는P2그대로이며P6는산출물근거경로입니다.
+
+post-export25차이는EOL20+CJK공백1+resolver3+URP_FPSLite migration1로실제전후보존/분류했고 rawexactfalse·runtime동등성미증명입니다. P6Editor46424부재/ExitCode·원인미확보이며정상종료PASS아닙니다. 그후공개3968/pathset차이0, 새packed/미호출compile연결실패를통과로합산하지않습니다. 배포점검표·외부20261023-work/를따르고 P2dirty5·기존worktree/미반영35·36을보존합니다.
+
+최신사용자LDPlayer지정은 **FPS 인스턴스만**입니다. index2/API34/보고ARM64지원·PlayStore존재·게임미설치의읽기전용준비만했고실제설치/로그인/새30시험0입니다. 다른인스턴스·설정·앱/데이터는조작하지않습니다. 당일20시KST마감/사용량85%초과중단·사용자필요단계보류/마감질문수집합의를유지하며과거전면LD미사용·이전마감은각날짜기록입니다.
+
 2026-10-22 최신 통합 기록(#185): source73dc07f의 키 제외 P5에서 코드29 무서명 AAB98,406,759B/SHA36FA0B459DB8A25DA60FA07541CACE00C9C7F00C91AE9CD24D2327F2F15B13FA와 대응 심볼6/7 ZIP46,132,647B/SHA2FEA009CDACFA778BE37EF28FFDA37DD18BE475818753A3D17D34CDFF600D30F를 검증했습니다. export0오류71경고/Gradle176·새IL2CPP/ZIP·고지724052B·지정DEX17종0/native7 정적 검사를 구분합니다. prepared3967→현재3967의23차이는 원본/원pendingfalse 보존 후19EOL+CJK1+resolver3으로 별도 승인했으며 clean/전부서식/모든 메모리 안전으로 확대하지 않습니다.
 
 canonical P2 원장195,10,29·다음 새 예약30 이상/29서명재예약0, 실제 제공/Drive APK27/release8·새29서명/업로드/APK/기기0입니다. P2기존dirty5·P4dirty26·기존 산출물 보존, 기존 키 유지/이동·백업 후속·실기기/성능 후순위·같은 새 접속 버전 양쪽 빌드 원칙을 유지합니다. P5는 D:/codex/worktrees/sudden-force-fps-android29-20261022의 별도 산출물 worktree이며 기본 Unity/Fork P2를 대체하지 않습니다. 상세 현재 상태는 배포 점검표/계획과 외부20261022-evening을 읽습니다. 아래는 과거 시점의 기록입니다.
