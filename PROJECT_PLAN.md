@@ -4,7 +4,7 @@
 
 왼손·탄창의 전용 재장전 표현을 추가했습니다(#188). 격리 자세·복원 검사와 새 Windows 빌드, 실제 Blue predicting client의 두 차례30→26→30·Red host 수신·실행 카메라 이동을 확인했습니다. [표현과 검증 한계](Tools/PlayerPresentation/README.md)의 첫 절을 따릅니다. 사망/리스폰·Android·모든 화면비는 미완료이며 이 변경은 코드29에 미포함입니다. 다음 새 Android 통합은30 이상입니다. 현재 빌드가 flush한 기존 설정/글꼴 생성본은 제품 변경과 분리 보존하며 clean checkout으로 표현하지 않습니다.
 
-실제 Blue predicting client가 정상 spawn에서 두 번째 사다리까지 접근해 상승·상단 착지·하강·하단 해제를 완료했고 별도 Red host가 원격 등반 상태를 수신했습니다. 합성 입력/headless PC 표본과 정량 correction·Android/물리 UI 검증은 구분합니다. 로비 복귀·닉네임 복원·소유 host ExitCode0·기존 설정5개 보존을 확인했습니다. [이번 표본과 한계](Tools/Movement/PC_BOUNDARY_VALIDATION.md)의 첫 절을 따릅니다. 사망/리스폰·동적 장애물·원격 채팅/청취·전용 장전 모션은 남아 있습니다.
+앞선 PC 경계 검증에서는 실제 Blue predicting client가 정상 spawn에서 두 번째 사다리까지 접근해 상승·상단 착지·하강·하단 해제를 완료했고 별도 Red host가 원격 등반 상태를 수신했습니다. 합성 입력/headless PC 표본과 정량 correction·Android/물리 UI 검증은 구분합니다. 로비 복귀·닉네임 복원·소유 host ExitCode0·당시 기존 설정5개 보존을 확인했습니다. [이번 표본과 한계](Tools/Movement/PC_BOUNDARY_VALIDATION.md)의 첫 절을 따릅니다. 사망/리스폰·동적 장애물·원격 채팅/청취는 남은 범위이며 당시 미완료였던 전용 장전 모션은 위 후속 작업을 따릅니다.
 
 제품 소스·코드29 산출물·예약 원장은 이 검증에서 변경하지 않았습니다. 실제 제공/Drive APK는27이며29 서명·새 APK·업로드는 후속입니다. LD플레이어는 다른 프로젝트에서 사용 중이므로 건드리지 않고, 이후 검증 환경으로 분리 준비할 수 있을 때 사용합니다. 사용량85% 초과 시 작업을 멈추고 상태를 보존합니다. 아래는 각 시점의 계획입니다.
 
