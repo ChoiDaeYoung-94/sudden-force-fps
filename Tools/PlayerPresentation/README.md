@@ -1,5 +1,13 @@
 # 1인칭 팔 표현과 검증 범위
 
+## 코드30 포함과 시각 후속 경계 (2026-10-23, #188/#192)
+
+PR189/191을 포함한 source15196b8에서 코드30 무서명 AAB·새 IL2CPP와 정적 검사/심볼6/7을 확인했습니다. [배포 점검표](../../ANDROID_RELEASE_CHECKLIST.md)를 따릅니다. CanShow/LateUpdate·본/탄창 참조·좌표 변환·단일 solve·선택 복원·실패 finally·OnDisable·Finite 등 생성 C++11대표 본문이 C# 제어 흐름과 대응합니다. P2 LF/P6 CRLF의 raw SHA 차이는 정규화 본문 동일로 구분했고 최종 native 함수 생존·기기/GPU로 확대하지 않습니다.
+
+기존 idle(frame3193) 뒤 별도 QA가 HasAim/yaw90/pitch−60을 보내 middle(frame3359)을 촬영했으므로 고정 시선 비교쌍이 아닙니다. 캡처 도우미 inputProduced=false도 별도 QA 입력0을 뜻하지 않습니다. effective Aim/camera quaternion·recoil·마우스·writer 순서 전수 시계열이 없어 정확 각도·독점 원인은 단정하지 않으며 새 제품 버그 확정/기존 PC 표본 취소는 아닙니다.
+
+다음에는 idle 이전부터 같은 조준을 유지하고 사전 발사 후 recoil 회복을 확인한 뒤 같은 FOV·화면비로 비교하며 input/Aim/Recoil/camera/frame/tick을 남깁니다. 전체 손·탄창 화면 포함/접촉·사망/리스폰·Android는 미완료입니다. 제공27에 미포함이며 무서명30도 서명·기기 실행 전입니다. 근거는 외부 `20261023-work/android30-artifact-readiness01/revision02/actual-01/`, `android30-reload-cpp-body-independent-review01/`, `android30-visual-followup-audit01/`입니다. 아래는 각 시점의 기록입니다.
+
 ## 왼쪽 소매 프레이밍과 재장전 합성 (2026-10-23, #190)
 
 독립 FPS 왼쪽 쇄골을 무기 기준 뒤로.10m 이동하고, 왼손은 원래 Idle 그립 또는 재장전 목표로 한 번만 IK 계산합니다. 화면 아래쪽의 열린 소매 입구가 덜 드러나도록 한 보정이며 geometry 밀봉·새 모델/클립 추가는 아닙니다. 새 serialized 필드·prefab 저장 없이 C# 한 개만 변경합니다. 오른손 anchor·무기/총구·본체/피격/네트워크는 유지합니다.
