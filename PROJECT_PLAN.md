@@ -2,6 +2,8 @@
 
 ## 2026-10-23 PC 후속
 
+소매 단면이 덜 드러나도록 쇄골 프레이밍과 재장전 IK를 합성했습니다(#190). CPU3화면비42장/복원30조건과 새 Windows360파일, 실제 client272표본·원격 탄약 수신·카메라·로컬 메뉴 입력 차단/정상 복귀를 확인했습니다. 전체 접촉·사망/리스폰·Android는 미완료입니다. 정상 Editor/host Exit0 뒤 생성4개와 임시 QA를 분리 정리하고 기존 dirty5 raw 바이트를 복원했습니다. 상세 범위와 실패한 검증기 기대값은 [팔 표현 기록](Tools/PlayerPresentation/README.md)의 첫 절을 따릅니다.
+
 왼손·탄창의 전용 재장전 표현을 추가했습니다(#188). 격리 자세·복원 검사와 새 Windows 빌드, 실제 Blue predicting client의 두 차례30→26→30·Red host 수신·실행 카메라 이동을 확인했습니다. [표현과 검증 한계](Tools/PlayerPresentation/README.md)의 첫 절을 따릅니다. 사망/리스폰·Android·모든 화면비는 미완료이며 이 변경은 코드29에 미포함입니다. 다음 새 Android 통합은30 이상입니다. 현재 빌드가 flush한 기존 설정/글꼴 생성본은 제품 변경과 분리 보존하며 clean checkout으로 표현하지 않습니다.
 
 앞선 PC 경계 검증에서는 실제 Blue predicting client가 정상 spawn에서 두 번째 사다리까지 접근해 상승·상단 착지·하강·하단 해제를 완료했고 별도 Red host가 원격 등반 상태를 수신했습니다. 합성 입력/headless PC 표본과 정량 correction·Android/물리 UI 검증은 구분합니다. 로비 복귀·닉네임 복원·소유 host ExitCode0·당시 기존 설정5개 보존을 확인했습니다. [이번 표본과 한계](Tools/Movement/PC_BOUNDARY_VALIDATION.md)의 첫 절을 따릅니다. 사망/리스폰·동적 장애물·원격 채팅/청취는 남은 범위이며 당시 미완료였던 전용 장전 모션은 위 후속 작업을 따릅니다.
