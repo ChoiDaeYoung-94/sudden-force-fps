@@ -4373,10 +4373,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLocomotionPresentation
   _stepClips:
-  - {fileID: 8300000, guid: f4c7a4cc0ab5722459cc26079797b3dd, type: 3}
-  - {fileID: 8300000, guid: b10f716793824914c895b45fe1f4036e, type: 3}
-  - {fileID: 8300000, guid: d3c1b95ca2540ea4b982b45207a910a8, type: 3}
-  - {fileID: 8300000, guid: bc4f8da6fbdec784d959ce74b4fd5b50, type: 3}
+  - {fileID: 8300000, guid: 3f12fea5cba593c439e87c77c08fbe8d, type: 3}
+  - {fileID: 8300000, guid: f73e21b106afb274488b98ece692d4dd, type: 3}
+  - {fileID: 8300000, guid: 932d1f56f37fccb458448544adc057f2, type: 3}
+  - {fileID: 8300000, guid: 3b039eecc3743b744ba5f0b7186638c5, type: 3}
+  - {fileID: 8300000, guid: c23fd6da4280c7f41a51e985e8340cb5, type: 3}
   _sfxGroup: {fileID: 6722602206125860508, guid: b47b64c85f9926b45b0646f6ec585f5f,
     type: 2}
   _walkStepDistance: 1.65

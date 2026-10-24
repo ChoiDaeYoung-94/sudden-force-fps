@@ -1,0 +1,283 @@
+{
+  "schema": "KENNEY_CONCRETE_FOOTSTEPS_PREPARATION_V1",
+  "package": "Kenney Impact Sounds 1.0",
+  "archive": {
+    "bytes": 800850,
+    "sha256": "029D734AF1582474EDF3A694D1B0CEBC97C1C152F2F39FA34D4C2BAFC5DE77F8"
+  },
+  "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+  "license": {
+    "sourceEntry": "License.txt",
+    "originalBytes": 608,
+    "originalSha256": "B49AA9C56B04528B95913DE13E506A0F7C5E807B9925DB9BFEF86AF1F91120DB",
+    "normalization": "CRLF_or_CR_to_LF_only",
+    "outputBytes": 586,
+    "outputSha256": "48D20ED2F4FD9146E76B7F558D09A1C27E62554D9897BEB93DEE57D269006D02"
+  },
+  "toolSha256": "BAC7F3736F05492667C6C73CE3F9F8F154453CF5BF4D055E83597B1C0CFBAFAD",
+  "decoder": {
+    "soundfile": "0.13.1",
+    "libsndfile": "1.2.2",
+    "numpy": "2.3.5",
+    "python": "3.12.14"
+  },
+  "processing": {
+    "stereoToMono": "float64_arithmetic_mean_L_R",
+    "resampled": false,
+    "sourceRatePreserved": 44100,
+    "dcThreshold": 3.0517578125e-05,
+    "fadeInSecondsRequested": 0.0005,
+    "fadeInSamples": 22,
+    "fadeOutSecondsRequested": 0.002,
+    "fadeOutSamples": 88,
+    "fadeEndpoints": "linear_inclusive_zero_and_one;last_output_sample_zero",
+    "targetOldAuthoredMedianRms": 0.04862877832654305,
+    "peakCap": 0.9,
+    "gain": "min(1,targetRms/fadedRms,peakCap/fadedPeak)",
+    "quantization": "nearest_ties_to_even_PCM16_no_dither",
+    "trimmed": false,
+    "crossOsByteIdentityClaimed": false,
+    "lossySourceInformationRestored": false
+  },
+  "clips": [
+    {
+      "sourceArchiveEntry": "Audio/footstep_concrete_000.ogg",
+      "sourceOggBytes": 5808,
+      "sourceOggSha256": "D7267E183067757C92C169DE2A379ABEA592CFCA6B39BB2E8FEEA15221AD79FE",
+      "sourceChannels": 2,
+      "sampleRate": 44100,
+      "frames": 4671,
+      "durationSeconds": 0.10591836734693877,
+      "originalMono": {
+        "peak": 0.8989542126655579,
+        "rms": 0.08943501599771565,
+        "relative48dBOnsetFrame": 0,
+        "relative48dBOnsetSeconds": 0.0,
+        "mean": 0.00023128518072839006
+      },
+      "dcMeasured": 0.00023128518072839006,
+      "dcRemoved": 0.00023128518072839006,
+      "dcRemovalApplied": true,
+      "afterDcAndFade": {
+        "peak": 0.8987229274848295,
+        "rms": 0.08908039545149332,
+        "relative48dBOnsetFrame": 4,
+        "relative48dBOnsetSeconds": 9.070294784580499e-05,
+        "mean": -0.00010377032808260164
+      },
+      "rmsMatchingGain": 0.5458976476257644,
+      "peakCapGain": 1.001420985796751,
+      "appliedGain": 0.5458976476257644,
+      "gainWasUpward": false,
+      "peakLimited": false,
+      "output": {
+        "name": "ConcreteStep01.wav",
+        "bytes": 9386,
+        "sha256": "6C47324B80E028C4D9CC5A7BB6378EA6484F350F889277B1275021496DAAD68E",
+        "channels": 1,
+        "format": "WAV_PCM_S16LE",
+        "metrics": {
+          "peak": 0.4906005859375,
+          "rms": 0.04862872446696252,
+          "relative48dBOnsetFrame": 4,
+          "relative48dBOnsetSeconds": 9.070294784580499e-05,
+          "mean": -5.669696916479341e-05
+        },
+        "absoluteRmsErrorToReference": 5.385958052467332e-08,
+        "clippedSamples": 0
+      }
+    },
+    {
+      "sourceArchiveEntry": "Audio/footstep_concrete_001.ogg",
+      "sourceOggBytes": 6308,
+      "sourceOggSha256": "507A75EB19B897087855A3BE3CF11A12D7FA37D143AD535EEEBE0B8031C7325D",
+      "sourceChannels": 2,
+      "sampleRate": 44100,
+      "frames": 4747,
+      "durationSeconds": 0.10764172335600906,
+      "originalMono": {
+        "peak": 0.8699672818183899,
+        "rms": 0.07519953563540582,
+        "relative48dBOnsetFrame": 0,
+        "relative48dBOnsetSeconds": 0.0,
+        "mean": 4.602580416290557e-06
+      },
+      "dcMeasured": 4.602580416290557e-06,
+      "dcRemoved": 0.0,
+      "dcRemovalApplied": false,
+      "afterDcAndFade": {
+        "peak": 0.8699672818183899,
+        "rms": 0.07436530317794897,
+        "relative48dBOnsetFrame": 4,
+        "relative48dBOnsetSeconds": 9.070294784580499e-05,
+        "mean": -0.00023022443441828532
+      },
+      "rmsMatchingGain": 0.6539175697324744,
+      "peakCapGain": 1.0345216639858412,
+      "appliedGain": 0.6539175697324744,
+      "gainWasUpward": false,
+      "peakLimited": false,
+      "output": {
+        "name": "ConcreteStep02.wav",
+        "bytes": 9538,
+        "sha256": "ECD12894F3602F89D5AA4F9951B7C0E433F9C492523A91E483B505BF337E0D03",
+        "channels": 1,
+        "format": "WAV_PCM_S16LE",
+        "metrics": {
+          "peak": 0.568878173828125,
+          "rms": 0.04862868635846948,
+          "relative48dBOnsetFrame": 4,
+          "relative48dBOnsetSeconds": 9.070294784580499e-05,
+          "mean": -0.00015050495502093428
+        },
+        "absoluteRmsErrorToReference": 9.196807356642855e-08,
+        "clippedSamples": 0
+      }
+    },
+    {
+      "sourceArchiveEntry": "Audio/footstep_concrete_002.ogg",
+      "sourceOggBytes": 6255,
+      "sourceOggSha256": "B21FA546D74941196B25DA8A20B7010ABD8C05C4FCF93545D1F344E66A664E13",
+      "sourceChannels": 2,
+      "sampleRate": 44100,
+      "frames": 4974,
+      "durationSeconds": 0.1127891156462585,
+      "originalMono": {
+        "peak": 0.8919062614440918,
+        "rms": 0.07265207773635315,
+        "relative48dBOnsetFrame": 0,
+        "relative48dBOnsetSeconds": 0.0,
+        "mean": 6.154093091925037e-05
+      },
+      "dcMeasured": 6.154093091925037e-05,
+      "dcRemoved": 6.154093091925037e-05,
+      "dcRemovalApplied": true,
+      "afterDcAndFade": {
+        "peak": 0.8918447205131725,
+        "rms": 0.07192492057175273,
+        "relative48dBOnsetFrame": 3,
+        "relative48dBOnsetSeconds": 6.802721088435374e-05,
+        "mean": -0.00022918158734460526
+      },
+      "rmsMatchingGain": 0.6761047205888908,
+      "peakCapGain": 1.009144281845538,
+      "appliedGain": 0.6761047205888908,
+      "gainWasUpward": false,
+      "peakLimited": false,
+      "output": {
+        "name": "ConcreteStep03.wav",
+        "bytes": 9992,
+        "sha256": "648B500D8440B2925236C49EB69136188535D47B16873D98067AA2801B6C05F2",
+        "channels": 1,
+        "format": "WAV_PCM_S16LE",
+        "metrics": {
+          "peak": 0.60296630859375,
+          "rms": 0.04862875981620941,
+          "relative48dBOnsetFrame": 3,
+          "relative48dBOnsetSeconds": 6.802721088435374e-05,
+          "mean": -0.0001548641313737686
+        },
+        "absoluteRmsErrorToReference": 1.8510333633925402e-08,
+        "clippedSamples": 0
+      }
+    },
+    {
+      "sourceArchiveEntry": "Audio/footstep_concrete_003.ogg",
+      "sourceOggBytes": 5805,
+      "sourceOggSha256": "8B513C2F0316324060B9174B8F28DF6C2147418C506E6A53B77F18E149A5547B",
+      "sourceChannels": 2,
+      "sampleRate": 44100,
+      "frames": 4873,
+      "durationSeconds": 0.11049886621315193,
+      "originalMono": {
+        "peak": 0.8825891017913818,
+        "rms": 0.08157947919895779,
+        "relative48dBOnsetFrame": 0,
+        "relative48dBOnsetSeconds": 0.0,
+        "mean": -8.604264163406229e-05
+      },
+      "dcMeasured": -8.604264163406229e-05,
+      "dcRemoved": -8.604264163406229e-05,
+      "dcRemovalApplied": true,
+      "afterDcAndFade": {
+        "peak": 0.8826751444330159,
+        "rms": 0.08121745043047997,
+        "relative48dBOnsetFrame": 5,
+        "relative48dBOnsetSeconds": 0.00011337868480725624,
+        "mean": -8.036128769433733e-05
+      },
+      "rmsMatchingGain": 0.5987479053921795,
+      "peakCapGain": 1.0196276689971968,
+      "appliedGain": 0.5987479053921795,
+      "gainWasUpward": false,
+      "peakLimited": false,
+      "output": {
+        "name": "ConcreteStep04.wav",
+        "bytes": 9790,
+        "sha256": "6A3032CA9D28FF0B81F471B77D769001BD45750171823888C5D4484DA63C8A21",
+        "channels": 1,
+        "format": "WAV_PCM_S16LE",
+        "metrics": {
+          "peak": 0.52850341796875,
+          "rms": 0.048628860874339125,
+          "relative48dBOnsetFrame": 5,
+          "relative48dBOnsetSeconds": 0.00011337868480725624,
+          "mean": -4.7720899920480194e-05
+        },
+        "absoluteRmsErrorToReference": 8.254779607780316e-08,
+        "clippedSamples": 0
+      }
+    },
+    {
+      "sourceArchiveEntry": "Audio/footstep_concrete_004.ogg",
+      "sourceOggBytes": 5912,
+      "sourceOggSha256": "24DD8DB2413E5B81AD181E1205C12A1C7801DA5F85715D471B92A4B2F632E45E",
+      "sourceChannels": 2,
+      "sampleRate": 44100,
+      "frames": 5043,
+      "durationSeconds": 0.11435374149659865,
+      "originalMono": {
+        "peak": 0.8914852142333984,
+        "rms": 0.08640052110924029,
+        "relative48dBOnsetFrame": 0,
+        "relative48dBOnsetSeconds": 0.0,
+        "mean": -2.708202916677268e-06
+      },
+      "dcMeasured": -2.708202916677268e-06,
+      "dcRemoved": 0.0,
+      "dcRemovalApplied": false,
+      "afterDcAndFade": {
+        "peak": 0.8914852142333984,
+        "rms": 0.08602735800007205,
+        "relative48dBOnsetFrame": 4,
+        "relative48dBOnsetSeconds": 9.070294784580499e-05,
+        "mean": -0.00011809396603313518
+      },
+      "rmsMatchingGain": 0.5652710888378359,
+      "peakCapGain": 1.0095512361065053,
+      "appliedGain": 0.5652710888378359,
+      "gainWasUpward": false,
+      "peakLimited": false,
+      "output": {
+        "name": "ConcreteStep05.wav",
+        "bytes": 10130,
+        "sha256": "2C5F3A73E290715105E5CD979D9EDAF4DE3BFA453483145E92A88E3C0D76AA66",
+        "channels": 1,
+        "format": "WAV_PCM_S16LE",
+        "metrics": {
+          "peak": 0.503936767578125,
+          "rms": 0.04862855648843034,
+          "relative48dBOnsetFrame": 4,
+          "relative48dBOnsetSeconds": 9.070294784580499e-05,
+          "mean": -6.660251137095975e-05
+        },
+        "absoluteRmsErrorToReference": 2.218381127058744e-07,
+        "clippedSamples": 0
+      }
+    }
+  ],
+  "audibleImprovementOrDeviceLatencyPassed": false,
+  "unityImporterMixerPlaybackOrAttenuationChanged": false,
+  "sourceArchiveRehashedUnchangedBeforeWrite": true,
+  "originalOggsWrittenOrExtracted": false
+}
