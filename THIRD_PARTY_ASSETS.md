@@ -1,5 +1,15 @@
 # Third-party asset provenance
 
+## DOTween 동봉 readme의 출처 대응 (2026-10-24, #212/#42)
+
+DOTween 기본 컴포넌트의 출처는 [동봉 readme](Assets/Plugins/Demigiant/DOTween/readme.txt)를 우선 연결합니다. 원문은 Daniele Giardini - Demigiant의 2014–2018 저작권과 원저자 license URL을 담고 있으며, 2,190B/SHA256 `37B99FFDBB8B01B159D807B1FE77DB664AE5B3B201734A5AD602C7C7F83941F0`입니다. 코드32의 실제 source manifest에 포함된 같은 파일과 바이트가 일치합니다. readme의 Pro 언급만으로 Pro 도입·취득을 추정하지 않습니다.
+
+2026-10-24에 [원저자 license 페이지](https://dotween.demigiant.com/license.php)와 이를 가리키는 [공식 저장소 LICENSE](https://github.com/Demigiant/dotween/blob/develop/LICENSE)를 확인했습니다. 현재 웹 조건을 과거 동봉 DLL의 정확한 라이선스로 대체하지 않으며, 원 배포 패키지 버전과 당시 조건은 미확정입니다. 별도 공개 metadata 관측의 assemblyVersion `1.0.0.0`도 DOTween 패키지 버전이 아닙니다. readme의 업그레이드 설명에 있는 버전 번호 역시 설치 버전 근거로 쓰지 않습니다.
+
+코드32 빌드 소스 `bce341b6ef387f29cbf5bff6d3491e866a3f375e`의 생성 입력 목록에서 `unityLibrary/src/main/Il2CppOutputProject/Source/il2cppOutput/` 아래 `DOTween.cpp`, `DOTween__1.cpp`, `DOTween__2.cpp`, `DOTween_CodeGen.c` 네 경로의 metadata를 확인했습니다. 이는 생성 입력의 경로·바이트·SHA 대응이며, DLL 본문·최종 네이티브 함수 생존·전체 배포 권리를 증명하지 않습니다. 별도 `UniTask.DOTween` 생성 항목까지 같은 조건으로 묶지 않습니다.
+
+이번에는 출처 대응 기록만 추가했고 앱 고지 본문·DLL·에셋·패키지와 기존 원본 readme는 변경하지 않았습니다. 앱의 고지 의무 위반이나 전체 권리 완료를 판정하지 않으며 #42의 남은 범위를 유지합니다. 근거는 외부 `20261024-work/assets42-remaining-pc-gaps01/`의 원문 핀·공개 생성 목록·버전 metadata 한계 기록입니다.
+
 ## 코드30 고지 전문과 정적 검사 범위 (2026-10-23, #192/#42)
 
 재장전·소매 후속 포함 코드30 AAB에서 고지724,052B 전문이 source와 exact이며 지정 광고/결제 DEX17prefix 참조/정의0·양성 대조·native7 LOAD/RELRO와 앱 아이콘24개의 알파/보이는 RGB를 확인했습니다. [산출물과 검사 한계](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다. 기존 제공27과 구분하며 키·원시 로그·산출물은 Git에 넣지 않습니다.
