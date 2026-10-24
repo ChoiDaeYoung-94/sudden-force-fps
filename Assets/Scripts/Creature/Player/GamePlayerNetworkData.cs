@@ -433,6 +433,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         PreviousButtons = default; ReloadTimer = default; NextShotTimer = default;
         ResetRecoilPreview(); RecoilPreviewAmmo = Ammo;
         RespawnTimer = default; RespawnRetryTimer = default;
+        LastShotDirection = Vector3.zero;
         RespawnVersion++; IsDead = false; IsCrouching = false;
         if (_ladderMotor != null) _ladderMotor.ResetSimulation();
         ApplyLifeCollision();

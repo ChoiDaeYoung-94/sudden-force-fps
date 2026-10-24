@@ -109,7 +109,11 @@ public sealed class CombatPresentation : MonoBehaviour
             Notify(LocalVitalsChanged, snapshot);
         }
         if (_cursor.ConsumeShot(Owner.ShotSequence, out var shotDelta))
-            Notify(ShotObserved, new ShotObservedSnapshot(Owner, shotDelta));
+        {
+            var direction = Owner.LastShotDirection;
+            if (CombatShotQuery.IsFinite(direction) && direction.sqrMagnitude > 0f)
+                Notify(ShotObserved, new ShotObservedSnapshot(Owner, shotDelta));
+        }
         if (_cursor.ConsumeHit(Owner.HitSequence, out var hitDelta) && local)
             Notify(ConfirmedHit, new ConfirmedHitSnapshot(Owner, hitDelta));
     }
