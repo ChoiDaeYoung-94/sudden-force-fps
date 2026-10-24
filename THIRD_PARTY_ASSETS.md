@@ -1,5 +1,13 @@
 # Third-party asset provenance
 
+## Kenney 콘크리트 발소리5종 (2026-10-25, #166/#42)
+
+[공식 Impact Sounds1.0](https://kenney.nl/assets/impact-sounds)의 `footstep_concrete_000–004.ogg`를 mono WAV5개로 파생했습니다. 원 ZIP800,850B/SHA `029D734AF1582474EDF3A694D1B0CEBC97C1C152F2F39FA34D4C2BAFC5DE77F8`와 동봉 CC0 원문을 확인했습니다. 원 License608B/SHA `B49AA9C56B04528B95913DE13E506A0F7C5E807B9925DB9BFEF86AF1F91120DB`에서 줄바꿈만 LF로 바꾼586B/SHA `48D20ED2F4FD9146E76B7F558D09A1C27E62554D9897BEB93DEE57D269006D02`를 새asset 폴더와 앱 고지에 보존합니다. [공식 사용 안내](https://kenney.nl/support)와 원문은 상업적 사용과 선택적 credit을 설명합니다.
+
+선택5멤버 SHA/CRC·파생 PCM5개/License·변환 수치의 독립 검토를 수행했고, 재생성 도구·manifest는 [자료](Tools/AudioAssets/KenneyFootsteps/README.md)에 있습니다. 원 손실 Vorbis의 stereo 평균/DC 보정/fade/하향 gain 파생이며 자체 녹음·원래 손실의 복구·전체 OS에서 바이트 재현으로 분류하지 않습니다. 변환용 Python decoder는 앱에 포함한 새 런타임 SDK가 아닙니다.
+
+두 팀의 발소리 참조만4→5로 연결하고 기존 자체4WAV·meta/원 script/mixer를 유지했습니다. 앱 고지의 기존724,028B prefix는 그대로이며 새 출처·원문930B를 덧붙였습니다. 이5개 선택파일의 권리/출처 대응과 후속 소스 도입이며 제공33의 packed 결과를 바꾸거나, 전체 에셋 권리·새 Android 포함·실기기 청감을 완료한 것은 아닙니다. 아래 코드33의 자체 발소리4개 표는 당시 제공본의 기록입니다.
+
 ## 코드33 원 export 보고서의 포함 경로 대조 (2026-10-24, #42)
 
 코드33 Native export의 원 BuildReport 파일(SHA256 `04E3759C2A17D4BABCA92E31942A80176CED8787DF1A50A0F9CBC5FD539B7869`)을 별도 편집 중인 P8에서 메모리로만 읽었습니다. 보고서 GUID `70c60f2a1f6c42f98b7cdf8e8814afab`·Android/Succeeded를 원 export 반환과 대조했고, 원 오류0/경고71·출력E33 조건은 공개 reader의 identity guard로 연결했습니다. 새 빌드나 최신 P8 소스의 보고서로 대체한 것이 아닙니다. 실제 제공본은 계속 코드33/release11입니다.

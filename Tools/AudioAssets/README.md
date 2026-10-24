@@ -1,5 +1,17 @@
 # 이동·씬 전환 음향 검증
 
+## CC0 콘크리트 발소리5종 도입 (2026-10-25, #166/#42)
+
+SoldierBlue/Red의 PlayerLocomotionPresentation._stepClips만 기존 자체4종에서 Kenney 콘크리트5종으로 연결했습니다. 자체4WAV와 원meta·원script·SFX mixer/그룹·보행거리/volume/거리 감쇠는 보존합니다. 모든 바닥을 같은 콘크리트 음원으로 표현하며 지형별 소재나 차폐를 추가한 것은 아닙니다.
+
+원파일은 mono44,100Hz/PCM16·약0.106–0.114초입니다. 새 Unity importer는 기본값 그대로 **Vorbis/DecompressOnLoad/PreserveSampleRate/preload=false**를 관측했으며 기존 importer나 DSP·믹서 값을 바꾸지 않았습니다. 원파일 PCM과 Unity codec을 구분합니다. 첫 재생 로딩·청감/입력 지연·실기기 검증은 아직 통과가 아닙니다. [출처·변환·재생성](KenneyFootsteps/README.md)과 고정 manifest를 따릅니다.
+
+같은 preview의 전체 GameObject/Component JSON에서 MonoBehaviour._stepClips 하나만 제외한 비교 후 두 prefab을 저장했고, 별도 read-only inspector에서 양쪽5참조·순서·GUID/AudioClipID·SFX를 확인했습니다. 원meta와 문서 class/fileID/order·배열 밖 전체 YAML은 LF만 정규화해 일치했으며, P8 공개3,947파일 전후에서 변경은 두 prefab뿐이었습니다. P2에는 원래 LF 형식으로 이 저장본과 Unity 생성 새13asset/meta만 승격하고 고지의 기존724,028B prefix를 유지해930B를 덧붙였습니다.
+
+초기 import03의 전체 Resource dirty flag 비교는 실패했고 원인을 소급 식별하지 못했습니다. 그 false/부분 실행과 실패한 도구 초안은 보존했습니다. 후속05는 총괄의 명시된 제한 판단에 따라 기존3934파일 바이트·새13개를 연결하고, 공개asset/현재normalScene 객체의 identity·dirty flags 및 원씬/preview1·render구독 보존을 새로 검증했습니다. 이를 원래 전체 메모리 보존 성공·복원으로 바꾸지 않습니다.
+
+근거는 외부 `20261024-resume/kenney-footstep-adoption-candidate05/`의 Verify/Apply/Inspect actual, `kenney-prefab-block-audit01/actual-37848b01d5f344e9a42579b537944cd7/`, `kenney-p8-after-apply05.public.json` 및 독립 검토입니다. 제공 코드33 APK에는 이 후속 소스가 미포함입니다.
+
 ## Additive 씬 전환의 리스너 중첩 제한 (2026-10-24, #166)
 
 AD.SceneManager는 target을 additive로 읽기 전에 현재 source scene의 원래 active/enabled AudioListener만 잠시 끕니다. source unload 요청 이전에 끝나면 그 목록만 복원하며, 원래 disabled/inactive·다른 씬·이동된 리스너와 전역 pause/믹서는 바꾸지 않습니다. 부분 suspend 실패도 복원 목록을 보존하고, 복원이 기존 로딩/BGM/전환 flag의 finally 정리를 막지 않도록 했습니다.
