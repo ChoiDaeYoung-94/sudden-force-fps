@@ -1,5 +1,11 @@
 # GitHub 이슈와 PR 작업 관리
 
+## 후속 경기 근거와 사격 입력 경계 (#198/#217, 2026-10-24)
+
+#198은 코드33 Android host와 PC Editor client의 Relayed READY/START·300초 제한 DRAW/0:0·양쪽 로비 복귀를 추가했습니다. PC 새 Lobby Runner/Connected 및 Play 종료 뒤 Login/clean/observer 부재도 확인했습니다. [후속 근거](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/198#issuecomment-6384575492)는 앞선30초 관측과 별도이며 전체 연속 패킷·Direct 원인 해결·실기기 통과가 아닙니다. #198은 열림을 유지합니다.
+
+#217/PR218은 알려진 사격 held 상태의 release gate를 입력 초기화에서 유지하는2줄 소스 수정과 검증 문서입니다. 같은 격리 실제 컴포넌트22조건에서7실패→0실패, 정리·source reload·독립 COMMENT·최신 head/base/필수 조건 확인 후 병합했습니다. 물리 입력·새 owner 전체는 미검증이며 제공33 APK에 미포함입니다. #162/#166 전체는 닫지 않습니다. [현재 잔여 이슈 표](PROJECT_PLAN.md)의16개 범위를 유지하며 아래 전달 기록은 당시 상태입니다.
+
 ## 코드33 내부 제공·APK 전달 기록 (#215, PR216, 2026-10-24)
 
 #207/PR209 사다리 진입·이탈 기준, #208/PR211 리스폰 이전 발사 연출, #210/PR214 채팅 이력 스크롤은 각각의 독립 검토와 검증 범위로 마무리했습니다. PR213의 DOTween 고지 정정도 포함한 source `87fbfdb3669589376f8fd3f238cac016ec5ed02c`에서 코드33/1.0.196을 빌드했습니다. #215/PR216의 범위는 소비 원장 `196,1,33`과 실제 빌드·서명·내부 release11(21:05 KST)·APK/Drive 전달 기록입니다. 코드33을 재예약하지 않습니다.

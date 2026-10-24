@@ -1,5 +1,11 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 제공 이후 제한된 경기 표본 (2026-10-24)
+
+코드33 Android host(SFF33/Red)와 PC Editor client(PC33/Blue)는 자기 방 qa33/DesertHouse에서 READY/START 후 게임의300초 제한으로 Draw/TimeExpired/0:0에 도달했습니다. 양쪽 정상 RETURN 후 Android PUBLIC ROOMS·PC 새 Lobby Runner/Connected를 확인했고 PC Play 종료 뒤 Login/nonplay/clean/observer 부재를 확인했습니다. [#198 공개 기록](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/198#issuecomment-6384575492), 외부 `20261024-work/issue198-code33-runtime-01/day-end-gameplay-and-preservation.public.json` 및 독립 검토를 따릅니다.
+
+연결은 Relayed였으며 상태 스냅샷·Root의 Android CUA 관측입니다. 전체300초 패킷/host telemetry·Direct Timeout 해결·PGS/Play Store 설치·전체 전투·실제16KB 기기·실기기/성능 검증은 아닙니다. P8 생산 C#73개 LF 메모리 비교는 clean checkout/prefab/SDK 전체 동일성 증거가 아닙니다. 이후 PR218 사격 release gate 수정은 제공33에 미포함이며 새 빌드 예약·서명·업로드는 하지 않았습니다. 아래 산출물 수치와 해시는 불변입니다.
+
 ## 현재 제공본: 코드33/release11·APK 전달 완료 (2026-10-24)
 
 실제 빌드 source는 `87fbfdb3669589376f8fd3f238cac016ec5ed02c`입니다. PR209 사다리 대각선 입력 기준·PR211 리스폰 직후 이전 발사 연출 제거·PR214 채팅 이력 위치/스크롤/드래그와 PR213 고지 정정을 포함합니다. **1.0.196/코드33을 기존 업로드 키로 서명하여2026-10-24 21:05 KST 내부 release11로 제공**했고 대응 심볼 첨부 표시를 확인했습니다.
