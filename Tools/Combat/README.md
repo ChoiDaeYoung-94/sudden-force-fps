@@ -1,5 +1,13 @@
 # 발사 피드백 검증
 
+## 포커스 상실·입력 취소 뒤 사격 해제 유지 (2026-10-24, #217)
+
+입력 초기화는 사격을 멈추면서 이미 알고 있는 버튼 held 상태를 release gate에 보존합니다. 포커스 상실·pause/resume·Unbind·pointer cancel 뒤 계속 누른 값을 다시 받아도 발사가 재개되지 않으며, 실제 release를 알리는 `SetFire(false)` 뒤 새 press는 허용합니다. 메뉴·리스폰의 기존 SeedAim 경로와 발사/탄약/네트워크 규칙은 바꾸지 않습니다. 새 owner 바인딩의 모든 물리 입력 경계까지 검증한 것은 아닙니다.
+
+Unity6000.3.25f1의 격리 PreviewScene에서 실제 PlayerInputSource와 CombatPointerControl을 호출한 동일22조건은 수정 전7실패, 수정 후0실패였습니다. callback과 held 재표본은 합성했으며 결과 필드는 읽기만 했습니다. 다른 pointer의 Up 무시·자기 Up 해제·새 press 허용·반복 reset·기존 crouch gate를 포함합니다. 두 실행 뒤 fixture 객체0·singleton 부재·preview 종료·원 scene/dirty 보존을 확인했습니다. 물리 마우스/터치·실제 권한자 입력·네트워크 경기 통과로 확대하지 않습니다.
+
+공개 재현 source와 전후 결과는 외부 `D:/codex/validation/sudden-force-fps/20261024-resume/FireReleaseFixture.cs`, `issue217-before01.public.json`, `issue217-after01.public.json`에 보존합니다. 이 수정은 이미 제공한 코드33 APK에 미포함이며, 앞선 경기말 탄약0 관측의 원인으로 확정하지 않습니다.
+
 ## 로컬 예측 효과와 확정 명중 분리 (2026-10-22, #162)
 
 기존 참가자 기기는 반동만 예측하고 총구 효과·총성은 방장의 ShotSequence가 도착한 뒤 재생했습니다. 이제 허용된 forward 발사에서 로컬 표시를 큐에 넣고 Render에서 재생합니다. 명중·피해·실제 탄약·재장전 권한은 방장에 유지하며 서버 hitscan에 탄환 비행 대기는 없습니다. 확정 impact·히트마커는 기존 권한자 관측을 따릅니다.

@@ -122,6 +122,8 @@ public sealed class PlayerInputSource : MonoBehaviour
         _crouch = false;
         _crouchReleaseRequired |= _physicalCrouchHeld;
         _fire = false;
+        // Resetting ownership/focus is not evidence of a physical release.
+        _fireReleaseRequired |= _physicalFireHeld;
         _reloadRequested = false;
         _reloadSubmittedFrame = -1;
         _lookFinger = -1;
