@@ -158,7 +158,7 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         float phase = Mathf.Clamp01(normalizedPhase);
         float handWeight = Window(.04f, .20f, phase) * (1f - Window(.80f, .97f, phase));
         float magazineWeight = Window(.22f, .43f, phase) * (1f - Window(.55f, .80f, phase));
-        Vector3 frameOffset = Vector3.down * (.18f * magazineWeight);
+        Vector3 frameOffset = Vector3.down * (.04f * magazineWeight);
         Vector3 magazineOffset = _magazineParent.InverseTransformVector(_weaponFrame.TransformVector(frameOffset));
         Vector3 shoulderOffset = _leftShoulder.parent.InverseTransformVector(_weaponFrame.TransformVector(Vector3.back * .10f));
         Vector3 handPosition = _leftHand.position;
