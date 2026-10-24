@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
@@ -42,6 +43,7 @@ namespace AD
             bool bgmPaused = false;
             bool sourceUnloadStarted = false;
             bool targetLoadStarted = false;
+            var suspendedListeners = new List<AudioListener>();
             try
             {
                 if (!currentScene.IsValid() || !currentScene.isLoaded
@@ -61,6 +63,8 @@ namespace AD
                     bgmPaused = true;
                 }
                 token.ThrowIfCancellationRequested();
+                // The additive target activates its own listener before source unloading.
+                SuspendSceneListeners(currentScene, suspendedListeners);
                 var loading = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(
                     targetName, UnityEngine.SceneManagement.LoadSceneMode.Additive);
                 if (loading == null) throw new InvalidOperationException("Scene loading did not start.");
@@ -122,12 +126,46 @@ namespace AD
             {
                 try
                 {
-                    if (loadingShown && popup != null) popup.ClosePopupSceneLoading();
+                    // Once unloading starts, the old scene cannot be restored safely.
+                    if (!sourceUnloadStarted) RestoreSceneListeners(currentScene, suspendedListeners);
                 }
                 finally
                 {
-                    try { if (bgmPaused && sound != null) sound.UnpauseBGM(); }
-                    finally { _sceneChangeInProgress = false; }
+                    try { if (loadingShown && popup != null) popup.ClosePopupSceneLoading(); }
+                    finally
+                    {
+                        try { if (bgmPaused && sound != null) sound.UnpauseBGM(); }
+                        finally { _sceneChangeInProgress = false; }
+                    }
+                }
+            }
+        }
+
+        private static void SuspendSceneListeners(UnityEngine.SceneManagement.Scene scene, List<AudioListener> suspended)
+        {
+            if (!scene.IsValid() || !scene.isLoaded) return;
+            foreach (var root in scene.GetRootGameObjects())
+                foreach (var listener in root.GetComponentsInChildren<AudioListener>(true))
+                    if (listener != null && listener.isActiveAndEnabled)
+                    {
+                        // Retain ownership even if disabling this listener fails.
+                        suspended.Add(listener);
+                        listener.enabled = false;
+                    }
+        }
+
+        private static void RestoreSceneListeners(UnityEngine.SceneManagement.Scene scene, List<AudioListener> suspended)
+        {
+            if (!scene.IsValid() || !scene.isLoaded) return;
+            foreach (var listener in suspended)
+            {
+                try
+                {
+                    if (listener != null && listener.gameObject.scene == scene) listener.enabled = true;
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogWarning($"[Scene] Audio listener restore failed: {exception.GetType().Name}");
                 }
             }
         }
