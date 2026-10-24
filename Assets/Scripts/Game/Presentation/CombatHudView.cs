@@ -57,8 +57,11 @@ public sealed class CombatHudView : MonoBehaviour
         if (_healthBar != null) _healthBar.fillAmount = Mathf.Clamp01(snapshot.Health / 100f);
         if (_healthText != null) _healthText.text = "HP " + snapshot.Health;
         if (_ammoText != null) _ammoText.text = snapshot.Ammo + " / " + snapshot.Capacity;
-        if (_reloadText != null) _reloadText.text = snapshot.IsReloading && !snapshot.IsDead && !_matchSuppressed
-            ? "RELOADING " + snapshot.ReloadRemaining.ToString("0.0") + "s" : string.Empty;
+        if (_reloadText != null) _reloadText.text = _presentation == null || snapshot.IsDead || _matchSuppressed
+            ? string.Empty
+            : snapshot.IsReloading ? "RELOADING " + snapshot.ReloadRemaining.ToString("0.0") + "s"
+            : snapshot.Health > 0 && snapshot.Capacity > 0 && snapshot.Ammo == 0
+                ? "EMPTY - RELOAD" : string.Empty;
     }
 
     private void ShowHit(ConfirmedHitSnapshot hit)

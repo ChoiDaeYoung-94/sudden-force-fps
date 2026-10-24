@@ -1,5 +1,11 @@
 # Sudden Force FPS
 
+## 빈 탄창 재장전 안내 (2026-10-25, #224)
+
+살아 있는 플레이어의 탄창이 비면 기존 HUD 상태 영역에 EMPTY - RELOAD를 표시합니다. 재장전 중에는 기존 카운트다운을 우선하며, 사망·경기 억제·비바인딩 상태에서는 문구를 숨깁니다. 버튼·입력·탄약·네트워크 판정과 씬 배치는 변경하지 않았습니다.
+
+실제 CombatHudView/TMP의 격리된 문구 10상태에서 구소스의 빈 탄창·억제 해제 후 새 스냅샷 두 실패가 수정 후 0실패로 바뀌었습니다. 정상 탄창·카운트다운 우선·사망·경기 억제·용량0·HP0·Clear도 확인했습니다. 각 워크트리의 공개 입력 3947개 중 HUD 소스 외 3946개는 바이트가 같고, 원래 Login 씬·preview 수와 자기 임시 객체 정리를 확인했습니다. 자기 비활성 presentation을 사용한 문구 검사이며 실제 owner 연결·UI 렌더·물리 입력·기기 검증은 아닙니다. **이 안내는 후속 소스이며 제공한 코드33 APK에는 미포함**입니다.
+
 ## 코드33 후속 경기와 입력 경계 (2026-10-24)
 
 코드33 Android host와 PC Editor client가 Relayed 경로에서 READY/START·300초 시간 제한의 DRAW(0:0)·양쪽 로비 복귀를 확인했습니다. PC는 새 Lobby Runner/Connected와 Play 종료 뒤 Login/clean/observer 부재를 확인했습니다. 경기 상태 스냅샷과 Android CUA 화면 관측이며 전체300초 패킷·Direct Timeout 해결·실기기 검증은 아닙니다. [#198 후속 근거](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/198#issuecomment-6384575492)를 따릅니다.
