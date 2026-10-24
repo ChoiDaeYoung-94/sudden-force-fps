@@ -8,14 +8,29 @@ public class ChatManager : MonoBehaviour
     [SerializeField] private UnityEngine.UI.ScrollRect _scrollRect;
     [SerializeField] private TMP_InputField _inputField;
 
+    private readonly System.Collections.Generic.Queue<PendingMessage> _pendingMessages
+        = new System.Collections.Generic.Queue<PendingMessage>();
+    private ChatScrollDragObserver _dragObserver;
+    private bool _flushingMessages;
+
+    private struct PendingMessage
+    {
+        public readonly string Text;
+        public readonly bool ForceFollow;
+        public PendingMessage(string text, bool forceFollow) { Text = text; ForceFollow = forceFollow; }
+    }
+
     private void Awake()
     {
         _inputField.onSubmit.AddListener(OnSubmit);
+        EnsureDragObserver();
     }
 
     private void OnDestroy()
     {
         if (_inputField != null) _inputField.onSubmit.RemoveListener(OnSubmit);
+        _dragObserver = null;
+        _pendingMessages.Clear();
     }
 
     private void OnSubmit(string text) => SubmitChat();
@@ -39,7 +54,7 @@ public class ChatManager : MonoBehaviour
             return;
         }
         canvas.RpcBroadcastChat(message, runner.LocalPlayer, manager._nickName);
-        AddMessage($"<You> {message}");
+        AddMessage($"<You> {message}", true);
         _inputField.text = string.Empty;
     }
 
@@ -84,8 +99,56 @@ public class ChatManager : MonoBehaviour
             AD.Managers.PopupM.PopupMessage(message);
     }
 
-    public void AddMessage(string text)
+    public void AddMessage(string text) => AddMessage(text, false);
+
+    private void AddMessage(string text, bool forceFollow)
     {
+        bool wasEmpty = _pendingMessages.Count == 0;
+        _pendingMessages.Enqueue(new PendingMessage(text, forceFollow));
+        // A queue left by a drag is drained only in LateUpdate, after EndDrag dispatch.
+        if (wasEmpty) FlushPendingMessages();
+    }
+
+    private void LateUpdate() => FlushPendingMessages();
+
+    private bool EnsureDragObserver()
+    {
+        if (_dragObserver != null) return true;
+        if (_scrollRect == null) return false;
+        // The observer belongs to the ScrollRect GameObject, not this manager.
+        _dragObserver = _scrollRect.GetComponent<ChatScrollDragObserver>();
+        if (_dragObserver == null)
+            _dragObserver = _scrollRect.gameObject.AddComponent<ChatScrollDragObserver>();
+        return true;
+    }
+
+    private void FlushPendingMessages()
+    {
+        if (_flushingMessages || _pendingMessages.Count == 0 || !isActiveAndEnabled
+            || !EnsureDragObserver() || _dragObserver.IsDragging
+            || !_content.gameObject.activeInHierarchy || !_scrollRect.gameObject.activeInHierarchy) return;
+        _flushingMessages = true;
+        try
+        {
+            while (_pendingMessages.Count > 0 && !_dragObserver.IsDragging)
+            {
+                var pending = _pendingMessages.Dequeue();
+                AddMessageCore(pending.Text, pending.ForceFollow);
+            }
+        }
+        finally { _flushingMessages = false; }
+    }
+
+    private void AddMessageCore(string text, bool forceFollow)
+    {
+        Canvas.ForceUpdateCanvases();
+        var viewport = _scrollRect.viewport != null
+            ? _scrollRect.viewport : (RectTransform)_scrollRect.transform;
+        bool follow = forceFollow || _content.rect.height <= viewport.rect.height
+            || _scrollRect.verticalNormalizedPosition <= .01f;
+        Vector2 position = _content.anchoredPosition;
+        float height = _content.rect.height;
+
         GameObject message = AD.Managers.PoolM.PopFromPool(AD.GameConstants.PoolObjects.Message.ToString());
         message.transform.SetParent(_content, false);
         var label = message.GetComponent<TMP_Text>();
@@ -93,6 +156,14 @@ public class ChatManager : MonoBehaviour
         label.parseCtrlCharacters = false;
         label.text = text ?? string.Empty;
         Canvas.ForceUpdateCanvases();
-        _scrollRect.verticalNormalizedPosition = 0;
+        if (follow) _scrollRect.verticalNormalizedPosition = 0;
+        else
+        {
+            // Keep existing rows in place when bottom-pivot content grows.
+            position.y -= (_content.rect.height - height) * (1f - _content.pivot.y);
+            _content.anchoredPosition = position;
+        }
+        // Exclude this layout correction from the next drag velocity sample.
+        _scrollRect.Rebuild(UnityEngine.UI.CanvasUpdate.PostLayout);
     }
 }
