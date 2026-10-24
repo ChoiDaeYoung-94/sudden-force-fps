@@ -1,5 +1,24 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 현재 제공본: 코드31/release9·Play APK 전달 완료 (2026-10-24)
+
+#196/PR197의 무서명 검증 기록은 main `c91377f`에 반영됐습니다. 실제 코드31 빌드 소스는 `aefb1f97a7903273bbabffe037a01a16434ee961`이며 기록 main/Editor QA `c91377f`와 구분합니다. 기존 업로드 키로 서명한 AAB를 **2026-10-24 09:28 KST 내부 테스트 release9**로 제공했고, 대응 심볼6/7 첨부를 확인했습니다.
+
+| 산출물 | 바이트 | SHA256 |
+| --- | ---: | --- |
+| 기존 업로드 키로 서명한 코드31 AAB | 98,433,210 | `023F627927ACD17AF7DEE88904B37797271C191FE821D5535C29CD65DA4B60A3` |
+| 코드31 대응 심볼 ZIP | 46,139,192 | `9B42DD909D48C358611A7D0B8C38BCD3680FEB4622F9A8B0D0646B1BA022EBFA` |
+| Play 앱 서명 코드31 APK | 105,682,251 | `C27CEE93738F79E5856FB895C05AC1761E4714A6042318E4440AACB83261D25C` |
+
+- **업로드용 서명:** 단1회 서명 후 원본150개 payload 일치·무서명 원본 보존·예상 인증서와 모든 payload 서명을 확인했습니다. 자식 종료·자격정보 참조/환경 정리를 구분해 기록했으며 불변 메모리 완전 삭제를 주장하지 않습니다. 기존 키 유지·원장195,12,31 보존·재예약0입니다.
+- **Play APK:** 전체 ZIP CRC, package `com.AeDeong.SuddenForceFPS`/31/1.0.195/min25/target36/ARM64/nondebug, APK v2 서명 및 zipalign16KB 정적 검사를 확인했습니다. Play 앱 서명 인증서 SHA256은 `01B2846B34835CD145264048DD5C642B6F112D35AA8F0B601DBA11F49E100D86`이며 업로드 키 인증서와 다릅니다. native7개는 APK/AAB 스트림 바이트가 일치했습니다. 전체 assets/DEX/font payload 동일성·실제16KB 기기 실행을 증명한 것은 아닙니다.
+- **심볼:** 현재 AAB에 대응하는6/7이며 `libnanosockets.so`는 누락, fullCoverage=false입니다. Play 첨부 확인을7/7 확보·전체 엔진 재컴파일·모든 crash 해석 가능으로 확대하지 않습니다.
+- **Drive:** 기존 비공개 테스트 폴더 루트에 `SuddenForceFPS-1.0.195-code31-PlaySigned.apk` 파일1개를 업로드하고, 원격에서 다시 다운로드한 SHA256이 위 로컬 원본과 일치함을 확인했습니다. 원격 해시 미검증 상태가 아닙니다. `Release31`은 로컬 산출물 보관 경로 `D:/codex/releases/sudden-force-fps/1.0.195-code31`을 가리키며 Drive 하위 폴더를 생성한 것이 아닙니다. 기존 APK5/27을 보존했고 키·암호 업로드와 공유 권한 변경은0입니다.
+- **LD FPS 제한 표본:** 허용된 index2/API34에 기존 앱이 없던 상태에서31을 새로 설치했습니다. 로그인 흐름 후 로비 닉네임 `qafps31`, 맵 썸네일·선택, 빈 방 이름 거부, 정상 QA 방 생성과1인 START 안내를 확인했습니다. Play 테스터의 실제 기기 설치/업데이트 경로·전체 로그인/PGS·경기 검증과 구분합니다.
+- **교차 플랫폼 #198 OPEN:** Android host와 Editor client의 실제2명 Room 정착 후 Direct 연결에서 약10초 뒤 Timeout을 관측했고 새 Runner가 Lobby로 복구됐습니다. 이어진 Shutdown Ok는 복구 단계이며 끊김 원인을 해결했다는 뜻이 아닙니다. ProvideInput=true 시험도 Timeout으로 끝났습니다. 역할 반전한 PC Editor host/Android31 client는 약133초 간격 두 표본에서 같은 Room2명과 양쪽 팀 이름을 확인했고 미READY START 안내를 확인했습니다. Android 캡처 시각은 `2026-10-24T01:12:54.401Z`, 후속 API 시각은 `2026-10-24T10:15:07.5408764+09:00`(UTC `01:15:07.5408764Z`)입니다. 이는 표본 사이 연속 접속·재접속 전수를 증명하지 않으며 경기는 미실행입니다. 근본 원인은 미확정이고 전체 교차 플랫폼·경기 PASS가 아닙니다.
+
+공개 근거는 외부 `20261024-work/`의 file-signing31 binding/actual 공개 검토, play-apk31 actual 결과·독립 검토, drive31-delivery01, cross-peer-sdk-observer02/03-input-true 및 reverse-role-room-initial01/stable01·reverse-role-unready-start01입니다. 공개 기록에 비공개 폴더 URL·계정 이메일·암호 파일/키 경로를 넣지 않습니다. 이번 코드31 서명·제공·전달은 완료이며 후속32이상 새 빌드·서명은 미실행입니다. 실제16KB 기기·실기기 단계·전체 권리·전체 재장전 접촉·단일 Unity 빌드 안정화·장시간 성능은 남겨 둡니다. 아래의 ‘무서명31’·‘제공27/release8’·‘서명/업로드0’은 각 작성 당시 기록이며 현재 제공 상태는 이 절을 따릅니다.
+
 ## 최신 무서명 후보: 방 이름 수정 포함 코드31 (빌드2026-10-23·검증2026-10-24, #196)
 
 빌드source `aefb1f97a7903273bbabffe037a01a16434ee961`의 개인2파일 sparse 제외 P7 `D:/codex/worktrees/sudden-force-fps-android31-20261023`에서 생성했습니다. 기본 Unity/Fork는 P2 그대로이며 기존 설정5개를 보존합니다. P2권위원장195,12,31은 단1회 CAS로 소비했고 P7복사원장195,11,30은 source snapshot입니다. 다음 새 예약은32이상이며31서명에서는 재예약하지 않습니다.
