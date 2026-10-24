@@ -1,11 +1,15 @@
 # Sudden Force FPS 작업 규칙
 
-## 2026-10-23 코드31 중간 상태
+## 2026-10-24 코드31 무서명 통합 검증 기록
 
-- 기본 Unity/Fork 경로 P2는 유지하며 공개 빌드용 P7은 `D:/codex/worktrees/sudden-force-fps-android31-20261023`입니다. source aefb1f97a7903273bbabffe037a01a16434ee961/공개3969·개인2 sparse 제외·기존 P2 dirty5를 보존합니다.
-- P2 권위원장195,12,31은 단1회 소비됐고 P7 복사본195,11,30은 source snapshot입니다. actual CAS receipt17CA402AC2C3329B4F97145AE1B8FB87007A4695A2119C85B7545DE89C263FC5·동일handle readback과 독립 검토를 기준으로 합니다. 외부 PSwrapper의 LASTEXITCODE 오판 throw는 별도 실패이며 비교값 미확보/초기숫자추론 정정02를 보존합니다. 재예약·복원0입니다.
-- Unity31 export 오류0·경고71/GUID44ef66c5e3ef4dbd8738dc39d34ae872, prepared3969 대비23변화/3946rawexact의 실제 전후 보관·독립 검토를 완료했습니다. 최초 source-exact=false/긴 외부 경로 실패/Gradle R02 dry VerifyError와 캐시 이동 보관을 보존하고 새 R03 dry만 별도 성공으로 구분합니다. AAB·서명·업로드 성공으로 확대하지 않습니다.
-- 현재 #196 통합 기록은 진행 중입니다. 실제 Play/Drive 제공27/release8·기존 키 유지·기기/장시간 성능 후순위·사용자 조치/질문22시 취합을 유지합니다. 키/암호·원시 로그·바이너리는 공개 기록에 넣지 않습니다. 이후 최신 결과는 Android 점검표 상단과 해당 PR의 확정 기록을 확인합니다.
+- 2026-10-24 사용자는 기존 동일 암호를 외부 파일에서 사용하는 것을 명시 허용했습니다. 오늘 서명은 USER_EXPLICIT_PASSWORD_FILE 별도 계약으로 진행하며 과거 UI 직접 입력 확인 bool을 true로 위장하지 않습니다. 비밀값의 출력·로그·해시·복사·명령 인자·Git/Drive 저장을 금지하고 root가 필요한 시점에만 메모리/전용 child env로 사용·참조 정리합니다. 기존 키 유지·생성/교체/이동/Drive백업 보류·실기기 후순위·LDPlayer FPS 한정·사용량90%초과시 마감 합의를 유지합니다.
+
+- sourceaefb/개인2제외 P7 공개3969에서 코드31 AAB 98418048B/SHA43F6E9EF4B41D4140FA38745CE16E861F97BA862CF5CEA127BD3AF53C3BC83ED·심볼46139192B/SHA9B42DD909D48C358611A7D0B8C38BCD3680FEB4622F9A8B0D0646B1BA022EBFA를 생성했습니다. Unityexport오류0·경고71/GUID44ef66c5e3ef4dbd8738dc39d34ae872, Gradle176/새IL2CPP, core3/아이콘24/심볼6of7 정적 검사를 구분합니다. nanosockets심볼누락/전체권리·실제16KB·최신기기미검증입니다.
+- P2원장195,12,31 단1회소비·다음32이상/서명재예약0·P7복사원장195,11,30 snapshot을 유지합니다. P2dirty5·이전산출물·기존worktree/미반영작업을 보존합니다. 준비본대비23차이와 최초sourceexactfalse/긴경로실패/R02dry실패/CAS외부wrapper오판을 보존하고 새R03성공과 구분합니다.
+- 실제Play/Drive27/release8·새31서명/업로드/APK/기기0·기존키유지/이동·백업후속·2026-10-24사용량90%초과시마감·실기기/장시간성능후순위를 유지합니다. 로컬release31폴더와 Android점검표/외부actual·독립검토가 근거입니다. 기본Unity/Fork는P2그대로입니다.
+
+
+- 10월24일 재개 관측에서 P2의 기존 키 별칭만 빈 값으로 달랐습니다. 당시 설정을 외부 보관하고 native Unity0 확인 후 기존 사용자 선택 aedeong 한 필드만 재적용했습니다. 전체 SHA가 빌드 시점의 설정과 일치함을 확인했으며 중간 차이가 없었다고 처리하지 않습니다. 비밀 파일/키 내용 조회0입니다. 공식 SDK의 Private DLL5/private 헤더·C소스17을 비밀 파일로 오인한 reader 실패는 보존하고, 원 export SHA에 고정된 정확22개 경로·크기·SHA만 허용한 Core05로 검증했습니다. 심볼은 proof/upstream 핀 방향을 고친 producer04/binder03에서 실제 생성·검사했습니다.
 
 2026-10-23 코드30 기록(#192): 빌드source15196b8의 별도 P6 `D:/codex/worktrees/sudden-force-fps-android30-20261023`에서 공개3968개·명시 설정/단1회 CAS195,11,30을 바탕으로 무서명 AAB98,416,094B/SHA4FFF5986E9EFFD593CA4C5B6E4B64AD5660818E782F2BFA0B5A2E82DFA261E82와 심볼6/7 ZIP46,139,487B/SHA58F0DDC6979CF414788EE9B205AC6ECB96737BD983FF96CB7CE9C20F324CFC8C를 확인했습니다. export0오류71경고/Gradle176·freshIL2CPP/ZIP150·고지724052B·지정DEX17종0/native7정적·아이콘24를 구분합니다. 원장30되돌림/재예약금지·다음31이상/실제제공27release8·새30서명/업로드/APK/기기0입니다. 기본Unity/Fork는P2그대로이며P6는산출물근거경로입니다.
 

@@ -1,5 +1,11 @@
 # GitHub 이슈와 PR 작업 관리
 
+## 코드31 무서명 통합 검증 (#196, PR197)
+
+PR195 방 이름 수정을 포함한 코드31 AAB와 심볼6/7을 실제 생성·검증했습니다. Unity export 오류0·경고71, Gradle176·새 IL2CPP, ZIP/bundletool·고지·지정 DEX·native7 정적 정렬·아이콘24·대응 심볼을 구분하며 정확한 SHA와 한계는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다. nanosockets 심볼은 누락입니다.
+
+#196은 무서명 통합·산출물 검증 범위입니다. 기존 키 서명·Play 내부 제공·APK 전달은 #43, 실제 기기·전체 권리·빌드 안정화·종료·추가 재장전 품질은 기존 이슈에 유지합니다. 원장195,12,31은 소비한 상태로 보존하고31을 재예약하지 않습니다. 실제 Play/Drive 제공은 아직27/release8입니다.
+
 ## 방 이름 표시 문자 유입 수정 (#194, PR195)
 
 정상 GUI가 만든 방의 실제 Photon 이름 끝에 U+200B가 붙는 재현을 확인했습니다. CanvasLobby가 TMP 표시 라벨 대신 소유 TMP_InputField.text를 읽도록 수정하고 Unicode/빈 값/길이와 라벨 소유 관계를 검증합니다. 컴파일 오류0·TMP/경계39개·실제 빈 Confirm 안내·정확한14자 이름의 새 방 생성/다른 Player 참가·닉네임/로비/clean Untitled 복구를 확인했습니다. [검증과 한계](Tools/Lobby/ROOM_NAME_VALIDATION.md)를 따릅니다.

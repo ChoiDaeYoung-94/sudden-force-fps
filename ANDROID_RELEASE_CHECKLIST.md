@@ -1,15 +1,23 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
-## 코드31 내보내기·패키징 진행 (2026-10-23, #196)
+## 최신 무서명 후보: 방 이름 수정 포함 코드31 (빌드2026-10-23·검증2026-10-24, #196)
 
-방 이름 입력 수정 포함 source `aefb1f97a7903273bbabffe037a01a16434ee961`을 개인키·개인 fastlane 설정 제외 P7에서 준비했습니다. 기본 Unity/Fork 경로는 기존 P2이며 사용자의 기존 설정5개를 보존합니다. P7 복사 원장 `195,11,30`과 P2 권위 원장 `195,12,31`을 구분하고 후자만 한 번 예약했습니다. 코드31 서명·복구 과정에서 재예약하거나 원장을 되돌리지 않습니다.
+빌드source `aefb1f97a7903273bbabffe037a01a16434ee961`의 개인2파일 sparse 제외 P7 `D:/codex/worktrees/sudden-force-fps-android31-20261023`에서 생성했습니다. 기본 Unity/Fork는 P2 그대로이며 기존 설정5개를 보존합니다. P2권위원장195,12,31은 단1회 CAS로 소비했고 P7복사원장195,11,30은 source snapshot입니다. 다음 새 예약은32이상이며31서명에서는 재예약하지 않습니다.
 
-- Unity export: 6000.3.25f1, 오류0·경고71, report GUID `44ef66c5e3ef4dbd8738dc39d34ae872`, 12:00:16~12:08:21 UTC, Gradle project 내보내기 성공입니다. AAB 생성 성공과는 다릅니다.
-- 입력: 공개3969개 준비본 중3946rawexact/23변화입니다. EOL-only19·자체 CJK asset의 빈 YAML 값 공백/EOL1·Android resolver/build 설정3을 실제46개 보관 파일에서 독립 비교했습니다. C#/씬/PlayerSettings 변경0이며 최초 source-exact=false를 보존합니다. 앞선 저장 baseline의 URP_FPSLite11→13 변환은 이번23개에 합산하지 않습니다.
-- 보관/복구: 실제 preexport3969개 원본을 별도 보관했습니다. 첫 postexport 감사의 긴 외부 경로 실패·부분 자료를 보존하고 짧은 새 감사/보관 경로에서 완료했습니다. 첫 Gradle dry의 VerifyError도 보존했으며 입력·원 export·기존 산출물·도구 불변을 확인했습니다. 실패가 만든 캐시7개는 별도 경로로 이동 보관했고 실패 마커/원본 입력/파일 삭제0입니다.
-- 패키징 준비: 원 export2819/IL2CPP2732/직접CPP576과 도구17·AGP4·기존 설정/원장/이전29·30 산출물12개를 새로 고정했습니다. primitive→boxed TTL 인자 최소 수정 뒤 새 dry는 종료0·준비 검사 통과·실제 task0·AAB없음을 확인했습니다. 실제 AAB·고지/DEX/native/아이콘·부분 심볼은 아직 후속입니다.
+| 산출물 | 바이트 | SHA256 |
+| --- | ---: | --- |
+| 코드31 무서명 AAB | 98,418,048 | `43F6E9EF4B41D4140FA38745CE16E861F97BA862CF5CEA127BD3AF53C3BC83ED` |
+| 코드31 대응 심볼 ZIP | 46,139,192 | `9B42DD909D48C358611A7D0B8C38BCD3680FEB4622F9A8B0D0646B1BA022EBFA` |
 
-코드31의 **서명·업로드·새 APK/Drive·기기 검증은0**입니다. 최신 실제 제공은27/release8이며 기존 키 유지·실기기/장시간 성능 후순위 합의를 유지합니다. 외부 근거는 `20261023-work/`의 android31 CAS/export, s31pre01/s31a02/s31p01/s31class01, packaging revision02 실패와 revision03 준비/각 독립 검토입니다. 키·암호·원시 로그·바이너리는 Git에 넣지 않습니다. 아래는 이전 완료 산출물 기록입니다.
+- 최신 방 이름 입력 수정(PR195)을 포함한 코드31 무서명 AAB와 대응 심볼을 생성·검증했습니다. Unity export 오류0·경고71, 별도 Gradle 176개 작업과 새 IL2CPP, ZIP/bundletool·고지·지정 광고/결제 DEX·native7 정적 정렬·아이콘24개를 확인했습니다. 심볼은6/7이며 nanosockets는 누락입니다.
+- 입력: prepared공개3969개 대비3946rawexact/23변화를 실제 전후46파일에서 보존·독립 비교했습니다. EOL19·자체CJK 빈 YAML값 공백/EOL1·Android resolver/build3이며 C#/씬/PlayerSettings 변화0입니다. 앞선 저장 baseline의 URP_FPSLite11→13은 이23개에 포함하지 않으며 런타임 동등성·제품 설정 채택은 미증명입니다.
+- 실패 보존: 첫 외부경로 길이 오류/부분 감사·Gradle R02 dry VerifyError·별도 보관 캐시7개·CAS 외부wrapper의 LASTEXITCODE 오판을 보존했습니다. 새R03의 dry/actual 결과만 새 성공 근거이며 코드 재예약/원장 복원/실패마커 삭제0입니다.
+- 보존: 실제 source3969·원 export2819·IL2CPP2732/직접CPP576·도구17/AGP4·P2기존dirty5/원장·이전29/30산출물12개를 검사했습니다. 새 compile-data는 별도 분류하며 전체 엔진 cold재컴파일·모든 물리 파일/메모리 불변을 뜻하지 않습니다.
+- 로컬 보관: `D:/codex/releases/sudden-force-fps/1.0.195-code31`의 AAB/심볼 사본을 원본과 재해시했습니다. ZIP심볼6/7의 정확 companion 대응과 누락1개를 구분하며 원본 모든 네이티브 심볼 확보는 아닙니다.
+
+실제 Play/Drive 제공은 계속 **코드27/release8**입니다. 코드31 서명·Play 업로드·새 APK/Drive 전달·최신 기기 검증은 아직0입니다. 단일 Unity AAB 호출 안정화·실제16KB 기기·전체 권리·전체 재장전 접촉 품질 통과로 확대하지 않습니다. 기존 키 유지·키 이동/백업 후속·실기기/장시간 성능 후순위를 유지합니다. 근거는 외부 `20261023-work/`의 actual31 package/core3/icons/symbols 및 독립 검토입니다. 키·암호·원시 로그·바이너리는 Git에 넣지 않습니다. 아래는 이전 시점 기록입니다.
+
+- 10월24일 재개 관측에서 P2의 기존 키 별칭만 빈 값으로 달랐습니다. 당시 설정을 외부 보관하고 native Unity0 확인 후 기존 사용자 선택 aedeong 한 필드만 재적용했습니다. 전체 SHA가 빌드 시점의 설정과 일치함을 확인했으며 중간 차이가 없었다고 처리하지 않습니다. 비밀 파일/키 내용 조회0입니다. 공식 SDK의 Private DLL5/private 헤더·C소스17을 비밀 파일로 오인한 reader 실패는 보존하고, 원 export SHA에 고정된 정확22개 경로·크기·SHA만 허용한 Core05로 검증했습니다. 심볼은 proof/upstream 핀 방향을 고친 producer04/binder03에서 실제 생성·검사했습니다.
 
 ## 최신 무서명 후보: 재장전·소매 개선 코드30 (2026-10-23, #192)
 
