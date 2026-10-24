@@ -6,6 +6,9 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class PlayerLadderMotor : NetworkBehaviour
 {
+    // Unit-circle diagonals have a lateral magnitude of about .707.
+    private const float SideInputThreshold = .5f;
+
     [Networked] public bool IsClimbing { get; set; }
     [Networked] public int LadderId { get; set; }
     [Networked] public int ClimbLifeVersion { get; set; }
@@ -75,7 +78,7 @@ public sealed class PlayerLadderMotor : NetworkBehaviour
         if (IsClimbing && ladder == null) { Detach(); return true; }
         if (!IsClimbing)
         {
-            if (!ReattachDelay.ExpiredOrNotRunning(Runner) || Mathf.Abs(input.MoveX) >= .75f) return false;
+            if (!ReattachDelay.ExpiredOrNotRunning(Runner) || Mathf.Abs(input.MoveX) >= SideInputThreshold) return false;
             foreach (var volume in volumes)
             {
                 bool bottom = volume.BottomEntry(transform.position, _owner.AimYaw, input.MoveZ);
@@ -89,7 +92,7 @@ public sealed class PlayerLadderMotor : NetworkBehaviour
             }
             if (ladder == null) return false;
         }
-        if (Mathf.Abs(input.MoveX) >= .75f)
+        if (Mathf.Abs(input.MoveX) >= SideInputThreshold)
         {
             // Releasing the ladder changes movement mode; ordinary gravity
             // resumes next tick. No sideways teleport or collision disable.
