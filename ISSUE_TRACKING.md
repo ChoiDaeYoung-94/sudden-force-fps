@@ -1,5 +1,13 @@
 # GitHub 이슈와 PR 작업 관리
 
+## 코드31 제공·전달 완료와 교차 플랫폼 후속 (2026-10-24)
+
+#196/PR197은 코드31 무서명 통합·산출물 검증 범위로 main `c91377f`에 반영했습니다. 이후 #43의 코드31 기존 키 서명·Play 내부 release9 제공(09:28 KST)·Play 서명 APK 검증·Drive 전달을 완료했습니다. 심볼은6/7이며 `libnanosockets.so` 누락을 유지한 상태로 첨부를 확인했습니다. Drive 재다운로드 SHA가 로컬 원본과 일치하며 키·암호 업로드/공유 권한 변경은0입니다. [정확한 해시와 한계](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+
+**#198 OPEN:** 코드31 Android host와 `c91377f` Editor client가 같은 방에서 실제2명 Room 정착 후 약10초 뒤 Direct 연결의 `NetDisconnectReason.Timeout`을 관측했고, 새 Runner의 Lobby 복구를 확인했습니다. 뒤따른 Shutdown `Ok`를 최초 끊김 이유로 대체하지 않습니다. `ProvideInput=true` 별도 시험도 Timeout이어서 해결로 처리하지 않습니다. 반대 역할인 PC Editor host/Android31 client는 약133초 간격의 두 표본에서 같은 Room2명과 양쪽 팀 이름을 확인했고, 미READY START 안내도 확인했습니다. 이는 중간 재접속 전수·연속 접속·경기 통과 근거가 아닙니다. 제품 코드·LD 네트워크/부하·설정 차이 중 원인은 미확정이며 전체 Windows/Android/PGS·경기 실패나 전체 교차 플랫폼 통과로 일반화하지 않습니다.
+
+LD FPS의 코드31 새 설치·로그인 흐름 후 로비·닉네임 `qafps31`·맵 썸네일/선택·빈 방 이름 거부·정상 방 생성·1인 START 안내는 제한된 UI 표본입니다. 빌드 소스 `aefb1f9`, 기록 main/Editor QA `c91377f`를 구분합니다. #41 실기기·#42 전체 권리·#66 단일 Unity 빌드 안정화·#132 최초 cold Editor TMP 말줄임표 경고·#188 재장전 접촉 등 남은 범위는 유지하고, 후속 새32이상 빌드·서명은 별도입니다. 원장195,12,31을 되돌리거나31을 재예약하지 않습니다. 아래의 무서명31/제공27 기록은 이전 시점의 상태입니다.
+
 ## 코드31 무서명 통합 검증 (#196, PR197)
 
 PR195 방 이름 수정을 포함한 코드31 AAB와 심볼6/7을 실제 생성·검증했습니다. Unity export 오류0·경고71, Gradle176·새 IL2CPP, ZIP/bundletool·고지·지정 DEX·native7 정적 정렬·아이콘24·대응 심볼을 구분하며 정확한 SHA와 한계는 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다. nanosockets 심볼은 누락입니다.
