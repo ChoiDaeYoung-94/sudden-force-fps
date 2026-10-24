@@ -10,6 +10,7 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
     [SerializeField] private TMP_Text _statusText;
 
     private NetworkRunnerManager _manager;
+    private bool _globalLoading;
 
     private void OnEnable()
     {
@@ -24,6 +25,21 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
         {
             BindManager(current);
         }
+    }
+
+    private void LateUpdate()
+    {
+        // Popup requests can change without another lobby-status notification.
+        if (_globalLoading != IsGlobalLoading())
+        {
+            RefreshStatus();
+        }
+    }
+
+    private static bool IsGlobalLoading()
+    {
+        var popup = AD.Managers.Instance != null ? AD.Managers.PopupM : null;
+        return popup != null && popup.IsLoading;
     }
 
     private void OnDisable()
@@ -76,6 +92,7 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
 
     private void RefreshStatus()
     {
+        _globalLoading = IsGlobalLoading();
         // Only the explicitly assigned status label belongs to this view.
         if (_statusText == null)
         {
@@ -89,7 +106,11 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
         }
 
         // Keep the view and its subscriptions alive even if both share this GameObject.
-        _statusText.enabled = message.Length > 0;
+        bool duplicateProgress = _manager != null
+            && (_manager.LobbyStatus == LobbyConnectionStatus.Connecting
+                || (_manager.LobbyStatus == LobbyConnectionStatus.Connected
+                    && !_manager.HasReceivedSessionList));
+        _statusText.enabled = message.Length > 0 && !(_globalLoading && duplicateProgress);
     }
 
     private string GetStatusMessage()
