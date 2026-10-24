@@ -121,9 +121,9 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
         _reloadBlend = Mathf.Lerp(_reloadBlend, _owner.IsReloading ? 1f : 0f, 1f - Mathf.Exp(-12f * dt));
         float amplitude = _blend * (crouched ? .6f : running ? 1.35f : 1f);
         LocalWeaponPositionOffset = new Vector3(_sway.x + Mathf.Sin(_phase) * .012f * amplitude,
-            _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude - .06f * _reloadBlend,
-            -.025f * _reloadBlend);
-        LocalWeaponRotationOffset = Quaternion.Euler(8f * _reloadBlend,
+            _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude + .14f * _reloadBlend,
+            0f);
+        LocalWeaponRotationOffset = Quaternion.Euler(0f,
             0f, Mathf.Sin(_phase) * .8f * amplitude);
     }
 
