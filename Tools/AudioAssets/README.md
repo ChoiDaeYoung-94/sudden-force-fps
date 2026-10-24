@@ -4,7 +4,7 @@
 
 AD.SceneManager는 target을 additive로 읽기 전에 현재 source scene의 원래 active/enabled AudioListener만 잠시 끕니다. source unload 요청 이전에 끝나면 그 목록만 복원하며, 원래 disabled/inactive·다른 씬·이동된 리스너와 전역 pause/믹서는 바꾸지 않습니다. 부분 suspend 실패도 복원 목록을 보존하고, 복원이 기존 로딩/BGM/전환 flag의 finally 정리를 막지 않도록 했습니다.
 
-같은 읽기 전용 프로브의 정상 Login→Lobby 전후에서 수정 전16표본 중 두 표본이 Login/Lobby Main Camera2개였고, 수정 후15표본의 최대는1개였습니다. Lobby가 로드된 사건에서도 수정 후 Lobby 리스너만1개였으며 두 실행 모두 이후 단일 로비 표본 .5초와 정상 로비 접속·Play 종료/Login clean을 확인했습니다. 첫 로딩 구간의 큰 표본 간격이 있어 전체 frame·정확한 중첩 지속 시간·청취/총성 지연을 측정한 것은 아닙니다.
+같은 읽기 전용 프로브의 정상 Login→Lobby 전후에서 수정 전16표본 중 두 표본이 Login/Lobby Main Camera2개였고, 수정 후15표본의 최대는1개였습니다. Lobby가 로드된 사건에서도 수정 후 Lobby 리스너만1개였으며 두 실행 모두 이후 단일 로비 표본 .5초와 정상 로비 접속·Play 종료/Login clean을 확인했습니다. 수정 후에는 target 활성 전 리스너0인 두 표본도 있습니다(표본 시각 차267.621ms). 기존 코드상 BGM pause 이후 source 리스너를 먼저 끄는 방식이며, 이 수치를 전체 무리스너/청취 무음 길이로 해석하지 않습니다. 첫 로딩 구간의 큰 표본 간격이 있어 전체 frame·정확한 중첩 지속 시간·청취/총성 지연을 측정한 것은 아닙니다.
 
 별도 격리된 실제 AudioListener20조건은 모두 일치했습니다. 중첩 자식·원래 disabled/inactive·타깃/기존 리스너 보존·반복 복원·다른 씬으로 이동·파괴/null·invalid scene과 preview/원 scene 정리를 포함합니다. 실제 native load의 지연 취소·target 정리 실패 전수 검증은 아니며, 취소 뒤 native load가 계속되는 기존 경계까지 해결했다고 처리하지 않습니다.
 
