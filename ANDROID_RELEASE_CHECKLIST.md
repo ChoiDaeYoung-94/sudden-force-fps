@@ -1,6 +1,28 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
-## 현재 제공본: 코드32/release10·APK 전달 완료 (2026-10-24)
+## 현재 제공본: 코드33/release11·APK 전달 완료 (2026-10-24)
+
+실제 빌드 source는 `87fbfdb3669589376f8fd3f238cac016ec5ed02c`입니다. PR209 사다리 대각선 입력 기준·PR211 리스폰 직후 이전 발사 연출 제거·PR214 채팅 이력 위치/스크롤/드래그와 PR213 고지 정정을 포함합니다. **1.0.196/코드33을 기존 업로드 키로 서명하여2026-10-24 21:05 KST 내부 release11로 제공**했고 대응 심볼 첨부 표시를 확인했습니다.
+
+| 산출물 | 바이트 | SHA256 |
+| --- | ---: | --- |
+| 업로드 서명 코드33 AAB | 98,441,642 | `F882A9C22C6A47C70F0F94361E80622266D60866DD935EA497BA0159CF5322F0` |
+| 코드33 심볼 ZIP | 46,141,066 | `51DCE3DFF535F7E4DB1468168B23269A0E0355E7FB4A575FAC5A017673AB8FFA` |
+| Play 앱 서명 코드33 APK | 105,690,443 | `2331B5B6EA1CE33E6DCA5F3630DB41F63E08035B33D803530399ACADA3C926F5` |
+
+- **빌드/무서명 검사:** Native export 오류0/경고71, 실제 Gradle 종료0. 무서명 AAB98,426,488B/SHA `BB2624051550F6F71492214A0421CFD685B84F08D65B0A30AFCFA39CFA34157C`. 실제 bundletool·package/code33/name196/min25/target36/nondebug/ARM64·ZIP CRC·native7 LOAD/RELRO, 공지 본문 일치·지정 광고/결제 DEX 타입/클래스0과 양성 대조를 확인했습니다. 별도 aux에서 아이콘24의18개 RGBA 일치와6개 foreground alpha/보이는 RGB 일치, 원본 font7+meta7/자체CJK asset+meta의8assets/16files 보존을 구분합니다. 모든 아이콘의 전체 RGBA 동일성·packed font/glyph 렌더·전체 권리 통과가 아닙니다.
+- **심볼:** 현재 AAB와 각 companion의 ELF/BuildID/허용 payload를 대조해 실제6/7을 산출하고, 별도 읽기 전용 audit에서 producer·ZIP 직접SHA/CRC·payload·coverage를 다시 확인했습니다. `libnanosockets.so` 누락/fullCoverage=false이며 전체 심볼 재고·새 companion 컴파일 완료가 아닙니다.
+- **기존 키 서명:** 기존 업로드 인증서 `4D072592228C991D3F6A0EDA768C8CBEE40895C3B1F4A6FB9379540F048965E0`·서명 검증·전체 unsigned payload150개 보존을 확인했습니다. 사용자가 지정한 로컬 암호 파일은 단일 서명 실행에서 JVM stdin으로만 전달했고 값/해시·명령행·환경·원시 도구 출력에 저장하지 않았습니다. 자격정보 정리 후 Root가 소비한 서명 승인6개를 모두 false로 바꿨고 원래 config/attempt는 보존했습니다. 키 교체·이동·새 Git/Drive 업로드는 없습니다.
+- **Play 경고:** 검토 화면은 가독화 파일(R8/ProGuard) 안내1개였고 생성 launcher의 `minifyEnabled=false`를 확인했습니다. R8 mapping 업로드·실제16KB 기기 검증을 수행한 것으로 기록하지 않습니다.
+- **Play APK:** 공식 Console의 코드33 서명된 범용 APK를 다운로드했습니다. 새 APK 인증서 `01B2846B34835CD145264048DD5C642B6F112D35AA8F0B601DBA11F49E100D86`·v2 서명·매니페스트·ARM64·CRC·zipalign16KB 정적 검사와 현재 unsigned AAB의 native7 전체 스트림 바이트/SHA 일치를 확인했습니다. 전체 assets/DEX/font payload 동일성이나 실제16KB 기기 실행은 아닙니다.
+- **Drive/보관:** [검증된 APK](https://drive.google.com/file/d/14XY887OlOzlUwFUhIzwLEVO7Lwf1JR1r/view) 파일1개를 기존 비공개 테스트 폴더에 업로드했고 **원격 재다운로드 SHA256도 위 APK와 일치**합니다. 기존 파일·권한은 유지했고 키·암호·AAB/심볼은 Drive에 올리지 않았습니다. 로컬 보관은 `D:/codex/releases/sudden-force-fps/1.0.196-code33/`, 원장은 `196,1,33`이며 전달 재예약0입니다.
+- **LD FPS 표본:** 지정 FPS(index2/window10881330)만32→33 `install -r`로 교체했고 uninstall/clear-data·다른 인스턴스 제어는0입니다. 앱 실행·닉네임SFF33·로비·Desert House 선택·QA33 방 생성·1인 START 안내를 실제 UI에서 확인했습니다. Google Play Games 인증·두 피어 경기·기기/장시간 성능 통과로 확대하지 않습니다.
+
+원시 근거는 `D:/codex/validation/sudden-force-fps/20261024-work/`의 새33 package/core3/aux/symbol/sign/APK 보고서, `android33-release11-provided-observation01.public.json`, `android33-drive-delivery-verification01.public.json`입니다. 독립 검토는 Root의 실제 도구 실행과 별도 공개 metadata/직접SHA 검토를 구분합니다. 원격 업로드 AAB 자체를 다시 내려받아 SHA 검증한 것은 아닙니다. 배포5/6(약83%)는 기존 단계 수 기준이고 전체 게임 완성률이 아닙니다. 실기기·장시간 성능·실제16KB 기기·전체 권리와 #198/#188/#154/#66 등 남은 범위를 유지하며 현재 필요한 사용자 조치는 없습니다. 아래 코드32 및 이전 기록은 당시 상태입니다.
+
+추가 LD 한 피어 표본은 자기 `QA33` 방에서 IME 제출 후 `<You> QA33` 표시와 방 퇴장 후 PUBLIC ROOMS 복귀까지 확인했습니다. 근거는 `android33-fps-single-peer-smoke01.public.json`의 Root CUA 관측이며 별도 픽셀 파일 보관·PGS 인증·원격 수신·두 피어 경기 검증은 아닙니다.
+
+## 이전 제공본: 코드32/release10·APK 전달 완료 (2026-10-24)
 
 빌드 소스는 `bce341b6ef387f29cbf5bff6d3491e866a3f375e`이며 PR202 재장전 손·탄창 프레이밍 조정, PR203 로비 대비 개선, PR204 중복 접속 안내 제거를 포함합니다. **1.0.196/코드32를 기존 업로드 키로 서명해 2026-10-24 15:57 KST 내부 release10으로 제공했습니다.**
 
