@@ -1,5 +1,11 @@
 # Sudden Force FPS
 
+## 코드33 후속 경기와 입력 경계 (2026-10-24)
+
+코드33 Android host와 PC Editor client가 Relayed 경로에서 READY/START·300초 시간 제한의 DRAW(0:0)·양쪽 로비 복귀를 확인했습니다. PC는 새 Lobby Runner/Connected와 Play 종료 뒤 Login/clean/observer 부재를 확인했습니다. 경기 상태 스냅샷과 Android CUA 화면 관측이며 전체300초 패킷·Direct Timeout 해결·실기기 검증은 아닙니다. [#198 후속 근거](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/198#issuecomment-6384575492)를 따릅니다.
+
+별도 [PR218](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/218)은 입력 취소·포커스 상실 뒤 알려진 사격 held 상태의 release gate를 보존합니다. 격리 실제 컴포넌트22조건에서7실패→0실패를 확인했으며 물리 입력·새 owner 바인딩 전체는 미검증입니다. **PR218은 제공한 코드33 APK에 미포함**입니다. [남은 작업 전체와 우선순위](PROJECT_PLAN.md)의 최신 표를 따르며 아래 각 배포 시점 기록은 보존합니다.
+
 ## 코드33 내부 테스트 제공·APK 전달 완료 (2026-10-24)
 
 **1.0.196/코드33을 기존 업로드 키로 서명해 2026-10-24 21:05 KST Google Play 내부 테스트 release11로 제공했습니다.** 실제 빌드 소스는 `87fbfdb3669589376f8fd3f238cac016ec5ed02c`이며 PR209 사다리 대각선 진입·이탈 기준, PR211 리스폰 직후 이전 발사 연출 제거, PR214 채팅 이력 위치·스크롤·드래그 개선과 PR213 고지 정정을 포함합니다.
