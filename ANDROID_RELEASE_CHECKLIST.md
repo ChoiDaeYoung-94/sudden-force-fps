@@ -1,5 +1,24 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 현재 제공본: 코드32/release10·APK 전달 완료 (2026-10-24)
+
+빌드 소스는 `bce341b6ef387f29cbf5bff6d3491e866a3f375e`이며 PR202 재장전 손·탄창 프레이밍 조정, PR203 로비 대비 개선, PR204 중복 접속 안내 제거를 포함합니다. **1.0.196/코드32를 기존 업로드 키로 서명해 2026-10-24 15:57 KST 내부 release10으로 제공했습니다.**
+
+| 산출물 | 바이트 | SHA256 |
+| --- | ---: | --- |
+| 업로드 서명 코드32 AAB | 98,434,120 | `A88C9B6DE9656F0FF0AA87DEED37CF7A0BA5150814A74BF6806EB490DCD71684` |
+| 코드32 심볼 ZIP | 46,139,811 | `3894029D713B421A4A4F17DA0C7A4C064BDDAA91872D14324D2121A30117F431` |
+| Play 앱 서명 코드32 APK | 105,682,251 | `D0514EF51DED6F1A114705BD10B0DCC489171B4F2B5D47E00F8C58A126C3B109` |
+
+- **Play APK:** 검증 PASS이며 package/code32/version1.0.196/min25/target36/ARM64/nondebug, ZIP CRC·v2 서명·zipalign16KB 정적 검사와 현재 AAB의 native7 스트림 일치를 확인했습니다. Play 앱 서명 인증서는 `01B2846B34835CD145264048DD5C642B6F112D35AA8F0B601DBA11F49E100D86`이며 업로드 키 인증서와 구분합니다. 전체 assets/DEX/font payload 동일성이나 실제16KB 기기 실행을 뜻하지 않습니다.
+- **심볼:**6/7 partial이며 `libnanosockets.so` 누락·fullCoverage=false입니다. 전체 DWARF·모든 crash 해석 가능·전체 엔진 재컴파일을 주장하지 않습니다.
+- **Drive:** 기존 비공개 테스트 폴더에 APK 파일1개 업로드 완료와 파일 행을 확인했습니다. 해당 파일을 다시 다운로드한 105,682,251B/SHA256이 위 APK와 일치합니다. 기존31·27·5 파일과 공유 권한을 유지했으며 키·암호 업로드는 없습니다.
+- **보관·원장:** 로컬 `D:/codex/releases/sudden-force-fps/1.0.196-code32/`, 권위 원장 `196,0,32`, 전달을 위한 재예약0입니다. 기존 코드31 및 이전 산출물·기록은 보존합니다.
+
+실제 기기·장시간 성능·실제16KB 기기·전체 권리·#154 Windows native 원인·#66 단일 Unity 빌드 안정화·#198 Timeout 원인·#188 전체 재장전 접촉 검증은 남아 있습니다. 5/6(약83%)는 전달 단계 수 기준이며 전체 게임 완성률이 아닙니다. 아래 코드31/release9와 과거 기록은 당시 상태를 나타내며 최신 코드32 상태는 이 절을 따릅니다.
+
+Unity Android 프로젝트 export의 Succeeded·오류0·경고71 이후 출력 목록 검사 실패는 보존했습니다. 공개 입력을 분류·보존한 별도 Gradle176개 작업으로 AAB를 생성했으며 단일 Unity AAB 호출 안정화 완료를 뜻하지 않습니다. Play 경고는 R8 가독화 파일 미첨부1건이며 실제 export의 minifyEnabled=false를 확인했습니다.
+
 ## 현재 제공본: 코드31/release9·Play APK 전달 완료 (2026-10-24)
 
 #196/PR197의 무서명 검증 기록은 main `c91377f`에 반영됐습니다. 실제 코드31 빌드 소스는 `aefb1f97a7903273bbabffe037a01a16434ee961`이며 기록 main/Editor QA `c91377f`와 구분합니다. 기존 업로드 키로 서명한 AAB를 **2026-10-24 09:28 KST 내부 테스트 release9**로 제공했고, 대응 심볼6/7 첨부를 확인했습니다.
