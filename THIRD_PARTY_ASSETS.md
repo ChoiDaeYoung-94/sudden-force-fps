@@ -1,5 +1,27 @@
 # Third-party asset provenance
 
+## 코드33 원 export 보고서의 포함 경로 대조 (2026-10-24, #42)
+
+코드33 Native export의 원 BuildReport 파일(SHA256 `04E3759C2A17D4BABCA92E31942A80176CED8787DF1A50A0F9CBC5FD539B7869`)을 별도 편집 중인 P8에서 메모리로만 읽었습니다. 보고서 GUID `70c60f2a1f6c42f98b7cdf8e8814afab`·Android/Succeeded를 원 export 반환과 대조했고, 원 오류0/경고71·출력E33 조건은 공개 reader의 identity guard로 연결했습니다. 새 빌드나 최신 P8 소스의 보고서로 대체한 것이 아닙니다. 실제 제공본은 계속 코드33/release11입니다.
+
+11 packed 그룹의6,831행에서 Assets/Packages 공개 상대 경로 **2,788개(Assets585+Packages2203)**를 수집했습니다. 공개 상대 경로 조건을 만족하지 않은32행은 출력하지 않았으며 민감 basename 후보는0행입니다. 이32행은 예전 보고서의 unique/empty 수와 단위가 달라 증감 비교하지 않습니다.
+
+| 대상 | 현재33 공개 경로 수 | 확인 범위 |
+| --- | ---: | --- |
+| Military 본체·FPS 리그 자료 | 74 | Basemesh1·URP Materials18·Texture55 |
+| LowPolyFPSLite 맵 | 17 | Materials2·Models13·Scenes1·Textures1 |
+| LowPolyWeapons_LITE 소총 | 3 | Material1·Model1·Texture1 |
+| 사용자 제작 확인 HUD | 7 | 기존 지정 PNG7개 |
+| 자체 발소리 / 총성·재장전 | 4 / 2 | AuthoredStep01–04 / RifleShot·ReloadTick |
+| 새 CC0 기반 Rifle clip/controller | 3 | Idle_Aiming·Death_Front·controller; 파생 Avatar는 별도 |
+| 지정 옛 clip/controller·Loading Icons·EmojiOne·Font2·구61음원 | 0 | 기존 공개 목록의 exact 경로와 해당 prefix 한정 |
+
+공개 코드29 목록2,787개와 직접 비교해 모두 공통이고 추가는 `ChatScrollDragObserver.cs`1개, 삭제는0개였습니다. 경로 집합 비교이며 에셋 객체/서브에셋·음원 원본·APK payload의 바이트 동일성은 아닙니다. 위 분류는 겹치는 집합이 있어 표의 숫자를 전체 수로 단순 합산하지 않습니다. 지정 옛 경로0도 다른 이름·복사·내장 객체의 전수 부재로 확대하지 않습니다.
+
+보고서로 새로 로드한 객체18개를 모두 정리했고 원 Login scene clean·원 report 바이트 불변을 확인했습니다. SourceIR 뒤 미호출 컴파일과 단1회 actual 읽기, 공개 결과·분류의 독립 검토를 구분합니다. 근거는 외부 `20261024-resume/code33-packed-report03.public.json`, `report-read-actual-independent-review03/`, `code33-packed-classification01/`입니다. V1/V2 후보의 필터·dirty 비교 보완 이력과 미실행 상태는 보존했습니다.
+
+이 결과는 세 공급자 팩의 실제33 포함 근거를 보강합니다. 기존 취득 확인을 되돌리지 않으며, 원 패키지 판본·정확 파일·동봉 조건 대응과 SDK 전체 BOM/고지·APK 객체 바이트는 여전히 후속입니다. 새로운 위반·배포 금지·전체 권리 완료를 판정하지 않았고 자산·license·앱 고지·계정·키를 바꾸거나 새 다운로드/동의를 수행하지 않았습니다.
+
 ## DOTween 동봉 readme의 출처 대응 (2026-10-24, #212/#42)
 
 DOTween 기본 컴포넌트의 출처는 [동봉 readme](Assets/Plugins/Demigiant/DOTween/readme.txt)를 우선 연결합니다. 원문은 Daniele Giardini - Demigiant의 2014–2018 저작권과 원저자 license URL을 담고 있으며, 2,190B/SHA256 `37B99FFDBB8B01B159D807B1FE77DB664AE5B3B201734A5AD602C7C7F83941F0`입니다. 코드32의 실제 source manifest에 포함된 같은 파일과 바이트가 일치합니다. readme의 Pro 언급만으로 Pro 도입·취득을 추정하지 않습니다.
