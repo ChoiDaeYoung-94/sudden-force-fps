@@ -92,3 +92,13 @@ python -B -m unittest discover -s Tools/Android -p 'test_*.py' -v
 Gradle 검사14개와 ELF/ZIP 검사31개는 임시 fixture와 mocked Gradle 이벤트로 기대값·실패 거부·입력 보존 로직을 확인합니다. pip 설치나 custom secret, Unity license, SDK/JDK·Gradle 실행이 필요하지 않습니다. 실제 Gradle/AGP·init script, Unity 빌드·AAB·서명·배포·기기 실행은 CI 검증 범위에 포함되지 않습니다.
 
 실제 GitHub Actions 실행 상태와 로그는 workflow를 추가한 PR의 checks 결과에서 확인합니다. 로컬 unittest 결과와 GitHub 실행 결과는 별도로 기록합니다. CI 실행이 성공해도 기존 export의 현장 dry-run 및 실제 Android 산출물 검증은 각각 필요합니다.
+
+## Unity 6 구형 URP 에셋 형식 정리 (#234)
+
+별도 샘플 에셋 `Assets/ThirdPartyAssets/Objects/LowPolyFPSLite/Scenes/Settings/URP_FPSLite.asset`의 version11/previous11을 설치 URP17.3의 정상 생성 형식13/13으로 갱신했습니다. 기존104개 공통 필드·renderer 참조는 그대로이며, 현재 Graphics/Quality의 기본 파이프라인은 이 에셋을 사용하지 않습니다. 새 기본 기능 필드와 제거된 구형 필드는 설치 migration/initializer 및 실제 Unity 생성 바이트와 대조했습니다.
+
+GUI의 기존 loaded13/previous12·clean 관측을 SaveAssetIfDirty 성공으로 처리하지 않았습니다. 별도 import에서 검토한 정확한 Unity 생성 파일1개를 가져와 native13/13·clean과 GUID/localID를 확인했습니다. 글로벌 Save/Refresh·private migration 호출·version/dirty 수동 setter는 사용하지 않았고, 공개3947개 중 다른3946개는 raw exact였습니다. Unity가 생성한 빈 YAML값의 후행 공백을 보존하기 위해 `.gitattributes`는 이 파일 한 경로의 whitespace 예외만 추가하며 text/eol 규칙이나 전역 Git 설정은 바꾸지 않습니다.
+
+제품 커밋538b245의 별도 Android 검증 공간을 새 Editor 프로세스로 재시작해13/13·clean/compilationFailed=false·DOTNET1/BEE1·Graphics Null을 확인했습니다. 정상 native handle ExitCode0 뒤에도 대상 파일4730B/SHA8BC37FA549ADD38C68DD189885F301A0A258B3674972668DB4C412627AB80B9F는 raw exact였습니다. GUI의4587B/LF와 체크아웃4730B/CRLF는 LF 정규화 본문이 같습니다. 다른 종료 변화는 DOTweenSettings의 줄바꿈1건뿐이었고 전후 보존 후 닫힌 상태에서 자기 변화만 복원해 fresh 공개3947개 일치를 확인했습니다.
+
+이는 해당 legacy 변환의 반복 제거 표본입니다. 새 Library/clean checkout 전체, 모든 Editor 종료 무변경, 현재 기본 렌더의 시각/성능이나 새 AAB·서명·기기 검증으로 확대하지 않습니다. 근거는 외부 `20261025-work/urp234-*`와 `unity6-serialization-adoption01/`에 보존합니다.

@@ -3,3 +3,4 @@ Assets/Audios/KenneyImpactFootsteps.meta whitespace=-blank-at-eol
 Assets/Audios/KenneyImpactFootsteps/*.meta whitespace=-blank-at-eol
 Assets/Audios/KenneyImpactFootsteps/License.txt whitespace=-blank-at-eol,-blank-at-eof
 Assets/Legal/ThirdPartyNotices.txt whitespace=-blank-at-eol,-blank-at-eof
+Assets/ThirdPartyAssets/Objects/LowPolyFPSLite/Scenes/Settings/URP_FPSLite.asset whitespace=-blank-at-eol
