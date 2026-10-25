@@ -1,5 +1,13 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 후속 PC 검증과 새 Android 대기 (2026-10-25, #232)
+
+PR229/231 후속 PC 표본은 두 피어 일반 방/채팅·READY/START·자연 결과와 재접속, 실제 owner 카메라의 손/소매 표시 경계, 명시 합성4발·재장전·원격 스크롤 보존을 확인했습니다. [현재 수용 범위](PROJECT_PLAN.md)를 따르며 Android 포함/서명/배포·물리 조작·실기기·장시간 성능으로 합산하지 않습니다.
+
+현재 제공은 여전히 아래 **코드33/1.0.196/release11**이며 원장196,1,33을 재사용하지 않습니다. 후속 변경을 포함한 새 Android는 최신 Console 최대 버전 확인·새 source/입력 분류·저장/재시작 검증·새 예약/산출물 검증을 진행해야 합니다. 이번 PC 검증에서 새 AAB·서명·업로드·APK는 생성하지 않았습니다. 대응 심볼6/7과 실제16KB 기기·전체 권리 등 기존 제한도 남습니다.
+
+별도 Android 환경은 읽기 전용 context·선택 도구 파일 검증과 정상 Editor ExitCode0을 확인했으나 빌드 안정화 통과는 아닙니다. 종료 직렬화3개와 Windows QA의 EDM3값 변경은 각각 바이트를 보존·분류했으며 기존 성공 proof나 생성 설정을 새 빌드에 복사해 통과 처리하지 않습니다.
+
 ## 제공 이후 제한된 경기 표본 (2026-10-24)
 
 코드33 Android host(SFF33/Red)와 PC Editor client(PC33/Blue)는 자기 방 qa33/DesertHouse에서 READY/START 후 게임의300초 제한으로 Draw/TimeExpired/0:0에 도달했습니다. 양쪽 정상 RETURN 후 Android PUBLIC ROOMS·PC 새 Lobby Runner/Connected를 확인했고 PC Play 종료 뒤 Login/nonplay/clean/observer 부재를 확인했습니다. [#198 공개 기록](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/198#issuecomment-6384575492), 외부 `20261024-work/issue198-code33-runtime-01/day-end-gameplay-and-preservation.public.json` 및 독립 검토를 따릅니다.
