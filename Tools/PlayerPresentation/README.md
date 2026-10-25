@@ -69,6 +69,19 @@ walk/sprint/시선/reload fixture04는673 frame과24.04203m 이동, Ammo19→30�
 
 ## 출처와 저장 감사
 
+## 장갑·전완 중심의 화면 정리 (2026-10-25, #230)
+
+왼팔의 굽힘 방향은 무기 아래쪽을 먼저 사용하고, 퇴화하면 기존 팔꿈치 방향과 무기 왼쪽 fallback으로 돌아갑니다. 양 팀 프리팹은 1인칭 Shirt leaf의 활성 필드만 1→0으로 바꿨습니다. 기존 renderer 참조 2개와 `SetVisible`·Reset, 손목 목표·탄창·무기·3인칭 캐릭터·게임 판정은 유지합니다. 원본 메시·재질을 삭제하거나 배포 포함/권리 문제를 해결한 변경은 아닙니다.
+
+P8의 실제 Unity 재컴파일은 오류·경고 0이며, Editor의 격리 프리팹 저장 2개는 검토한 필드 1개씩의 후보 바이트와 일치했습니다. 양 팀 7단계씩의 실제 포즈 측정 14개에서 보호 변환·Reset 오차 0, 기록된 손목 목표 잔차 최대 약 4.81e-7m를 확인했습니다. 직접 `SetVisible`·부모 비활성/재활성 8조건과 자체 상태 복구 2개도 확인했습니다. 접촉 메시·실제 authority/카메라 callback·사망/리스폰 수용을 뜻하지 않습니다.
+
+수정한 실제 소스·inactive 프리팹으로 1280×720/FOV60의 시작·중간·종료 화면 6장을 새로 그렸습니다. 소매 leaf는 14회 관측 모두 inactive였고, 별도 소매 활성화나 사후 IK override를 사용하지 않았습니다. 검증은 자체 clone의 스킨 행렬 재계산과 복제 재질을 사용하며, 중간 프레이밍은 기존 상승량 .14m의 정지 표본입니다. 실제 시간 보간·모든 조명/색·화면비·GPU/Android 품질로 확대하지 않습니다. 복제 재질 18개 정리·원본 재질 3개 JSON·씬/preview·source10 보존을 확인했습니다.
+
+첫 포즈 검증은 선택적인 탄창 부모 변경 검사에서 중단되어 `complete=false`로 보존했습니다. 중첩 RiflePresentation 인스턴스 경계는 확인했으나 SetParent 거부 원인은 확정하지 않았습니다. 후속 revision02는 기존 14단계와 표시 경계만 검증하며, retarget 시도 0·미측정 상태를 명시합니다. 첫 실패를 성공으로 합산하지 않습니다.
+
+문서 반영 전 P2/P8 공개 입력 각각 3,947개에서 의도한 C# 1개·프리팹 2개 외 3,944개가 원래 바이트와 같았습니다. 기존 설정·폰트·소비 원장도 보존합니다. 근거는 외부 `20261025-work/forearm-style-editor-apply01/`, `forearm-style-validation-candidate01/revision02/`, `forearm-style-render02/`와 각 독립 검토·`forearm-product-preservation01.public.json`입니다. 현재 제공 APK33에는 미포함이며 #188/#166의 실제 경기·생명주기·Android 수용은 남습니다.
+
+
 기존 Slayver Survivalist character의 전용 FPS variant5와 취득 대응은 [에셋 목록](../../THIRD_PARTY_ASSETS.md), 기존 CC0 기반 소총 Idle/호흡/그립의 출처는 [애니메이션 기록](../AnimationBaking/README.md)을 따릅니다. 새 외부 모델·texture·출처 미확인22클립은 추가하지 않았습니다.
 
 원래 각234 prefab record 중233개는 줄바꿈 정규화 후 동일하고 기존 ViewModelRoot의 자식1줄만 추가했습니다. 새172 record에 별도 리그가 들어가며, 후속 재질 보완은 해당 FPS Shirt3의 material 참조1곳씩만 바꿨습니다. 원 source material·texture·기존 prefab meta는 유지합니다.
