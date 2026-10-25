@@ -1,5 +1,21 @@
 # Sudden Force FPS 완성 계획
 
+## 현재 PC 수용 근거와 다음 단계 (2026-10-25, #232)
+
+PR229/#228의 Bind 해제 경계와 PR231/#230의 장갑·전완 정리는 독립 COMMENT 검토 후 main에 반영했습니다. 후자는 C# 굽힘 방향 한 블록과 FPS Shirt 활성 필드2개만 바꾸며 원래 손목·총·탄창·3인칭·게임 판정은 유지합니다. 포즈14·표시8조건/복구2, 실제 제품 정지6장과 실제 owner 카메라1표본을 구분합니다. 첫 선택적 탄창 부모 변경 테스트의 중단은 보존했고, 후속 retarget는 시도0·미측정입니다.
+
+PC GUI 클라이언트와 headless 호스트는 일반 UI handler의 닉네임→방 생성/실제 목록 행 참가→양방향 한글 채팅→미READY START 안내/OK→READY/START를 확인했습니다. 두 번의 자연300초 제한 결과는 DRAW/TimeExpired/0:0이며, 정상 결과 RETURN·새 Manager/Runner의 Lobby Connected와 재참가를 확인했습니다. 두 번째에는 호스트 RETURN 뒤 클라이언트가 별도 RETURN 호출 없이 자동으로 로비에 복귀했습니다. 같은 PC Direct 표본이며 #198 Android 호스트 Timeout 원인 해결은 아닙니다.
+
+명시적 합성 Fusion 입력의 실제 4발/Reload1은 탄약30→26→30·LocalShot/ShotObserved delta합각4와 호스트의 최종sequence4/ammo30을 확인했습니다. 물리 버튼·총성 출력 지연·전체 손/탄창 접촉 수용은 아닙니다. 실제 Room 원격 이력32건+추가1건의 프로그램식 drag 경계에서는 queue 보류→자연 flush·anchor 오차0(viewport local UI units)과 normalized/velocity 복귀를 확인했습니다. 새33행은 유지하며 물리 gesture·IME·관성은 남습니다.
+
+이동은 fresh8방향 경로와 실제 owner를 결합했으나 WALK 입력2회/약.023초 뒤 GROUND_OR_CONTROLLER_CHANGED 보호 검사로 중단됐습니다. 실제 종료 시점에는 XZ약.051m/Y약.103m 변화가 있었고, 이동 후 표본 부족으로 peakSpeed0/maxVertical0을 전수 관측으로 해석하지 않습니다. neutral 입력0/복귀 판정false이므로 입력 helper의 정상 정지 성공도 아닙니다. 자체 callback/객체 제거와 소스7개 보존은 확인했으며, 별도 두 차례 읽기 전용 관측에서 속도0·원래 서기 크기/시선·접지·검증 객체0을 확인했습니다. 실패를 보존하고 지면 검사 시점은 추가 조사하며 달리기/앉기 입력은 미실행으로 둡니다. 두 QA 공간의 공개3947파일은 각각 이전 기준과 raw exact였으며 Android 수용으로 확대하지 않습니다.
+
+후속 입력 없는2초 표본은 OnInput132회/Editor update666회에서 CC/NCC 접지true·읽기 오류0을 관측했지만 WALK 때의 실패항/원인이나 물리 입력 수용을 증명하지 않습니다. 별도 일반 MENU→나가기 요청→확인 handler와 양쪽 새 Lobby Connected도 확인한 뒤 Play를 정상 종료했습니다. P8은 원래 clean Login/preview1·입력/로컬 표현 부재로, P3은 원래 clean Untitled로 복귀하고 native process handle ExitCode0을 확인했습니다. P8 공개3947파일은 QA 전후 raw exact입니다. P3 종료 뒤 CJK에셋1개는 줄바꿈과 빈 YAML값의 후행 공백 변화만 보였으며, 전후를 보존하고 닫힌 상태에서 자기 종료 변화만 복원해 fresh 기준3947개 일치를 확인했습니다. 기존 EDM3값 변화는 보존합니다.
+
+#132 소스 감사는 MenuFont 정적 U+2026/전용 dynamic CJK 연결, TMP238개 중 MenuFont232개, Ellipsis134개 Normal400·Title14개 Overflow, 원본 TTF의 현대 한글 cmap11172/11172를 확인했습니다. 이는 cold Editor/새 Player 첫 atlas·문자 픽셀 통과가 아니며 과거 미귀속 콘솔 오류를 해결로 처리하지 않습니다.
+
+**제공본은 코드33/release11, 소비 원장은196,1,33입니다.** 새 버전 코드는 최신 Console 확인 후 예약하며 후속 빌드·서명·업로드를 기존33 결과로 대체하지 않습니다. 기존16개 열린 추적 범위는 아래 표를 유지합니다. 실기기·16KB·발열/장시간 성능은 합의대로 후순위이며 현재 PC 표본으로 닫지 않습니다.
+
 ## 후속 품질 소스와 다음 Android 통합 (2026-10-25, #226)
 
 현재 제공본은 코드33/1.0.196·내부 release11이며 기존 PlaySigned APK의 Drive 왕복 SHA 검증까지 완료했습니다. 제품 소스 기준 2eb6583까지의 후속 변경 중 PR218 입력 release gate, PR221 일반 씬 전환 listener 중복 보완, PR222 Kenney CC0 콘크리트 발소리5개, PR225 빈 탄창 안내는 제공 APK33에 미포함입니다. PR219/220/223의 계획·packed 출처 분류·조작법 기록도 실제 Android 포함 여부와 구분합니다. 후속 무서명 AAB·서명·Play/Drive 제공은 새 입력과34이상 번호로 별도 진행하며 아직 예약하지 않았습니다.

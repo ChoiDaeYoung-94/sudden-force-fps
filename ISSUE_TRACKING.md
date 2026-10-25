@@ -1,5 +1,15 @@
 # GitHub 이슈와 PR 작업 관리
 
+## 현재 PC 검증 기록과 좁은 제품 완료 (#228/#230/#232, 2026-10-25)
+
+#228/PR229는 새 입력 Bind의 held/focus 해제 경계를, #230/PR231은 전완 표시와 팔 굽힘 방향의 최소 수정을 마무리했습니다. 기존22 컴포넌트 회귀와 실제 양 팀 포즈14·표시8조건/복구2·소스/프리팹 감사·독립 COMMENT를 각각의 범위로 기록합니다. 새 owner의 실제 물리 버튼 지속 누르기나 #188/#166 전체를 닫은 것은 아닙니다.
+
+#232는 현재 PC 두 피어의 일반 UI/채팅·자연 결과/재접속·실제 owner 카메라·합성4발/재장전과 스크롤 수신 검증을 모읍니다. 같은 PC Direct와 Android 호스트 Timeout, UI 이벤트 dispatch와 물리 gesture/IME, 카메라 PNG와 HUD·모든 pose를 구분합니다. 첫 retarget fixture 실패와 WALK 지면 보호 검사 중단을 통과로 합산하지 않습니다. WALK는 입력2회 뒤 자체 callback/객체를 제거했고 별도 두 차례 정지·서기·접지 관측을 확인했으나 달리기/앉기 입력은 미실행입니다. 지면 검사 묶음 중 어느 항이 중단시켰는지는 수집하지 않았으며 제품 결함 원인으로 확정하지 않습니다.
+
+P8은 기존 설정을 보존한 GUI QA 공간이고 P3은 cached Windows 검증 공간입니다. 팔 표현 C#은 같은 바이트, 프리팹2개는 P3의 checkout CRLF와 P2/P8 LF를 정규화했을 때 같은 본문입니다. P3의 EDM3값 변경은 형식만의 변경이 아니며 원본/생성본을 보존하고 정확한 writer는 미확정으로 둡니다. 원시 SDK 로그·자격정보는 공개하지 않습니다. 제공 APK33에는 PR229/231이 미포함입니다.
+
+이번 #232의 QA 객체/자체 observer 제거, 양쪽 Play 종료, Windows 검증 Editor의 native handle ExitCode0과 GUI 원래 clean Login 복귀를 확인했습니다. Windows 종료 CJK1개는 줄바꿈/빈값 후행 공백만의 변화였고 전후 보존 후 자기 변화만 닫힌 상태에서 복원했습니다. 정확한 직렬화 callback·Windows Player native crash 원인·항상 안정 종료를 입증한 것은 아닙니다. #132 소스 감사는 fallback/cmap 구조를 확인했을 뿐 cold 첫 표시 수용은 남깁니다.
+
 ## 후속 경기 근거와 사격 입력 경계 (#198/#217, 2026-10-24)
 
 #198은 코드33 Android host와 PC Editor client의 Relayed READY/START·300초 제한 DRAW/0:0·양쪽 로비 복귀를 추가했습니다. PC 새 Lobby Runner/Connected 및 Play 종료 뒤 Login/clean/observer 부재도 확인했습니다. [후속 근거](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/198#issuecomment-6384575492)는 앞선30초 관측과 별도이며 전체 연속 패킷·Direct 원인 해결·실기기 통과가 아닙니다. #198은 열림을 유지합니다.
