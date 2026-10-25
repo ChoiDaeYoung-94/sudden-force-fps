@@ -34,8 +34,10 @@ public sealed class PlayerInputSource : MonoBehaviour
         _owner = owner;
         _menuInputBlocked = false;
         _respawnVersion = owner.RespawnVersion;
-        _physicalFireHeld = false;
-        _fireReleaseRequired = false;
+        // A new owner must require release of an already-held fire button.
+        bool fireHeld = Application.isMobilePlatform ? _physicalFireHeld : Input.GetMouseButton(0);
+        _physicalFireHeld = fireHeld;
+        _fireReleaseRequired = fireHeld || !Application.isFocused;
         // A new owner/Runner must not treat an already-held Ctrl as a fresh press.
         // On mobile retain known held state; only a new pointer Down may release
         // that gate through its explicit SetCrouch(false) -> SetCrouch(true).
