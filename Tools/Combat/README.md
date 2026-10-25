@@ -1,5 +1,13 @@
 # 발사 피드백 검증
 
+## 새 owner 연결 시 사격 해제 경계 (2026-10-25, #228)
+
+`PlayerInputSource.Bind`에서도 현재 FIRE held 상태를 release gate에 반영합니다. PC는 현재 왼쪽 마우스 버튼을 읽고, mobile은 이미 알고 있는 held를 보존하며 포커스가 없으면 해제를 요구합니다. Bind 전에 누르고 있던 왼쪽 버튼을 유지한 채 오른쪽 클릭으로 cursor를 잡는 것을 새 사격 누름으로 취급하지 않습니다. Bind 뒤 해제 상태를 샘플한 다음의 새 왼쪽 클릭과 mobile 새 PointerDown의 기존 false→true 동작은 유지합니다. 커서·탄약·네트워크 판정은 변경하지 않습니다.
+
+구소스는 Bind에서 held/gate를 false로 지웠습니다. 보통 HUD의 Waiting→Running `SeedAim`이 이를 보완하지만, 이미 Running인 상태에서 새 input을 처음 관측하면 해당 호출이 보장되지 않습니다. 이 소스 경계를 독립 검토해 최소 초기화 블록만 수정했습니다. 실제 경기 자동사격 재현이나 발생 빈도를 확정한 변경은 아닙니다.
+
+P8에서 새 게임 어셈블리의 실제 컴포넌트 release/cancel/focus/pause/pointer 회귀22조건은 실패0이며 자기 객체0·singleton 부재·preview 종료·원 Login 씬과 dirty 보존을 확인했습니다. 이 회귀는 Bind·spawned owner·물리 마우스/터치·실제 cursor 재획득을 실행하지 않으므로 해당 수용은 #162/#166에 남깁니다. 근거는 외부 `20261025-work/`의 `fire-bind-audit/`, `fire-bind-review01/`, `fire-bind-release-regression01.public.json`입니다. **제공 APK33에는 미포함**입니다.
+
 ## 포커스 상실·입력 취소 뒤 사격 해제 유지 (2026-10-24, #217)
 
 입력 초기화는 사격을 멈추면서 이미 알고 있는 버튼 held 상태를 release gate에 보존합니다. 포커스 상실·pause/resume·Unbind·pointer cancel 뒤 계속 누른 값을 다시 받아도 발사가 재개되지 않으며, 실제 release를 알리는 `SetFire(false)` 뒤 새 press는 허용합니다. 메뉴·리스폰의 기존 SeedAim 경로와 발사/탄약/네트워크 규칙은 바꾸지 않습니다. 새 owner 바인딩의 모든 물리 입력 경계까지 검증한 것은 아닙니다.
