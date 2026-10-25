@@ -204,7 +204,8 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         float upper = Vector3.Distance(shoulder, elbow), lower = Vector3.Distance(elbow, hand), distance = toTarget.magnitude;
         if (!Finite(upper) || !Finite(lower) || !Finite(distance) || upper < .001f || lower < .001f || distance < .001f) return false;
         Vector3 axis = toTarget / distance;
-        Vector3 bend = Vector3.ProjectOnPlane(elbow - shoulder, axis);
+        Vector3 bend = Vector3.ProjectOnPlane(-_weaponFrame.up, axis);
+        if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(elbow - shoulder, axis);
         if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(-_weaponFrame.right, axis);
         if (bend.sqrMagnitude < .000001f) return false;
         bend.Normalize();
