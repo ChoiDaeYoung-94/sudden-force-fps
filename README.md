@@ -1,5 +1,32 @@
 # Sudden Force FPS
 
+## PC 조작·재장전·HUD 개선과 제공본 (2026-10-26)
+
+[PR239](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/239), [PR240](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/240), [PR241](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/241), [PR243](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/243), [PR245](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/245), [PR247](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/247)를 독립 검토 후 main `f055e4a`에 병합했습니다. 조이스틱 좌표·응답, 방 목록 스크롤 취소, 원격 재장전 효과, 보행 접촉 상승 속도, 경기 HUD 가독성을 각각 좁은 범위로 개선했습니다. **실제 제공본은 계속 코드33/1.0.196/release11이며, 오늘 여섯 PR은 APK33에 미포함입니다.**
+
+| 격리 회귀 | 확인한 범위 | 실제 경기와의 구분 |
+| --- | --- | --- |
+| 조이스틱195항목 ([PR239](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/239)) | 실제 Canvas·PointerEventData의 좌표 배율·Fixed/Free·포인터·복원 경계, 실패0 | 자체 컴포넌트 검사이며 물리 터치·이동 수용이 아님 |
+| 방 목록 스크롤22항목 ([PR240](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/240)) | 취소·재시작·반복·차단막 정리, 실패0 | 자연 Editor update와 명시적 생명주기 호출 검사이며 실제 gesture가 아님 |
+| 재장전59항목 ([PR241](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/241)) | 자체 음량0 FX의 edge·중복·유효시간·사망·비활성 경계, 실패0 | 실제 player 상태 주입이 없으며, 재장전 중인 실제 actor의 새 bind 조건은 미실행 |
+| 조이스틱 응답255항목 ([PR245](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/245)) | 로컬 반경100·거리50의 입력0.5·범위 밖 Down의 즉시 clamp·해제, 실패0 | 감도 튜닝의 컴포넌트 회귀이며 실기기 사용성 수용이 아님 |
+
+별도 실제 두 Editor 피어의 정상 조이스틱 handler→자연 Source.Update→기존 manager.OnInput 경로에서는 약0.5초 입력, 최고5m/s, 자연 중립·정지·Up·UI/콜백 복귀를 확인했습니다. 보행 수정 후 표본의 최대 Y 변화는 약0.03m, 관측 중 NCC/CC 접지 이탈은0이었고 host/client 최종 위치 차이는0.5mm 이내였습니다. 수정 전 표본의 약0.107m 들뜸과 비교하되, 시작점·방향이 서로 다른 fresh8m 경로이므로 동일 경로를 통제한 게임 A/B라고 주장하지 않습니다. 같은 조건의 자체 native CC 비교는 별도 근거입니다.
+
+명시 합성 입력을 사용한 별도 두 피어 재장전 표본에서는 탄약30→26→30과 원격 재생 요청 카운터1회 증가·공간 재생 설정·SFX 경로·Loaded clip을 관측했습니다. 카운터와 isPlaying은 실제 청취·음향 출력 지연의 증거가 아닙니다. 경기 HUD는 안내92자 한 줄·잘림/primary missing0, ONLINE/DONE 각2행 표시, 비raycast 배경과 실제 query에서 배경 미포함, 정상 종료 숨김·RETURN 뒤 원래 소유 객체 부재를 확인했습니다. 점수판은 허용된 일시적 Editor touch preview를 복원한 검사이며 일반 desktop Tab·실기기 통과가 아닙니다. [상세 현재 계획](PROJECT_PLAN.md)을 따릅니다.
+
+**Windows #248: 빌드·산출물 대조 완료, Player 실행0.** 별도 Windows64 Development 빌드는 Succeeded/오류0/경고5, BuildReport210.746초·helper225.388초로 완료했습니다. 실제360개 크기·SHA를 manifest와 독립 대조했고, Report278,510,396B와 실제합계278,707,943B의 차이197,547B는 함께 보존한 Burst DoNotShip 디버그 파일1개와 일치합니다. Windows 검증 메타데이터는1.0.194이며 새 Android 버전이 아닙니다.
+
+공개입력3,984개는 누락0/C#변경0, raw변경9개는7개 EOL만·자체 CJK와 EDM2개의 EOL/빈 필드 공백으로 분류되어 설정값 변화는 발견되지 않았습니다. 변경본을 외부 보존했고 P2 보호6개·기존 dirty5·소비 원장을 유지했습니다. private6 부재/indexS와 credential helper 선제 sparse 제외는 Root 공개 영수증 범위입니다.
+
+경고5개는 Unity Dashboard 미연결1, RuntimePipelineConfig 부재로 Player Pipeline 비활성1, UniRx의 CS0618 3개입니다. 경고를 해결·억제한 것은 아니며 새 Windows EXE의 실행·두 피어 경기·종료 검증은0회입니다. 초기 loose globalgamemanagers 기대 감사 실패와 data.unity3d 구성에 맞춘 정정을 보존했고 빌드 재실행은0회입니다. [PC 검증 요약](Docs/validation/2026-10-26/pc-validation-summary.md)과 [Windows 공개 요약](Docs/validation/2026-10-26/windows-build-summary.json)을 따릅니다.
+
+별도 LDPlayer(index2)의 기존 Android33 호스트와 오늘 여섯 PR의 제품 복사본을 담은 P3 Editor 클라이언트로 상호운용1라운드를 확인했습니다. 로비·빈 제목/맵 미선택 안내·최소2명/Ready 안내를 거쳐 DesertHouse actors2로 진입했고, 호스트 사격의 탄약30→26/shot4, P3 원격 proxy의 reload=true·표시카운터0→1, 장전완료30/shot4 유지를 관측했습니다. 양쪽 Draw/TimeExpired와 P3 Finished/remaining0/CanCombat=false·DONE2행, 정상 RETURN 뒤 양쪽 연결 로비 복귀 및 P3 닉네임QAC26·새 Runner를 확인했습니다.
+
+이 라운드는 기존33 Android와 최신 제품 복사본 Editor의 좁은 상호운용 근거입니다. 새 Windows EXE 실행0·새 Android 생성/여섯 PR 포함0을 유지합니다. crouch tap/held는 UP 뒤 또는 Finished 뒤에 관측하여 시험부적절·미검증이며, 이 라운드의 이동·피해·지연·성능·새 방 재참가 검증도0입니다. 원격 재장전 관측은 실제 청취·물리 입력·출력 프레임 지연 측정이 아닙니다.
+
+기존 열린16개 추적 범위와 새 #248은 유지합니다. 실제 맵의 사다리·경사·생명주기, LEFT 이탈 렌더·cold 첫 글자, Android 통합·Store/기기 수용은 별도입니다. 현재 점프 호출은 없으며 향후 의도한 상승 모드는 전체 상승 기간에 보행 필터 예외가 필요합니다. 실기기·실제16KB·발열·장시간 FPS/메모리·저사양 성능은 합의대로 후순위입니다. 현재 PC 검증·문서 정리에는 사용자 조치가 필요하지 않습니다. 이후 Chrome 작업 창 식별과 Drive 접근 확인은 별도 후속입니다. 아래는 각 날짜의 기존 기록입니다.
+
 ## 현재 PC 품질 개선과 제공본 (2026-10-25, #232)
 
 PR229의 새 입력 바인딩 사격 해제 경계와 PR231의 장갑·전완 중심 표현을 main에 반영했습니다. 양 팀 포즈14·표시 전환8조건과 실제 게임 owner 카메라의 손 표시/숨김·소매 비활성 표본을 확인했습니다. PC 두 피어는 일반 방/채팅/READY 경로, 자연 제한 시간 결과와 로비 재접속·재참가를 확인했고, 명시적 합성 입력에서는 4발·재장전으로 탄약30→26→30을 확인했습니다.
