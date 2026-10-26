@@ -32,6 +32,35 @@ public sealed class MatchHudView : MonoBehaviour
     private MenuState _menuState;
     private bool _scoreboardDismissed, _returnFailed;
     private int _lifecycleVersion;
+    private GameObject _mobileMenuHelpObject;
+    private MobileMenuLayout _mobileMenuLayout;
+
+    private sealed class MobileMenuLayout
+    {
+        public readonly RectTransform Content;
+        private readonly RectTransform _panel, _title, _resume, _leave;
+        private readonly Vector2 _panelSize, _contentSize, _titlePosition, _resumePosition, _leavePosition;
+
+        public MobileMenuLayout(RectTransform panel, RectTransform content, RectTransform title,
+            RectTransform resume, RectTransform leave)
+        {
+            _panel = panel; Content = content; _title = title; _resume = resume; _leave = leave;
+            _panelSize = panel.sizeDelta; _contentSize = content.sizeDelta;
+            _titlePosition = title.anchoredPosition; _resumePosition = resume.anchoredPosition;
+            _leavePosition = leave.anchoredPosition;
+        }
+
+        public void SetExpanded(bool expanded)
+        {
+            var growth = expanded ? Vector2.up * 180f : Vector2.zero;
+            var shift = growth * .5f;
+            if (_panel != null) _panel.sizeDelta = _panelSize + growth;
+            if (Content != null) Content.sizeDelta = _contentSize + growth;
+            if (_title != null) _title.anchoredPosition = _titlePosition + shift;
+            if (_resume != null) _resume.anchoredPosition = _resumePosition + shift;
+            if (_leave != null) _leave.anchoredPosition = _leavePosition + shift;
+        }
+    }
 
     private bool TouchMode
     {
@@ -269,6 +298,76 @@ public sealed class MatchHudView : MonoBehaviour
         if (target != null && target.activeSelf != visible) target.SetActive(visible);
     }
 
+    private void UpdateMobileMenuHelp(bool visible)
+    {
+        if (!visible || !isActiveAndEnabled || _menuRoot == null || !_menuRoot.activeInHierarchy
+            || _menuContent == null || !_menuContent.activeInHierarchy)
+        {
+            RestoreMobileMenuHelp();
+            return;
+        }
+        var content = _menuContent.transform as RectTransform;
+        if (_mobileMenuLayout != null && (_mobileMenuLayout.Content != content || _mobileMenuHelpObject == null))
+            RestoreMobileMenuHelp();
+        if (_mobileMenuLayout == null)
+        {
+            var panel = content != null ? content.parent as RectTransform : null;
+            var title = content != null ? content.Find("Title") as RectTransform : null;
+            var resume = _resumeButton != null ? _resumeButton.transform as RectTransform : null;
+            var leave = content != null ? content.Find("ReturnToLobby") as RectTransform : null;
+            var titleText = title != null ? title.GetComponent<TMP_Text>() : null;
+            // These are the existing menu's own direct children; never search another popup.
+            if (panel == null || title == null || titleText == null || titleText.font == null
+                || resume == null || resume.parent != content || leave == null) return;
+            if (_mobileMenuHelpObject == null)
+            {
+                _mobileMenuHelpObject = new GameObject("MobileControlsHelp", typeof(RectTransform),
+                    typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+                _mobileMenuHelpObject.hideFlags = HideFlags.DontSave;
+                _mobileMenuHelpObject.layer = content.gameObject.layer;
+                _mobileMenuHelpObject.SetActive(false);
+                var rect = _mobileMenuHelpObject.GetComponent<RectTransform>();
+                rect.SetParent(content, false);
+                rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.right;
+                rect.pivot = new Vector2(.5f, 0f);
+                rect.anchoredPosition = new Vector2(0f, 28f);
+                rect.sizeDelta = new Vector2(-80f, 160f);
+                var text = _mobileMenuHelpObject.GetComponent<TextMeshProUGUI>();
+                text.font = titleText.font;
+                text.fontSharedMaterial = titleText.fontSharedMaterial;
+                text.color = titleText.color;
+                text.fontSize = 30f;
+                text.fontStyle = FontStyles.Normal;
+                text.enableAutoSizing = false;
+                text.textWrappingMode = TextWrappingModes.NoWrap;
+                text.overflowMode = TextOverflowModes.Overflow;
+                text.alignment = TextAlignmentOptions.Center;
+                text.margin = Vector4.zero;
+                text.richText = false;
+                text.raycastTarget = false;
+                text.text = "Move: left stick\nLook: drag empty right side\nHold FIRE, CROUCH, SPRINT\nTap RELOAD";
+            }
+            if (_mobileMenuHelpObject.transform.parent != content) return;
+            _mobileMenuLayout = new MobileMenuLayout(panel, content, title, resume, leave);
+            _mobileMenuLayout.SetExpanded(true);
+        }
+        Show(_mobileMenuHelpObject, true);
+    }
+
+    private void RestoreMobileMenuHelp()
+    {
+        Show(_mobileMenuHelpObject, false);
+        if (_mobileMenuLayout == null) return;
+        _mobileMenuLayout.SetExpanded(false);
+        _mobileMenuLayout = null;
+    }
+
+    private void OnDestroy()
+    {
+        RestoreMobileMenuHelp();
+        if (_mobileMenuHelpObject != null) Destroy(_mobileMenuHelpObject);
+    }
+
     private void RefreshPanels()
     {
         var owner = NetworkRunnerManager.Instance;
@@ -299,6 +398,7 @@ public sealed class MatchHudView : MonoBehaviour
         Show(_menuRoot, menu);
         Show(_menuContent, _menuState == MenuState.Menu);
         Show(_confirmContent, _menuState == MenuState.Confirm);
+        UpdateMobileMenuHelp(TouchMode && _menuState == MenuState.Menu);
         Show(_menuButton, _hasSnapshot && !finished && !_returning && !menu && !scoreboard);
         Show(_killFeedRoot, _hasSnapshot && !waiting && !finished && !_returning && !scoreboard && !menu);
         Show(_mobileScoreButton, TouchMode && _hasSnapshot && !waiting && !finished && !_returning && !scoreboard && !menu);
@@ -367,6 +467,7 @@ public sealed class MatchHudView : MonoBehaviour
 
     private void ClearDisplay()
     {
+        RestoreMobileMenuHelp();
         if (_redScore != null) _redScore.text = "RED  --";
         if (_blueScore != null) _blueScore.text = "BLUE  --";
         if (_clockText != null) _clockText.text = "--:--";
