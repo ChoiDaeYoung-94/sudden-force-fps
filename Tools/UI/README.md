@@ -1,5 +1,11 @@
 # 메뉴 미리보기 이미지
 
+## 이동 조이스틱 좌표와 해제 경계 (2026-10-26, #236)
+
+조이스틱의 포인터 화면 좌표를 실제 `pressEventCamera`와 안정된 부모 RectTransform의 local 좌표로 변환합니다. 이동 반경·deadzone·손잡이 표시를 같은 UI 단위로 계산하며, 기존 고정/자유 모드와 반경 계수1.3·pointer 소유권을 유지합니다. 레이아웃 이동 뒤 새 누름에서 중심을 다시 읽고, 해제 시 원래 손잡이 local 위치를 복구합니다. 비활성 컴포넌트의 직접 Down/Drag 호출은 새 입력을 잡지 않습니다.
+
+실제 Canvas·RectTransform·PointerEventData를 만든 격리 Editor 회귀195항목을 통과했습니다. Overlay와 eventCamera, 부모 배율0.5/1/2, 고정/자유 모드·대각선·최대 이동·다른 pointer 거부·배치 이동과 명시적 focus/pause/disable/cancel을 확인했습니다. 기존 scene/root/preview와 singleton을 보존했습니다. 이는 화면 해상도 자체 변경·물리 멀티터치·Android 자동 lifecycle dispatch의 통과가 아니며 제공 APK33에는 아직 미포함입니다.
+
 ## 팀 변경 거절 안내 (2026-10-22, #179)
 
 대기실에서 선택한 팀에 빈자리가 없으면 기존 공통 팝업으로 `RED TEAM is full` 또는 `BLUE TEAM is full` 안내를 표시합니다. 자기 플레이어/방 정보가 아직 준비되지 않은 경우에도 재시도 안내를 표시합니다. 로컬 버튼 경로와 기존 서버 `CanChangeTeam` 검사는 같은 사유 함수를 사용하며, 서버 sender·정원 검증과 같은 팀 선택 시 READY 유지, 다른 팀으로 실제 이동할 때 READY 해제 정책은 유지합니다.
