@@ -37,6 +37,17 @@ namespace AD
 
         public bool IsLoading => _loadingRequested || _sceneLoadingRequested;
 
+        // Requested loading and an actually visible loading canvas are separate states.
+        public bool HasVisibleLoading => IsLoadingVisualActive(_popupLoading)
+            || IsLoadingVisualActive(_popupSceneLoading);
+
+        private static bool IsLoadingVisualActive(GameObject popup)
+        {
+            if (popup == null || !popup.activeInHierarchy) return false;
+            var canvas = popup.GetComponentInParent<UnityEngine.Canvas>();
+            return canvas != null && canvas.isActiveAndEnabled;
+        }
+
         /// <summary>
         /// Managers - Awake() -> Init()
         /// </summary>
