@@ -50,8 +50,10 @@ public class JoyStick : MonoBehaviour
 
     private void RefreshRadius()
     {
-        // Keep the existing travel coefficient; use the input parent's UI units.
-        _handleAreaRadius = _handleAreaTransform.rect.height * Mathf.Abs(_handleAreaTransform.localScale.y) * 1.3f;
+        // Full input at the visible circle's outer edge, in the input parent's UI units.
+        Rect area = _handleAreaTransform.rect;
+        _handleAreaRadius = Mathf.Min(area.width * Mathf.Abs(_handleAreaTransform.localScale.x),
+            area.height * Mathf.Abs(_handleAreaTransform.localScale.y)) * 0.5f;
     }
 
     private bool TryReadPoint(PointerEventData pointer, out Vector3 point)
@@ -85,9 +87,9 @@ public class JoyStick : MonoBehaviour
             _firstTouchPosition = _inputSpace.InverseTransformPoint(_handleAreaTransform.position) + _distanceVector;
         }
 
-        _handleTransform.position = _inputSpace.TransformPoint(inputPos);
         _joystickVector = (inputPos - _firstTouchPosition).normalized;
-        _joystickDistance = Vector3.Distance(inputPos, _firstTouchPosition);
+        _joystickDistance = Mathf.Min(Vector3.Distance(inputPos, _firstTouchPosition), _handleAreaRadius);
+        _handleTransform.position = _inputSpace.TransformPoint(_firstTouchPosition + _joystickVector * _joystickDistance);
     }
 
     public void Drag(BaseEventData baseEventData)
