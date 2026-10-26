@@ -15,6 +15,7 @@ public sealed class CombatVisualEffects : MonoBehaviour
     public int PresentedLocalShotCount { get; private set; }
     public int PresentedRemoteShotCount { get; private set; }
     public int ConfirmedImpactCount { get; private set; }
+    public int PresentedReloadCount { get; private set; }
 
     private void OnEnable()
     {
@@ -72,6 +73,7 @@ public sealed class CombatVisualEffects : MonoBehaviour
         // The authored PCM clip has preloadAudioData=false. Move first-use work
         // to binding instead of the first accepted shot; no importer rewrite.
         if (_shotClip != null && _shotClip.loadState == AudioDataLoadState.Unloaded) _shotClip.LoadAudioData();
+        if (_reloadClip != null && _reloadClip.loadState == AudioDataLoadState.Unloaded) _reloadClip.LoadAudioData();
     }
     private void PlayMuzzleAndSound(Vector3 position, Vector3 direction, bool local)
     {
@@ -89,12 +91,23 @@ public sealed class CombatVisualEffects : MonoBehaviour
     }
     private void OnVitals(CombatPresentationSnapshot snapshot)
     {
-        if (snapshot.IsReloading && !_wasReloading && _audioSource != null && _reloadClip != null)
+        if (snapshot.IsReloading && snapshot.ReloadRemaining > 0f && !snapshot.IsDead && !snapshot.RespawnPending && !_wasReloading
+            && _audioSource != null && _audioSource.isActiveAndEnabled && _reloadClip != null)
         {
-            _audioSource.spatialBlend = 0f;
+            bool local = _owner != null && _owner.Object != null && _owner.Object.IsValid
+                && _owner.Object.HasInputAuthority;
+            _audioSource.spatialBlend = local ? 0f : 1f;
             _audioSource.PlayOneShot(_reloadClip, .35f);
+            PresentedReloadCount++;
         }
         _wasReloading = snapshot.IsReloading;
+    }
+    private void LateUpdate()
+    {
+        // Local actors already receive LocalVitalsChanged. Proxies do not.
+        if (_owner == null || _owner.Object == null || !_owner.Object.IsValid
+            || _owner.Object.HasInputAuthority || _presentation == null) return;
+        if (_presentation.TryGetSnapshot(out var snapshot)) OnVitals(snapshot);
     }
     private void Unbind(CombatPresentation presentation)
     {
