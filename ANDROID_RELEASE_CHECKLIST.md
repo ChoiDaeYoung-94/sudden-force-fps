@@ -16,7 +16,7 @@ HUD의 ONLINE/DONE 표시는 해당 경기의 연결/종료 스냅샷 의미입�
 
 별도 LDPlayer(index2)의 기존 Android33 호스트와 오늘 여섯 PR의 제품 복사본을 담은 P3 Editor 클라이언트로 상호운용1라운드를 확인했습니다. 로비·빈 제목/맵 미선택 안내·최소2명/Ready 안내를 거쳐 DesertHouse actors2로 진입했고, 호스트 사격의 탄약30→26/shot4, P3 원격 proxy의 reload=true·표시카운터0→1, 장전완료30/shot4 유지를 관측했습니다. 양쪽 Draw/TimeExpired와 P3 Finished/remaining0/CanCombat=false·DONE2행, 정상 RETURN 뒤 양쪽 연결 로비 복귀 및 P3 닉네임QAC26·새 Runner를 확인했습니다.
 
-이 라운드는 기존33 Android와 최신 제품 복사본 Editor의 좁은 상호운용 근거입니다. 새 Windows EXE 실행0·새 Android 생성/여섯 PR 포함0을 유지합니다. crouch tap/held는 UP 뒤 또는 Finished 뒤에 관측하여 시험부적절·미검증이며, 이 라운드의 이동·피해·지연·성능·새 방 재참가 검증도0입니다. 원격 재장전 관측은 실제 청취·물리 입력·출력 프레임 지연 측정이 아닙니다.
+이 라운드는 기존33 Android와 최신 제품 복사본 Editor의 좁은 상호운용 근거입니다. 새 Windows EXE 실행0·새 Android 생성/여섯 PR 포함0을 유지합니다. crouch tap은 UP 뒤에 관측했고 held는 동시 MatchPhase를 기록하지 않아 성공을 판정할 수 없으며, 이 라운드의 이동·피해·지연·성능·새 방 재참가 검증도0입니다. 원격 재장전 관측은 실제 청취·물리 입력·출력 프레임 지연 측정이 아닙니다.
 
 다음 Android 통합은 최신 source와 원장/Console 최대 코드를 새로 확인한 뒤34 이상에서 실제 가능한 새 코드를 정하고, 공개 입력·저장/재시작·산출물/고지/native/폰트·심볼·서명·제공 근거를 별도로 남깁니다. 기존33 산출물과 검증 proof를 새 빌드 성공으로 복제하지 않습니다. 기존 심볼6/7, 전체 권리·단일 Unity AAB 안정화·실제16KB 한계와 열린16개 추적 범위 및 #248은 유지합니다. 실기기·발열·장시간 FPS/메모리·저사양 검증은 합의대로 후순위이며 현재 PC 검증·문서 정리에는 사용자 조치가 필요하지 않습니다. 이후 Chrome 작업 창 식별과 Drive 접근 확인은 별도 후속입니다. 아래 각 제공본의 기록과 해시값은 원문으로 보존합니다.
 

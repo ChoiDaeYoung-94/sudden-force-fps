@@ -200,7 +200,7 @@
     },
     "crouch": {
       "gameplayPass": false,
-      "attemptClassification": "UNSUITABLE_OBSERVATION_AFTER_UP_OR_FINISHED_NOT_VALIDATED"
+      "attemptClassification": "POST_UP_TAP_AND_HELD_MATCH_PHASE_NOT_CAPTURED"
     },
     "notTestedInThisRound": [
       "movement",
