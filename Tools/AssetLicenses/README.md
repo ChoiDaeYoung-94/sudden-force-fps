@@ -1,5 +1,13 @@
 # 에셋 원본 대응 기록
 
+## DOTween 1.2.765 선택 파일의 공식 배포본 대응 (2026-10-26, #257/#42)
+
+[원저자 목록](https://dotween.demigiant.com/download.php)의 2024-02-04판 [1.2.765 ZIP](https://dotween.demigiant.com/downloads/DOTween_1_2_765.zip)을 외부 검증 폴더에서 확인했습니다. ZIP215,500B/SHA `B359376326F333D6A132E0CBE0DC7A9CF18EE6C8DE89739193E5438E27DBB6A0`의27항목 CRC를 검사했고 runtime DLL·Editor DLL·readme 세 파일은 저장소 원본과 바이트가 같습니다. runtime DLL은 새 Windows03 내장본과도 같습니다.
+
+공개 Cecil metadata에서 `DG.Tweening.DOTween.Version`의 정적 대입값1.2.765를 읽었으며 assemblyVersion1.0.0.0과 구분했습니다. 검사한 DLL을 metadata reader가 로드·호출한 것은 아닙니다. [선택 파일 대응표](dotween-1.2.765-binary-provenance.json)를 따릅니다.
+
+SDK 업그레이드·DLL/원래 readme·앱 고지 변경은 없습니다. ZIP에 별도 license 파일은 없고 readme가 원저자 URL을 가리킵니다. 현재 [라이선스 페이지](https://dotween.demigiant.com/license.php)는 참고로만 연결하며 2024년 조건·모든 module/생성 파일·과거 취득·Pro 여부·전체 권리 완료로 확대하지 않습니다. #42는 남은 범위를 유지하고 아래 이전 기록을 보존합니다.
+
 ## URP BlueNoise256 7개 — 원저자 CC0 대응 (2026-10-22, #42)
 
 코드28의 알려진 공개 packed 경로에서 추가로 열거된 `Packages/com.unity.render-pipelines.universal/Textures/BlueNoise256/LDR_LLL1_[0..6].png` 7개의 원저자 대응을 보강했습니다. 설치된 URP17.3.0의 해당7개는 [Christoph Peters의 공식 배포 페이지](https://momentsingraphics.de/BlueNoise.html)가 연결한 [원본 ZIP](https://momentsingraphics.de/Media/BlueNoise/FreeBlueNoiseTextures.zip)의 `Data/256_256/` 동명7개와 바이트·SHA256이 모두 같습니다. 저자는 해당 페이지의 `A database of blue noise textures` 절에서 texture database를 [CC0](https://creativecommons.org/publicdomain/zero/1.0/)로 공개한다고 명시합니다.
