@@ -368,6 +368,19 @@ public sealed class MatchHudView : MonoBehaviour
         if (_mobileMenuHelpObject != null) Destroy(_mobileMenuHelpObject);
     }
 
+    // Popup requests can change after the HUD Update, before rendering.
+    private void LateUpdate()
+    {
+        if (_returning) RefreshReturningOverlay();
+    }
+
+    private void RefreshReturningOverlay()
+    {
+        var popup = AD.Managers.Instance != null ? AD.Managers.PopupM : null;
+        bool loadingVisual = popup != null && popup.HasVisibleLoading;
+        Show(_returningRoot, _returning && (_returnFailed || !loadingVisual));
+    }
+
     private void RefreshPanels()
     {
         var owner = NetworkRunnerManager.Instance;
@@ -394,7 +407,7 @@ public sealed class MatchHudView : MonoBehaviour
         Show(_waitingRoot, waiting && !_returning && !menu);
         Show(_scoreboardRoot, scoreboard);
         Show(_resultsRoot, finished && !_returning);
-        Show(_returningRoot, _returning);
+        RefreshReturningOverlay();
         Show(_menuRoot, menu);
         Show(_menuContent, _menuState == MenuState.Menu);
         Show(_confirmContent, _menuState == MenuState.Confirm);
