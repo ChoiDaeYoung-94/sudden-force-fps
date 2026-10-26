@@ -152,7 +152,7 @@ public sealed class MatchHudView : MonoBehaviour
             if (_rosterStats != null && index < _rosterStats.Length && _rosterStats[index] != null)
                 _rosterStats[index].text = entry.Kill + " / " + entry.Death;
             if (_rosterStatus != null && index < _rosterStatus.Length && _rosterStatus[index] != null)
-                _rosterStatus[index].text = entry.Connected ? string.Empty : "LEFT";
+                _rosterStatus[index].text = !entry.Connected ? "LEFT" : _snapshot.Phase == MatchPhase.Finished ? "DONE" : "ONLINE";
         }
     }
 
