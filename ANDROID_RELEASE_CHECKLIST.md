@@ -1,3 +1,11 @@
+> **2026-10-26 Android main 초기 준비 · #265:** 별도 QA P12(source e19cb55)의 Android/IL2CPP 읽기 전용 probe 진단0과 공개3990개 import 감사를 확인했으며 기본 Unity/Fork P2는 유지합니다.
+>
+> 최초3989rawexact+EDM1개 형식 차이를 보존했고 독립30검사/현재3990재해시 일치는 초기 준비 범위이며 저장·재시작·AAB·서명·기기 통과가 아닙니다.
+>
+> ARMv7+ARM64와 체크아웃1.0.194/code5는 새 배포 설정/예약이 아니며 실제 제공33/1.0.196/release11·원장 `196,1,33`, 새 예약·빌드·서명·업로드0을 유지합니다.
+>
+> [짧은 준비 요약](Docs/validation/2026-10-26/android-main-readiness-summary.md)의 다음 Console/ARM64·출력/저장 검증과 두 연결 후속을 따르며 #265만 좁은 완료 대상으로 두고 #66/#43 및 아래 기존 기록은 보존합니다.
+
 > **2026-10-26 저녁 최신 배포 경계 · #262:** 마지막 알려진 제공은 코드33/1.0.196/release11·원장 `196,1,33`입니다. 이번 후속의 fresh Console 제공/최대코드 조회·새 Android 예약·AAB/APK·서명·Play 업로드·Drive 전달은0입니다. PR264/#263의 병합된 PC 수정과 Windows05의 두 Player 기본 경기/DRAW는 새 Android 수용이 아닙니다.
 >
 > 05 결과 RETURN·재참가·EXIT는0이며 Native05 독립 검토는 원본14장의 양성 표본만 확인했으며 미실행 복귀·종료를 통과로 합산하지 않습니다. [저녁 검증·다음 배포 순서](Docs/validation/2026-10-26/evening-pc-validation-summary.md)를 따릅니다. 후속 사용자 연결은 정확한 Sudden Force Console 작업 탭과 기존 테스트 폴더에 접근 가능한 Drive 복구 두 항목만00시에 모으며 지금 반복 질문하지 않습니다. 기존 키·기기/성능 후순위와 아래 산출물 원문을 보존합니다.
