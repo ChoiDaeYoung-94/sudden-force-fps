@@ -1,3 +1,7 @@
+> **2026-10-26 19시 이후 후속:** 마지막 확인·전달본은 코드33/1.0.196/release11·원장 `196,1,33`입니다. 제품8PR의 후속 변경은 APK33에 미포함이며 이번 후속의 새 예약/AAB/APK/서명/Play 업로드/Drive 전달은0입니다. 현재 Console 최대 코드는 새로 조회하지 않았습니다.
+>
+> P10의 UNITY_ANDROID+UNITY_EDITOR/Android 대상 지원·IL2CPP backend 설정·ARMv7/ARM64는 준비 관측이며 새 Player/AAB·ARM64 단독 수용이 아닙니다. [PC 후속 요약](Docs/validation/2026-10-26/pc-validation-followup-summary.md)과 [모바일 요약](Docs/validation/2026-10-26/mobile-menu-crouch-summary.json)을 따르며 아래 이전 기록을 보존합니다.
+
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
 ## 2026-10-26 PC 소스 완료와 Android 통합 대기

@@ -1,3 +1,7 @@
+> **2026-10-26 19시 이후 후속:** 제품8PR 반영 main `439c833`에서 Windows03 빌드·단독 Lobby 정상 종료 표본, R7 MENU·R8 CROUCH의 좁은 검증을 추가했습니다. 마지막 확인·전달본은 코드33/1.0.196/release11 그대로이고8개 후속 제품 PR은 APK33에 미포함입니다.
+>
+> 최신 범위·한계는 [PC 후속 요약](Docs/validation/2026-10-26/pc-validation-followup-summary.md)을 기준으로 합니다. 아래 본문은 이전 시점의 기록으로 보존합니다.
+
 # Sudden Force FPS
 
 ## PC 조작·재장전·HUD 개선과 제공본 (2026-10-26)

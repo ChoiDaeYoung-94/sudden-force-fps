@@ -1,3 +1,7 @@
+> **2026-10-26 19시 이후 후속:** Windows03 빌드/단독 종료·R7 MENU·R8 CROUCH 결과를 추가했고, P10 Android Editor 준비 관측을 실제 Player/AAB 통과와 구분했습니다. 다음은 잔여 기본 기능·모바일 UI 경계와 별도 Android 통합 준비이며, 실제 기기·음향/성능/권리 검증은 미완료입니다.
+>
+> 현재 제공33·원장 `196,1,33`과 상위16개 잔여 범위를 유지합니다. 상세 우선순위·제한은 [PC 후속 요약](Docs/validation/2026-10-26/pc-validation-followup-summary.md)을 따르며 아래 이전 기록을 보존합니다.
+
 # Sudden Force FPS 완성 계획
 
 ## 2026-10-26 현재 상태와 다음 작업

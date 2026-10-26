@@ -1,0 +1,176 @@
+{
+  "schema": "SUDDEN_FORCE_MOBILE_MENU_CROUCH_FOLLOWUP_SUMMARY_V1",
+  "recordDate": "2026-10-26",
+  "sourceProductMain": "439c83329c7162badfe4750c451bd2877b0f6a87",
+  "productPullRequests": [
+    239,
+    240,
+    241,
+    243,
+    245,
+    247,
+    253,
+    255
+  ],
+  "documentationOrPolicyPullRequests": [
+    249,
+    252
+  ],
+  "delivery": {
+    "playVersionCode": 33,
+    "playVersionName": "1.0.196",
+    "internalRelease": 11,
+    "existingDriveDeliveryUnchanged": true,
+    "ledger": "196,1,33",
+    "allEightFollowupProductPrsIncludedInDeliveredApk": false,
+    "newAndroidReservation": 0,
+    "newAabOrApk": 0,
+    "newSigningOrPlayUpload": 0,
+    "newDriveTransfers": 0,
+    "freshCurrentPlayMaxQueried": false,
+    "productPrsNotIncludedInDeliveredApk": [
+      239,
+      240,
+      241,
+      243,
+      245,
+      247,
+      253,
+      255
+    ]
+  },
+  "r7Menu": {
+    "sourceSha256": "C4B1F6BC57F44B7D2571E1BE41E77163AC72504EE3033CCBF130A86FE99EE56D",
+    "p2P3AndCandidateSourceRawExact": true,
+    "helpLines": [
+      "Move: left stick",
+      "Look: drag empty right side",
+      "Hold FIRE, CROUCH, SPRINT",
+      "Tap RELOAD"
+    ],
+    "fontSize": 30,
+    "lineCount": 4,
+    "preferredSize": [
+      413.03,
+      137.01
+    ],
+    "helpRectSize": [
+      560,
+      160
+    ],
+    "primaryMissingGlyphs": 0,
+    "raycastTarget": false,
+    "autoSize": false,
+    "richText": false,
+    "helpExcludedByRaycastQuery": true,
+    "expectedResumeLeaveCancelFirstHandlersObserved": true,
+    "sequenceObservations": 10,
+    "finallyRestoredOriginalPreviewFalse": true,
+    "rectRestoredForConfirmClosedAndDesktop": true,
+    "repeatedExpansionAccumulationObserved": false,
+    "finishedHelpInactiveAndLobbyOwnerGoneObserved": true,
+    "actualGameViewResolution": [
+      3040,
+      1440
+    ],
+    "captureResolution": [
+      1520,
+      720
+    ],
+    "actualAspectRatiosTested": 1,
+    "physicalClickTouchOrAndroidBackPass": false,
+    "dynamicReparentRecoveryClaim": false,
+    "p3NonTargetSourceScope": {
+      "fileCount": 8,
+      "sameAfterCrLfNormalization": 8,
+      "rawEolDifferences": 6,
+      "beforeAfterManifestAvailable": false,
+      "beforeAfterRawPreservationClaim": false
+    }
+  },
+  "r8Crouch": {
+    "host": "existing LD FPS APK33/1.0.196",
+    "client": "P3 current Editor source",
+    "requestedStationaryHoldMilliseconds": 450,
+    "normalRows": 840,
+    "distinctGameFrames": 357,
+    "crouchTrueRows": 73,
+    "distinctCrouchTrueGameFrames": 27,
+    "allTrueRowsWithinBroadCommandWindow": true,
+    "broadCommandWindowUtc": [
+      "2026-10-26T09:40:58.445837Z",
+      "2026-10-26T09:40:59.811352Z"
+    ],
+    "remoteStateObserved": "standing -> crouched -> standing",
+    "everyNormalRowPhase": "Running",
+    "activePeers": 2,
+    "sameRemoteProxyAndLife": true,
+    "remoteHealth": 100,
+    "remoteShotSequence": 0,
+    "remoteRespawnVersion": 0,
+    "observerDetached": true,
+    "observerInputStateTransformWrites": 0,
+    "firstJoinFailedThenRetrySucceeded": true,
+    "joinFailureCauseConfirmed": false,
+    "issue198RootCauseResolved": false,
+    "exactAndroidDownUpOrLatencyMeasured": false,
+    "fpsBenchmark": false,
+    "renderPoseCapsuleHeadroomOrMovingCrouchPass": false
+  },
+  "androidEditorReadiness": {
+    "status": "PREPARATION_OBSERVATION_ONLY",
+    "target": "Android",
+    "UNITY_ANDROID": true,
+    "UNITY_EDITOR": true,
+    "backendObserved": "IL2CPP",
+    "architecturesObserved": [
+      "ARMv7",
+      "ARM64"
+    ],
+    "actualPlayerIl2CppCompilationProven": false,
+    "newAabProduced": false,
+    "arm64OnlyAcceptance": false,
+    "allSdkCredentialGettersZeroClaim": false,
+    "editorRecompileSucceeded": true,
+    "scriptCompilationFailed": false,
+    "readinessProbeDiagnosticCount": 0,
+    "androidTargetSupported": true,
+    "il2cppCompilerToolchainValidated": false
+  },
+  "remainingScope": {
+    "openParentIssues": [
+      198,
+      188,
+      166,
+      162,
+      163,
+      132,
+      154,
+      66,
+      42,
+      41,
+      43,
+      140,
+      44,
+      35,
+      36,
+      1
+    ],
+    "scopedCompletedIssues": [
+      250,
+      254
+    ],
+    "currentDocumentationIssue": 256,
+    "physicalDeviceStore16KbRightsAudioListeningAndLongPerformanceComplete": false
+  },
+  "evidenceIds": [
+    "mobile-menu-help-final-review-xhigh01/COMMENT.ko.md",
+    "menu-help-r7-sequence02.public.json",
+    "menu-help-r7-final-scoped-audit03.public.json",
+    "ld-crouch-runtime-r8-01/assessment.public.json",
+    "ld-crouch-r8-independent-review-xhigh01/COMMENT.ko.md",
+    "p10-latest-android-compile-readiness01.public.json"
+  ],
+  "evidenceStorageScope": "Local validation workspace; referenced evidence files are not copied into the repository.",
+  "distributionStatementScope": "Last confirmed/delivered APK33 record; no fresh Play Console observation in this follow-up"
+}
