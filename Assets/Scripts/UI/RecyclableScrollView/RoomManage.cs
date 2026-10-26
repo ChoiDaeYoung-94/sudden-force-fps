@@ -46,7 +46,7 @@ public class RoomManage : MonoBehaviour
     {
         _instance = this;
 
-        _ctsMoveToTop = new CancellationTokenSource();
+
     }
 
     private void OnEnable()
@@ -56,6 +56,7 @@ public class RoomManage : MonoBehaviour
 
     private void OnDisable()
     {
+        CancelMoveToTop();
         Unsubscribe();
     }
 
@@ -96,9 +97,7 @@ public class RoomManage : MonoBehaviour
     private void OnDestroy()
     {
         Unsubscribe();
-        _ctsMoveToTop?.Cancel();
-        _ctsMoveToTop?.Dispose();
-        _ctsMoveToTop = null;
+        CancelMoveToTop();
 
         if (ReferenceEquals(_instance, this)) _instance = null;
     }
@@ -469,25 +468,56 @@ public class RoomManage : MonoBehaviour
     /// <summary>
     /// ScrollView -> Viewport -> MoveCurLevelEffect 클릭 시 Event Trigger로 호출
     /// </summary>
-    public void MoveToTop() => MoveToTopAsync(_ctsMoveToTop.Token).Forget();
-
-    private async UniTask MoveToTopAsync(CancellationToken token)
+    public void MoveToTop()
     {
-        _blockScroll.SetActive(true);
+        if (!isActiveAndEnabled || _contentRect == null || _blockScroll == null) return;
+        CancelMoveToTop();
+        var operation = new CancellationTokenSource();
+        _ctsMoveToTop = operation;
+        MoveToTopAsync(operation).Forget();
+    }
 
-        while (_contentRect.anchoredPosition.y >= 1f && !token.IsCancellationRequested)
+    private async UniTask MoveToTopAsync(CancellationTokenSource operation)
+    {
+        CancellationToken token = operation.Token;
+        try
         {
-            _contentRect.anchoredPosition = Vector2.Lerp(_contentRect.anchoredPosition, new Vector2(_contentRect.anchoredPosition.x, 0f), _lerp);
-            await UniTask.Yield(PlayerLoopTiming.Update, token);
+            _blockScroll.SetActive(true);
+            var scroll = _contentRect.GetComponentInParent<UnityEngine.UI.ScrollRect>();
+            if (scroll != null) scroll.StopMovement();
+            while (_contentRect.anchoredPosition.y >= 1f)
+            {
+                token.ThrowIfCancellationRequested();
+                _contentRect.anchoredPosition = Vector2.Lerp(_contentRect.anchoredPosition,
+                    new Vector2(_contentRect.anchoredPosition.x, 0f), _lerp);
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
+            }
         }
+        catch (OperationCanceledException) when (token.IsCancellationRequested) { }
+        finally
+        {
+            // A canceled older operation must never hide its replacement's overlay.
+            if (ReferenceEquals(_ctsMoveToTop, operation))
+            {
+                _ctsMoveToTop = null;
+                if (_blockScroll != null) _blockScroll.SetActive(false);
+            }
+            operation.Dispose();
+        }
+    }
 
-        _blockScroll.SetActive(false);
+    private void CancelMoveToTop()
+    {
+        var operation = _ctsMoveToTop;
+        _ctsMoveToTop = null;
+        operation?.Cancel();
+        if (_blockScroll != null) _blockScroll.SetActive(false);
     }
 
     /// <summary>
     /// ScrollView -> BlockScroll 클릭 시 Event Trigger로 호출
     /// </summary>
-    public void BlockScroll() => _ctsMoveToTop.Cancel();
+    public void BlockScroll() => CancelMoveToTop();
 
     #endregion
 
