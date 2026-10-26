@@ -12,7 +12,7 @@
 | Windows03 native smoke | 자동 Login→Lobby(QAW03)→정상 EXIT/OK1회, 사전 보유 process handle ExitCode0·Crash literal0·강제종료0 | 명시적 종료 후 UI query0이나 backend UIA는 독립 측정하지 않음. #154 원인 해결·모든 종료/실제 경기 통과가 아님 |
 | R7 MENU | C4 소스 일치,30pt4줄·glyph/raycast·전환10관측+finally 원복·정상 수명 정리 | 실제 GameView3040×1440의 단일 비율, Editor preview/public callback 경로이며 실제 멀티터치·Android Back 수용이 아님 |
 | R8 CROUCH | 기존 LD33 host↔현재 P3 Editor의 정상840행/357프레임, crouch true73행/27프레임·서기→앉기→서기 |450ms는 요청값이며 넓은 명령 구간과의 겹침만 확인. 정밀 Down/Up·지연/FPS·렌더 자세·이동 중 앉기·실기기 통과가 아님 |
-| Android Editor 준비 | UNITY_ANDROID+UNITY_EDITOR, Editor 재컴파일 성공·상태 조회 코드 진단0, IL2CPP module·ARMv7/ARM64 관측 | 새 IL2CPP Player/AAB·ARM64 단독 대상 수용을 수행한 것이 아님 |
+| Android Editor 준비 | UNITY_ANDROID+UNITY_EDITOR, Editor 재컴파일 성공·상태 조회 코드 진단0, Android 대상 지원·IL2CPP backend 설정·ARMv7/ARM64 관측 | 새 IL2CPP Player/AAB·ARM64 단독 대상 수용을 수행한 것이 아님 |
 
 Windows Report27.664199초와 helper41.3210622초를 구분합니다. Report278,513,836B와 실제 합계278,711,383B의 차이197,547B는 Burst DoNotShip 텍스트1개입니다. Windows 표시 버전1.0.194는 Android 제공 버전이 아닙니다. 경고2개는 Dashboard 미연결과 RuntimePipelineConfig 부재 안내이며 해결·억제로 처리하지 않습니다. P2 보호6개와 기존 dirty5·원장을 보존했습니다.
 

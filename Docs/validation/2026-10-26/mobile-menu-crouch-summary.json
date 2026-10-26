@@ -122,7 +122,6 @@
     "target": "Android",
     "UNITY_ANDROID": true,
     "UNITY_EDITOR": true,
-    "il2cppModuleSupported": true,
     "backendObserved": "IL2CPP",
     "architecturesObserved": [
       "ARMv7",
@@ -134,7 +133,9 @@
     "allSdkCredentialGettersZeroClaim": false,
     "editorRecompileSucceeded": true,
     "scriptCompilationFailed": false,
-    "readinessProbeDiagnosticCount": 0
+    "readinessProbeDiagnosticCount": 0,
+    "androidTargetSupported": true,
+    "il2cppCompilerToolchainValidated": false
   },
   "remainingScope": {
     "openParentIssues": [
