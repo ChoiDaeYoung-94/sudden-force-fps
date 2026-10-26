@@ -22,6 +22,8 @@ public sealed class CombatHudView : MonoBehaviour
     private bool _matchSuppressed;
     private CombatPresentation _presentation;
     private float _hitUntil;
+    private GameObject _desktopHintPlateObject;
+    private UnityEngine.UI.Image _desktopHintPlate;
     public CombatPresentation BoundPresentation => _presentation;
 
     private void OnEnable()
@@ -107,8 +109,58 @@ public sealed class CombatHudView : MonoBehaviour
             _desktopHint.enabled = (!Application.isMobilePlatform || climbing) && _presentation != null && !_isDead && !_matchSuppressed;
             _desktopHint.text = climbing
                 ? (touch ? "LADDER  STICK UP / DOWN  SIDE RELEASE" : "LADDER  W UP / S DOWN  A / D RELEASE")
-                : touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CTRL CROUCH   CLICK AIM / FIRE   R RELOAD   ESC MENU";
+                : touch ? "EDITOR TOUCH PREVIEW" : "WASD MOVE   SHIFT SPRINT   CTRL CROUCH   RMB LOCK LOOK   HOLD LMB FIRE   R RELOAD   ESC MENU";
         }
+        UpdateDesktopHintPlate();
+    }
+
+    private void UpdateDesktopHintPlate()
+    {
+        bool visible = isActiveAndEnabled && !Application.isMobilePlatform && _desktopHint != null
+            && _desktopHint.enabled && _desktopHint.gameObject.activeInHierarchy;
+        if (!visible)
+        {
+            if (_desktopHintPlate != null) _desktopHintPlate.enabled = false;
+            return;
+        }
+        var hint = _desktopHint.rectTransform;
+        var parent = hint.parent as RectTransform;
+        if (parent == null)
+        {
+            if (_desktopHintPlate != null) _desktopHintPlate.enabled = false;
+            return;
+        }
+        if (_desktopHintPlateObject == null)
+        {
+            _desktopHintPlateObject = new GameObject("DesktopHintPlate", typeof(RectTransform),
+                typeof(CanvasRenderer), typeof(UnityEngine.UI.Image));
+            _desktopHintPlateObject.hideFlags = HideFlags.DontSave;
+            _desktopHintPlateObject.layer = _desktopHint.gameObject.layer;
+            _desktopHintPlate = _desktopHintPlateObject.GetComponent<UnityEngine.UI.Image>();
+            _desktopHintPlate.color = new Color(.035f, .055f, .075f, .9f);
+            _desktopHintPlate.raycastTarget = false;
+        }
+        if (_desktopHintPlate == null) return;
+        var plate = _desktopHintPlate.rectTransform;
+        if (plate.parent != parent) plate.SetParent(parent, false);
+        // Keep this owned sibling immediately behind the existing text.
+        int hintIndex = hint.GetSiblingIndex(), plateIndex = plate.GetSiblingIndex();
+        int targetIndex = plateIndex < hintIndex ? hintIndex - 1 : hintIndex;
+        if (plateIndex != targetIndex) plate.SetSiblingIndex(targetIndex);
+        plate.anchorMin = hint.anchorMin; plate.anchorMax = hint.anchorMax; plate.pivot = hint.pivot;
+        plate.anchoredPosition3D = hint.anchoredPosition3D;
+        plate.localRotation = hint.localRotation; plate.localScale = hint.localScale;
+        // UI units; leave room at both parent edges while keeping the text unchanged.
+        float width = Mathf.Min(_desktopHint.preferredWidth + 32f,
+            Mathf.Min(hint.rect.width + 32f, Mathf.Max(0f, parent.rect.width - 32f)));
+        plate.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+        plate.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, hint.rect.height + 12f);
+        _desktopHintPlate.enabled = width > 0f;
+    }
+
+    private void OnDestroy()
+    {
+        if (_desktopHintPlateObject != null) Destroy(_desktopHintPlateObject);
     }
 
     public void SetMatchSuppressed(bool suppressed)
