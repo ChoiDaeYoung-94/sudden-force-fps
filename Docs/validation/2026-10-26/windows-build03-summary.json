@@ -1,0 +1,132 @@
+{
+  "schema": "SUDDEN_FORCE_WINDOWS_BUILD03_FOLLOWUP_SUMMARY_V1",
+  "recordDate": "2026-10-26",
+  "checkpoint": "19시 이후 후속",
+  "sourceProductMain": "439c83329c7162badfe4750c451bd2877b0f6a87",
+  "sourceProvenance": {
+    "scratchBaseHead": "f055e4a84391bd9d8741c4e12855887b1ef72166",
+    "exactSourceCopies": [
+      "UniRx modern object API source 5C09",
+      "MatchHud C4 mobile menu source C4B1"
+    ],
+    "preservedFormattingDifferences": 10,
+    "canonicalCleanCheckout": false,
+    "publicBaselineFileCount": 3984,
+    "allPublicBaselineFilesRehashedUnchanged": true,
+    "strictSourcePinsPostBuildMatched": 13,
+    "privateInputsExcluded": 6,
+    "privateInputContentReads": 0,
+    "privateSparseIndexEvidence": "Root public snapshot; reviewer did not run Git",
+    "generatedPipelineInputsAbsent": 5,
+    "p2ProtectedFilesMatched": 6,
+    "p2ExistingDirtySettingsPreserved": 5,
+    "ledgerUnchanged": "196,1,33"
+  },
+  "build": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 2,
+    "target": "StandaloneWindows64",
+    "backend": "Mono",
+    "development": true,
+    "unityVersion": "6000.3.25f1",
+    "playerVersionMetadata": "1.0.194",
+    "reportDurationSeconds": 27.664199,
+    "helperDurationSeconds": 41.3210622,
+    "payloadFiles": 360,
+    "selfManifestFilesExcludedFromPayloadCount": 1,
+    "reportedTotalBytes": 278513836,
+    "actualPayloadByteSum": 278711383,
+    "byteDifference": 197547,
+    "differenceExplainedBy": "one BurstDebugInformation_DoNotShip lib_burst_generated.txt file",
+    "all360ActualSizeAndHashMatches": true,
+    "independentArtifactConsistencyChecks": 32
+  },
+  "compiledMetadata": {
+    "actualAssemblyCSharpSha256": "386371500548273A242262BE23372B3154D94C531E5361DE79DD96E85DFDB3DD",
+    "actualUniRxSha256": "5DC4E6D5D4C11BDAEE9E429BE635EB6C4FF4A5AE5D6680FF6F52912323288447",
+    "c4Methods": [
+      "UpdateMobileMenuHelp",
+      "RestoreMobileMenuHelp",
+      "OnDestroy"
+    ],
+    "nestedMobileMenuLayout": true,
+    "exactFourLineHelpLiteral": true,
+    "uniRxCalls": [
+      {
+        "method": "Initialize",
+        "target": "FindFirstObjectByType"
+      },
+      {
+        "method": "CullAllExcessDispatchers",
+        "target": "FindObjectsByType"
+      },
+      {
+        "method": "OnDestroy",
+        "target": "FindFirstObjectByType"
+      }
+    ],
+    "scope": "Cecil metadata tied to actual DLL hashes; not gameplay or UI execution"
+  },
+  "warnings": [
+    "Unity Dashboard project not linked",
+    "RuntimePipelineConfig absent; its Player Pipeline functionality is disabled"
+  ],
+  "warningsResolvedOrSuppressed": false,
+  "authorization": {
+    "singleConsumedNonce": "7e4ad648ffb24480b69bef2cd980d49c",
+    "startApprovalTtlSeconds": 120,
+    "currentlyEnabled": false,
+    "currentlyRootApproved": false,
+    "callbackRemovedAtEntry": true,
+    "automaticRetry": false
+  },
+  "nativeSmoke": {
+    "actualRuns": 1,
+    "route": "automatic Login -> Lobby, QA nickname QAW03 -> normal EXIT -> one OK",
+    "guestAuthOrGooglePlayGamesTest": false,
+    "heldProcessHandleBeforeQuit": true,
+    "heldHandleExitCode": 0,
+    "crashLiteralCount": 0,
+    "forcedTermination": false,
+    "explicitPostQuitWindowQueries": 0,
+    "implicitBackendUiaQueriesIndependentlyMeasured": false,
+    "strictAllBackendUiaZeroClaim": false,
+    "exactClickOrQuitLatencyMeasured": false,
+    "requestedPlayerResolution": [
+      1280,
+      720
+    ],
+    "actualOuterWindowCapture": [
+      1282,
+      752
+    ],
+    "actualCaptureFormat": "JPEG",
+    "screenshotsCopiedToRepository": false,
+    "fullMatchTest": false,
+    "issue154RootCauseResolved": false
+  },
+  "notClaimed": [
+    "canonical clean-main build",
+    "all Windows exit paths stable",
+    "strict zero backend UIA activity",
+    "Windows two-player match acceptance",
+    "new Android Player or AAB",
+    "physical device or 16KB-device acceptance",
+    "performance or audio listening acceptance"
+  ],
+  "evidenceIds": [
+    "windows-build03-artifact-audit.public.json",
+    "windows-build03-public-inputs-before.json",
+    "windows-build03-independent-artifact-review-xhigh01/COMMENT.ko.md",
+    "p11-windows03-compiled-features01.public.json",
+    "p11-windows03-warnings01.public.json",
+    "p2-post-windows-build-protected03.public.json",
+    "player03-native-smoke01/owner.public.json",
+    "player03-native-smoke01/assessment.public.json",
+    "player03-native-smoke01/process-result.public.json",
+    "player03-native-smoke01/root-quit-action-result.public.json"
+  ],
+  "evidenceStorageScope": "Local validation workspace; referenced evidence files are not copied into the repository.",
+  "distributionStatementScope": "Last confirmed/delivered APK33 record; no fresh Play Console observation in this follow-up"
+}
