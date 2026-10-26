@@ -293,11 +293,19 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         if (!climbingTick)
         {
             // SDK Move normalizes direction, so maxSpeed carries analog magnitude.
-            if (IsCrouching)
+            var velocity = _movementController.Velocity;
+            if (IsCrouching || velocity.y > 0f)
             {
-                var velocity = _movementController.Velocity;
-                var planar = Vector2.ClampMagnitude(new Vector2(velocity.x, velocity.z), PlayerCrouchGeometry.CrouchSpeed);
-                _movementController.Velocity = new Vector3(planar.x, velocity.y, planar.y);
+                if (IsCrouching)
+                {
+                    var planar = Vector2.ClampMagnitude(new Vector2(velocity.x, velocity.z), PlayerCrouchGeometry.CrouchSpeed);
+                    velocity.x = planar.x;
+                    velocity.z = planar.y;
+                }
+                // Ordinary locomotion has no jump mode. Do not carry CC contact lift
+                // into the next Move; intentional upward modes need an explicit exemption.
+                if (velocity.y > 0f) velocity.y = 0f;
+                _movementController.Velocity = velocity;
             }
             _movementController.maxSpeed = (IsCrouching ? PlayerCrouchGeometry.CrouchSpeed : sprint ? 7.5f : 5f) * move.magnitude;
             _movementController.Move(transform.rotation * new Vector3(move.x, 0f, move.y));
