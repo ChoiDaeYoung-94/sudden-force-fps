@@ -1,5 +1,13 @@
 # Third-party asset provenance
 
+## DOTween 1.2.765 선택 파일의 공식 배포본 대응 (2026-10-26, #257/#42)
+
+[원저자 목록](https://dotween.demigiant.com/download.php)의 2024-02-04판 [1.2.765 ZIP](https://dotween.demigiant.com/downloads/DOTween_1_2_765.zip)을 외부 검증 폴더에서 확인했습니다. ZIP215,500B/SHA `B359376326F333D6A132E0CBE0DC7A9CF18EE6C8DE89739193E5438E27DBB6A0`의27항목 CRC를 검사했고 runtime DLL·Editor DLL·readme 세 파일은 저장소 원본과 바이트가 같습니다. runtime DLL은 새 Windows03 내장본과도 같습니다.
+
+공개 Cecil metadata에서 `DG.Tweening.DOTween.Version`의 정적 대입값1.2.765를 읽었으며 assemblyVersion1.0.0.0과 구분했습니다. 검사한 DLL을 metadata reader가 로드·호출한 것은 아닙니다. [선택 파일 대응표](Tools/AssetLicenses/dotween-1.2.765-binary-provenance.json)를 따릅니다.
+
+SDK 업그레이드·DLL/원래 readme·앱 고지 변경은 없습니다. ZIP에 별도 license 파일은 없고 readme가 원저자 URL을 가리킵니다. 현재 [라이선스 페이지](https://dotween.demigiant.com/license.php)는 참고로만 연결하며 2024년 조건·모든 module/생성 파일·과거 취득·Pro 여부·전체 권리 완료로 확대하지 않습니다. #42는 남은 범위를 유지하고 아래 이전 기록을 보존합니다.
+
 ## Kenney 콘크리트 발소리5종 (2026-10-25, #166/#42)
 
 [공식 Impact Sounds1.0](https://kenney.nl/assets/impact-sounds)의 `footstep_concrete_000–004.ogg`를 mono WAV5개로 파생했습니다. 원 ZIP800,850B/SHA `029D734AF1582474EDF3A694D1B0CEBC97C1C152F2F39FA34D4C2BAFC5DE77F8`와 동봉 CC0 원문을 확인했습니다. 원 License608B/SHA `B49AA9C56B04528B95913DE13E506A0F7C5E807B9925DB9BFEF86AF1F91120DB`에서 줄바꿈만 LF로 바꾼586B/SHA `48D20ED2F4FD9146E76B7F558D09A1C27E62554D9897BEB93DEE57D269006D02`를 새asset 폴더와 앱 고지에 보존합니다. [공식 사용 안내](https://kenney.nl/support)와 원문은 상업적 사용과 선택적 credit을 설명합니다.

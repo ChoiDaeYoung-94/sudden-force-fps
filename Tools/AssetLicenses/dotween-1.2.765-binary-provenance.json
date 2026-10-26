@@ -1,0 +1,69 @@
+{
+  "schema": "DOTWEEN_OFFICIAL_1_2_765_SELECTED_BINARY_PROVENANCE_V1",
+  "recordDate": "2026-10-26",
+  "component": "DOTween",
+  "officialReleasePage": "https://dotween.demigiant.com/download.php",
+  "officialListedReleaseDate": "2024-02-04",
+  "officialArchiveUrl": "https://dotween.demigiant.com/downloads/DOTween_1_2_765.zip",
+  "archiveBytes": 215500,
+  "archiveSha256": "B359376326F333D6A132E0CBE0DC7A9CF18EE6C8DE89739193E5438E27DBB6A0",
+  "archiveMemberCount": 27,
+  "allMemberCrcChecked": true,
+  "versionMetadata": {
+    "assemblyVersion": "1.0.0.0",
+    "staticInitializerAssignedVersion": "1.2.765",
+    "assignment": "DG.Tweening.DOTween::.cctor: ldstr 1.2.765 -> stsfld System.String DG.Tweening.DOTween::Version",
+    "reader": "Public Mono.Cecil metadata; observation did not load or invoke inspected DLL"
+  },
+  "selectedFiles": [
+    {
+      "archiveMember": "DOTween/DOTween.dll",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/DOTween.dll",
+      "bytes": 175616,
+      "sha256": "8E90FC43AB564A5A51424AF56531AB074A5A2E9CAB271B2D653D287954237B83",
+      "crc32": "D9FA1D45",
+      "sourceRawExact": true,
+      "windows03RuntimeRawExact": true
+    },
+    {
+      "archiveMember": "DOTween/readme.txt",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/readme.txt",
+      "bytes": 2190,
+      "sha256": "37B99FFDBB8B01B159D807B1FE77DB664AE5B3B201734A5AD602C7C7F83941F0",
+      "crc32": "A16217A4",
+      "sourceRawExact": true,
+      "windows03RuntimeRawExact": null
+    },
+    {
+      "archiveMember": "DOTween/Editor/DOTweenEditor.dll",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenEditor.dll",
+      "bytes": 70656,
+      "sha256": "45FA0EF0017CCDBE8B91F59E77AE65D86B5C9C6F49A75C080F30F837EDC3FDA5",
+      "crc32": "A83094EB",
+      "sourceRawExact": true,
+      "windows03RuntimeRawExact": null
+    }
+  ],
+  "licenseEvidence": {
+    "readmeRawExact": true,
+    "standaloneLicenseFilePresentInOfficialZip": false,
+    "readmeLicenseUrl": "https://dotween.demigiant.com/license.php",
+    "currentWebLicenseReferenceOnly": true,
+    "historical2024TermsConfirmedByCurrentPage": false,
+    "allPackageModulesOrGeneratedChangesAudited": false,
+    "originalUserAcquisitionReconstructed": false,
+    "proPresenceOrEntitlementConcluded": false,
+    "wholeProjectRightsComplete": false
+  },
+  "operationScope": {
+    "downloadedZipImportedOrExecuted": false,
+    "sdkUpgradedOrReplaced": false,
+    "metadataReaderExecutedInspectedDll": false,
+    "existingWindows03AppSmokeIsSeparate": true,
+    "newAndroidProduced": false,
+    "appNoticeOrOriginalReadmeChanged": false
+  },
+  "independentReview": "dotween1765-official-independent-review-xhigh01",
+  "parentIssue": 42,
+  "scopedIssue": 257
+}
