@@ -1,5 +1,11 @@
 # 발사 피드백 검증
 
+## 원격 재장전 음향 (2026-10-26, #238)
+
+원격 actor에게 발행되지 않는 `LocalVitalsChanged`만 기다리던 재장전 음향을 보완했습니다. 로컬 event 경로는 유지하고 원격은 표시 snapshot을 읽어 재장전 시작 edge를 한 번 재생합니다. 로컬2D/원격3D와 기존 clip·SFX·거리 설정을 유지하며, 만료·사망·리스폰 대기·비활성 AudioSource의 edge는 재생하지 않습니다. bind 때 이미 진행 중인 상태는 seed하여 과거 음향을 재생하지 않습니다. reload clip도 binding에서 미리 로드합니다. `PresentedReloadCount`는 PlayOneShot 요청수이며 실제 청취의 증거가 아닙니다.
+
+fresh PC 두 Editor 피어에서 호스트4발/재장전의 탄약30→26→30, 클라이언트 proxy의 요청 증가1·3D/SFX/Loaded와 자체 관찰 콜백 정리를 확인했습니다. 자체 음량0 FX clone의59항목은 local/remote·중복·만료/NaN·사망/대기·비활성/재활성·실제 OnEnable/OnDisable 및 원본 delegate/scene 보존을 통과했습니다. clone 검사는 복사 snapshot이며 실제 player state를 쓰지 않습니다. 실제 bind-during-reload 표본2개는 미실행이고, isPlaying은 다른 소리도 포함하므로 개별 clip 출력·스피커 지연·Android 청취를 통과로 합산하지 않습니다. 제공 APK33에는 아직 미포함입니다.
+
 ## 새 owner 연결 시 사격 해제 경계 (2026-10-25, #228)
 
 `PlayerInputSource.Bind`에서도 현재 FIRE held 상태를 release gate에 반영합니다. PC는 현재 왼쪽 마우스 버튼을 읽고, mobile은 이미 알고 있는 held를 보존하며 포커스가 없으면 해제를 요구합니다. Bind 전에 누르고 있던 왼쪽 버튼을 유지한 채 오른쪽 클릭으로 cursor를 잡는 것을 새 사격 누름으로 취급하지 않습니다. Bind 뒤 해제 상태를 샘플한 다음의 새 왼쪽 클릭과 mobile 새 PointerDown의 기존 false→true 동작은 유지합니다. 커서·탄약·네트워크 판정은 변경하지 않습니다.
