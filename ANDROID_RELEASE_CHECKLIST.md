@@ -1,3 +1,7 @@
+> **2026-10-26 저녁 최신 배포 경계 · #262:** 마지막 알려진 제공은 코드33/1.0.196/release11·원장 `196,1,33`입니다. 이번 후속의 fresh Console 제공/최대코드 조회·새 Android 예약·AAB/APK·서명·Play 업로드·Drive 전달은0입니다. PR264/#263의 병합된 PC 수정과 Windows05의 두 Player 기본 경기/DRAW는 새 Android 수용이 아닙니다.
+>
+> 05 결과 RETURN·재참가·EXIT는0이며 Native05 독립 검토는 원본14장의 양성 표본만 확인했으며 미실행 복귀·종료를 통과로 합산하지 않습니다. [저녁 검증·다음 배포 순서](Docs/validation/2026-10-26/evening-pc-validation-summary.md)를 따릅니다. 후속 사용자 연결은 정확한 Sudden Force Console 작업 탭과 기존 테스트 폴더에 접근 가능한 Drive 복구 두 항목만00시에 모으며 지금 반복 질문하지 않습니다. 기존 키·기기/성능 후순위와 아래 산출물 원문을 보존합니다.
+
 > **2026-10-26 19시 이후 후속:** 마지막 확인·전달본은 코드33/1.0.196/release11·원장 `196,1,33`입니다. 제품8PR의 후속 변경은 APK33에 미포함이며 이번 후속의 새 예약/AAB/APK/서명/Play 업로드/Drive 전달은0입니다. 현재 Console 최대 코드는 새로 조회하지 않았습니다.
 >
 > P10의 UNITY_ANDROID+UNITY_EDITOR/Android 대상 지원·IL2CPP backend 설정·ARMv7/ARM64는 준비 관측이며 새 Player/AAB·ARM64 단독 수용이 아닙니다. [PC 후속 요약](Docs/validation/2026-10-26/pc-validation-followup-summary.md)과 [모바일 요약](Docs/validation/2026-10-26/mobile-menu-crouch-summary.json)을 따르며 아래 이전 기록을 보존합니다.
