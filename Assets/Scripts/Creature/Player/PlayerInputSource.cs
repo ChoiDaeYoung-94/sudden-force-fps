@@ -109,6 +109,22 @@ public sealed class PlayerInputSource : MonoBehaviour
         _reloadSubmittedFrame = -1;
     }
 
+    private bool CanUseTouchLook => Instance == this && isActiveAndEnabled && _owner != null
+        && _owner.CanProvideInput && _owner.RespawnVersion == _respawnVersion
+        && !_paused && !_menuInputBlocked && Application.isFocused;
+
+    public bool TryCaptureTouchLook(int fingerId)
+    {
+        if (fingerId < 0 || _lookFinger >= 0 || !CanUseTouchLook) return false;
+        _lookFinger = fingerId;
+        return true;
+    }
+
+    public void ReleaseTouchLook(int fingerId)
+    {
+        if (CanUseTouchLook && fingerId >= 0 && _lookFinger == fingerId) _lookFinger = -1;
+    }
+
     // Degrees; positive Y raises the view. Mobile controls can call this too.
     public void AddLookDelta(Vector2 delta)
     {
@@ -193,16 +209,18 @@ public sealed class PlayerInputSource : MonoBehaviour
 
     private void SampleTouchLook()
     {
-        for (int i = 0; i < Input.touchCount; i++)
-        {
-            var touch = Input.GetTouch(i);
-            if (touch.phase == TouchPhase.Began && _lookFinger < 0 && touch.position.x >= Screen.width * 0.5f && !IsPointerOverControl(touch.position))
-                _lookFinger = touch.fingerId;
-            if (touch.fingerId != _lookFinger) continue;
-            if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) _lookFinger = -1;
-            else if (touch.phase == TouchPhase.Moved)
-                AddLookDelta(touch.deltaPosition * (180f / Mathf.Max(Screen.width, 1)));
-        }
+        for (int i = 0; i < Input.touchCount; i++) SampleTouchLook(Input.GetTouch(i));
+    }
+
+    private void SampleTouchLook(Touch touch)
+    {
+        if (!CanUseTouchLook || touch.fingerId < 0) return;
+        if (touch.phase == TouchPhase.Began && _lookFinger < 0 && touch.position.x >= Screen.width * 0.5f && !IsPointerOverControl(touch.position))
+            TryCaptureTouchLook(touch.fingerId);
+        if (touch.fingerId != _lookFinger) return;
+        if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) ReleaseTouchLook(touch.fingerId);
+        else if (touch.phase == TouchPhase.Moved)
+            AddLookDelta(touch.deltaPosition * (180f / Mathf.Max(Screen.width, 1)));
     }
 
     private bool IsPointerOverControl(Vector2 position)
