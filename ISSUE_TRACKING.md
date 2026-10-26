@@ -1,5 +1,27 @@
 # GitHub 이슈와 PR 작업 관리
 
+## 2026-10-26 좁은 제품 완료와 열린 추적 범위
+
+[PR239](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/239), [PR240](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/240), [PR241](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/241), [PR243](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/243), [PR245](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/245), [PR247](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/247)를 각각의 독립 검토와 해당 범위 검증 후 병합했습니다. 현재 제품 main은 `f055e4a`입니다. 조이스틱195·방 목록 스크롤22·재장전59·조이스틱 응답255항목의 실패0은 격리 컴포넌트 회귀 수치이며 실제 두 피어 경기·물리 입력·기기 통과 수로 합산하지 않습니다.
+
+상위 #166에는 정상 조이스틱→자연 Source.Update→기존 입력 writer 경로의 실제 두 피어 걷기·해제·자연 정지와 보행 들뜸 개선을 추가했습니다. 수정 후 최대 Y 약0.03m, 관측 접지 이탈0, 최고5m/s, host/client 최종 위치 차이0.5mm 이내 표본입니다. 수정 전 약0.107m와의 게임 비교는 각기 다른 시작점/방향의 fresh8m 경로이며, 통제된 동일 경로 A/B로 처리하지 않습니다. 원격 재장전은 별도 두 피어의 요청 카운터1회 증가이며 청취·전체 재장전 접촉 수용과 다릅니다.
+
+#163에는 방 목록의 맨 위로 이동 취소 후 차단막·취소 상태가 남는 경로를 좁게 마무리했습니다. 이는 채팅 IME·물리 스크롤·관성·실패/재시도 전체를 끝낸 근거가 아닙니다. HUD 안내92자·ONLINE/DONE·배경 비raycast·정상 RETURN 뒤 자기 객체 정리는 확인했지만 #132의 cold 첫 표시, 실제 LEFT 이탈 렌더와 기기 입력은 남습니다. Editor touch preview는 원래 false로 복원했고 일반 desktop Tab 통과로 기록하지 않습니다.
+
+기존 열린16개(#198, #188, #166, #162, #163, #132, #154, #66, #42, #41, #43, #140, #44, #35, #36, #1)는 각자 남은 수용 범위로 유지하고, 새 #248도 OPEN입니다. 좁은 완료 PR을 근거로 상위 #166/#163/#43 또는 Windows 종료 #154·단일 AAB #66·전체 권리 #42를 닫지 않습니다.
+
+**Windows #248: 빌드·산출물 대조 완료, Player 실행0.** 별도 Windows64 Development 빌드는 Succeeded/오류0/경고5, BuildReport210.746초·helper225.388초로 완료했습니다. 실제360개 크기·SHA를 manifest와 독립 대조했고, Report278,510,396B와 실제합계278,707,943B의 차이197,547B는 함께 보존한 Burst DoNotShip 디버그 파일1개와 일치합니다. Windows 검증 메타데이터는1.0.194이며 새 Android 버전이 아닙니다.
+
+공개입력3,984개는 누락0/C#변경0, raw변경9개는7개 EOL만·자체 CJK와 EDM2개의 EOL/빈 필드 공백으로 분류되어 설정값 변화는 발견되지 않았습니다. 변경본을 외부 보존했고 P2 보호6개·기존 dirty5·소비 원장을 유지했습니다. private6 부재/indexS와 credential helper 선제 sparse 제외는 Root 공개 영수증 범위입니다.
+
+경고5개는 Unity Dashboard 미연결1, RuntimePipelineConfig 부재로 Player Pipeline 비활성1, UniRx의 CS0618 3개입니다. 경고를 해결·억제한 것은 아니며 새 Windows EXE의 실행·두 피어 경기·종료 검증은0회입니다. 초기 loose globalgamemanagers 기대 감사 실패와 data.unity3d 구성에 맞춘 정정을 보존했고 빌드 재실행은0회입니다. [PC 검증 요약](Docs/validation/2026-10-26/pc-validation-summary.md)과 [Windows 공개 요약](Docs/validation/2026-10-26/windows-build-summary.json)을 따릅니다.
+
+별도 LDPlayer(index2)의 기존 Android33 호스트와 오늘 여섯 PR의 제품 복사본을 담은 P3 Editor 클라이언트로 상호운용1라운드를 확인했습니다. 로비·빈 제목/맵 미선택 안내·최소2명/Ready 안내를 거쳐 DesertHouse actors2로 진입했고, 호스트 사격의 탄약30→26/shot4, P3 원격 proxy의 reload=true·표시카운터0→1, 장전완료30/shot4 유지를 관측했습니다. 양쪽 Draw/TimeExpired와 P3 Finished/remaining0/CanCombat=false·DONE2행, 정상 RETURN 뒤 양쪽 연결 로비 복귀 및 P3 닉네임QAC26·새 Runner를 확인했습니다.
+
+이 라운드는 기존33 Android와 최신 제품 복사본 Editor의 좁은 상호운용 근거입니다. 새 Windows EXE 실행0·새 Android 생성/여섯 PR 포함0을 유지합니다. crouch tap은 UP 뒤에 관측했고 held는 동시 MatchPhase를 기록하지 않아 성공을 판정할 수 없으며, 이 라운드의 이동·피해·지연·성능·새 방 재참가 검증도0입니다. 원격 재장전 관측은 실제 청취·물리 입력·출력 프레임 지연 측정이 아닙니다.
+
+제공은 계속 코드33/1.0.196/release11이며 오늘 여섯 PR은 APK33에 미포함입니다. 이번 작업의 새 Android 예약·AAB/APK·서명·업로드는0건입니다. 실기기·발열·장시간 FPS/메모리·저사양 측정 후순위 합의를 유지하며 현재 PC 검증·문서 정리에는 사용자 조치가 필요하지 않습니다. 이후 Chrome 작업 창 식별과 Drive 접근 확인은 별도 후속입니다. 아래 과거 결과·중단·실패 기록은 당시 범위로 보존합니다.
+
 ## 현재 PC 검증 기록과 좁은 제품 완료 (#228/#230/#232, 2026-10-25)
 
 #228/PR229는 새 입력 Bind의 held/focus 해제 경계를, #230/PR231은 전완 표시와 팔 굽힘 방향의 최소 수정을 마무리했습니다. 기존22 컴포넌트 회귀와 실제 양 팀 포즈14·표시8조건/복구2·소스/프리팹 감사·독립 COMMENT를 각각의 범위로 기록합니다. 새 owner의 실제 물리 버튼 지속 누르기나 #188/#166 전체를 닫은 것은 아닙니다.

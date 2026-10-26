@@ -1,5 +1,25 @@
 # Android 첫 빌드 및 Google Play 테스트 배포 점검
 
+## 2026-10-26 PC 소스 완료와 Android 통합 대기
+
+[PR239](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/239), [PR240](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/240), [PR241](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/241), [PR243](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/243), [PR245](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/245), [PR247](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/247)를 main `f055e4a`에 병합했습니다. 조이스틱 좌표·반경100 응답, 스크롤 취소 복구, 원격 재장전 효과, 일반 보행의 양의 Y carry 제거, 경기 HUD 가독성은 최신 소스 변경입니다. **제공 기준은 계속 코드33/1.0.196/release11이며 오늘 여섯 PR은 APK33에 포함되지 않습니다. 이번 후속 작업에서 새 Android 예약·AAB/APK 생성·서명·업로드는0건입니다.** 소비 원장 `196,1,33`은 그대로 보존합니다.
+
+조이스틱195·스크롤22·재장전59·응답255항목 실패0은 격리 컴포넌트 검사입니다. 별도 실제 두 Editor 피어의 정상 조이스틱 입력·해제·정지, 수정 후 최대 Y 약0.03m/관측 접지 이탈0/최고5m/s/host-client 위치 차이0.5mm 이내, 원격 재장전 요청과 정상 경기 HUD·RETURN 뒤 객체 정리를 확인했습니다. 서로 다른 경로의 수정 전/후 게임 표본, 자체 native CC paired 비교, 실제 네트워크 피어 결과를 구분합니다. 실제 음향 청취·전체 물리 터치·기기 수용으로 합산하지 않습니다.
+
+HUD의 ONLINE/DONE 표시는 해당 경기의 연결/종료 스냅샷 의미입니다. 안내92자 한 줄·잘림/primary missing0, 배경의 실제 raycast 미포함과 정상 수명 종료를 확인했으며 점수판은 복원된 Editor touch preview 범위입니다. 실제1280·일반 desktop Tab·LEFT 이탈 렌더·cold 첫 atlas는 남습니다. [PC 근거와 현재 작업 순서](PROJECT_PLAN.md)를 따릅니다.
+
+**Windows #248: 빌드·산출물 대조 완료, Player 실행0.** 별도 Windows64 Development 빌드는 Succeeded/오류0/경고5, BuildReport210.746초·helper225.388초로 완료했습니다. 실제360개 크기·SHA를 manifest와 독립 대조했고, Report278,510,396B와 실제합계278,707,943B의 차이197,547B는 함께 보존한 Burst DoNotShip 디버그 파일1개와 일치합니다. Windows 검증 메타데이터는1.0.194이며 새 Android 버전이 아닙니다.
+
+공개입력3,984개는 누락0/C#변경0, raw변경9개는7개 EOL만·자체 CJK와 EDM2개의 EOL/빈 필드 공백으로 분류되어 설정값 변화는 발견되지 않았습니다. 변경본을 외부 보존했고 P2 보호6개·기존 dirty5·소비 원장을 유지했습니다. private6 부재/indexS와 credential helper 선제 sparse 제외는 Root 공개 영수증 범위입니다.
+
+경고5개는 Unity Dashboard 미연결1, RuntimePipelineConfig 부재로 Player Pipeline 비활성1, UniRx의 CS0618 3개입니다. 경고를 해결·억제한 것은 아니며 새 Windows EXE의 실행·두 피어 경기·종료 검증은0회입니다. 초기 loose globalgamemanagers 기대 감사 실패와 data.unity3d 구성에 맞춘 정정을 보존했고 빌드 재실행은0회입니다. [PC 검증 요약](Docs/validation/2026-10-26/pc-validation-summary.md)과 [Windows 공개 요약](Docs/validation/2026-10-26/windows-build-summary.json)을 따릅니다.
+
+별도 LDPlayer(index2)의 기존 Android33 호스트와 오늘 여섯 PR의 제품 복사본을 담은 P3 Editor 클라이언트로 상호운용1라운드를 확인했습니다. 로비·빈 제목/맵 미선택 안내·최소2명/Ready 안내를 거쳐 DesertHouse actors2로 진입했고, 호스트 사격의 탄약30→26/shot4, P3 원격 proxy의 reload=true·표시카운터0→1, 장전완료30/shot4 유지를 관측했습니다. 양쪽 Draw/TimeExpired와 P3 Finished/remaining0/CanCombat=false·DONE2행, 정상 RETURN 뒤 양쪽 연결 로비 복귀 및 P3 닉네임QAC26·새 Runner를 확인했습니다.
+
+이 라운드는 기존33 Android와 최신 제품 복사본 Editor의 좁은 상호운용 근거입니다. 새 Windows EXE 실행0·새 Android 생성/여섯 PR 포함0을 유지합니다. crouch tap은 UP 뒤에 관측했고 held는 동시 MatchPhase를 기록하지 않아 성공을 판정할 수 없으며, 이 라운드의 이동·피해·지연·성능·새 방 재참가 검증도0입니다. 원격 재장전 관측은 실제 청취·물리 입력·출력 프레임 지연 측정이 아닙니다.
+
+다음 Android 통합은 최신 source와 원장/Console 최대 코드를 새로 확인한 뒤34 이상에서 실제 가능한 새 코드를 정하고, 공개 입력·저장/재시작·산출물/고지/native/폰트·심볼·서명·제공 근거를 별도로 남깁니다. 기존33 산출물과 검증 proof를 새 빌드 성공으로 복제하지 않습니다. 기존 심볼6/7, 전체 권리·단일 Unity AAB 안정화·실제16KB 한계와 열린16개 추적 범위 및 #248은 유지합니다. 실기기·발열·장시간 FPS/메모리·저사양 검증은 합의대로 후순위이며 현재 PC 검증·문서 정리에는 사용자 조치가 필요하지 않습니다. 이후 Chrome 작업 창 식별과 Drive 접근 확인은 별도 후속입니다. 아래 각 제공본의 기록과 해시값은 원문으로 보존합니다.
+
 ## 후속 PC 검증과 새 Android 대기 (2026-10-25, #232)
 
 PR229/231 후속 PC 표본은 두 피어 일반 방/채팅·READY/START·자연 결과와 재접속, 실제 owner 카메라의 손/소매 표시 경계, 명시 합성4발·재장전·원격 스크롤 보존을 확인했습니다. [현재 수용 범위](PROJECT_PLAN.md)를 따르며 Android 포함/서명/배포·물리 조작·실기기·장시간 성능으로 합산하지 않습니다.

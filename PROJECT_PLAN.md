@@ -1,5 +1,38 @@
 # Sudden Force FPS 완성 계획
 
+## 2026-10-26 현재 상태와 다음 작업
+
+main `f055e4a`에 [PR239](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/239), [PR240](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/240), [PR241](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/241), [PR243](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/243), [PR245](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/245), [PR247](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/247)를 반영했습니다. 현재 제공본은 코드33/1.0.196/release11, 소비 원장은 `196,1,33`입니다. 오늘 여섯 PR과 앞서 APK33 미포함으로 기록한 후속 소스는 새 Android 통합 대상이며, 이번 작업의 새 예약·AAB/APK 생성·서명·업로드는0건입니다.
+
+| 검증 종류 | 완료한 좁은 범위 | 남은 수용 경계 |
+| --- | --- | --- |
+| 격리 회귀 | 조이스틱195·스크롤22·재장전59·응답255항목 실패0 | 물리 touch/gesture·실제 player의 재장전 중 bind·기기와 구분 |
+| 실제 두 피어 걷기 | 정상 UI handler→자연 sampler→기존 단일 writer, 약0.5초 입력·최고5m/s·Up·자연 정지 | 최신 관측의 접지 이탈0/최대 Y 약0.03m를 모든 맵·모드·예측 보정 통과로 확대하지 않음 |
+| 원격 재장전 | 별도 명시 합성 입력의 탄약30→26→30, 원격 요청 카운터1회·공간 설정·SFX·Loaded | 실제 청취·총성 지연·손/탄창 전체 접촉·생명주기 수용은 별도 |
+| 실제 경기 HUD | 안내92자 한 줄·ONLINE/DONE 각2행·비raycast·실제 query 미포함·정상 숨김/RETURN 후 소유 객체 부재 | 3040×1440 원화면의1520×720 캡처이며 실제1280·일반 desktop Tab·LEFT 이탈·실기기 통과가 아님 |
+
+보행 수정 전 약0.107m와 수정 후 약0.03m는 서로 다른 spawn/방향의 각 fresh8m 게임 표본입니다. 통제된 동일 경로 게임 A/B로 주장하지 않습니다. 별도 자체 native CC의 paired 평지·20cm 단차·20도 경사·2m 낙하 비교와 실제 host/client 위치 차이0.5mm 이내 근거를 구분합니다. 기존 보호검사 중단·추가 입력 writer 표본 등은 원래 결과로 보존하며 최신 정상 경로 결과로 소급 통과시키지 않습니다. 점프 호출은 현재 없고, 향후 상향 모드 전체에 명시적 필터 예외가 필요합니다.
+
+| 우선순위 | 다음 작업 | 현재 상태/완료 경계 |
+| --- | --- | --- |
+| 현재 | #248 새 Windows 검증 | **빌드·360개 산출물 대조 완료 / 실제 Player 실행0.** 두 피어 경기·종료 수용은 후속 |
+| 확인 | Android33 host + 최신 제품 복사본 P3 Editor 상호운용1라운드 | 사격4발·원격 재장전·자연 시간만료·정상 로비 복귀. crouch·이동·피해·지연·성능·새 방 재참가는 미검증 |
+| PC 후속 | #166/#188/#162/#163/#132/#154의 남은 품질 경계 | 실제 맵 사다리·다른 이동/생명주기·전체 재장전 접촉·물리 입력/IME·cold UI·Windows 종료 원인은 유지 |
+| 통합 | 최신 소스의 Android 제공 준비 | 최신 Console 최대 코드/원장과 입력·출처를 확인한 별도 새 빌드·검사·서명·제공. 기존33의 proof나 번호를 재사용하지 않음 |
+| 후순위 | #41/#43/#140 기기/Store/실제16KB 및 장시간 성능 | 합의된 후순위를 유지하고 연결·수동 시험을 반복 요청하지 않음 |
+
+별도 Windows64 Development 빌드는 Succeeded/오류0/경고5, BuildReport210.746초·helper225.388초로 완료했습니다. 실제360개 크기·SHA를 manifest와 독립 대조했고, Report278,510,396B와 실제합계278,707,943B의 차이197,547B는 함께 보존한 Burst DoNotShip 디버그 파일1개와 일치합니다. Windows 검증 메타데이터는1.0.194이며 새 Android 버전이 아닙니다.
+
+공개입력3,984개는 누락0/C#변경0, raw변경9개는7개 EOL만·자체 CJK와 EDM2개의 EOL/빈 필드 공백으로 분류되어 설정값 변화는 발견되지 않았습니다. 변경본을 외부 보존했고 P2 보호6개·기존 dirty5·소비 원장을 유지했습니다. private6 부재/indexS와 credential helper 선제 sparse 제외는 Root 공개 영수증 범위입니다.
+
+경고5개는 Unity Dashboard 미연결1, RuntimePipelineConfig 부재로 Player Pipeline 비활성1, UniRx의 CS0618 3개입니다. 경고를 해결·억제한 것은 아니며 새 Windows EXE의 실행·두 피어 경기·종료 검증은0회입니다. 초기 loose globalgamemanagers 기대 감사 실패와 data.unity3d 구성에 맞춘 정정을 보존했고 빌드 재실행은0회입니다. [PC 검증 요약](Docs/validation/2026-10-26/pc-validation-summary.md)과 [Windows 공개 요약](Docs/validation/2026-10-26/windows-build-summary.json)을 따릅니다.
+
+별도 LDPlayer(index2)의 기존 Android33 호스트와 오늘 여섯 PR의 제품 복사본을 담은 P3 Editor 클라이언트로 상호운용1라운드를 확인했습니다. 로비·빈 제목/맵 미선택 안내·최소2명/Ready 안내를 거쳐 DesertHouse actors2로 진입했고, 호스트 사격의 탄약30→26/shot4, P3 원격 proxy의 reload=true·표시카운터0→1, 장전완료30/shot4 유지를 관측했습니다. 양쪽 Draw/TimeExpired와 P3 Finished/remaining0/CanCombat=false·DONE2행, 정상 RETURN 뒤 양쪽 연결 로비 복귀 및 P3 닉네임QAC26·새 Runner를 확인했습니다.
+
+이 라운드는 기존33 Android와 최신 제품 복사본 Editor의 좁은 상호운용 근거입니다. 새 Windows EXE 실행0·새 Android 생성/여섯 PR 포함0을 유지합니다. crouch tap은 UP 뒤에 관측했고 held는 동시 MatchPhase를 기록하지 않아 성공을 판정할 수 없으며, 이 라운드의 이동·피해·지연·성능·새 방 재참가 검증도0입니다. 원격 재장전 관측은 실제 청취·물리 입력·출력 프레임 지연 측정이 아닙니다.
+
+기존 열린16개(#198, #188, #166, #162, #163, #132, #154, #66, #42, #41, #43, #140, #44, #35, #36, #1)와 새 #248을 유지합니다. 위 순서를 CI/리팩토링/PlayFab의 새로운 선행 승인 문턱으로 바꾸지 않으며 #44/#35/#36의 기존 범위도 그대로입니다. 실기기·발열·장시간 FPS/메모리·저사양 성능은 이번 PC 표본으로 통과 처리하지 않습니다. 현재 PC 검증·문서 정리에는 사용자 조치가 필요하지 않습니다. 이후 Chrome 작업 창 식별과 Drive 접근 확인은 별도 후속입니다. 아래는 날짜별 기존 계획과 검증 이력입니다.
+
 ## 현재 PC 수용 근거와 다음 단계 (2026-10-25, #232)
 
 PR229/#228의 Bind 해제 경계와 PR231/#230의 장갑·전완 정리는 독립 COMMENT 검토 후 main에 반영했습니다. 후자는 C# 굽힘 방향 한 블록과 FPS Shirt 활성 필드2개만 바꾸며 원래 손목·총·탄창·3인칭·게임 판정은 유지합니다. 포즈14·표시8조건/복구2, 실제 제품 정지6장과 실제 owner 카메라1표본을 구분합니다. 첫 선택적 탄창 부모 변경 테스트의 중단은 보존했고, 후속 retarget는 시도0·미측정입니다.

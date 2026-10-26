@@ -1,0 +1,358 @@
+{
+  "schema": "WINDOWS_BUILD_AND_EXISTING_ANDROID_INTEROP_PUBLIC_SUMMARY_V2",
+  "checkpoint": "2026-10-26; Windows artifact review and one narrow existing-Android33/Editor interop round",
+  "issue": 248,
+  "sourceHead": "f055e4a84391bd9d8741c4e12855887b1ef72166",
+  "target": "StandaloneWindows64",
+  "development": true,
+  "unityVersion": "6000.3.25f1",
+  "windowsValidationPlayerVersion": "1.0.194",
+  "exePeVersionIsUnityEngineVersion": true,
+  "buildReport": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 5,
+    "durationSeconds": 210.74635519999998,
+    "totalBytes": 278510396
+  },
+  "helper": {
+    "success": true,
+    "elapsedSeconds": 225.3878608,
+    "buildCallsRequested": 1,
+    "ownCallbackRemoved": true,
+    "autoRunRequested": false
+  },
+  "artifacts": {
+    "fileCount": 360,
+    "sizeAndShaMatchedCount": 360,
+    "actualByteSum": 278707943,
+    "doNotShipDebugBytes": 197547,
+    "reportPlusDebugEqualsActual": true,
+    "buildMetadataFileExcludedFromArtifactCount": true,
+    "coreCompanionsVerified": true,
+    "packedDataUnity3d": true,
+    "archiveContentLoadTested": false
+  },
+  "warningClassification": [
+    {
+      "category": "Unity Dashboard project not linked",
+      "count": 1
+    },
+    {
+      "category": "RuntimePipelineConfig absent; Pipeline disabled in Player",
+      "count": 1
+    },
+    {
+      "category": "UniRx CS0618 deprecated FindObject(s)OfType",
+      "count": 3
+    }
+  ],
+  "warningsResolved": false,
+  "publicInputAudit": {
+    "count": 3984,
+    "missing": 0,
+    "csharpChanged": 0,
+    "rawChanged": 9,
+    "eolOnly": 7,
+    "eolAndEmptyFieldWhitespaceOnly": 2,
+    "settingValueChangesFound": 0,
+    "scope": "named exact baseline and after bytes",
+    "changedCopiesExternallyPreserved": true
+  },
+  "canonicalPreservation": {
+    "protectedMatches": 6,
+    "existingDirtyCount": 5,
+    "ledgerPreserved": true
+  },
+  "sourceException": {
+    "privateAndCredentialEditorHelperFilesSparseExcludedBeforeHydration": true,
+    "privateSixAbsenceAndSparseIndexAreRootReceiptOnly": true,
+    "privateContentOrHashReadByReviewer": false
+  },
+  "initialAudit": {
+    "looseGlobalgamemanagersExpectationFailed": true,
+    "initialAuditPreserved": true,
+    "correctedPackedDataUnity3dExpectation": true,
+    "buildReruns": 0
+  },
+  "windowsPlayerExecutions": 0,
+  "windowsRuntimePass": false,
+  "physicalLatencyOrDevicePass": false,
+  "android": {
+    "deliveredCode": 33,
+    "deliveredVersion": "1.0.196",
+    "deliveredRelease": 11,
+    "latestSixPrs": [
+      239,
+      240,
+      241,
+      243,
+      245,
+      247
+    ],
+    "latestSixPrsIncludedInDelivered33": false,
+    "newVersionReservations": 0,
+    "newAabOrApk": 0,
+    "newSigning": 0,
+    "newUpload": 0
+  },
+  "evidencePins": [
+    {
+      "path": "windows-build01-artifact-audit.public.json",
+      "bytes": 79129,
+      "sha256": "750C0C5DCECEDD2C53441BFD6E8CC9E944ACC6E24573CC2429D0E9D05C8E79C4"
+    },
+    {
+      "path": "windows-player01/player/validation-build.json",
+      "bytes": 73221,
+      "sha256": "4ADC2E666D56CB6457AF4F7E5EDE860DC4643D11B508DD341F84BC23371643EC"
+    },
+    {
+      "path": "windows-build-run01/actual-b85d243f61ec47bc84a81e9b24b46af7/started.public.json",
+      "bytes": 453,
+      "sha256": "E5C7989206CB280FFFFF6A10C57093FDB33C4368510439A9690243EF84BCE531"
+    },
+    {
+      "path": "windows-build-run01/actual-b85d243f61ec47bc84a81e9b24b46af7/finished.public.json",
+      "bytes": 432,
+      "sha256": "422B5B7EBADCDBFD90556F3983D8EAB28B60AA086F36A9D3B124817E56D44C25"
+    },
+    {
+      "path": "windows-build01-independent-artifact-review/verification.public.json",
+      "bytes": 12364,
+      "sha256": "142D12D085D18C2C461B129DB246841A60E5606C13626489C5C0E5C97471CDEE"
+    },
+    {
+      "path": "windows-build01-independent-artifact-review/completion.public.json",
+      "bytes": 1567,
+      "sha256": "B76316DE593E5B667447FC85DE1C5CC62D3629C83B92A09958E8622603B719A5"
+    },
+    {
+      "path": "windows-build01-postdiff-classification/classification.public.json",
+      "bytes": 11987,
+      "sha256": "26D44AD7B798A0247FC14731BAEFC43EFA699C272EADE2BE0E8221FAA284B9D0"
+    },
+    {
+      "path": "p11-windows-postbuild01.public.json",
+      "bytes": 1743,
+      "sha256": "7A69F645738799DCBCFAA54F8A64CBA9E3480985A334301D27E73B819AB2127E"
+    },
+    {
+      "path": "p11-windows-warning-redaction02.public.json",
+      "bytes": 2787,
+      "sha256": "C36407466F5F204167DE1BED1AFFF9BDE66B6466FA1799D7C949E191B7285B56"
+    },
+    {
+      "path": "p2-post-windows-build-protected01.public.json",
+      "bytes": 1682,
+      "sha256": "96044CFA2F3945DC4BE595B56CA23DDD5F1FC7F4420E3A941C6BBD66D5184E94"
+    }
+  ],
+  "fullFileManifestOrRawLogsPublished": false,
+  "existingAndroid33EditorInterop": {
+    "roundsObserved": 1,
+    "host": {
+      "platform": "LDPlayer FPS/index2 Android",
+      "code": 33,
+      "version": "1.0.196",
+      "latestSixPrsIncluded": false
+    },
+    "client": {
+      "platform": "P3 Unity Editor",
+      "latestSixProductCopiesFromRootHandoff": true,
+      "fullCheckoutAtCurrentMainClaimed": false
+    },
+    "basicGuards": {
+      "emptyRoomTitleAndNoMapNoticeObserved": true,
+      "soloMinimumTwoNotice": true,
+      "unreadyReadyNotice": true
+    },
+    "gameEntry": {
+      "scene": "DesertHouse",
+      "actors": 2
+    },
+    "fire": {
+      "beforeAmmo": 30,
+      "afterAmmo": 26,
+      "shotSequence": 4
+    },
+    "remoteReload": {
+      "observedReloading": true,
+      "presentedReloadCountBefore": 0,
+      "presentedReloadCountAfter": 1,
+      "completedAmmo": 30,
+      "completedShotSequence": 4
+    },
+    "naturalResult": {
+      "result": "Draw",
+      "reason": "TimeExpired",
+      "p3Phase": "Finished",
+      "p3Remaining": 0,
+      "p3CanCombat": false,
+      "p3DoneRows": 2
+    },
+    "returnToLobby": {
+      "bothReturnedConnectedFromRootObservation": true,
+      "p3ConnectedReceipt": true,
+      "p3Nickname": "QAC26",
+      "p3RunnerChanged": true,
+      "freshRoomRejoinTrials": 0
+    },
+    "crouch": {
+      "gameplayPass": false,
+      "attemptClassification": "POST_UP_TAP_AND_HELD_MATCH_PHASE_NOT_CAPTURED"
+    },
+    "notTestedInThisRound": [
+      "movement",
+      "damage",
+      "physical input or audible sound",
+      "frame or network latency",
+      "performance",
+      "fresh room rejoin"
+    ],
+    "windowsExeExecutions": 0,
+    "newAndroidBuilds": 0,
+    "latestSixAndroidBuildPass": false,
+    "source": "Root public receipts and selected PNG files; no device control by document helper",
+    "evidencePins": [
+      {
+        "path": "fps-ld-package-metadata01.public.json",
+        "bytes": 378,
+        "sha256": "1F4521053DCFB813D6F2D2A4F5060F8EDAFF9172FFC9AD417BE91EBAC6CF8A5C"
+      },
+      {
+        "path": "fps-ld-solo-start-guard01.public.json",
+        "bytes": 610,
+        "sha256": "72A913FB580E6822EDD4C70D362D47CDE42D229B40A24E36438DDF9572016431"
+      },
+      {
+        "path": "fps-ld-unready-start-guard01.public.json",
+        "bytes": 613,
+        "sha256": "EE4815F40554862F8FDD8A8B8CD427E3FAF7C2B3C5C38E8C71E5DA5722D83869"
+      },
+      {
+        "path": "p3-ld-interop-start-observation01.public.json",
+        "bytes": 2027,
+        "sha256": "52405EC545488335F68C8DCA5A382B1CD501ADB3C339B632460B9FF34C2E75B2"
+      },
+      {
+        "path": "fps-ld-game-entered01.public.json",
+        "bytes": 613,
+        "sha256": "C409EDE937BF883A6E240330169899640B75CE05E8D1E8C1C071737F82E6C8D0"
+      },
+      {
+        "path": "fps-ld-fire-hold450-01.public.json",
+        "bytes": 610,
+        "sha256": "43B50F95E6D7A3941D6CC278DCC16ACF74B16AF3B3CDCC7A29C1FF32DB35C99E"
+      },
+      {
+        "path": "p3-ld-interop-after-fire01.public.json",
+        "bytes": 2025,
+        "sha256": "0C7B8FA3245AC39C8EF7D3E1968AA0B857B4B2A832EA5E343619FC48F57533A8"
+      },
+      {
+        "path": "fps-ld-reload-request01.public.json",
+        "bytes": 610,
+        "sha256": "3DBC2AD797482D2A9BDEB44EE5821D18AB3E32F109A62F78A87FBF6F5388EAD0"
+      },
+      {
+        "path": "p3-ld-interop-reload-observation01.public.json",
+        "bytes": 2029,
+        "sha256": "BAA2084B10A6D740C65B44DE1EBD4FB005206803A6B20120864489EEC33B72D1"
+      },
+      {
+        "path": "p3-ld-interop-crouch-on01.public.json",
+        "bytes": 2038,
+        "sha256": "1D6E6976C36D2666BEA1BF834697C19AF3EBF9B1458D5716E7F885AE7DA51CC6"
+      },
+      {
+        "path": "p3-ld-interop-crouch-held01.public.json",
+        "bytes": 2038,
+        "sha256": "924EBA73F9F23A96929C84D375280534A4D2026E48A8FF4DBE618AE162A35087"
+      },
+      {
+        "path": "fps-ld-crouch-held-cleanup01.public.json",
+        "bytes": 216,
+        "sha256": "BCFF82B0441E92F80673303B680C87AD6C2E9364FBEC5C21D6FBE8EA00F988D0"
+      },
+      {
+        "path": "fps-ld-natural-results01.public.json",
+        "bytes": 616,
+        "sha256": "2E118ACF84276705A79759202A3112C632A1CBEF88FB821DD2B7C3E796157247"
+      },
+      {
+        "path": "p3-ld-interop-finished-state01.public.json",
+        "bytes": 1221,
+        "sha256": "01F242D58993D98407487C8FC060BBA7DAD1DBEA88834E219DC943A020B6C5BA"
+      },
+      {
+        "path": "ld-interop-p3-natural-results01.public.json",
+        "bytes": 379,
+        "sha256": "82911EA95CC117598C104EA31512BFFC9D7BAA742E1A3DA6DA08932ADC5F2499"
+      },
+      {
+        "path": "fps-ld-return-lobby-request01.public.json",
+        "bytes": 615,
+        "sha256": "2B13A6A02BBB1E6BFAB8C2FAAA1B80221758ECF7F2E824CABB066A780ED0FBB4"
+      },
+      {
+        "path": "p3-ld-interop-host-return01.public.json",
+        "bytes": 1024,
+        "sha256": "42FC3EDBFE1EEF704FF30090438C949B42A877D0BEFAF6E171A7583B7A55C0F5"
+      },
+      {
+        "path": "fps-ld-returned-lobby01.public.json",
+        "bytes": 614,
+        "sha256": "9FDE2DB639B52376144CBAD8D34C7402BEB153E1CC5B284F4739215F3FEC8ABC"
+      },
+      {
+        "path": "p3-ld-interop-returned-lobby01.public.json",
+        "bytes": 1024,
+        "sha256": "7662EFD4CDA80E8A037F67A13AD9F1CAAB0A21F67D2D93F58C87E6F415A7FE64"
+      },
+      {
+        "path": "p3-ld-interop-lobby01.public.json",
+        "bytes": 1037,
+        "sha256": "D279417C9F47AE6BD09B3AB9E57C9E350A95DA44A7A3E73A01441ED745C61636"
+      }
+    ],
+    "imageHashes": [
+      {
+        "path": "fps-ld-solo-start-guard01.png",
+        "sha256": "4FDA7D56A89BFABE4E674939BF656F7A4D251B79D1B6AA35F456B14C52CC2915"
+      },
+      {
+        "path": "fps-ld-unready-start-guard01.png",
+        "sha256": "79144132AEEA8125153F1A273EFCAF729F17C9E8F15D90EB8113FB4708E53011"
+      },
+      {
+        "path": "fps-ld-game-entered01.png",
+        "sha256": "4156FC820C4D73600E2E85C9D2BD381D738755B017D122FD91810106E572A880"
+      },
+      {
+        "path": "fps-ld-fire-hold450-01.png",
+        "sha256": "15C696B7E812F66EA3AB10A9BE14E77AC0B9081D98351B98BA8143B7FAFD2851"
+      },
+      {
+        "path": "fps-ld-reload-request01.png",
+        "sha256": "E3C0DD5CC6FE205F792AF8A178F8D26C5CDA46100FBEA0DCBC04898D5A6BAFB7"
+      },
+      {
+        "path": "fps-ld-natural-results01.png",
+        "sha256": "8634119E6EADE417B08EEFF3A8C9EBBA92595BB2D213EBD1D2517E5E7F613C6E"
+      },
+      {
+        "path": "fps-ld-return-lobby-request01.png",
+        "sha256": "BFE38106E6CF8D2FC881A3980EA1ECDE26D95AB553C0188BF0A18A971515CC3D"
+      },
+      {
+        "path": "fps-ld-returned-lobby01.png",
+        "sha256": "0946B068EA2A0E0DD78CC4A6B0827862A1B579F8D5278550CAEFA1722676457A"
+      },
+      {
+        "path": "ld-interop-p3-natural-results01.png",
+        "sha256": "BD3A42C6FE6877CC54BE816496769A7A7C72241295D09908836654B8F034A032"
+      }
+    ]
+  }
+}
