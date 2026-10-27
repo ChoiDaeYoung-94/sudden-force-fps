@@ -1,0 +1,564 @@
+{
+  "schema": "DOTWEEN_OFFICIAL_1_2_765_MODULE_PUBLIC_FILE_PROVENANCE_V1",
+  "recordDate": "2026-10-27",
+  "component": "DOTween",
+  "officialReleasePage": "https://dotween.demigiant.com/download.php",
+  "officialListedReleaseDate": "2024-02-04",
+  "officialArchiveUrl": "https://dotween.demigiant.com/downloads/DOTween_1_2_765.zip",
+  "archiveBytes": 215500,
+  "archiveSha256": "B359376326F333D6A132E0CBE0DC7A9CF18EE6C8DE89739193E5438E27DBB6A0",
+  "archiveMemberCount": 27,
+  "archiveFileCount": 23,
+  "archiveDirectoryCount": 4,
+  "allMemberCrcChecked": true,
+  "pathTraversalAndSymlinkChecksPassed": true,
+  "summary": {
+    "matchedRawExact": 18,
+    "mismatched": 0,
+    "missingFromCurrentTree": 5,
+    "currentTreeFiles": 39,
+    "extraUnityMeta": 21,
+    "extraNonMeta": 0,
+    "matchedModuleSources": 8,
+    "matchedXmlDocumentation": 2,
+    "matchedEditorImages": 5,
+    "previouslyMatchedDllAndReadme": 3
+  },
+  "archiveMembers": [
+    {
+      "archiveMember": "DOTween/",
+      "archiveBytes": 0,
+      "archiveCrc32": "00000000",
+      "isDirectory": true,
+      "status": "DIRECTORY"
+    },
+    {
+      "archiveMember": "DOTween/DOTween.dll",
+      "archiveBytes": 175616,
+      "archiveCrc32": "D9FA1D45",
+      "isDirectory": false,
+      "archiveSha256": "8E90FC43AB564A5A51424AF56531AB074A5A2E9CAB271B2D653D287954237B83",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/DOTween.dll",
+      "sourceBytes": 175616,
+      "sourceSha256": "8E90FC43AB564A5A51424AF56531AB074A5A2E9CAB271B2D653D287954237B83",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/DOTween.dll.mdb",
+      "archiveBytes": 67598,
+      "archiveCrc32": "E51C1FC9",
+      "isDirectory": false,
+      "archiveSha256": "81EBF51697739B2AEEE94F7CA62B03A2849ECC3A3A125452E94957C17752398A",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/DOTween.dll.mdb",
+      "status": "MISSING_FROM_CURRENT_TREE"
+    },
+    {
+      "archiveMember": "DOTween/DOTween.XML",
+      "archiveBytes": 232971,
+      "archiveCrc32": "84D7EED2",
+      "isDirectory": false,
+      "archiveSha256": "8F4A1E32977645EC8F997F0045EC8F91E2A23CFE290CF822518036FEB1E2E386",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/DOTween.XML",
+      "sourceBytes": 232971,
+      "sourceSha256": "8F4A1E32977645EC8F997F0045EC8F91E2A23CFE290CF822518036FEB1E2E386",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/readme.txt",
+      "archiveBytes": 2190,
+      "archiveCrc32": "A16217A4",
+      "isDirectory": false,
+      "archiveSha256": "37B99FFDBB8B01B159D807B1FE77DB664AE5B3B201734A5AD602C7C7F83941F0",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/readme.txt",
+      "sourceBytes": 2190,
+      "sourceSha256": "37B99FFDBB8B01B159D807B1FE77DB664AE5B3B201734A5AD602C7C7F83941F0",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Editor/",
+      "archiveBytes": 0,
+      "archiveCrc32": "00000000",
+      "isDirectory": true,
+      "status": "DIRECTORY"
+    },
+    {
+      "archiveMember": "DOTween/Editor/DOTweenEditor.dll",
+      "archiveBytes": 70656,
+      "archiveCrc32": "A83094EB",
+      "isDirectory": false,
+      "archiveSha256": "45FA0EF0017CCDBE8B91F59E77AE65D86B5C9C6F49A75C080F30F837EDC3FDA5",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenEditor.dll",
+      "sourceBytes": 70656,
+      "sourceSha256": "45FA0EF0017CCDBE8B91F59E77AE65D86B5C9C6F49A75C080F30F837EDC3FDA5",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Editor/DOTweenEditor.dll.mdb",
+      "archiveBytes": 12646,
+      "archiveCrc32": "82FADF09",
+      "isDirectory": false,
+      "archiveSha256": "9489EACCC297D8D5C65E47B46507C066DE76E916951F307A916A90EE47EB1E89",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenEditor.dll.mdb",
+      "status": "MISSING_FROM_CURRENT_TREE"
+    },
+    {
+      "archiveMember": "DOTween/Editor/DOTweenEditor.XML",
+      "archiveBytes": 7956,
+      "archiveCrc32": "95FC891E",
+      "isDirectory": false,
+      "archiveSha256": "64EBABAAA68E3B371350BB7C0B647448B1B79C0AB9039C80565ECBE4C3845CD6",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenEditor.XML",
+      "sourceBytes": 7956,
+      "sourceSha256": "64EBABAAA68E3B371350BB7C0B647448B1B79C0AB9039C80565ECBE4C3845CD6",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Editor/DOTweenUpgradeManager.dll",
+      "archiveBytes": 10752,
+      "archiveCrc32": "BEC8FB7C",
+      "isDirectory": false,
+      "archiveSha256": "3EDD717BA6ADD7DF0701A57DE7774E5D9B6A64FF0E0855CDDEB33FF8EB849D1F",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenUpgradeManager.dll",
+      "status": "MISSING_FROM_CURRENT_TREE"
+    },
+    {
+      "archiveMember": "DOTween/Editor/DOTweenUpgradeManager.dll.mdb",
+      "archiveBytes": 909,
+      "archiveCrc32": "413A3AFE",
+      "isDirectory": false,
+      "archiveSha256": "BAAEBDAD8421D667110AC793E2E3CAD374972C572A8B1C379C89C596814C15E4",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenUpgradeManager.dll.mdb",
+      "status": "MISSING_FROM_CURRENT_TREE"
+    },
+    {
+      "archiveMember": "DOTween/Editor/DOTweenUpgradeManager.XML",
+      "archiveBytes": 527,
+      "archiveCrc32": "42E6ECB0",
+      "isDirectory": false,
+      "archiveSha256": "363A9B81739FA175C9ACD2335074B10E9BE2C403D2B28CA35EC9F4481C7A2DDC",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenUpgradeManager.XML",
+      "status": "MISSING_FROM_CURRENT_TREE"
+    },
+    {
+      "archiveMember": "DOTween/Editor/Imgs/",
+      "archiveBytes": 0,
+      "archiveCrc32": "00000000",
+      "isDirectory": true,
+      "status": "DIRECTORY"
+    },
+    {
+      "archiveMember": "DOTween/Editor/Imgs/DOTweenIcon.png",
+      "archiveBytes": 1565,
+      "archiveCrc32": "BA598BFA",
+      "isDirectory": false,
+      "archiveSha256": "6E6CA81AF7B3FDBECC7069B8644047713AF97C8E311CD3DA97E75EFF0B973FAA",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/DOTweenIcon.png",
+      "sourceBytes": 1565,
+      "sourceSha256": "6E6CA81AF7B3FDBECC7069B8644047713AF97C8E311CD3DA97E75EFF0B973FAA",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Editor/Imgs/DOTweenMiniIcon.png",
+      "archiveBytes": 319,
+      "archiveCrc32": "E921CA26",
+      "isDirectory": false,
+      "archiveSha256": "29CD2E4BF91E3FE91A2485AC1608D2BA6AE338D04C82FD8D343AE4336684E644",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/DOTweenMiniIcon.png",
+      "sourceBytes": 319,
+      "sourceSha256": "29CD2E4BF91E3FE91A2485AC1608D2BA6AE338D04C82FD8D343AE4336684E644",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Editor/Imgs/Footer.png",
+      "archiveBytes": 4409,
+      "archiveCrc32": "41BAFCDF",
+      "isDirectory": false,
+      "archiveSha256": "B1BCCFB25EF58988D123ADE538E28637DA988DFAF33272067B641F34582E7B89",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/Footer.png",
+      "sourceBytes": 4409,
+      "sourceSha256": "B1BCCFB25EF58988D123ADE538E28637DA988DFAF33272067B641F34582E7B89",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Editor/Imgs/Footer_dark.png",
+      "archiveBytes": 4429,
+      "archiveCrc32": "3179EA2B",
+      "isDirectory": false,
+      "archiveSha256": "2BC04D9700E60B53AA4741C4580D61E490B1192D3EA4F98F4437A2E776057A5A",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/Footer_dark.png",
+      "sourceBytes": 4429,
+      "sourceSha256": "2BC04D9700E60B53AA4741C4580D61E490B1192D3EA4F98F4437A2E776057A5A",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Editor/Imgs/Header.jpg",
+      "archiveBytes": 22787,
+      "archiveCrc32": "BE185DDF",
+      "isDirectory": false,
+      "archiveSha256": "80652902491D99FE580056ED204D204D9ECACCF810E7EC546BD949CCFF8D67FD",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/Header.jpg",
+      "sourceBytes": 22787,
+      "sourceSha256": "80652902491D99FE580056ED204D204D9ECACCF810E7EC546BD949CCFF8D67FD",
+      "status": "MATCHED_RAW_EXACT"
+    },
+    {
+      "archiveMember": "DOTween/Modules/",
+      "archiveBytes": 0,
+      "archiveCrc32": "00000000",
+      "isDirectory": true,
+      "status": "DIRECTORY"
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModuleAudio.cs",
+      "archiveBytes": 8943,
+      "archiveCrc32": "78FEFAC7",
+      "isDirectory": false,
+      "archiveSha256": "72671C591110372C239622D551131FD7698E8FBB4596580811AB8E0248B45093",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleAudio.cs",
+      "sourceBytes": 8943,
+      "sourceSha256": "72671C591110372C239622D551131FD7698E8FBB4596580811AB8E0248B45093",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": "Daniele Giardini - http://www.demigiant.com"
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModuleEPOOutline.cs",
+      "archiveBytes": 6855,
+      "archiveCrc32": "6D2D006F",
+      "isDirectory": false,
+      "archiveSha256": "F20E26D35F1013148BAF520B0BA91982E73204859AB1110D5F19F7F60CAC730D",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleEPOOutline.cs",
+      "sourceBytes": 6855,
+      "sourceSha256": "F20E26D35F1013148BAF520B0BA91982E73204859AB1110D5F19F7F60CAC730D",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": null
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModulePhysics.cs",
+      "archiveBytes": 13989,
+      "archiveCrc32": "B791B56B",
+      "isDirectory": false,
+      "archiveSha256": "E4A3478813A970FC4A5152A9B014D47900FCF96523B6645243D6A75DE8E36B10",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModulePhysics.cs",
+      "sourceBytes": 13989,
+      "sourceSha256": "E4A3478813A970FC4A5152A9B014D47900FCF96523B6645243D6A75DE8E36B10",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": "Daniele Giardini - http://www.demigiant.com"
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModulePhysics2D.cs",
+      "archiveBytes": 12125,
+      "archiveCrc32": "BB8AA6EC",
+      "isDirectory": false,
+      "archiveSha256": "D82BD5CEAE8233F9808A2588E9FE0A956E4BA6C7931DDB85C7FE1E1DD4DEB105",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModulePhysics2D.cs",
+      "sourceBytes": 12125,
+      "sourceSha256": "D82BD5CEAE8233F9808A2588E9FE0A956E4BA6C7931DDB85C7FE1E1DD4DEB105",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": "Daniele Giardini - http://www.demigiant.com"
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModuleSprite.cs",
+      "archiveBytes": 4166,
+      "archiveCrc32": "EFB89C1C",
+      "isDirectory": false,
+      "archiveSha256": "7A5669EBE2164AEFE161C8801B34A6E9457855D88E56D46E5D8640C3DD9F0623",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleSprite.cs",
+      "sourceBytes": 4166,
+      "sourceSha256": "7A5669EBE2164AEFE161C8801B34A6E9457855D88E56D46E5D8640C3DD9F0623",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": "Daniele Giardini - http://www.demigiant.com"
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModuleUI.cs",
+      "archiveBytes": 43245,
+      "archiveCrc32": "EF1ADC57",
+      "isDirectory": false,
+      "archiveSha256": "E6D6E9B2AE6010ADD7A3809419441ABE762E41BDB0081006352B74E5A35ADE91",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUI.cs",
+      "sourceBytes": 43245,
+      "sourceSha256": "E6D6E9B2AE6010ADD7A3809419441ABE762E41BDB0081006352B74E5A35ADE91",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": "Daniele Giardini - http://www.demigiant.com"
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModuleUnityVersion.cs",
+      "archiveBytes": 18321,
+      "archiveCrc32": "C401C8C3",
+      "isDirectory": false,
+      "archiveSha256": "26126010AD8B836B74EBE7524BACCD6D4CC04DA4064CD840E92D4060194CF71D",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUnityVersion.cs",
+      "sourceBytes": 18321,
+      "sourceSha256": "26126010AD8B836B74EBE7524BACCD6D4CC04DA4064CD840E92D4060194CF71D",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": "Daniele Giardini - http://www.demigiant.com"
+    },
+    {
+      "archiveMember": "DOTween/Modules/DOTweenModuleUtils.cs",
+      "archiveBytes": 6719,
+      "archiveCrc32": "84EB6A23",
+      "isDirectory": false,
+      "archiveSha256": "6E972F0918E588952061AEE6DFAB9D1250434B3B28BF5BEBA41D53628470C100",
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUtils.cs",
+      "sourceBytes": 6719,
+      "sourceSha256": "6E972F0918E588952061AEE6DFAB9D1250434B3B28BF5BEBA41D53628470C100",
+      "status": "MATCHED_RAW_EXACT",
+      "sourceHeaderAuthor": "Daniele Giardini - http://www.demigiant.com"
+    }
+  ],
+  "currentTreeMetaFiles": [
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/DOTween.dll.meta",
+      "bytes": 448,
+      "sha256": "F008966DEA49A727B1845604240F352E91F0EE85763E56B614F0B611D5AA98A7",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "PluginImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/DOTween.XML.meta",
+      "bytes": 97,
+      "sha256": "40B314AD25ACC0B94550F51A8A09AEFD36D782C2608EC329268A6779DDD726F3",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextScriptImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenEditor.dll.meta",
+      "bytes": 448,
+      "sha256": "FA5936806D558109B6BBF3556CFEA2A5A267AA4A5FC8180DE8CCF5A2052FE5D2",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "PluginImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/DOTweenEditor.XML.meta",
+      "bytes": 97,
+      "sha256": "C0DC0B4F1A57F1F2889D22AF1BF707B6DD0C8A05C90FB5D8746A0093B83F9546",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextScriptImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/DOTweenIcon.png.meta",
+      "bytes": 1023,
+      "sha256": "A97FAD159D230EA27635FCD79162C4BBED95FEFABEE4A85A29399A78C51BB98D",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextureImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/DOTweenMiniIcon.png.meta",
+      "bytes": 1544,
+      "sha256": "BC01C659CFECC1000204251BBB7E3B6E295701E00830CBAA780EEA3C54F209F6",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextureImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/Footer.png.meta",
+      "bytes": 1023,
+      "sha256": "23FE4FFA359EDFFA85670CB28DD5EEB8EE43A13AE452C3A33B3A86EA500C8E2F",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextureImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/Footer_dark.png.meta",
+      "bytes": 1028,
+      "sha256": "DF66E5B59168F429E7B720C5E3EE9AD6E7699DE5EBA05F17F7DDF885E10F6BCC",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextureImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs/Header.jpg.meta",
+      "bytes": 1023,
+      "sha256": "5E75917C4BBF5135BB430D88BDBA2E3E48B148C6907E1D11E2B68B6E5A50C274",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextureImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor/Imgs.meta",
+      "bytes": 112,
+      "sha256": "C21C087ECB46E7DFA507708090618ADE2F7C2F723FC9A417EC05D1874CBC9D23",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": true,
+      "importerType": "DefaultImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Editor.meta",
+      "bytes": 112,
+      "sha256": "905E4D7F7A300C971F0BAB028CDB4C9B1612539A53F6E19586ADA6E938A77BB2",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": true,
+      "importerType": "DefaultImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleAudio.cs.meta",
+      "bytes": 186,
+      "sha256": "6A91A66332BD72037BE7554F33C3A5FB21E4090FAC507ED9087281DDE9FC881E",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleEPOOutline.cs.meta",
+      "bytes": 276,
+      "sha256": "B794B0446C4EFD90DCA679199A0EFDA4D9737809613D2EF8244B4C06E1F9DC2B",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModulePhysics.cs.meta",
+      "bytes": 186,
+      "sha256": "69971F1DA29DDE21AED0858839F649F0922878225ECCAA04C4E7066AF3BA0463",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModulePhysics2D.cs.meta",
+      "bytes": 186,
+      "sha256": "87AC89C8AEDDB26A1E47505AF72A87DE131D1F9DEF88422F0E46CC6CE7C693BD",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleSprite.cs.meta",
+      "bytes": 186,
+      "sha256": "449E2AC6F16B7D9B0E23553EA55EA2F81B5BDACD7A440761A3A64D2F75D0CEBD",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUI.cs.meta",
+      "bytes": 186,
+      "sha256": "B4881B35947CA37799B1474759DE46696AA8C5823D946B2065BED6F0F109D5E0",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUnityVersion.cs.meta",
+      "bytes": 186,
+      "sha256": "F30B97F9BF5B8AB0791BD952B4366DD803F30ED99875BA3AEC92EDC98C49A149",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUtils.cs.meta",
+      "bytes": 186,
+      "sha256": "9972E696E74C76BF03DEA62B01FA8FE6E1C2DD0A35C73BA429D4E2A4E6B7F370",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "MonoImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/Modules.meta",
+      "bytes": 112,
+      "sha256": "7302AAF8B130B3B8094A48D46C1F016B54D6686CF0CFE3FB70B72CF3F574CCED",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": true,
+      "importerType": "DefaultImporter",
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Plugins/Demigiant/DOTween/readme.txt.meta",
+      "bytes": 97,
+      "sha256": "F5FC3F3CFD2B5579E4E2257F41A434D692C425785656046D5252C8202AFEA112",
+      "classification": "UNITY_META_NOT_IN_OFFICIAL_ZIP",
+      "folderAsset": false,
+      "importerType": "TextScriptImporter",
+      "generationHistoryProven": false
+    }
+  ],
+  "projectConfigurationOutsideArchiveTree": [
+    {
+      "sourcePath": "Assets/Resources/DOTweenSettings.asset",
+      "bytes": 1360,
+      "sha256": "9C137C403669E356D85134D90EF5D6F282D08155791155CFF2DF6DCBA20580BA",
+      "classification": "PROJECT_CONFIGURATION_OUTSIDE_ARCHIVE_TREE",
+      "archiveByteIdentityClaimed": false,
+      "generationHistoryProven": false
+    },
+    {
+      "sourcePath": "Assets/Resources/DOTweenSettings.asset.meta",
+      "bytes": 197,
+      "sha256": "7B7C6091C7F24922813EE7CA357D0859736A69939E143156FC01D68AE5CEF40D",
+      "classification": "PROJECT_CONFIGURATION_OUTSIDE_ARCHIVE_TREE",
+      "archiveByteIdentityClaimed": false,
+      "generationHistoryProven": false
+    }
+  ],
+  "currentPrimarySourceReferences": [
+    {
+      "url": "https://dotween.demigiant.com/download.php",
+      "observedDate": "2026-10-27",
+      "bytes": 75975,
+      "sha256": "58DECDC0743C3B648CF358D2911883CEADEFCDAC1E7446B1B5473ED72AE2E8E1"
+    },
+    {
+      "url": "https://dotween.demigiant.com/license.php",
+      "observedDate": "2026-10-27",
+      "bytes": 10231,
+      "sha256": "DC3FD3CB8036220962CCBE31D12C07CBE206EB66E11A40BAAE881857EB54DC1A"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Demigiant/dotween/develop/LICENSE",
+      "observedDate": "2026-10-27",
+      "bytes": 453,
+      "sha256": "A0C7ADA1BD4F1014833AF5CC9BB7599666D4A9BA901A2D1D889C9D75587E438E"
+    }
+  ],
+  "licenseEvidence": {
+    "originalReadmeRetainedRawExact": true,
+    "standaloneLicenseFilePresentInOfficialZip": false,
+    "readmeLicenseUrl": "http://dotween.demigiant.com/license.php",
+    "currentOfficialLicenseReference": "https://dotween.demigiant.com/license.php",
+    "currentWebLicenseReferenceOnly": true,
+    "historical2024TermsConfirmed": false
+  },
+  "limits": {
+    "wholePackageByteIdentity": false,
+    "historical2024LicenseTermsConfirmed": false,
+    "originalUserAcquisitionReconstructed": false,
+    "proPresenceOrEntitlementConcluded": false,
+    "allProjectRightsComplete": false,
+    "releasePermissionPass": false,
+    "finalAndroidAssetInclusionClaimed": false,
+    "generationOrSetupHistoryReconstructed": false
+  },
+  "operationScope": {
+    "archiveExtracted": false,
+    "dllLoadedOrInvoked": false,
+    "sdkImportedUpgradedOrReplaced": false,
+    "sourceProductChanged": false,
+    "appNoticeOrOriginalReadmeChanged": false,
+    "newAndroidProduced": false
+  },
+  "parentIssue": 42
+}
