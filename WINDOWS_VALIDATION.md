@@ -1,5 +1,9 @@
 # Windows 검증 Player
 
+## 방 채팅 실제 두 Player 검증 · 2026-10-27 (#163)
+
+기존 Windows05 360파일을 실행 전 대조한 두 Player에서 초안 포커스 이탈 미전송·Enter/SEND 양방향 단1회 표시·빈값/공백 미전송·160단위 표시·재참가 후 채팅을 확인했습니다. 정상 종료는 보유 handle ExitCode0/고정 Crash 문자열0이었으며 #154 원인 해결이나 Android/IME 통과는 아닙니다. 빌드 출처·화면 관측의 한계와 근거는 [상세 기록](Docs/validation/2026-10-27/remote-chat-windows.md)을 따릅니다. 아래 과거 기록을 보존합니다.
+
 ## 종료 재시험 최신 상태 · 2026-10-21 (#154)
 
 **종료 문제는 미해결입니다.** 기존 W3 Windows64/Mono/Development1.0.194(source `1d7ca5f6e143aa9bccb17fbd9837f815278f122c`)와 같은359개 payload/267,928,697B를 전수 SHA 대조해 경로·bytes 변경/추가/누락0을 확인한 뒤 재시험했습니다. 현재 Android28이나 최신 제품 전체 실행 결과로 합산하지 않습니다.
