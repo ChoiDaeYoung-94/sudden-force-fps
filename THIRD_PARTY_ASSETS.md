@@ -587,3 +587,11 @@ Play=false 임시 prefab/deep font 복사본에서 로비 일반 label과 고지
 메뉴용 `SuddenForceMenuFont.asset`는 기존 LiberationSans SDF의 static atlas·material을 공유하고, `SuddenForceMenuCjk.asset`는 기존 DungGeunMo.ttf에서 만든 별도 dynamic fallback입니다. 새 글꼴 다운로드 없이 원본 두 SDF·두 TTF와 각 meta의8개 SHA256을 생성 전후 동일하게 보존했습니다. Liberation Sans2.00.1의 copyright·SIL OFL1.1 전문과 DungGeunMo1.301의 Public Domain·저자·출처 고지는 기존 `Assets/Legal/ThirdPartyNotices.txt`에 포함되어 있습니다. 원본 폰트 조건을 유지하며 전체 CJK 지원을 뜻하지 않습니다. 설정·보존 범위는 [UI 자료](Tools/UI/README.md)에 기록합니다.
 
 `DesertHouseBackdrop.png`는 기존 DesertHouse 씬 촬영의 alley 시점을 메뉴 배경으로 재사용한 파생 이미지입니다. 새 외부 이미지·AI 생성 자산이나 CC0 전환으로 분류하지 않으며 Low Poly FPS Map Lite의 기존 취득·원본 대응 근거를 유지합니다. 이 추가가 #42 전체 권리 검증 완료나 새 Android 배포 검증을 뜻하지는 않습니다.
+
+## Fusion 동봉 JetBrains Mono — source/license 대응 (2026-10-27, #42)
+
+`JetBrainsMono-Regular.ttf`112,176B/SHA `850B82DB4D79AA3AEB26F9AABC0B88E7EE8BBB24D72BE9512361F6F4B221660A`의 SFNT name table에서 JetBrains Mono Regular/Version2.211/원저자 URL을 바이트로 읽었습니다. name0 저작권은 동봉 `JetBrainsMono OFL.txt`4,491B/SHA `16617D5825BAE5898B1F78E447BD12FCDC4686EFE51041D06A7C4A12A4B13944`의 첫 줄과 정확히 같습니다. 폰트 engine·SDK 실행은 없습니다.
+
+동봉 OFL은 [공식 JetBrainsMono v2.210 commit40e4dea999d21eb6d5d84f5d754e087ae332f018의 OFL.txt](https://raw.githubusercontent.com/JetBrains/JetBrainsMono/40e4dea999d21eb6d5d84f5d754e087ae332f018/OFL.txt)(4,399B/SHA `B2FE5E8987594E9FFD1D2CA52A2F5D73EB8335243893C5D6254B5AD69269591D`)와 raw exact는 아닙니다. 공백과 FAQ URL 한 곳의 http→https 차이를 정규화하면 전체 어휘가 같습니다. 원문은 변경하지 않았습니다. 해당 commit을 로컬 font의 정확한 배포 판본으로 주장하지 않습니다.
+
+코드34 frozen AAB의 관련 ZIP entry3개를 메모리에서 읽었으며 SHA `91E41873BF601BEB7EA6153B3958A7A052A02FDCD7D2FBA6A583B80FDEC5FFC6`는 전후 같습니다. UnityFS 내부 block/Font object는 미해석이므로 font 원본 동일성·실제 포함/부재·고지 누락·전체 권리 완료로 확대하지 않습니다. 이번 반영은 source/license 매핑1건이며 앱 고지·제품·에셋 변경은 없습니다. 근거는 외부 `20261027-work/asset-rights-next-audit01/`의 보고서·원문 사본·공개 대응 JSON입니다.
