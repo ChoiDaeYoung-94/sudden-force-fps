@@ -53,7 +53,7 @@ canonical P2 원장195,10,29·다음 새 예약30 이상/29서명재예약0, 실
 
 - 문서·운영 변경: `git diff --check`와 커밋 대상의 `git diff --cached --check`, 변경 파일·링크·근거의 독립 검토를 수행합니다. 완료 기준은 관련 파일만 포함되고 실패/보류/미검증 범위와 기존 자료가 정확히 보존되는 것입니다. 문서 기록만을 위해 제품 빌드나 기기 테스트를 반복하지 않습니다.
 - 브랜치 정리: `git fetch --prune origin`, `git worktree list --porcelain`, `git merge-base --is-ancestor <tip> origin/main`, `git rev-list --count origin/main..<tip>`, `git ls-remote --heads origin`을 대조합니다. 완료 기준은 반영 또는 동등성이 개별 확인된 후보만 정리되고 현재 HEAD·기존 dirty·사용 중 워크트리와 미반영 커밋이 보존되는 것입니다. ancestry로 판정할 수 없는 squash 이력은 별도로 검토하고 자동 삭제하지 않습니다.
-- Unity 작업: 현재 제공되는 unity-cli 스킬을 읽고 `unity status --project-path <실제프로젝트> --format json`으로 정확한 Editor를 지정합니다. 코드·씬 작업의 컴파일·실행·화면/로그 검증과 실제 빌드 결과를 구분합니다. 빌드는 명시적으로 정한 대상/버전/출력/서명 준비와 실패 중단 기준이 갖춰졌을 때 한 번 실행하고, 성공 판정은 오류0·실제 비어 있지 않은 새 산출물 및 필요한 파일 검사로 확인합니다.
+- Unity 작업: 현재 제공되는 unity-cli 스킬을 읽고 상태 조회에 실제 프로젝트의 `--project-path`를 명시합니다. 현재 Pipeline0.8.0-exp.1/CLI beta.14 조합에서는 `unity command editor_status --project-path <실제프로젝트> --format json`으로 등록명을 직접 조회합니다. 일반 `unity status`의 새 이름 요청이 Console 오류를 남길 수 있어 [호환 조회 근거](Tools/Unity/EDITOR_STATUS_COMPATIBILITY.md)를 따릅니다. ready는 fresh 소유·컴파일 실패·assembly 검사를 대체하지 않으며 빌드 중 상태 폴링은 하지 않습니다. 코드·씬 작업의 컴파일·실행·화면/로그 검증과 실제 빌드 결과를 구분합니다. 빌드는 명시적으로 정한 대상/버전/출력/서명 준비와 실패 중단 기준이 갖춰졌을 때 한 번 실행하고, 성공 판정은 오류0·실제 비어 있지 않은 새 산출물 및 필요한 파일 검사로 확인합니다.
 - PR: head/base 최신 SHA, 독립 검토 및 저장소 필수 검사 상태를 확인합니다. 필수 검사가 실패·대기·미실행이면 병합하지 않습니다. 통과 후 Squash merge 결과·새 main SHA·작업 브랜치 정리 여부를 다시 확인합니다.
 
 ## 세션과 도구 소유권
