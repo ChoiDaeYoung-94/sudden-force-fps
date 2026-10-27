@@ -24,6 +24,10 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
     private bool _hasMagazineBase, _hasReloadPose, _hasSupportPose;
     private Vector3 _baseShoulderPosition, _appliedShoulderPosition;
     private Quaternion _baseUpper, _baseLower, _baseHand, _appliedUpper, _appliedLower, _appliedHand;
+    // Bone-only palm proxy cached from Idle0; this is not a skin-contact measurement.
+    private Vector3 _wristToPalmPosition;
+    private Quaternion _palmToWristRotation;
+    private bool _hasPalmCalibration;
     private int _reloadLife = int.MinValue, _reloadFrame = -1;
     private static readonly int IdleState = Animator.StringToHash("Base Layer.Idle_Aiming");
     private bool _configured;
@@ -113,6 +117,9 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
 
     private void ResolveReloadBones()
     {
+        _hasPalmCalibration = false;
+        _wristToPalmPosition = Vector3.zero;
+        _palmToWristRotation = Quaternion.identity;
         _leftShoulder = _leftUpperArm = _leftLowerArm = _leftHand = null;
         if (_armsAnimator == null || _armsAnimator.transform != transform || !_armsAnimator.isHuman
             || _armsAnimator.avatar == null || !_armsAnimator.avatar.isValid) return;
@@ -120,11 +127,39 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         _leftUpperArm = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
         _leftLowerArm = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
         _leftHand = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftHand);
+        // OnEnable has sampled the real Idle0 before this one-time, hand-local cache.
+        if (_leftHand == null || _leftHand.name != "SFF_FP_hand_l" || !_leftHand.IsChildOf(transform)
+            || !FiniteVector(_leftHand.lossyScale) || (_leftHand.lossyScale - Vector3.one).sqrMagnitude > .000001f) return;
+        var index = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
+        var middle = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+        var little = _armsAnimator.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
+        if (index == null || middle == null || little == null
+            || index.name != "SFF_FP_index_01_l" || middle.name != "SFF_FP_middle_01_l" || little.name != "SFF_FP_pinky_01_l"
+            || !index.IsChildOf(_leftHand) || !middle.IsChildOf(_leftHand) || !little.IsChildOf(_leftHand)
+            || !FiniteVector(_leftHand.position) || !FiniteVector(index.position) || !FiniteVector(middle.position)
+            || !FiniteVector(little.position) || !FiniteRotation(_leftHand.rotation)) return;
+        Vector3 up = middle.position - _leftHand.position;
+        if (!FiniteVector(up) || up.sqrMagnitude < .000025f) return;
+        up.Normalize();
+        Vector3 across = Vector3.ProjectOnPlane(index.position - little.position, up);
+        if (!FiniteVector(across) || across.sqrMagnitude < .0001f) return;
+        across.Normalize();
+        Vector3 normal = Vector3.Cross(across, up);
+        if (!FiniteVector(normal) || normal.sqrMagnitude < .000001f) return;
+        normal.Normalize();
+        Vector3 midpoint = (_leftHand.position + (index.position + middle.position + little.position) / 3f) * .5f;
+        Vector3 wristToPalmPosition = _leftHand.InverseTransformPoint(midpoint);
+        Quaternion wristToPalmRotation = Quaternion.Inverse(_leftHand.rotation) * Quaternion.LookRotation(normal, up);
+        Quaternion palmToWristRotation = Quaternion.Inverse(wristToPalmRotation);
+        if (!FiniteVector(wristToPalmPosition) || !FiniteRotation(palmToWristRotation)) return;
+        _wristToPalmPosition = wristToPalmPosition;
+        _palmToWristRotation = palmToWristRotation;
+        _hasPalmCalibration = true;
     }
 
     private bool ValidateReloadReferences()
     {
-        return _owner != null && _owner.ViewModelRoot != null
+        return _hasPalmCalibration && _owner != null && _owner.ViewModelRoot != null
             && _armsAnimator != null && _armsAnimator.transform == transform
             && _weaponFrame != null && _weaponFrame.IsChildOf(_owner.ViewModelRoot) && !_weaponFrame.IsChildOf(transform)
             && _leftShoulder != null && _leftShoulder.parent != null && _leftShoulder.IsChildOf(transform) && _leftShoulder.name == "SFF_FP_clavicle_l"
@@ -149,6 +184,13 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         return true;
     }
 
+    // The shared phase window returns to zero before the reload timer ends.
+    internal static float EvaluateReloadHandWeight(float phase)
+    {
+        if (!Finite(phase) || phase < 0f || phase > 1f) return 0f;
+        return Window(.04f, .20f, phase) * (1f - Window(.80f, .97f, phase));
+    }
+
     // One render-only solve combines idle shoulder framing and the copied reload phase.
     // Support tracking is separate: an idle correction never reports a reload pose.
     private void ApplyReloadPose(float normalizedPhase)
@@ -156,16 +198,14 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         ResetReloadPose();
         if (!Finite(normalizedPhase) || normalizedPhase < 0f || normalizedPhase > 1f || !TryCacheMagazineBase()) return;
         float phase = Mathf.Clamp01(normalizedPhase);
-        float handWeight = Window(.04f, .20f, phase) * (1f - Window(.80f, .97f, phase));
+        float handWeight = EvaluateReloadHandWeight(phase);
         float magazineWeight = Window(.22f, .43f, phase) * (1f - Window(.55f, .80f, phase));
         Vector3 frameOffset = Vector3.down * (.04f * magazineWeight);
         Vector3 magazineOffset = _magazineParent.InverseTransformVector(_weaponFrame.TransformVector(frameOffset));
         Vector3 shoulderOffset = _leftShoulder.parent.InverseTransformVector(_weaponFrame.TransformVector(Vector3.back * .10f));
         Vector3 handPosition = _leftHand.position;
         Quaternion handRotation = _leftHand.rotation;
-        Vector3 grip = _weaponFrame.TransformPoint(new Vector3(-.035f, -.055f, .145f) + frameOffset);
-        Vector3 target = Vector3.Lerp(handPosition, grip, handWeight);
-        if (!FiniteVector(magazineOffset) || !FiniteVector(shoulderOffset) || !FiniteVector(target)
+        if (!FiniteVector(magazineOffset) || !FiniteVector(shoulderOffset) || !FiniteVector(handPosition)
             || !FiniteRotation(handRotation) || !FiniteVector(_magazineBasePosition) || !FiniteVector(_magazineBaseScale) || !FiniteRotation(_magazineBaseRotation)) return;
         _baseShoulderPosition = _leftShoulder.localPosition;
         _baseUpper = _leftUpperArm.localRotation; _baseLower = _leftLowerArm.localRotation; _baseHand = _leftHand.localRotation;
@@ -177,8 +217,16 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
             _leftShoulder.localPosition = _baseShoulderPosition + shoulderOffset;
             _viewMagazine.localPosition = _magazineBasePosition + magazineOffset;
             _viewMagazine.localRotation = _magazineBaseRotation; _viewMagazine.localScale = _magazineBaseScale;
+            // Rifle-local palm target; the cached hand frame keeps the wrist aligned.
+            Quaternion fullWristRotation = _viewMagazine.rotation * _palmToWristRotation;
+            Vector3 fullWristPosition = _viewMagazine.TransformPoint(new Vector3(-.007f, -.0464f, -.0252f))
+                - fullWristRotation * _wristToPalmPosition;
+            Vector3 target = Vector3.Lerp(handPosition, fullWristPosition, handWeight);
+            Quaternion targetRotation = Quaternion.Slerp(handRotation, fullWristRotation, handWeight);
+            if (!FiniteVector(fullWristPosition) || !FiniteRotation(fullWristRotation)
+                || !FiniteVector(target) || !FiniteRotation(targetRotation)) return;
             if (!SolveReloadArm(target)) return;
-            _leftHand.rotation = Quaternion.AngleAxis(25f * handWeight, _weaponFrame.forward) * handRotation;
+            _leftHand.rotation = targetRotation;
             _appliedShoulderPosition = _leftShoulder.localPosition;
             _appliedUpper = _leftUpperArm.localRotation; _appliedLower = _leftLowerArm.localRotation; _appliedHand = _leftHand.localRotation;
             _hasSupportPose = true;
