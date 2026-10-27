@@ -1,5 +1,13 @@
 # Third-party asset provenance
 
+## DOTween 1.2.765 모듈·공개 파일의 공식 ZIP 대응 (2026-10-27, #42)
+
+기존 선택3개 대응을 같은 [공식 1.2.765 ZIP](https://dotween.demigiant.com/downloads/DOTween_1_2_765.zip)의 나머지 공개 파일로 확장했습니다. ZIP215,500B/SHA `B359376326F333D6A132E0CBE0DC7A9CF18EE6C8DE89739193E5438E27DBB6A0`의27항목 CRC를 다시 확인했습니다. 파일23개와 디렉터리4개를 분리했으며, 현재 `Assets/Plugins/Demigiant/DOTween`에서 대응되는18개는 모두 raw exact입니다. 새 대응15개는 모듈 C#8개·XML2개·Editor 이미지5개이고 기존 runtime/Editor DLL·readme3개도 다시 일치합니다. [파일별 대응표](Tools/AssetLicenses/dotween-1.2.765-module-provenance.json)를 따릅니다.
+
+ZIP의 runtime/Editor `.mdb`2개와 `DOTweenUpgradeManager.dll`·`.dll.mdb`·`.XML`3개는 현재 이 트리에 없습니다. 부재 원인·과거 설치/삭제 이력을 추정하지 않습니다. 현재 트리39파일 중 나머지21개는 ZIP에 없는 Unity `.meta`이며 extra non-meta는0입니다. 별도 `Assets/Resources/DOTweenSettings.asset`와 그 meta는 프로젝트 설정으로 분리하고 ZIP 원본 동일성을 주장하지 않습니다. 이 분류는 전체 패키지 바이트 동일성·설정 생성 이력·최종 Android 포함 검증이 아닙니다.
+
+모듈8개와 기존 주석·동봉 readme를 보존합니다. 모듈7개의 `Author` 주석은 Daniele Giardini와 원저자 URL을 가리키고 EPOOutline 모듈에는 해당 주석이 없습니다. EPOOutline 대응은 이 ZIP 안의 모듈 파일 출처이며 외부 EPOOutline 패키지 도입·권리 근거가 아닙니다. [공식 다운로드 목록](https://dotween.demigiant.com/download.php), [현재 라이선스 페이지](https://dotween.demigiant.com/license.php), [공식 저장소 LICENSE 참조](https://github.com/Demigiant/dotween/blob/develop/LICENSE)는 현재 관측으로 기록했으며2024년의 동일 조건·과거 취득·Pro 유무/권리·전체 배포 권한으로 확대하지 않습니다. DLL 로드/호출·SDK 설치/교체·제품 파일/앱 고지 변경은0이며, #42는 전체 권리 범위를 유지합니다. 아래 선택3개와 이전 기록은 당시 범위로 보존합니다.
+
 ## DOTween 1.2.765 선택 파일의 공식 배포본 대응 (2026-10-26, #257/#42)
 
 [원저자 목록](https://dotween.demigiant.com/download.php)의 2024-02-04판 [1.2.765 ZIP](https://dotween.demigiant.com/downloads/DOTween_1_2_765.zip)을 외부 검증 폴더에서 확인했습니다. ZIP215,500B/SHA `B359376326F333D6A132E0CBE0DC7A9CF18EE6C8DE89739193E5438E27DBB6A0`의27항목 CRC를 검사했고 runtime DLL·Editor DLL·readme 세 파일은 저장소 원본과 바이트가 같습니다. runtime DLL은 새 Windows03 내장본과도 같습니다.

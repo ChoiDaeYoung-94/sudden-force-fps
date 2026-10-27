@@ -1,3 +1,23 @@
+> **2026-10-27 Android 공개 설정 지속성 · #66:** 별도 P12에서 ARM64·export/bundle true·customKeystore false의4설정과 기존 버전1.0.194/code5를 분리했습니다. 저장1회·정상 Editor Exit0·새 프로세스의4설정 유지와 저장 후 공개3990개 일치를 확인했습니다.
+>
+> 최초 PS 예측raw불일치는 CRLF1023개→LF와 두 값 변경으로 별도 분류했고, 다른3989개는 raw exact입니다. SDK/JDK version 검사와 실제 빌드·서명·기기 통과는 구분합니다. [저장·재시작 상세와 한계](Docs/validation/2026-10-27/android-public-settings-persistence.md)를 따르며 새 예약/AAB/APK/서명/업로드는0입니다. 이후 APK는 외부 업로드 없이 실제 로컬 경로를 보고합니다.
+
+> **2026-10-27 최신 APK 전달 방식 · #268:** 테스트 APK는 외부에 직접 업로드하지 않고, 완료 보고에서 실제 로컬 절대경로·파일명/버전·크기/SHA256과 검증 범위를 안내합니다. APK 전달을 위한 Drive 연결은 선행 조건에서 제외합니다.
+>
+> Play 내부 테스트 AAB 배포 범위·기존 키 유지/백업 보류는 그대로입니다. 아래 Drive 업로드·원격 검증 및 연결 후속은 각 날짜의 과거 기록으로 보존합니다. 계정 사용량90% 이상이면 새 작업을 중지하고 결과·잔여 작업·사용자 조치를 보고합니다.
+
+> **2026-10-26 Android main 초기 준비 · #265:** 별도 QA P12(source e19cb55)의 Android/IL2CPP 읽기 전용 probe 진단0과 공개3990개 import 감사를 확인했으며 기본 Unity/Fork P2는 유지합니다.
+>
+> 최초3989rawexact+EDM1개 형식 차이를 보존했고 독립30검사/현재3990재해시 일치는 초기 준비 범위이며 저장·재시작·AAB·서명·기기 통과가 아닙니다.
+>
+> ARMv7+ARM64와 체크아웃1.0.194/code5는 새 배포 설정/예약이 아니며 실제 제공33/1.0.196/release11·원장 `196,1,33`, 새 예약·빌드·서명·업로드0을 유지합니다.
+>
+> [짧은 준비 요약](Docs/validation/2026-10-26/android-main-readiness-summary.md)의 다음 Console/ARM64·출력/저장 검증과 두 연결 후속을 따르며 #265만 좁은 완료 대상으로 두고 #66/#43 및 아래 기존 기록은 보존합니다.
+
+> **2026-10-26 저녁 최신 배포 경계 · #262:** 마지막 알려진 제공은 코드33/1.0.196/release11·원장 `196,1,33`입니다. 이번 후속의 fresh Console 제공/최대코드 조회·새 Android 예약·AAB/APK·서명·Play 업로드·Drive 전달은0입니다. PR264/#263의 병합된 PC 수정과 Windows05의 두 Player 기본 경기/DRAW는 새 Android 수용이 아닙니다.
+>
+> 05 결과 RETURN·재참가·EXIT는0이며 Native05 독립 검토는 원본14장의 양성 표본만 확인했으며 미실행 복귀·종료를 통과로 합산하지 않습니다. [저녁 검증·다음 배포 순서](Docs/validation/2026-10-26/evening-pc-validation-summary.md)를 따릅니다. 후속 사용자 연결은 정확한 Sudden Force Console 작업 탭과 기존 테스트 폴더에 접근 가능한 Drive 복구 두 항목만00시에 모으며 지금 반복 질문하지 않습니다. 기존 키·기기/성능 후순위와 아래 산출물 원문을 보존합니다.
+
 > **2026-10-26 19시 이후 후속:** 마지막 확인·전달본은 코드33/1.0.196/release11·원장 `196,1,33`입니다. 제품8PR의 후속 변경은 APK33에 미포함이며 이번 후속의 새 예약/AAB/APK/서명/Play 업로드/Drive 전달은0입니다. 현재 Console 최대 코드는 새로 조회하지 않았습니다.
 >
 > P10의 UNITY_ANDROID+UNITY_EDITOR/Android 대상 지원·IL2CPP backend 설정·ARMv7/ARM64는 준비 관측이며 새 Player/AAB·ARM64 단독 수용이 아닙니다. [PC 후속 요약](Docs/validation/2026-10-26/pc-validation-followup-summary.md)과 [모바일 요약](Docs/validation/2026-10-26/mobile-menu-crouch-summary.json)을 따르며 아래 이전 기록을 보존합니다.
