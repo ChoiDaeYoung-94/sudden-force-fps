@@ -6,11 +6,11 @@
 
 | 검증 | 확인한 범위 |
 | --- | --- |
-| 소스·컴파일 | 제품 C# 2개 독립 검토와 P11 새 Game 어셈블리 컴파일 diagnostic 0. 물리 CRLF 소스와 커밋 LF blob은 정규화 본문 일치로 구분 |
+| 소스·컴파일 | 제품 C# 2개 독립 검토와 P11 새 Game 어셈블리 재컴파일 완료(compilationFailed=false). 별도 fixture compile-only diagnostic 0과 구분하며 컴파일 경고 0을 주장하지 않음. 물리 CRLF 소스와 커밋 LF blob은 정규화 본문 일치로 구분 |
 | 정지 구도 | 별도 복제 리그의 4안 비교에서 왼쪽 구도를 선택. 오른쪽 구도는 개머리판이 시야를 가려 제외 |
 | 복제 리그 회귀 | 양 팀 각 6진행률과 반복·직접 OnDisable 호출·NaN·잘못된 MCP의 복원 확인. 12진행률, 사례별 복원 확인 20건, 오류 0. 자연 사망 callback 검증은 아님 |
 | 실제 owner | Windows05 host + 새 소스 P11 Editor client의 자연 경기 1회. 일반 UI로 방/팀/READY/START를 거쳐 사격으로 탄약 30→29, 정상 `RequestReload()` 합성 호출 1회 뒤 30 복귀 |
-| 시간적 자세 | 167개 자연 프레임 기록과 idle/reach/pull/insert/settled PNG 5개 모두 해당 구간의 요청 전·렌더 begin/end·요청 후 상태 대조 통과. poseFrame은 모든 기록에서 현재 frame |
+| 시간적 자세 | 631프레임 구간에서 선택한 자연 프레임 기록 167개와 idle/reach/pull/insert/settled PNG 5개 모두 해당 구간의 요청 전·렌더 begin/end·요청 후 상태 대조 통과. 연속 전체 프레임 기록은 아니며 poseFrame은 모든 기록에서 현재 frame |
 | 장전 끝 구도 | 진행률 .9765625 이상인 장전 중 기록 10개에서 새 X 이동·회전 0. 처음 관측된 장전 완료 프레임도 0. 기존 상하 lift blend는 그때 .842682958로 별도 감쇠 중 |
 | 조준 보호 | 이 표본에서 카메라 위치/회전·Aim·simulation shot origin 변화 0. 오른손 grip 거리 최대 약 0.97µm, 각도 변화 0도 |
 | 정리·보존 | observer callback/임시 렌더 자원 정리, GameView/테스트 닉네임 복원, Play 종료·clean Untitled 복귀. 전체 공개 입력 3,984개 전후 raw exact, private6 부재/index sparse 유지 |
