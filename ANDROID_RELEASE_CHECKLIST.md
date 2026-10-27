@@ -1,3 +1,5 @@
+> **2026-10-27 최신 code34 QA:** 내보내기 Succeeded/오류2·경고68(오류2는 CLI 계층으로 별도 분류), 별도 Gradle 복구02 종료0/176tasks, 실제 AAB·고지·native 정적·아이콘/폰트·심볼6/7·기존 키 서명과 로컬 APK 검증을 완료했습니다. [정확한 SHA와 검증 한계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 최신 기준으로 합니다. Play 업로드·실제 Android 입력 수용0, 마지막 확인 제공33/release11·원장196,2,34이며 아래 미완료/실패 문장은 작성 당시 기록으로 보존합니다.
+
 > **2026-10-27 Android 공개 설정 지속성 · #66:** 별도 P12에서 ARM64·export/bundle true·customKeystore false의4설정과 기존 버전1.0.194/code5를 분리했습니다. 저장1회·정상 Editor Exit0·새 프로세스의4설정 유지와 저장 후 공개3990개 일치를 확인했습니다.
 >
 > 최초 PS 예측raw불일치는 CRLF1023개→LF와 두 값 변경으로 별도 분류했고, 다른3989개는 raw exact입니다. SDK/JDK version 검사와 실제 빌드·서명·기기 통과는 구분합니다. [저장·재시작 상세와 한계](Docs/validation/2026-10-27/android-public-settings-persistence.md)를 따르며 새 예약/AAB/APK/서명/업로드는0입니다. 이후 APK는 외부 업로드 없이 실제 로컬 경로를 보고합니다.

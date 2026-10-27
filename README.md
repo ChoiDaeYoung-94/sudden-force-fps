@@ -1,3 +1,5 @@
+> **2026-10-27 최신 Android QA 산출물:** 코드34/1.0.196의 내보내기·패키징·기존 키 서명과 로컬 APK 검증을 완료했습니다. main ea74519에 미병합 Draft261 입력2개와 QA 계측을 더한 후보이며, Play 업로드·실제 Android 입력 수용은 아직0입니다. 마지막 확인 제공은33/release11입니다. [산출물·실제 검증·다음 단계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 최신 기준으로 보시고 아래 각 시점 기록은 보존합니다. 테스트 APK는 외부 업로드 없이 로컬 경로로 안내합니다.
+
 > **2026-10-26 저녁 최신 요약 · #262:** 새 Windows05의 같은 binary 두 Player로 일반 방 생성/Join·READY/START·한글 Enter 원격수신1건·사격30→29/재장전30·MENU/RESUME와 양쪽5분 DRAW를 확인했습니다. 앱 활성화 도구 실패로 결과 RETURN·재참가·EXIT는0이며 관측 시점 두 Player 생존/ExitCode 미확보 상태입니다. 정상 종료·cleanup 통과가 아닙니다.
 >
 > PR264/#263의 좁은 PC 수정은 main e19cb55에 병합했고 PR261은 Draft입니다. Windows04의 별도 RETURN·held-handle Exit0 표본과05를 구분합니다. 마지막 알려진 제공은 코드33/1.0.196/release11·원장 `196,1,33`, 새 Android 예약·AAB/APK·서명·업로드·Drive 전달은0입니다. [저녁 PC 검증과 남은 범위](Docs/validation/2026-10-26/evening-pc-validation-summary.md)를 최신 기준으로 보시고 아래 안내·본문은 각 시점 기록으로 보존합니다.
