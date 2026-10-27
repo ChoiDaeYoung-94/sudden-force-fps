@@ -531,12 +531,14 @@ Android 배포용 빌드 진입점은 [BuildScript.cs](Assets/Scripts/Editor/Bui
 
 APK 메뉴는 Development/LZ4, AAB 메뉴는 non-Development/LZ4HC/CleanBuildCache이며 둘 다 상세 빌드 보고서를 생성합니다. APK 메뉴를 non-Development 릴리스 APK로 표현하지 않습니다. 도구체인·서명·Resolver 재실행 시 템플릿 점검과 배포 선행 조건은 [Android 릴리스 점검표](ANDROID_RELEASE_CHECKLIST.md)에 있습니다.
 
-### 기존 CI/CD 구성의 현재 상태
+### CI/CD 구성의 현재 상태 (2026-10-27 확인)
 
-- Unity2022/macOS/self-hosted `buildpc` → App Center 구성은 [원문 보관 파일](.github/legacy/cicd.yml.disabled)로 이동했습니다. 활성 `.github/workflows`에 실행 정의가 없으므로 이 소스에는 자동 Android 빌드·배포나 PR 검증 CI가 없습니다. 과거 [unity-cicd](https://github.com/ChoiDaeYoung-94/unity-cicd) 안내는 현재 배포 절차가 아닙니다.
-- [App Center 배포 기능은 종료](https://learn.microsoft.com/en-us/appcenter/retirement)되었습니다. 로컬 빌드는 Unity6000.3.25f1 절차를 사용하며 기존 Sudden Force 앱의 Google Play 내부 테스트 code5 업로드·출시는 완료했습니다. Play 스토어 설치본의 설치·로그인·경기 검증은 남아 있습니다.
-- 2026-10-08 확인한 과거 Actions 2건은 completed/cancelled였고 저장소에 등록된 self-hosted runner는 없었습니다. 해당 시점의 확인이며 현재 runner 가용성이나 Unity6 라이선스·Android 도구체인·secrets 구성을 보장하지 않습니다. 새 CI 환경은 미구성입니다.
-- 후속 CI는 확인된 runner에서 수동 `workflow_dispatch` 단일 빌드 작업으로 검증한 뒤 추가합니다. 로컬 빌드·실기기 검증과 GitHub CI 결과를 구분하며, PR 병합으로 빌드·배포를 자동 실행하지 않습니다. 진행 범위는 [이슈 #44](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44)에 기록합니다.
+- Unity2022/macOS/self-hosted `buildpc` → App Center 구성은 [원문 보관 파일](.github/legacy/cicd.yml.disabled)에 비활성으로 보존합니다. 과거 [unity-cicd](https://github.com/ChoiDaeYoung-94/unity-cicd) 안내는 현재 배포 절차가 아닙니다.
+- 활성 [Android 검증기 workflow](.github/workflows/android-export-verifier.yml)는 GitHub-hosted Windows2025/Python3.12에서 stdlib 단위 검사를 실행합니다. `Tools/Android/**` 또는 자기 정의가 바뀌는 PR/main push와 수동 실행 대상입니다. 최근 확인한 [main 실행40187481644](https://github.com/ChoiDaeYoung-94/sudden-force-fps/actions/runs/40187481644)는2026-10-25 completed/success입니다. 문서·다른 C# 변경에서 경로 필터로 미실행된 것을 통과로 합산하지 않습니다.
+- 이 workflow는 Unity 빌드·실제 Gradle 패키징·서명·Play 배포를 하지 않습니다. [검증 범위](Tools/Android/README.md#pr용-python-단위-검사)를 따르며 로컬 Unity6000.3.25f1 산출물·기기 결과와 GitHub 단위 검사 결과를 구분합니다.
+- [App Center 배포 기능은 종료](https://learn.microsoft.com/en-us/appcenter/retirement)되었습니다. 현재 Google Play 제공·별도 QA 산출물의 버전과 실제 검증은 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 기준으로 합니다. 과거 code5를 최신 제공본으로 쓰지 않습니다.
+- 2026-10-27 API 확인에서 이 저장소에 등록된 self-hosted runner는0개였습니다. 별도 장비·조직 runner 전체 가용성이나 Unity 라이선스·secrets 유효성을 판정한 것은 아니며 runner/secrets 등록·수정은 하지 않았습니다.
+- 후속 Unity 빌드 CI는 확인된 runner·라이선스·toolchain에서 수동 단일 빌드 작업으로 검증한 뒤 추가합니다. PR 병합으로 빌드·배포를 자동 실행하지 않으며 [이슈 #44](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44)의 남은 범위를 유지합니다.
 
 ## 계획·검증·라이선스
 
