@@ -1,3 +1,5 @@
+> **2026-10-27 최신 code34 QA:** 내보내기 Succeeded/오류2·경고68(오류2는 CLI 계층으로 별도 분류), 별도 Gradle 복구02 종료0/176tasks, 실제 AAB·고지·native 정적·아이콘/폰트·심볼6/7·기존 키 서명과 로컬 APK 검증을 완료했습니다. [정확한 SHA와 검증 한계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 최신 기준으로 합니다. Play 업로드·실제 Android 입력 수용0, 마지막 확인 제공33/release11·원장196,2,34이며 아래 미완료/실패 문장은 작성 당시 기록으로 보존합니다.
+
 > **2026-10-27 Android 공개 설정 지속성 · #66:** 별도 P12에서 ARM64·export/bundle true·customKeystore false의4설정과 기존 버전1.0.194/code5를 분리했습니다. 저장1회·정상 Editor Exit0·새 프로세스의4설정 유지와 저장 후 공개3990개 일치를 확인했습니다.
 >
 > 최초 PS 예측raw불일치는 CRLF1023개→LF와 두 값 변경으로 별도 분류했고, 다른3989개는 raw exact입니다. SDK/JDK version 검사와 실제 빌드·서명·기기 통과는 구분합니다. [저장·재시작 상세와 한계](Docs/validation/2026-10-27/android-public-settings-persistence.md)를 따르며 새 예약/AAB/APK/서명/업로드는0입니다. 이후 APK는 외부 업로드 없이 실제 로컬 경로를 보고합니다.
@@ -1238,3 +1240,22 @@ PGS는 출시된 속성/credential이며 개별 테스터2개와 내부 테스�
 - 종료 후 Win64/빈 깨끗한 씬/Play 종료/자동 tick 중지. 시작3930파일 SHA 변경·추가0 및 기존 dirty patch 동일, 버전code2/ledger와 키 경로 등 파일 설정을 복원했습니다. Android 빌드 finally의 메모리 서명 값 복원과 최종 Win64 reload에서 비밀번호·alias가 초기화된 현상은 구분합니다. 최종 메모리 비밀번호 보존을 주장하지 않습니다.
 
 근거는 같은 외부 폴더의 `apk-verification.json`, `preservation-final.json`, `signing-preflight-history.json` 및 `apk-attempt-01/upload-validation-build.json`입니다. 이 APK는 실기기 인증 검증용이며 실제 설치·PGS 로그인·모바일 경기·Play 테스트 트랙 배포는 아직 미검증입니다. Play 설치본은 별도 앱 서명 인증서를 사용한다는 기존 조건도 유지합니다.
+
+
+## 2026-10-27 code34 Input261 QA: 내보내기·패키징 복구 진행 중 (#66, #259)
+
+Play Console의 Sudden Force 패키지와 전체11개 업로드를 확인해 최대33을 재확인했고, 권위원장에 `196,1,33 → 196,2,34`를 단1회 기록·flush/readback 검증했습니다. 예약은 커밋 eb3a1f2에 보존했으며 실패해도 되돌리거나 다른 Unity 빌드에34를 재사용하지 않습니다. main ea74519와 Draft261의 입력2개를 정상 merge한6121803을 별도 P12에서 사용합니다. 일반 main 빌드나 입력PR 병합 완료가 아닙니다.
+
+버전1.0.196/code34·Android 옵션의 저장/정상종료/새Editor 지속성 및 공개3995개 독립 재해시를 확인했습니다. QA recorder C#/meta2개를 추가해3997개 입력을 새로 고정했고, 기본 define OFF·Player extraScriptingDefines에만 QA를 추가했습니다. 사격 손가락 시점 조작의 실제 Android 수용을 위한 내부 계측 후보이며 Native/실기기 입력 통과로 처리하지 않습니다.
+
+Unity BuildPlayer는 단1회 반환했고 reportGUID `d525a47bb57741dc8642bf73318c9a12`, result Succeeded/errors2/warnings68/369.7176초/1193351097B입니다. 동일GUID의 오류2행은 CLI 명령 dispatch 실패·main-thread 요청 timeout으로 분류했으며 오류 수를0으로 바꾸지 않았습니다. 빌드 중 status 요청과 같은 도구 계층 오류이지만 개별 message timestamp가 없어 단일 요청과의 인과 확정은 제한합니다. 이후 빌드 중 CLI status를 재호출하지 않고 빌드 영수증·소유 프로세스 관측을 사용합니다.
+
+내보내기 후3997개 중3974개 raw exact, 변화23개는 실제 before/after SHA 대조 후 개행19·CJK 빈 scalar 공백/개행1·현재 ARM64/export/local Maven에 맞는 EDM 의미변경3으로 독립 분류했습니다. before23은 Git blob과 사전핀을 대조한 재구성본이며 당시 물리 사전사본이라고 표현하지 않습니다. CJK glyph/atlas 값 변화나 제품 C#/scene/prefab 변화는 없습니다. 원본 폰트7개·private6 제외 상태는 범위별 근거를 유지합니다.
+
+첫 Gradle 사전 검사 exit0/task0/무서명·입력보존은 통과했습니다. 실제 패키징은 configureCMake의 prefab 배치에서 exit1, AAB미생성으로 종료됐고 소스3997/원장·원입력 보존을 확인했습니다. 같은 시도를 반복하거나 실패 자료를 덮어쓰지 않았습니다. JDK ProcessBuilder java-version 네 조합에서 COMSPEC forward slash만 exit1/32B, native Windows 경로는 exit0/version marker를 확인했습니다. 이 대조는 원인 분리를 뒷받침하며 실제 CMake 복구 성공은 아닙니다.
+
+새 복구 후보는 원 export의 고정 입력2819개(기존 local.properties 패치 포함)만 별도 `D:/codex/e/sff34-r2`에 복사·개별 해시 검증했습니다. Unity 프로젝트·서명키·기존 build/.gradle/.cxx 캐시는 복사하지 않았습니다. 자식 COMSPEC 값 수정과 새 export/기록 경로만 적용하고 새 독립 delta검토·binding·dry·actual을 요구합니다. 원장 재예약·Unity 재내보내기·전역 환경변수 변경은 없습니다.
+
+아직 새 AAB/APK·서명·Play업로드·FPS 인스턴스 입력 수용은 미완료입니다. 기존 제공 코드33/release11 및 이전 Play서명 APK와 구분합니다. 테스트 APK 외부 업로드는 하지 않으며 완성 후 로컬 경로를 안내합니다. 실기기·청취·16KB실행·장시간 성능/발열은 후속이고 부모 이슈를 닫지 않습니다. PR274/261은 해당 완료 기준 충족 전 Draft입니다. 공개 기록에 원시로그·키·암호를 반입하지 않습니다.
+
+근거: 외부20261027-work의 android34-persistence-independent-review01, canonical-reservation02, export-candidate-independent-review01, export-errors-independent-review01, post-export-delta-independent-review01, gradle-preparation01, cmd-environment-probe01 및 recovery-export-copy02. 내보내기 소스6121803과 이 후속 문서 커밋은 구분합니다.
