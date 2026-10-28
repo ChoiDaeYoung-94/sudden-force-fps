@@ -1,3 +1,6 @@
+> **2026-10-28 Android 실제 입력:** 코드34 FPS 에뮬레이터에서 단일 사격·시점 조작과 두 손가락의 두 해제 순서를 실행해 화면·recorder·서버 상태를 대조했습니다. [세 모드의 결과와 한계](Docs/validation/2026-10-28/android34-native-fire-look.md)를 따릅니다.
+> PR261은 pause/focus 전이·사망/리스폰 등 남은 경계 판단 전 Draft로 유지합니다. 실폰·전체 경기·최신 main 통합 빌드의 통과가 아니며 아래 기록은 각 시점 상태로 보존합니다.
+
 > **2026-10-28 코드34 에뮬레이터 실행:** 기존 Play33과 같은 인증서로34를 데이터 삭제 명령 없이 업데이트하고 정상 로그인·방 참가·READY/START·두 피어 Game 진입과 PC 정상 종료를 확인했습니다. [실제 결과와 한계](Docs/validation/2026-10-28/android34-runtime-partial.md)를 따릅니다.
 > 입력 helper는 전경 guard에서 events0으로 중단되어 native 입력 경계 수용과 Draft261은 미완료입니다. 최신 main 전체 Android 빌드·실제 휴대전화 검증과 구분하며 아래 기록은 각 시점 상태로 보존합니다.
 
