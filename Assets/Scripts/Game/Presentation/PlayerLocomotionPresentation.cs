@@ -128,16 +128,20 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
         _reloadBlend = Mathf.Lerp(_reloadBlend, isReloading ? 1f : 0f, 1f - Mathf.Exp(-12f * dt));
         // Return the new framing before the timer ends, including an immediate ready shot.
         float reloadHandWeight = 0f;
+        float reloadMagazineWeight = 0f;
         var weapon = _owner.WeaponDefinition;
         float reloadRemaining = isReloading ? _owner.ReloadRemaining : 0f;
         if (isReloading && weapon != null
             && PlayerInputSource.IsFinite(weapon.ReloadDuration) && weapon.ReloadDuration > 0f
             && PlayerInputSource.IsFinite(reloadRemaining) && reloadRemaining >= 0f)
-            reloadHandWeight = FirstPersonArmsPresentation.EvaluateReloadHandWeight(
-                Mathf.Clamp01(1f - reloadRemaining / weapon.ReloadDuration));
+        {
+            float reloadPhase = Mathf.Clamp01(1f - reloadRemaining / weapon.ReloadDuration);
+            reloadHandWeight = FirstPersonArmsPresentation.EvaluateReloadHandWeight(reloadPhase);
+            reloadMagazineWeight = FirstPersonArmsPresentation.EvaluateReloadMagazineWeight(reloadPhase);
+        }
         float amplitude = _blend * (crouched ? .6f : running ? 1.35f : 1f);
         LocalWeaponPositionOffset = new Vector3(_sway.x + Mathf.Sin(_phase) * .012f * amplitude - .04f * reloadHandWeight,
-            _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude + .14f * _reloadBlend,
+            _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude + .14f * _reloadBlend + .04f * reloadMagazineWeight,
             0f);
         LocalWeaponRotationOffset = Quaternion.Euler(0f,
             -25f * reloadHandWeight, Mathf.Sin(_phase) * .8f * amplitude - 12f * reloadHandWeight);

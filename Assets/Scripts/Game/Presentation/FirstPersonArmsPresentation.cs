@@ -191,6 +191,13 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         return Window(.04f, .20f, phase) * (1f - Window(.80f, .97f, phase));
     }
 
+    // Shared extraction window for magazine travel and its view framing compensation.
+    internal static float EvaluateReloadMagazineWeight(float phase)
+    {
+        if (!Finite(phase) || phase < 0f || phase > 1f) return 0f;
+        return Window(.22f, .43f, phase) * (1f - Window(.55f, .80f, phase));
+    }
+
     // One render-only solve combines idle shoulder framing and the copied reload phase.
     // Support tracking is separate: an idle correction never reports a reload pose.
     private void ApplyReloadPose(float normalizedPhase)
@@ -199,8 +206,8 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
         if (!Finite(normalizedPhase) || normalizedPhase < 0f || normalizedPhase > 1f || !TryCacheMagazineBase()) return;
         float phase = Mathf.Clamp01(normalizedPhase);
         float handWeight = EvaluateReloadHandWeight(phase);
-        float magazineWeight = Window(.22f, .43f, phase) * (1f - Window(.55f, .80f, phase));
-        Vector3 frameOffset = Vector3.down * (.04f * magazineWeight);
+        float magazineWeight = EvaluateReloadMagazineWeight(phase);
+        Vector3 frameOffset = Vector3.down * (.10f * magazineWeight);
         Vector3 magazineOffset = _magazineParent.InverseTransformVector(_weaponFrame.TransformVector(frameOffset));
         Vector3 shoulderOffset = _leftShoulder.parent.InverseTransformVector(_weaponFrame.TransformVector(Vector3.back * .10f));
         Vector3 handPosition = _leftHand.position;
