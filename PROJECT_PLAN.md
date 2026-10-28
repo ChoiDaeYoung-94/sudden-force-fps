@@ -1,3 +1,6 @@
+> **2026-10-28 QA34 제공:** source61218033의 코드34/1.0.196을 Play 내부 release12에 제공하고 공식 PlaySigned APK의 정적·독립 검증을 완료했습니다. [배포·검증 범위](Docs/validation/2026-10-28/play34-internal-delivery.md)를 따르며 제품 소스 기준5775와 구분합니다.
+> 다음은 QA34 native 입력 수용 → Draft261 반영 판단 → 최신 일반 main 새 Android 통합(다음35이상)입니다. 새35 예약0·기기/기존 Play33 업데이트 수용0이며 아래 과거 계획과 근거는 보존합니다.
+
 > **2026-10-28 채팅 입력 경계 · #289:** 160 UTF-16 hard cap을 유지하면서 선택/붙여넣기가 surrogate pair를 절반으로 자르지 않도록 보완했습니다. 실제 TMP 합성 Append에서 원본의2개 broken 경계를 재현하고 수정 후9행·delegate 소유권4역할을 확인했습니다. [범위와 근거](Docs/validation/2026-10-28/chat-utf16-input-boundary.md)를 따릅니다.
 > native IME·실제 키보드/클립보드·원격/RPC·자동 Awake와 #163 전체 수용은 남아 있으며 Play34/release12에는 미포함입니다. 한정된 실제 결과의 독립 COMMENT를 완료했습니다.
 

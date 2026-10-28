@@ -1,3 +1,6 @@
+> **2026-10-28 Play 내부 제공:** 코드34/1.0.196 입력계측 QA(source61218033)를 release12/11:58 KST에 내부 테스터에게 제공했고 공식 PlaySigned APK105,690,443B의 로컬 정적·독립 검증을 완료했습니다. [파일 경로·SHA·정확한 수용 범위](Docs/validation/2026-10-28/play34-internal-delivery.md)를 따릅니다.
+> native 입력/기기·업데이트 수용은 미완료이고 Draft261은 유지합니다. 최신 PR282/287/288/290은 이 APK에 미포함이며 아래 기록은 각 작성 시점의 상태로 보존합니다.
+
 > **2026-10-27 최신 Android QA 산출물:** 코드34/1.0.196의 내보내기·패키징·기존 키 서명과 로컬 APK 검증을 완료했습니다. main ea74519에 미병합 Draft261 입력2개와 QA 계측을 더한 후보이며, Play 업로드·실제 Android 입력 수용은 아직0입니다. 마지막 확인 제공은33/release11입니다. [산출물·실제 검증·다음 단계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 최신 기준으로 보시고 아래 각 시점 기록은 보존합니다. 테스트 APK는 외부 업로드 없이 로컬 경로로 안내합니다.
 
 > **2026-10-26 저녁 최신 요약 · #262:** 새 Windows05의 같은 binary 두 Player로 일반 방 생성/Join·READY/START·한글 Enter 원격수신1건·사격30→29/재장전30·MENU/RESUME와 양쪽5분 DRAW를 확인했습니다. 앱 활성화 도구 실패로 결과 RETURN·재참가·EXIT는0이며 관측 시점 두 Player 생존/ExitCode 미확보 상태입니다. 정상 종료·cleanup 통과가 아닙니다.
