@@ -1,3 +1,6 @@
+> **2026-10-28 #259 부분 관측:** Joystick 동기 probe/복구는 완료했고 pulse는 이동 관측에도 inputAvailable=false로 전체 미통과입니다. [근거·정리·잔여 범위](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 최신 기록으로 읽습니다.
+> 다음은 조회 원인 진단·별도 수명 경계 검증이며 PR261 수용/병합·최신 main Android 통합과 분리합니다. 정상 종료·3984 보존을 게임 수용으로 합산하지 않고35 예약·빌드0 및 과거 기록을 유지합니다.
+
 > **2026-10-28 L1 callback 경계:** 정상 두 피어 P11에서 Focus/Pause×두 callback 순서의4시나리오·30검사항목과 즉시 복구·정상 종료를 확인했습니다. [결과와 한계](Docs/validation/2026-10-28/input261-lifecycle-callbacks.md)를 따릅니다.
 > 실제 OS 전이·사망/리스폰(L2)·PR261 전체 수용은 미완료이며 Draft를 유지합니다. 코드34/source612 QA와 최신 main 통합을 구분하고35 예약·빌드는0이며 아래 기록은 각 시점 상태로 보존합니다.
 
