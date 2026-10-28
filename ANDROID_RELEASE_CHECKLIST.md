@@ -1,3 +1,6 @@
+> **2026-10-28 Joystick 검증 범위:** PC 합성 공개 Pointer probe/복구는 완료했지만 짧은 pulse 전체 판정은 false입니다. [실제 결과와 정리](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 따릅니다.
+> native/죽음·리스폰/route·전체 PR261 수용은 미완료입니다. 제공34/source612와 후속 PR282/287/288/290 미포함을 유지하며 새35 예약·게임APK/AAB 빌드0이고 아래 과거 체크는 보존합니다.
+
 > **2026-10-28 L1 callback 경계:** 정상 두 피어 P11에서 Focus/Pause×두 callback 순서의4시나리오·30검사항목과 즉시 복구·정상 종료를 확인했습니다. [결과와 한계](Docs/validation/2026-10-28/input261-lifecycle-callbacks.md)를 따릅니다.
 > 실제 OS 전이·사망/리스폰(L2)·PR261 전체 수용은 미완료이며 Draft를 유지합니다. 코드34/source612 QA와 최신 main 통합을 구분하고35 예약·빌드는0이며 아래 기록은 각 시점 상태로 보존합니다.
 
