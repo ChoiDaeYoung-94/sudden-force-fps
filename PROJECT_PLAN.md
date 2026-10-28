@@ -1,3 +1,6 @@
+> **2026-10-28 채팅 입력 경계 · #289:** 160 UTF-16 hard cap을 유지하면서 선택/붙여넣기가 surrogate pair를 절반으로 자르지 않도록 보완했습니다. 실제 TMP 합성 Append에서 원본의2개 broken 경계를 재현하고 수정 후9행·delegate 소유권4역할을 확인했습니다. [범위와 근거](Docs/validation/2026-10-28/chat-utf16-input-boundary.md)를 따릅니다.
+> native IME·실제 키보드/클립보드·원격/RPC·자동 Awake와 #163 전체 수용은 남아 있으며 Play34/release12에는 미포함입니다. 한정된 실제 결과의 독립 COMMENT를 완료했습니다.
+
 > **2026-10-28 장전 탄창 구분 · #188:** 탄창 최대 분리 이동을4→10cm로 늘리고 같은 추출 곡선으로 표시용 무기를 최대4cm 더 올렸습니다. 같은 카메라의 전후 각3구간에서 pull 가독성 개선과 reach/insert 원본 PNG 동일, 곡선16조건·손목 도달·정리·정상 종료를 확인했습니다. [전후 원본 화면과 검증 한계](Docs/validation/2026-10-28/reload-magazine-visibility.md)를 따릅니다. 자연 장전·전체 피부 접촉·생명주기·Android 수용은 별도이며 #188/#166을 유지합니다. 코드34 미포함·새 버전 예약0입니다.
 
 > **2026-10-28 발소리 준비 · #286:** 아직 Unloaded인 발소리 데이터를 플레이어 초기화에서 준비하도록 수정했습니다. 새 Windows QA Editor에서 실제 양 팀 clone의 명시 Awake와 반복 호출, 고유5개 Unloaded→Loaded, source/step/자식 불변과 정리·정상 종료를 확인했습니다. [검증 범위](Docs/validation/2026-10-28/step-audio-preparation.md)를 따르며 자동 Spawn 순서·자연 보행·청취/지연·Android 포함은 별도입니다. 코드34 QA에는 이 변경이 미포함이고 새 버전 예약은 없습니다.
