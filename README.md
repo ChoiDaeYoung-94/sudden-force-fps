@@ -1,3 +1,6 @@
+> **2026-10-28 코드34 에뮬레이터 실행:** 기존 Play33과 같은 인증서로34를 데이터 삭제 명령 없이 업데이트하고 정상 로그인·방 참가·READY/START·두 피어 Game 진입과 PC 정상 종료를 확인했습니다. [실제 결과와 한계](Docs/validation/2026-10-28/android34-runtime-partial.md)를 따릅니다.
+> 입력 helper는 전경 guard에서 events0으로 중단되어 native 입력 경계 수용과 Draft261은 미완료입니다. 최신 main 전체 Android 빌드·실제 휴대전화 검증과 구분하며 아래 기록은 각 시점 상태로 보존합니다.
+
 > **2026-10-28 Play 내부 제공:** 코드34/1.0.196 입력계측 QA(source61218033)를 release12/11:58 KST에 내부 테스터에게 제공했고 공식 PlaySigned APK105,690,443B의 로컬 정적·독립 검증을 완료했습니다. [파일 경로·SHA·정확한 수용 범위](Docs/validation/2026-10-28/play34-internal-delivery.md)를 따릅니다.
 > native 입력/기기·업데이트 수용은 미완료이고 Draft261은 유지합니다. 최신 PR282/287/288/290은 이 APK에 미포함이며 아래 기록은 각 작성 시점의 상태로 보존합니다.
 
