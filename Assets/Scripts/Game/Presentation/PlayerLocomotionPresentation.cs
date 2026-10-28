@@ -31,6 +31,12 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
     {
         _owner = GetComponent<GamePlayerNetworkData>();
         _controller = GetComponent<Fusion.NetworkCharacterController>();
+        // These clips use preloadAudioData=false. Prepare them before the first
+        // distance-triggered step without changing assets or the SFX route.
+        if (_stepClips != null)
+            foreach (var clip in _stepClips)
+                if (clip != null && clip.loadState == AudioDataLoadState.Unloaded)
+                    clip.LoadAudioData();
     }
 
     // Stance is supplied by the owner, keeping this candidate independent of
