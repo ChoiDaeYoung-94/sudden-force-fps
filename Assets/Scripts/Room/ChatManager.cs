@@ -12,6 +12,7 @@ public class ChatManager : MonoBehaviour
         = new System.Collections.Generic.Queue<PendingMessage>();
     private ChatScrollDragObserver _dragObserver;
     private bool _flushingMessages;
+    private TMP_InputField.OnValidateInput _ownedInputValidator;
 
     private struct PendingMessage
     {
@@ -22,17 +23,44 @@ public class ChatManager : MonoBehaviour
 
     private void Awake()
     {
+        // Preserve any existing validation policy and the field's 160-unit hard cap.
+        if (_inputField.characterLimit == MaxMessageLength && _inputField.onValidateInput == null
+            && _inputField.characterValidation == TMP_InputField.CharacterValidation.None
+            && _inputField.inputValidator == null)
+        {
+            _ownedInputValidator = ValidateSurrogateInsertion;
+            _inputField.onValidateInput = _ownedInputValidator;
+        }
         _inputField.onSubmit.AddListener(OnSubmit);
         EnsureDragObserver();
     }
 
     private void OnDestroy()
     {
-        if (_inputField != null) _inputField.onSubmit.RemoveListener(OnSubmit);
+        if (_inputField != null)
+        {
+            _inputField.onSubmit.RemoveListener(OnSubmit);
+            if (_ownedInputValidator != null) _inputField.onValidateInput -= _ownedInputValidator;
+        }
+        _ownedInputValidator = null;
         _dragObserver = null;
         _pendingMessages.Clear();
     }
 
+    // TMP supplies text after removing the selection, before Insert calls Delete.
+    // Reserve both units at the high surrogate so the hard cap cannot split a pair.
+    private char ValidateSurrogateInsertion(string text, int charIndex, char addedChar)
+    {
+        // Leave BMP input (including Hangul composition) on its existing path.
+        if (!char.IsSurrogate(addedChar)) return addedChar;
+        if (text == null || charIndex < 0 || charIndex > text.Length) return '\0';
+        if (char.IsHighSurrogate(addedChar))
+            return text.Length <= MaxMessageLength - 2
+                && (charIndex == 0 || !char.IsHighSurrogate(text[charIndex - 1])) ? addedChar : '\0';
+        return text.Length < MaxMessageLength && charIndex > 0
+            && char.IsHighSurrogate(text[charIndex - 1])
+            && (charIndex == text.Length || !char.IsLowSurrogate(text[charIndex])) ? addedChar : '\0';
+    }
     private void OnSubmit(string text) => SubmitChat();
 
     // Shared by keyboard Submit and the explicit SEND button.

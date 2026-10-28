@@ -31,6 +31,12 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
     {
         _owner = GetComponent<GamePlayerNetworkData>();
         _controller = GetComponent<Fusion.NetworkCharacterController>();
+        // These clips use preloadAudioData=false. Prepare them before the first
+        // distance-triggered step without changing assets or the SFX route.
+        if (_stepClips != null)
+            foreach (var clip in _stepClips)
+                if (clip != null && clip.loadState == AudioDataLoadState.Unloaded)
+                    clip.LoadAudioData();
     }
 
     // Stance is supplied by the owner, keeping this candidate independent of
@@ -118,13 +124,27 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
         Vector2 targetSway = new Vector2(Mathf.Clamp(-yawRate * .00001f, -.012f, .012f),
             Mathf.Clamp(pitchRate * .00001f, -.009f, .009f));
         _sway = Vector2.Lerp(_sway, targetSway, follow);
-        _reloadBlend = Mathf.Lerp(_reloadBlend, _owner.IsReloading ? 1f : 0f, 1f - Mathf.Exp(-12f * dt));
+        bool isReloading = _owner.IsReloading;
+        _reloadBlend = Mathf.Lerp(_reloadBlend, isReloading ? 1f : 0f, 1f - Mathf.Exp(-12f * dt));
+        // Return the new framing before the timer ends, including an immediate ready shot.
+        float reloadHandWeight = 0f;
+        float reloadMagazineWeight = 0f;
+        var weapon = _owner.WeaponDefinition;
+        float reloadRemaining = isReloading ? _owner.ReloadRemaining : 0f;
+        if (isReloading && weapon != null
+            && PlayerInputSource.IsFinite(weapon.ReloadDuration) && weapon.ReloadDuration > 0f
+            && PlayerInputSource.IsFinite(reloadRemaining) && reloadRemaining >= 0f)
+        {
+            float reloadPhase = Mathf.Clamp01(1f - reloadRemaining / weapon.ReloadDuration);
+            reloadHandWeight = FirstPersonArmsPresentation.EvaluateReloadHandWeight(reloadPhase);
+            reloadMagazineWeight = FirstPersonArmsPresentation.EvaluateReloadMagazineWeight(reloadPhase);
+        }
         float amplitude = _blend * (crouched ? .6f : running ? 1.35f : 1f);
-        LocalWeaponPositionOffset = new Vector3(_sway.x + Mathf.Sin(_phase) * .012f * amplitude,
-            _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude + .14f * _reloadBlend,
+        LocalWeaponPositionOffset = new Vector3(_sway.x + Mathf.Sin(_phase) * .012f * amplitude - .04f * reloadHandWeight,
+            _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude + .14f * _reloadBlend + .04f * reloadMagazineWeight,
             0f);
         LocalWeaponRotationOffset = Quaternion.Euler(0f,
-            0f, Mathf.Sin(_phase) * .8f * amplitude);
+            -25f * reloadHandWeight, Mathf.Sin(_phase) * .8f * amplitude - 12f * reloadHandWeight);
     }
 
     private void PlayStep(bool local, bool crouched, bool running)

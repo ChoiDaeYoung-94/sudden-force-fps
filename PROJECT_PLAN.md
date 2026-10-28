@@ -1,3 +1,23 @@
+> **2026-10-28 Android 실제 입력:** 코드34 FPS 에뮬레이터에서 단일 사격·시점 조작과 두 손가락의 두 해제 순서를 실행해 화면·recorder·서버 상태를 대조했습니다. [세 모드의 결과와 한계](Docs/validation/2026-10-28/android34-native-fire-look.md)를 따릅니다.
+> PR261은 pause/focus 전이·사망/리스폰 등 남은 경계 판단 전 Draft로 유지합니다. 실폰·전체 경기·최신 main 통합 빌드의 통과가 아니며 아래 기록은 각 시점 상태로 보존합니다.
+
+> **2026-10-28 코드34 에뮬레이터 실행:** 기존 Play33과 같은 인증서로34를 데이터 삭제 명령 없이 업데이트하고 정상 로그인·방 참가·READY/START·두 피어 Game 진입과 PC 정상 종료를 확인했습니다. [실제 결과와 한계](Docs/validation/2026-10-28/android34-runtime-partial.md)를 따릅니다.
+> 입력 helper는 전경 guard에서 events0으로 중단되어 native 입력 경계 수용과 Draft261은 미완료입니다. 최신 main 전체 Android 빌드·실제 휴대전화 검증과 구분하며 아래 기록은 각 시점 상태로 보존합니다.
+
+> **2026-10-28 QA34 제공:** source61218033의 코드34/1.0.196을 Play 내부 release12에 제공하고 공식 PlaySigned APK의 정적·독립 검증을 완료했습니다. [배포·검증 범위](Docs/validation/2026-10-28/play34-internal-delivery.md)를 따르며 제품 소스 기준5775와 구분합니다.
+> 다음은 QA34 native 입력 수용 → Draft261 반영 판단 → 최신 일반 main 새 Android 통합(다음35이상)입니다. 새35 예약0·기기/기존 Play33 업데이트 수용0이며 아래 과거 계획과 근거는 보존합니다.
+
+> **2026-10-28 채팅 입력 경계 · #289:** 160 UTF-16 hard cap을 유지하면서 선택/붙여넣기가 surrogate pair를 절반으로 자르지 않도록 보완했습니다. 실제 TMP 합성 Append에서 원본의2개 broken 경계를 재현하고 수정 후9행·delegate 소유권4역할을 확인했습니다. [범위와 근거](Docs/validation/2026-10-28/chat-utf16-input-boundary.md)를 따릅니다.
+> native IME·실제 키보드/클립보드·원격/RPC·자동 Awake와 #163 전체 수용은 남아 있으며 Play34/release12에는 미포함입니다. 한정된 실제 결과의 독립 COMMENT를 완료했습니다.
+
+> **2026-10-28 장전 탄창 구분 · #188:** 탄창 최대 분리 이동을4→10cm로 늘리고 같은 추출 곡선으로 표시용 무기를 최대4cm 더 올렸습니다. 같은 카메라의 전후 각3구간에서 pull 가독성 개선과 reach/insert 원본 PNG 동일, 곡선16조건·손목 도달·정리·정상 종료를 확인했습니다. [전후 원본 화면과 검증 한계](Docs/validation/2026-10-28/reload-magazine-visibility.md)를 따릅니다. 자연 장전·전체 피부 접촉·생명주기·Android 수용은 별도이며 #188/#166을 유지합니다. 코드34 미포함·새 버전 예약0입니다.
+
+> **2026-10-28 발소리 준비 · #286:** 아직 Unloaded인 발소리 데이터를 플레이어 초기화에서 준비하도록 수정했습니다. 새 Windows QA Editor에서 실제 양 팀 clone의 명시 Awake와 반복 호출, 고유5개 Unloaded→Loaded, source/step/자식 불변과 정리·정상 종료를 확인했습니다. [검증 범위](Docs/validation/2026-10-28/step-audio-preparation.md)를 따르며 자동 Spawn 순서·자연 보행·청취/지연·Android 포함은 별도입니다. 코드34 QA에는 이 변경이 미포함이고 새 버전 예약은 없습니다.
+
+> **2026-10-27 재장전 후속:** 손바닥 관절 기준의 왼손 정렬과 왼쪽 총 구도를 제품 소스에 반영했습니다. 양 팀 복제 회귀·실제 두 피어 경기의 owner 재장전 1회에서 탄약 복귀, 장전 끝 새 구도 해제와 조준 보호를 확인했습니다. [검증 범위와 남은 접촉/중단 수용](Docs/validation/2026-10-27/reload-hand-framing.md)을 따릅니다. 후속 [양 팀 손가락 기준 관측](Docs/validation/2026-10-27/reload-finger-baseline.md)은 네 표본·120관절 행과 복원·정리를 확인한 자료이며 최종 피부 접촉/새 grip-pose 수용은 아닙니다. #188/#166 전체는 열어 둡니다. 코드34 APK에는 손 구도 수정이 미포함이고 새 Android 예약은 없습니다.
+>
+> **2026-10-27 최신 제공 순서:** 코드34 QA 산출물·기존 키 서명·로컬 APK 검증 완료 → 브라우저 연결 복구 후 지정 Console 내부 반영 → Play 서명34로 기존 FPS 앱·데이터 보존 업데이트 → 실제 Android 입력 수용 → PR261 및 일반 main 후속입니다. [정확한 산출물과 남은 단계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 따릅니다. 마지막 확인 제공33/release11·원장196,2,34이며 기기/청취/16KB 실행/장시간 성능은 후순위입니다. APK 외부 업로드·같은 설정 반복 요청은 하지 않습니다.
+
 > **2026-10-26 저녁 최신 계획 · #262:** Windows05 빌드/산출물 독립 검토와 같은 binary 두 Player의 기본 경기·양쪽5분 DRAW까지 확인했습니다.05의 결과 RETURN·재참가·EXIT는 앱 활성화 실패로 미실행이며 정상 종료 통과가 아닙니다. PR264/#263은 main e19cb55에 좁게 반영했고 PR261/#259는 Draft/OPEN입니다.
 >
 > 다음은 도구 제어가 가능한 시점의05 후속과 Draft 입력 경계·새 Android 통합 준비입니다. [검증·잔여17개와 별도 #262/#263](Docs/validation/2026-10-26/evening-pc-validation-summary.md)을 따릅니다. 제공33·원장 `196,1,33`, 기기/청취/16KB/장시간 성능 후순위와00시 질문 수집 합의를 유지하며 아래 계획은 당시 기록으로 보존합니다.

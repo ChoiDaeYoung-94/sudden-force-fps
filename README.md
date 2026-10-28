@@ -1,3 +1,14 @@
+> **2026-10-28 Android 실제 입력:** 코드34 FPS 에뮬레이터에서 단일 사격·시점 조작과 두 손가락의 두 해제 순서를 실행해 화면·recorder·서버 상태를 대조했습니다. [세 모드의 결과와 한계](Docs/validation/2026-10-28/android34-native-fire-look.md)를 따릅니다.
+> PR261은 pause/focus 전이·사망/리스폰 등 남은 경계 판단 전 Draft로 유지합니다. 실폰·전체 경기·최신 main 통합 빌드의 통과가 아니며 아래 기록은 각 시점 상태로 보존합니다.
+
+> **2026-10-28 코드34 에뮬레이터 실행:** 기존 Play33과 같은 인증서로34를 데이터 삭제 명령 없이 업데이트하고 정상 로그인·방 참가·READY/START·두 피어 Game 진입과 PC 정상 종료를 확인했습니다. [실제 결과와 한계](Docs/validation/2026-10-28/android34-runtime-partial.md)를 따릅니다.
+> 입력 helper는 전경 guard에서 events0으로 중단되어 native 입력 경계 수용과 Draft261은 미완료입니다. 최신 main 전체 Android 빌드·실제 휴대전화 검증과 구분하며 아래 기록은 각 시점 상태로 보존합니다.
+
+> **2026-10-28 Play 내부 제공:** 코드34/1.0.196 입력계측 QA(source61218033)를 release12/11:58 KST에 내부 테스터에게 제공했고 공식 PlaySigned APK105,690,443B의 로컬 정적·독립 검증을 완료했습니다. [파일 경로·SHA·정확한 수용 범위](Docs/validation/2026-10-28/play34-internal-delivery.md)를 따릅니다.
+> native 입력/기기·업데이트 수용은 미완료이고 Draft261은 유지합니다. 최신 PR282/287/288/290은 이 APK에 미포함이며 아래 기록은 각 작성 시점의 상태로 보존합니다.
+
+> **2026-10-27 최신 Android QA 산출물:** 코드34/1.0.196의 내보내기·패키징·기존 키 서명과 로컬 APK 검증을 완료했습니다. main ea74519에 미병합 Draft261 입력2개와 QA 계측을 더한 후보이며, Play 업로드·실제 Android 입력 수용은 아직0입니다. 마지막 확인 제공은33/release11입니다. [산출물·실제 검증·다음 단계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 최신 기준으로 보시고 아래 각 시점 기록은 보존합니다. 테스트 APK는 외부 업로드 없이 로컬 경로로 안내합니다.
+
 > **2026-10-26 저녁 최신 요약 · #262:** 새 Windows05의 같은 binary 두 Player로 일반 방 생성/Join·READY/START·한글 Enter 원격수신1건·사격30→29/재장전30·MENU/RESUME와 양쪽5분 DRAW를 확인했습니다. 앱 활성화 도구 실패로 결과 RETURN·재참가·EXIT는0이며 관측 시점 두 Player 생존/ExitCode 미확보 상태입니다. 정상 종료·cleanup 통과가 아닙니다.
 >
 > PR264/#263의 좁은 PC 수정은 main e19cb55에 병합했고 PR261은 Draft입니다. Windows04의 별도 RETURN·held-handle Exit0 표본과05를 구분합니다. 마지막 알려진 제공은 코드33/1.0.196/release11·원장 `196,1,33`, 새 Android 예약·AAB/APK·서명·업로드·Drive 전달은0입니다. [저녁 PC 검증과 남은 범위](Docs/validation/2026-10-26/evening-pc-validation-summary.md)를 최신 기준으로 보시고 아래 안내·본문은 각 시점 기록으로 보존합니다.
@@ -529,12 +540,14 @@ Android 배포용 빌드 진입점은 [BuildScript.cs](Assets/Scripts/Editor/Bui
 
 APK 메뉴는 Development/LZ4, AAB 메뉴는 non-Development/LZ4HC/CleanBuildCache이며 둘 다 상세 빌드 보고서를 생성합니다. APK 메뉴를 non-Development 릴리스 APK로 표현하지 않습니다. 도구체인·서명·Resolver 재실행 시 템플릿 점검과 배포 선행 조건은 [Android 릴리스 점검표](ANDROID_RELEASE_CHECKLIST.md)에 있습니다.
 
-### 기존 CI/CD 구성의 현재 상태
+### CI/CD 구성의 현재 상태 (2026-10-27 확인)
 
-- Unity2022/macOS/self-hosted `buildpc` → App Center 구성은 [원문 보관 파일](.github/legacy/cicd.yml.disabled)로 이동했습니다. 활성 `.github/workflows`에 실행 정의가 없으므로 이 소스에는 자동 Android 빌드·배포나 PR 검증 CI가 없습니다. 과거 [unity-cicd](https://github.com/ChoiDaeYoung-94/unity-cicd) 안내는 현재 배포 절차가 아닙니다.
-- [App Center 배포 기능은 종료](https://learn.microsoft.com/en-us/appcenter/retirement)되었습니다. 로컬 빌드는 Unity6000.3.25f1 절차를 사용하며 기존 Sudden Force 앱의 Google Play 내부 테스트 code5 업로드·출시는 완료했습니다. Play 스토어 설치본의 설치·로그인·경기 검증은 남아 있습니다.
-- 2026-10-08 확인한 과거 Actions 2건은 completed/cancelled였고 저장소에 등록된 self-hosted runner는 없었습니다. 해당 시점의 확인이며 현재 runner 가용성이나 Unity6 라이선스·Android 도구체인·secrets 구성을 보장하지 않습니다. 새 CI 환경은 미구성입니다.
-- 후속 CI는 확인된 runner에서 수동 `workflow_dispatch` 단일 빌드 작업으로 검증한 뒤 추가합니다. 로컬 빌드·실기기 검증과 GitHub CI 결과를 구분하며, PR 병합으로 빌드·배포를 자동 실행하지 않습니다. 진행 범위는 [이슈 #44](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44)에 기록합니다.
+- Unity2022/macOS/self-hosted `buildpc` → App Center 구성은 [원문 보관 파일](.github/legacy/cicd.yml.disabled)에 비활성으로 보존합니다. 과거 [unity-cicd](https://github.com/ChoiDaeYoung-94/unity-cicd) 안내는 현재 배포 절차가 아닙니다.
+- 활성 [Android 검증기 workflow](.github/workflows/android-export-verifier.yml)는 GitHub-hosted Windows2025/Python3.12에서 stdlib 단위 검사를 실행합니다. `Tools/Android/**` 또는 자기 정의가 바뀌는 PR/main push와 수동 실행 대상입니다. 최근 확인한 [main 실행40187481644](https://github.com/ChoiDaeYoung-94/sudden-force-fps/actions/runs/40187481644)는2026-10-25 completed/success입니다. 문서·다른 C# 변경에서 경로 필터로 미실행된 것을 통과로 합산하지 않습니다.
+- 이 workflow는 Unity 빌드·실제 Gradle 패키징·서명·Play 배포를 하지 않습니다. [검증 범위](Tools/Android/README.md#pr용-python-단위-검사)를 따르며 로컬 Unity6000.3.25f1 산출물·기기 결과와 GitHub 단위 검사 결과를 구분합니다.
+- [App Center Distribution은 종료](https://learn.microsoft.com/en-us/appcenter/retirement)되어 사용하지 않는 Fastlane 업로드 코드와 전용 Ruby 의존성 4파일을 제거했습니다. 비활성 legacy workflow는 과거 기록으로 보존합니다. Play 내부 테스트 AAB 배포는 별도 검증 후 진행하고, 테스트 APK는 외부 업로드 없이 로컬 경로로 안내합니다. 현재 제공본·별도 QA 산출물의 버전과 실제 검증은 [배포 점검표](ANDROID_RELEASE_CHECKLIST.md)를 따릅니다.
+- 2026-10-27 API 확인에서 이 저장소에 등록된 self-hosted runner는0개였습니다. 별도 장비·조직 runner 전체 가용성이나 Unity 라이선스·secrets 유효성을 판정한 것은 아니며 runner/secrets 등록·수정은 하지 않았습니다.
+- 후속 Unity 빌드 CI는 확인된 runner·라이선스·toolchain에서 수동 단일 빌드 작업으로 검증한 뒤 추가합니다. PR 병합으로 빌드·배포를 자동 실행하지 않으며 [이슈 #44](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/44)의 남은 범위를 유지합니다.
 
 ## 계획·검증·라이선스
 
