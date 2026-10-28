@@ -1,3 +1,6 @@
+> **2026-10-28 실제 제공/검증:** 코드34/1.0.196 QA를 내부 release12에 제공했고 공식 PlaySigned APK105,690,443B/SHA09403527…16E7F76의 ZIP/native7/인증서/manifest/정렬 정적·독립 검증을 완료했습니다. [전체 SHA·로컬 경로·압축 SO와16KB 검사 한계](Docs/validation/2026-10-28/play34-internal-delivery.md)를 최신 기준으로 읽습니다.
+> 원장196,2,34·새35예약0, active config false retire·소비본/marker 보존입니다. native 입력/실제16KB 기기·업데이트 수용은 남으며 Draft261과 최신 수정 미포함을 유지합니다. 아래 기록은 당시 상태로 보존합니다.
+
 > **2026-10-27 최신 code34 QA:** 내보내기 Succeeded/오류2·경고68(오류2는 CLI 계층으로 별도 분류), 별도 Gradle 복구02 종료0/176tasks, 실제 AAB·고지·native 정적·아이콘/폰트·심볼6/7·기존 키 서명과 로컬 APK 검증을 완료했습니다. [정확한 SHA와 검증 한계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 최신 기준으로 합니다. Play 업로드·실제 Android 입력 수용0, 마지막 확인 제공33/release11·원장196,2,34이며 아래 미완료/실패 문장은 작성 당시 기록으로 보존합니다.
 
 > **2026-10-27 Android 공개 설정 지속성 · #66:** 별도 P12에서 ARM64·export/bundle true·customKeystore false의4설정과 기존 버전1.0.194/code5를 분리했습니다. 저장1회·정상 Editor Exit0·새 프로세스의4설정 유지와 저장 후 공개3990개 일치를 확인했습니다.
