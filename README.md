@@ -1,3 +1,5 @@
+> **2026-10-29 관측 시각·입력 대기:** 새 출력 처리의 실제 관측9개와 설정 발행을 확인했지만, dispatcher는30초 대기 뒤 본문0으로 종료했습니다. [실제04/05의 결과·보존과 남은 단계](Docs/validation/2026-10-29/input-observer-identity-and-dispatch-wait.md)를 따릅니다.
+> pulse·enabled Arm·paired·packet0과 Draft261/#259 OPEN을 유지합니다. 정상 종료·3,984개 보존을 입력 수용으로 합산하지 않고 제공34/source612·새35 예약/게임 빌드0을 구분합니다.
 > **2026-10-29 조이스틱 probe와 바인딩:** 정상 두 피어에서 같은 프레임의 공개 입력 probe·복구6항목과 실제 설정 발행·퇴역, 정상 복귀·종료와3,984개 보존을 확인했습니다. [실제 결과와 남은 수집 단계](Docs/validation/2026-10-29/joystick-probe-binding-partial.md)를 따릅니다.
 > 후속 pulse·witness Arm·수집 패킷은0이며 PR261 Draft/#259 OPEN을 유지합니다. 제공34/source612와 최신 main을 구분하고 새35 예약/빌드0을 유지합니다.
 
