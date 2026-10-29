@@ -30,8 +30,8 @@ candidate01의 소스·manifest·실패 원본은 보존했습니다. 별도 can
 
 두 실행 모두 `unity close <P11> --timeout 30 --format json`으로 정상 종료를 요청했고 force를 사용하지 않았습니다. 별도 watcher가 실제 native Process.Handle을 종료 전 보유한 뒤 WaitSignaled/HasExited·strict int ExitCode0을 읽고 영수증을 쓴 후 Dispose했습니다. watcher tool0·disposeErrors0도 별도로 확인했습니다.
 
-- 첫 native 종료는 `05:49:02.9980001Z`, 소유4파일 정리·3,984개 감사 후 실제 반환은 `05:50:06.1362872Z`였습니다. compile/workflow 전체 수용은false입니다.
-- 두 번째 native 종료는 `06:14:08.7506193Z`, 소유4파일 정리·3,984개 감사 후 실제 반환은 `06:14:33.0382732Z`였습니다. 이번 컴파일/비활성 검사만 통과했으며 fullRuntimeAcceptance=false입니다.
+- 첫 native 종료 관측 영수증의 finishedUtc는 `05:49:02.9980001Z`, 소유4파일 정리·3,984개 감사 후 실제 반환은 `05:50:06.1362872Z`였습니다. compile/workflow 전체 수용은false입니다.
+- 두 번째 native 종료 관측 영수증의 finishedUtc는 `06:14:08.7506193Z`, 소유4파일 정리·3,984개 감사 후 실제 반환은 `06:14:33.0382732Z`였습니다. finishedUtc를 정확한 kernel 종료 시각으로 확대하지 않습니다. 이번 컴파일/비활성 검사만 통과했으며 fullRuntimeAcceptance=false입니다.
 
 각 실행에서 새 closed guard의 native/unknown0·TempLock=false, 외부 원바이트와 정확한 소유4파일 대조를 확인한 뒤 네 파일만 제거했습니다. 새 폴더·재귀 삭제는0입니다. 각 전후 감사의 기존 공개3,984개 path/bytes/SHA가 같고 비공개6개는 absent/indexS, 기존 dirty18·untracked0을 유지했습니다. private 내용 읽기/해시는0입니다. 게임·VM·ADB·SDK 설치·Player 빌드·서명·키·Chrome·global Save Project는 실행하지 않았습니다.
 
@@ -45,6 +45,7 @@ candidate01의 소스·manifest·실패 원본은 보존했습니다. 별도 can
 | --- | --- |
 | l2-host-bounded-bridge02-scenehandle-fix-independent-review01/verification.public.json | A3D466DAA8EF8C38846B5A7E813330645DECA66D2A9967FEECDD7907479F8357 |
 | l2-bridge-first-compile-actual-independent-review01/verification.public.json | 6267814A011E4296C8EA074CAEA9739F89910B97488C21D66D77368606473798 |
+| l2-bridge-second-compile-actual-independent-review01/verification.public.json | 2BC553E060C84533FC486C7727171ECAFDC923D8587E14318501632339A3FD5F |
 | l2-bridge-compile-attempt02/bridge-type-disabled01.public.json | 39A9359A913D051ED814A332B65C31D7A53B50FA2412DD5CA68C4F65B92616B6 |
 | native-exit-handle-retention-candidate03/native-l2-bridge-compile02.public.json | 9CC16AAB70F353D5720921903CE80B744FDA0D7DCA13A1A9918CC9BFF1A9ED55 |
 | p11-after-l2-bridge-cleanup02.public.json | 7A414BEA59324F9AE06D551191EA600FBF24CB159A27FA239ADB2C8F795BE360 |
