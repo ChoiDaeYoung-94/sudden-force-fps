@@ -1,3 +1,6 @@
+> **2026-10-29 입력 계측기 최초 컴파일:** 새 null-safe 후보의 자연 컴파일·타입과 미호출/비활성 경계8개, 정상 종료·공개3,984개 보존·임시2파일 정리를 확인했습니다. [결과와 한계](Docs/validation/2026-10-29/input-witness-compile-disabled.md)를 따릅니다.
+> 활성 Arm 등록·실제 패킷·원래 예외 해결·사망/리스폰·PR261 전체 수용은 미검증입니다. PR261 Draft/#259 OPEN, 제공34와 최신 main 분리·새35 예약/빌드0을 유지합니다.
+
 > **2026-10-28 Joystick 부분 관측:** 공개 Pointer probe와 복구는 완료했지만, 짧은 pulse는 network input 조회가 유효하지 않아 전체 미통과입니다. [실제 결과·정리·한계](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 따릅니다.
 > P11 정상 종료·3984 입력 보존과 native/사망·route·전체 PR261 수용을 구분합니다. Draft261·게임34/source612 분리와 새35 예약·빌드0을 유지하며 아래 과거 기록은 보존합니다.
 
