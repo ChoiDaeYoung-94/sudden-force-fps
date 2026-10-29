@@ -1,3 +1,9 @@
+> **2026-10-28 Joystick 검증 범위:** PC 합성 공개 Pointer probe/복구는 완료했지만 짧은 pulse 전체 판정은 false입니다. [실제 결과와 정리](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 따릅니다.
+> native/죽음·리스폰/route·전체 PR261 수용은 미완료입니다. 제공34/source612와 후속 PR282/287/288/290 미포함을 유지하며 새35 예약·게임APK/AAB 빌드0이고 아래 과거 체크는 보존합니다.
+
+> **2026-10-28 L1 callback 경계:** 정상 두 피어 P11에서 Focus/Pause×두 callback 순서의4시나리오·30검사항목과 즉시 복구·정상 종료를 확인했습니다. [결과와 한계](Docs/validation/2026-10-28/input261-lifecycle-callbacks.md)를 따릅니다.
+> 실제 OS 전이·사망/리스폰(L2)·PR261 전체 수용은 미완료이며 Draft를 유지합니다. 코드34/source612 QA와 최신 main 통합을 구분하고35 예약·빌드는0이며 아래 기록은 각 시점 상태로 보존합니다.
+
 > **2026-10-28 Android 실제 입력:** 코드34 FPS 에뮬레이터에서 단일 사격·시점 조작과 두 손가락의 두 해제 순서를 실행해 화면·recorder·서버 상태를 대조했습니다. [세 모드의 결과와 한계](Docs/validation/2026-10-28/android34-native-fire-look.md)를 따릅니다.
 > PR261은 pause/focus 전이·사망/리스폰 등 남은 경계 판단 전 Draft로 유지합니다. 실폰·전체 경기·최신 main 통합 빌드의 통과가 아니며 아래 기록은 각 시점 상태로 보존합니다.
 

@@ -1,3 +1,17 @@
+> **2026-10-29 관측 시각·입력 대기:** 새 출력 처리의 실제 관측9개와 설정 발행을 확인했지만, dispatcher는30초 대기 뒤 본문0으로 종료했습니다. [실제04/05의 결과·보존과 남은 단계](Docs/validation/2026-10-29/input-observer-identity-and-dispatch-wait.md)를 따릅니다.
+> pulse·enabled Arm·paired·packet0과 Draft261/#259 OPEN을 유지합니다. 정상 종료·3,984개 보존을 입력 수용으로 합산하지 않고 제공34/source612·새35 예약/게임 빌드0을 구분합니다.
+> **2026-10-29 조이스틱 probe와 바인딩:** 정상 두 피어에서 같은 프레임의 공개 입력 probe·복구6항목과 실제 설정 발행·퇴역, 정상 복귀·종료와3,984개 보존을 확인했습니다. [실제 결과와 남은 수집 단계](Docs/validation/2026-10-29/joystick-probe-binding-partial.md)를 따릅니다.
+> 후속 pulse·witness Arm·수집 패킷은0이며 PR261 Draft/#259 OPEN을 유지합니다. 제공34/source612와 최신 main을 구분하고 새35 예약/빌드0을 유지합니다.
+
+> **2026-10-29 입력 계측기 최초 컴파일:** 새 null-safe 후보의 자연 컴파일·타입과 미호출/비활성 경계8개, 정상 종료·공개3,984개 보존·임시2파일 정리를 확인했습니다. [결과와 한계](Docs/validation/2026-10-29/input-witness-compile-disabled.md)를 따릅니다.
+> 활성 Arm 등록·실제 패킷·원래 예외 해결·사망/리스폰·PR261 전체 수용은 미검증입니다. PR261 Draft/#259 OPEN, 제공34와 최신 main 분리·새35 예약/빌드0을 유지합니다.
+
+> **2026-10-28 Joystick 부분 관측:** 공개 Pointer probe와 복구는 완료했지만, 짧은 pulse는 network input 조회가 유효하지 않아 전체 미통과입니다. [실제 결과·정리·한계](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 따릅니다.
+> P11 정상 종료·3984 입력 보존과 native/사망·route·전체 PR261 수용을 구분합니다. Draft261·게임34/source612 분리와 새35 예약·빌드0을 유지하며 아래 과거 기록은 보존합니다.
+
+> **2026-10-28 L1 callback 경계:** 정상 두 피어 P11에서 Focus/Pause×두 callback 순서의4시나리오·30검사항목과 즉시 복구·정상 종료를 확인했습니다. [결과와 한계](Docs/validation/2026-10-28/input261-lifecycle-callbacks.md)를 따릅니다.
+> 실제 OS 전이·사망/리스폰(L2)·PR261 전체 수용은 미완료이며 Draft를 유지합니다. 코드34/source612 QA와 최신 main 통합을 구분하고35 예약·빌드는0이며 아래 기록은 각 시점 상태로 보존합니다.
+
 > **2026-10-28 Android 실제 입력:** 코드34 FPS 에뮬레이터에서 단일 사격·시점 조작과 두 손가락의 두 해제 순서를 실행해 화면·recorder·서버 상태를 대조했습니다. [세 모드의 결과와 한계](Docs/validation/2026-10-28/android34-native-fire-look.md)를 따릅니다.
 > PR261은 pause/focus 전이·사망/리스폰 등 남은 경계 판단 전 Draft로 유지합니다. 실폰·전체 경기·최신 main 통합 빌드의 통과가 아니며 아래 기록은 각 시점 상태로 보존합니다.
 
