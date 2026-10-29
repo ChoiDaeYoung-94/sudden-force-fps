@@ -1,3 +1,6 @@
+> **2026-10-29 L2 보조 코드 준비:** 첫 C# 컴파일 실패를 보존하고 최소 수정 후보의 실제 컴파일·타입·기본 비활성 검사, 새 두 프로세스의 보유 핸들 ExitCode0과 소유4파일 정리·3,984개 보존을 확인했습니다. [실제 결과와 남은 B1/L2 검증](Docs/validation/2026-10-29/l2-bridge-compile-and-disabled.md)을 따릅니다.
+> Play·공개 사격 입력·B1·native held lifecycle은0이며 PR261 Draft/#259 OPEN, 제공34/source612와 새35 예약/빌드0을 유지합니다. 이전 실제06의 native 종료 UNKNOWN은 그대로 보존합니다.
+>
 > **2026-10-29 실제06 Forward 입력:** 정상 두 피어에서 기대 입력과 일치하는13 tick 및 paired 복구를 확인했습니다. 원래 pulse의 complete=false/inputAvailable=false를 보존하며 [실제 수집과 종료 코드 UNKNOWN](Docs/validation/2026-10-29/input-witness-forward-ticks-and-exit-unknown.md)을 따릅니다.
 > 이전04/05의0은 당시 기록입니다. 이번 native ExitCode=null과 공유 자원 반환·별도 소유2파일 정리를 구분하고 전체 workflow·L2 수용/Draft261·#259 완료로 합산하지 않습니다. 제공34/source612와 새35 예약/빌드0을 유지합니다.
 > **2026-10-29 관측 시각·입력 대기:** 새 출력 처리의 실제 관측9개와 설정 발행을 확인했지만, dispatcher는30초 대기 뒤 본문0으로 종료했습니다. [실제04/05의 결과·보존과 남은 단계](Docs/validation/2026-10-29/input-observer-identity-and-dispatch-wait.md)를 따릅니다.
