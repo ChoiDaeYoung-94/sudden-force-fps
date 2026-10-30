@@ -1,7 +1,7 @@
 # Quad D 인트로 통합 준비 (#302)
 
 2026-10-30 P2, 변경 전 main `02a482c9e97d293077553d76884295ac1b776fa5` 기준입니다.
-현재 단계는 패키지 설치·새 씬 저장·제품 코드 컴파일까지이며 **실제 재생·Login 전환·네트워크 회귀 전 Draft**입니다.
+패키지 설치·새 씬 저장·제품 코드 컴파일 후 Editor Play를 실행했습니다. frame/time·오디오 신호·Login/로비 복귀는 관측했으나 **실제 영상이 검게 표시되어 Draft를 유지합니다.** 두 peer 네트워크 회귀와 Android 포함 검증은 남아 있습니다.
 
 ## 제품 구성
 
@@ -33,7 +33,16 @@ BuildSettings는 Intro3줄과 Unity가 함께 직렬화한 `m_UseUCBPForAssetBun
 
 ## 후속 수용과 근거
 
-실제 Intro 영상 frame/time 진행·오디오 신호, 정상 종료→Login/로비, 반복 실행, 모의 decoder 오류·지연 복구, 두 peer의 새 씬 목록/접속 버전 회귀를 확인해야 합니다. 소스 준비·설정값으로 실제 재생·실청·전체 Console 오류0·Android 포함을 대신하지 않습니다. 기존 제공34/source612와 분리하며 새35 예약·빌드·서명·업로드는0입니다. PR261 Draft/#259와 #42 전체 권리 범위는 유지합니다.
+### 실제 Editor Play 관측 (13:06~13:19 UTC)
+
+- P2에서 새 native Editor PID64220으로 Play 5회를 실행했습니다. 5회 모두 Intro 영상 frame/time 진행·prepare/end 이벤트·AudioListener mixed 출력 RMS와 targetAudioPlayingUnmuted, Intro→Login→Lobby 각 1회 전환을 관측했습니다. 전용 오디오 귀속은 증명하지 않았으며 영상 픽셀 표시나 실청 증거가 아닙니다. 실제 Play getter에서 Login loadable=true였고 Root는 로비 Photon 연결 화면도 관측했습니다. 닉네임 제출·방 생성·경기 입력은 하지 않았습니다.
+- 관측기02의 `normalObservedCriteriaMet`는 false입니다. 첫 Intro sceneLoaded의 mode 원값은 `4`로 공개 enum 의미가 확인되지 않았고, 기존 Login 흐름은 Lobby를 Additive로 엽니다. 모든 mode를 Single로 요구한 기존 결과는 그대로 보존하며 통과로 재작성하지 않습니다.
+- 3회차는 PAUSE_WATCHDOG라는 caseLabel을 사용했으나 첫 개입 호출은 준비된 영상 조건 불충족으로 called=false/videoCalls0이었습니다. 두 번째 호출은 innerSuccess=false/결과 미수용이며 영수증 시각은 config 만료 후이지만 상세 원인은 공개 결과로 확정할 수 없습니다. 개입 intent/result 파일도 없고 실제 Pause·모의 decoder 오류 실행은 확인되지 않아 둘 다0으로 구분합니다. watchdog·오류 복구 통과로 합산하지 않습니다. 이후 4·5회차는 정상 흐름을 다시 관측했습니다.
+- Root가 확인한 실제 Simulator와 별도로 연 GameView 화면 모두 Intro 동안 검게 표시됐고 로비 UI는 표시됐습니다. 관측기 JSON이 영상 픽셀을 측정한 결과는 아닙니다. 디코딩 frame/time와 오디오 신호가 있어도 출력 경로 수용은 실패입니다. URP/camera-plane의 원인 확정은 하지 않았으며 패키지 원본을 유지하는 프로젝트 측 UI 출력 보완을 후속 검토합니다.
+- Play 중단과 observer 비활성을 확인한 뒤 normal close 1회를 요청했습니다. 별도 GameView Close의 inner success=false는 보존했습니다. 보유 native handle에서 13:19:08.911Z 정수 ExitCode0, close CLI0, 후속 native0/unknown0/TempLock 없음으로 종료를 확인했습니다. 종료 중 UIAutomation·추가 close·force kill은0입니다.
+- 임시 observer 소스/meta/폴더 meta 총3파일과 신규 폴더를 정확한 해시로 외부 보존한 뒤 제거했습니다. Play 중 자동 직렬화된 ProjectSettings는 변경 키가 AndroidKeyaliasName 1개인 것을 값 출력 없이 분류하고 생성본 보존 후 실행 전 dirty 원본으로 복구했습니다. 최종 공개 입력4,015개는 실행 전과 모두 원바이트 일치·추가/삭제0, 기존 dirty5는 유지합니다. 최초 guard 뒤 stale LASTEXITCODE를 검사해 후속 명령이 중단된 orchestration 실패도 보존했고 JSON guard 값을 확인한 뒤 계속했습니다.
+
+실제 영상 표시, 반복 출력, 모의 decoder 오류·지연 복구, 두 peer의 새 씬 목록/접속 버전 회귀를 확인해야 합니다. 소스 준비·설정값으로 실제 재생·실청·전체 Console 오류0·Android 포함을 대신하지 않습니다. 기존 제공34/source612와 분리하며 새35 예약·빌드·서명·업로드는0입니다. PR261 Draft/#259와 #42 전체 권리 범위는 유지합니다.
 
 외부 근거: `D:/codex/validation/sudden-force-fps/20261030-work/`
 
@@ -41,3 +50,6 @@ BuildSettings는 Intro3줄과 Unity가 함께 직렬화한 `m_UseUCBPForAssetBun
 - `p2-before-intro-open01.public.json`, `p2-intro-after-recovery01.public.json`: 사전/문서 전 최종 공개 입력 감사
 - `native-exit-p2-candidate01/p2-intro-install01.public.json`, `intro-install-return01.public.json`: 보유 핸들 결과와 Root 도구/반환 관측 기록
 - `intro-install-runtime-source-review01/`, `intro-scene-create02-independent-review01/`, `intro-scene-create03-independent-review01/`, `intro-product01-independent-review01/`: source 검토와02 부분 실패 관측 차단 이력
+- `intro-play-actual01/`, `intro-runtime-observer-attempt01/`~`attempt05/`: 각 실제 호출·거절·결과와 원본 화면
+- `native-exit-p2-candidate01/p2-intro-play01.public.json`, `p2-after-intro-play-closed01.public.json`: 이번 Play의 보유 핸들 종료와 후속 guard
+- `intro-play-cleanup01.public.json`, `p2-after-play-cleanup01.public.json`: 임시 파일 보존·제거와 공개4,015개 원바이트 복구 감사
