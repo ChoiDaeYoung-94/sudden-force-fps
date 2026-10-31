@@ -1,3 +1,6 @@
+> **2026-10-31 Quad D 인트로 PC 검증:** 새 Windows 실행에서 전체 로고·애니메이션과 기존34의 접속 공간 분리, 두 Player의5분 DRAW→로비 복귀→새 방 재참가→양쪽 실제 native ExitCode0을 확인했습니다. [최신 결과와 첫 강제 종료 이력의 구분](Docs/validation/2026-10-31/quad-d-intro-windows-regression.md)을 따릅니다.
+> [Android 대상 Editor 컴파일](Docs/validation/2026-10-31/quad-d-intro-android-editor-compile.md)은 진단0·정상 종료·공개4,018개 복원 범위이며 Player/IL2CPP/Android 실행·실청 수용은 아닙니다. 실제 제공34/release12/source612 QA와 원장196,2,34는 그대로이며 새35 예약·Android 빌드/서명/업로드는0입니다. 아래는 각 날짜의 과거 기록입니다.
+
 > **2026-10-30 Quad D 인트로 준비:** 고정 회사 패키지 설치·Intro 씬/오디오 구성 저장·접속 버전 분리 코드 컴파일까지 확인했습니다. [실제 준비 결과와 남은 재생·전환 검증](Docs/validation/2026-10-30/quad-d-intro-integration.md)을 따릅니다.
 > 현재는 Draft 검증 단계이며 실제 재생/Login 전환·새 두 피어·Android 포함은 미완료입니다. 기존dirty5/다른4,007 입력 보존·native Exit0과 CLI close 실패를 구분하고 제공34·새35 예약/빌드0을 유지합니다.
 

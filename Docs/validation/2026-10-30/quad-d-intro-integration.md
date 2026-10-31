@@ -1,5 +1,7 @@
 # Quad D 인트로 통합 준비 (#302)
 
+> 2026-10-31 최신 후속: [Windows 전체 인트로·기존34 분리·두 Player 경기/복귀/재참가/정상 Exit0](../2026-10-31/quad-d-intro-windows-regression.md)과 [Android 대상 Editor 컴파일의 정확한 범위](../2026-10-31/quad-d-intro-android-editor-compile.md)를 확인했습니다. 아래 Draft·부분 검증 표현은 각 관측 시점의 이력입니다. Android Player/실청과 새 Android 제공은 여전히 별도입니다.
+
 > 2026-10-31 후속: [단일 GameView·Windows 빌드와 부분 두 피어 검증](../2026-10-31/quad-d-intro-windows-partial.md)을 추가했습니다. 새 Windows 빌드와 실제 경기 진입을 확인했으나 권한 창 처리 뒤의 복귀·종료·기존34 분리 검증이 남아 Draft를 유지합니다. 아래는 10월30일 당시의 기록입니다.
 
 2026-10-30 P2, 변경 전 main `02a482c9e97d293077553d76884295ac1b776fa5` 기준입니다.
