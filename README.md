@@ -1,3 +1,6 @@
+> **2026-10-31 단독 B1 준비:** [오프라인 경계 시험·구문 확인과 미실행 범위](Docs/validation/2026-10-31/input261-standalone-readiness.md)를 추가했습니다. guard175개·publisher144개는 통제 시험이며 실제 B1/L2·C# 컴파일·전체 family 실행 준비 통과가 아닙니다.
+> PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34를 유지하며 이 준비의 실제 staging/새 Editor/lease/config/Enable과 새35 예약·빌드·서명·업로드는0입니다. 아래 기록은 각 시점의 범위로 보존합니다.
+
 > **2026-10-31 Quad D 인트로 PC 검증:** 새 Windows 실행에서 전체 로고·애니메이션과 기존34의 접속 공간 분리, 두 Player의5분 DRAW→로비 복귀→새 방 재참가→양쪽 실제 native ExitCode0을 확인했습니다. [최신 결과와 첫 강제 종료 이력의 구분](Docs/validation/2026-10-31/quad-d-intro-windows-regression.md)을 따릅니다.
 > [Android 대상 Editor 컴파일](Docs/validation/2026-10-31/quad-d-intro-android-editor-compile.md)은 진단0·정상 종료·공개4,018개 복원 범위이며 Player/IL2CPP/Android 실행·실청 수용은 아닙니다. 실제 제공34/release12/source612 QA와 원장196,2,34는 그대로이며 새35 예약·Android 빌드/서명/업로드는0입니다. 아래는 각 날짜의 과거 기록입니다.
 
