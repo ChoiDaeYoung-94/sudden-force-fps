@@ -1,3 +1,6 @@
+> **2026-10-31 B1 실제 실행:** [새 C7 컴파일·정상 두 피어와 발사 전 중단](Docs/validation/2026-10-31/input261-b1-head-preflight-stop.md)을 기록했습니다. Queue1회 뒤 첫 충돌/head 검사에서 중단해 Fire(true)/SeedAim/shot0이며 B1/L2는 미통과입니다.
+> 정상 복귀·동일 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
 > **2026-10-31 단독 검증 코드 실제 컴파일:** [정확한 C4 소스의 기본 비활성·정상 종료·입력 보존 결과](Docs/validation/2026-10-31/input261-standalone-compile-only.md)를 확인했습니다. 새 P11의 진단0·Queue(false) IO0·보유 native Exit0·임시4파일 정리·공개3,984개/기존dirty18 보존 범위입니다.
 > 전체 실행 절차의 남은3결함 수정과 실제 B1/L2·새 수정본 컴파일은 후속입니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34·새35 예약/빌드/서명/업로드0을 유지하며 아래 과거 미실행 기록을 덮어쓰지 않습니다.
 
