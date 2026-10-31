@@ -1,3 +1,6 @@
+> **2026-10-31 첫 충돌 진단:** [새 C8 실제 컴파일·정상 두 피어의 읽기 전용 query4개](Docs/validation/2026-10-31/input261-readonly-shot-geometry.md)에서 현재 배치의 Wall_04 첫 충돌을 확인했습니다. 진단 입력/발사0이며 이전 C7 원인 확정·B1/L2·native 조이스틱 이동 통과로 확대하지 않습니다.
+> 같은 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
 > **2026-10-31 B1 실제 실행:** [새 C7 컴파일·정상 두 피어와 발사 전 중단](Docs/validation/2026-10-31/input261-b1-head-preflight-stop.md)을 기록했습니다. Queue1회 뒤 첫 충돌/head 검사에서 중단해 Fire(true)/SeedAim/shot0이며 B1/L2는 미통과입니다.
 > 정상 복귀·동일 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
 
