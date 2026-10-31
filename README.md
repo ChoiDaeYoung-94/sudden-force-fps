@@ -1,3 +1,6 @@
+> **2026-10-31 단독 검증 코드 실제 컴파일:** [정확한 C4 소스의 기본 비활성·정상 종료·입력 보존 결과](Docs/validation/2026-10-31/input261-standalone-compile-only.md)를 확인했습니다. 새 P11의 진단0·Queue(false) IO0·보유 native Exit0·임시4파일 정리·공개3,984개/기존dirty18 보존 범위입니다.
+> 전체 실행 절차의 남은3결함 수정과 실제 B1/L2·새 수정본 컴파일은 후속입니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34·새35 예약/빌드/서명/업로드0을 유지하며 아래 과거 미실행 기록을 덮어쓰지 않습니다.
+
 > **2026-10-31 단독 B1 준비:** [오프라인 경계 시험·구문 확인과 미실행 범위](Docs/validation/2026-10-31/input261-standalone-readiness.md)를 추가했습니다. guard175개·publisher144개는 통제 시험이며 실제 B1/L2·C# 컴파일·전체 family 실행 준비 통과가 아닙니다.
 > PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34를 유지하며 이 준비의 실제 staging/새 Editor/lease/config/Enable과 새35 예약·빌드·서명·업로드는0입니다. 아래 기록은 각 시점의 범위로 보존합니다.
 
