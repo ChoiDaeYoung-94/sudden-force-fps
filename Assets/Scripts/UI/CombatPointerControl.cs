@@ -24,6 +24,7 @@ public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, I
             _source.SynchronizeRespawn();
             _source.SetFire(false);
             _source.SetFire(true);
+            _source.TryCaptureTouchLook(eventData.pointerId);
         }
         else if (_control == Control.Crouch)
         {
@@ -49,6 +50,7 @@ public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, I
         {
             if (_control == Control.Fire)
             {
+                if (_pointer.HasValue) _source.ReleaseTouchLook(_pointer.Value);
                 if (physicalRelease) _source.SetFire(false);
                 else _source.ResetInput();
             }
