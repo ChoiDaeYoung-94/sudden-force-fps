@@ -1,6 +1,6 @@
 # Quad D 인트로의 단일 GameView와 Windows 빌드 검증
 
-2026-10-31 KST, #302/PR307의 **부분 검증 기록**입니다. 새 Windows 빌드와 단일 GameView 표시를 확인했으며, Windows 두 피어는 실제 경기까지 진입했습니다. 방화벽 권한 창이 나타난 뒤 GUI 입력을 보류했습니다. 결과·RETURN·재참가·Player 종료와 기존34 매칭 공간 분리는 아직 완료하지 않았으므로 PR307은 Draft로 유지합니다.
+2026-10-31 KST, #302/PR307의 **부분 검증 기록**입니다. 새 Windows 빌드와 단일 GameView 표시를 확인했으며, Windows 두 피어는 실제 경기까지 진입했습니다. 방화벽 권한 창이 나타난 뒤 GUI 입력을 보류했습니다. 결과·RETURN·재참가·Player 정상 EXIT 수용과 기존34 매칭 공간 분리는 아직 완료하지 않았으므로 PR307은 Draft로 유지합니다. 테스트 Player 두 개는 아래와 같이 강제 정리했습니다.
 
 ## 소스와 실행 범위
 
@@ -42,14 +42,16 @@ STOP 요청 뒤 playing/transitioning/dirty scene=false를 확인했습니다. �
 
 같은 실행 파일의 두 창을 배경 상태로 캡처했을 때 전경 화면이 반환된 경우가 있었습니다. `client-game-start01`, `client-after-host-shot01`은 독립 Client 근거에서 제외합니다. 실제 전경 전환 후 Client의 다른 시점/탄약30과 Host의 탄약29를 다시 확인했습니다. 기존 잘못 연결된 이미지와 관측은 삭제하거나 새 성공으로 바꾸지 않았습니다.
 
-종료 watcher01은 JSON ISO 날짜의 자동 DateTime 변환 뒤 문자열 parse에서 freshness guard가 실패했습니다. 프로세스 조회 전에 멈춘 실패를 보존했습니다. 새 watcher02는 `ConvertFrom-Json -DateKind String` 한 곳만 수정했으며, 독립 통제 입력에서 ISO 보존·정상 경과시간을 확인했습니다. 두 실제 PID/start/exe에 각각 보유 handle을 연결했지만 **아직 실제 Player 종료 코드는 미확보**입니다.
+종료 watcher01은 JSON ISO 날짜의 자동 DateTime 변환 뒤 문자열 parse에서 freshness guard가 실패했습니다. 프로세스 조회 전에 멈춘 실패를 보존했습니다. 새 watcher02는 `ConvertFrom-Json -DateKind String` 한 곳만 수정했으며, 독립 통제 입력에서 ISO 보존·정상 경과시간을 확인했습니다. 두 실제 PID/start/exe에 각각 보유 handle을 연결했습니다.
+
+이후 2026-10-31T00:13:40Z 총괄이 띄운 두 테스트 Player만 PID/startTicks/exe를 다시 대조해 강제 정리했습니다. 보유 handle은 양쪽 실제 정수 ExitCode=-1을 읽었습니다. Root의 Stop-Process 호출2개와 watcher 자체의 killCalls0을 구분하며 **정상 EXIT 통과는0**입니다. 두 로그의 Crash!!!/Fatal/NullReference 표식은0이지만 강제 종료를 정상 종료나 #154 해결로 바꾸지 않습니다. 종료 후 자기 Player 창0을 확인했으며 방화벽 권한 창은 계속 남아 있습니다. 권한 창 입력·보안 설정 명령은0입니다.
 
 새 EXE의 Windows 방화벽 권한 창은 총괄이 조작하지 않았습니다. 화면 조작·결과/RETURN·재참가·old34 음성 비교·정상 EXIT는 그 뒤의 대기 범위입니다. 기존 FPS 에뮬레이터에서 앱 실행까지 관측했지만 이번 설치 버전/인증서·새 매칭 비교는 확인하지 않았습니다. 기존 앱 제거·데이터 삭제·새 설치·ADB 서버 시작/재시작은 하지 않았습니다.
 
 ## 후속과 근거
 
-권한 창 처리 후 전경 대상을 새로 확인하여 현재 두 Player의 결과·RETURN·새 방 재참가·정상 EXIT를 이어갑니다. 이후 old34의 실제 설치 신원·Connected/새 목록이라는 양성 조건과 새 버전 방 미노출을 함께 비교합니다. 현재 브라우저 inventory에는 정확히 허용된 FPS Console 탭이 없어 claim/선택/탐색을 하지 않았으며, Android 다음 예약에는 fresh Console 최대 코드·권위원장·최종 포함 소스를 다시 결속해야 합니다.
+권한 창 처리 후 같은 검증 binary의 새 두 Player와 소유 handle을 준비해 결과·RETURN·새 방 재참가·정상 EXIT를 다시 확인합니다. 종료된 PID37576/17456을 재사용하지 않습니다. 이후 old34의 실제 설치 신원·Connected/새 목록이라는 양성 조건과 새 버전 방 미노출을 함께 비교합니다. 현재 브라우저 inventory에는 정확히 허용된 FPS Console 탭이 없어 claim/선택/탐색을 하지 않았으며, Android 다음 예약에는 fresh Console 최대 코드·권위원장·최종 포함 소스를 다시 결속해야 합니다.
 
-R31은 `D:/codex/validation/sudden-force-fps/20261031-work`입니다. 실제 근거는 `p13-build-binding01.public.json`, `intro-windows-build-attempt01/`, `windows-payload-audit01.public.json`, `p13-after-restore01.public.json`, `native-exit-p13/p13-import-build01.public.json`, `windows-runtime01/`입니다. 독립 검토는 `gameview-results-independent-review01/`, `intro-windows-payload-independent-review01/`, `intro-windows-watch02-independent-review01/`, `intro-windows-source-preservation-review01/`에 보존했습니다.
+R31은 `D:/codex/validation/sudden-force-fps/20261031-work`입니다. 실제 근거는 `p13-build-binding01.public.json`, `intro-windows-build-attempt01/`, `windows-payload-audit01.public.json`, `p13-after-restore01.public.json`, `native-exit-p13/p13-import-build01.public.json`, `windows-runtime01/`, `players-forced-cleanup-intent01.public.json`, `players-forced-cleanup-result01.public.json`, `host-exit01.public.json`, `client-exit01.public.json`입니다. 독립 검토는 `gameview-results-independent-review01/`, `intro-windows-payload-independent-review01/`, `intro-windows-watch02-independent-review01/`, `intro-windows-source-preservation-review01/`에 보존했습니다.
 
 현재 제공은 계속 코드34/release12/source612 QA이며 원장196,2,34·새35 예약/Android AAB·APK/서명/업로드는0입니다. 이번 UI·인트로와 새 Windows 결과가 기존 제공34에 포함됐다고 보고하지 않습니다.
