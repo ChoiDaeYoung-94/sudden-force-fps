@@ -1,3 +1,6 @@
+> **2026-11-02 L2 준비 실제 컴파일:** [C12 미호출 compile4·기본 false4와 정상 종료·정리](Docs/validation/2026-11-02/input261-l2-compile-readiness.md)를 확인했습니다. 새 허용 목록 수정의 실제 진단0·입력0과 공개3,984개/기존dirty18·P2보호5개 보존 범위입니다.
+> 최초 freshness 중단·CLI 종료 실패·이른 guard false를 보존하며 native held Exit0/tool0/Dispose0과 구분합니다. 실제 L2/timing/packet은 미수용이고 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
 > **2026-11-02 입력 도우미 갱신:** [코드34를 유지한 테스트 도우미1회 설치·관측과 정상 반환](Docs/validation/2026-11-02/input261-native-helper-preparation.md)을 기록했습니다. 기대 도우미 SHA·등록과 게임34 APK 바이트 보존을 독립 실제 검토에서 수용했습니다.
 > 실제 instrumentation0·native L2/timing/packet 미수용, 첫 반환 false와 새 관측 true·테스트 닉네임의 PlayerPrefs 한계를 보존합니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
 
