@@ -1,3 +1,6 @@
+> **2026-11-02 입력 도우미 갱신:** [코드34를 유지한 테스트 도우미1회 설치·관측과 정상 반환](Docs/validation/2026-11-02/input261-native-helper-preparation.md)을 기록했습니다. 기대 도우미 SHA·등록과 게임34 APK 바이트 보존을 독립 실제 검토에서 수용했습니다.
+> 실제 instrumentation0·native L2/timing/packet 미수용, 첫 반환 false와 새 관측 true·테스트 닉네임의 PlayerPrefs 한계를 보존합니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
 > **2026-11-02 B1 정상 경로 사격:** [C14 실제17지점 이동·1회 승인 사격/해제·정상 정리](Docs/validation/2026-11-02/input261-b1-normal-poll-shot.md)를 기록했습니다. 공개 Source를 통한 shot sequence1·탄약1 감소와 해제 후 추가 사격0을 확인했습니다.
 > 상대 HP100·명중/처치0·stored poll 미확보·native L2/timing 미수용과 전체 상태 복원 미주장을 보존합니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0은 그대로입니다.
 
