@@ -1,3 +1,6 @@
+> **2026-11-02 L2 회차02 사전 중단:** [C14 실제 compile4/default4·경로 계약 거부와 정상 반환](Docs/validation/2026-11-02/input261-l2-cohort02-preflight-stop.md)을 기록했습니다. 첫 publisher가 LOCAL_SLASH_PATH로 중단돼 Play·Nav·Queue·LD/ADB·Native 입력은0입니다.
+> M6 후속 Source/Control 승인은 false로 철회하고 원 IR를 보존했습니다. same-held Exit0/tool0/Dispose0·own4 정리·공개3,984개/dirty18·P2보호5 보존은 부분 확인이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
 > **2026-11-02 L2 준비 실제 컴파일:** [C12 미호출 compile4·기본 false4와 정상 종료·정리](Docs/validation/2026-11-02/input261-l2-compile-readiness.md)를 확인했습니다. 새 허용 목록 수정의 실제 진단0·입력0과 공개3,984개/기존dirty18·P2보호5개 보존 범위입니다.
 > 최초 freshness 중단·CLI 종료 실패·이른 guard false를 보존하며 native held Exit0/tool0/Dispose0과 구분합니다. 실제 L2/timing/packet은 미수용이고 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
 
