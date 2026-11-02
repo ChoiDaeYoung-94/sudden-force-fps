@@ -1,3 +1,6 @@
+> **2026-11-02 C13 실제 컴파일·시각 형식 중단:** [실제 진단8개·정상 방/PC Game2피어·입력 전 중단과 정상 정리](Docs/validation/2026-11-02/input261-c13-compile-and-utc-boundary-stop.md)를 기록했습니다. 새15지점은 모델 제안이며 Nav/B1 입력은0입니다.
+> 시각 형식 최소수정·같은 native held Exit0·자기4 정리/공개3,984개·기존dirty18 보존을 구분합니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
 > **2026-11-02 경로 이동·발사 전 IO 중단:** [C12 실제 진단8개·공개 Joystick18지점 이동과 읽기 전용 head query](Docs/validation/2026-11-02/input261-route-and-prefire-io-stop.md)를 확인했습니다. B1은 파일 교환 오류로 발사 전에 중단했고 Fire(true)/피해/킬0입니다.
 > 공개 해제·자기 객체 부재와 동일 native held Exit0을 확인했습니다. 저장 입력 패킷 중립·B1/L2·최신 main Android 통합 수용은 미완료이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
 
