@@ -9,7 +9,7 @@
 - 공개 QA 프로젝트는 `D:/codex/worktrees/sudden-force-fps-windows-20261026-01`의 detached `f055e4a84391bd9d8741c4e12855887b1ef72166` 및 기존 로컬 변경18개입니다. 최신 일반 main 전체를 실행한 결과가 아닙니다. PlayerInputSource/CombatPointerControl 두 소스의 PR261 동등성 확인과 프로젝트 전체 최신 통합은 구분합니다.
 - C14 소스32개+manifest의 raw manifest SHA256은 `80478BDF8B9F7A6C6E41355B26E09BD1C7AB947EE3380F493462886ABDBFEE88`입니다. 전체 소스 독립 검토 `BAC595198FE7DE09FCE48B9A8B1E4C30446B76E74F1778C8CEE0A218CCE177FB`, 통제검토 `295545D44429ADF091C2B6E1A694A4444D9BEFFC88A5DBE500C453CD3B93832A`와 새 Root/native/runtime lease를 결속했습니다. 과거 승인·nonce·프로세스 성공을 재사용하지 않았습니다.
 - 새 P11 PID38372 / 시작 `2026-11-02T08:34:22.4679884Z` / Game MVID `910b7bab-1bc5-4578-8a7d-8f50992f0d4e`입니다. native identity의100ns 정밀도와 일반 이벤트 시각 표현을 구분합니다.
-- Host·Queue caller·Navigation·Shot geometry의 미호출 compile/defaultfalse8개는 실제 진단0으로 확인했습니다. clean Untitled·Direct3D11·DOTNET1/BEE1·기존 frame cap -1을 확인한 뒤 정상 로비·닉네임·방 생성·Android READY와 host START를 진행했습니다.
+- Host·Queue caller·Close caller·Navigation·Shot geometry의 미호출 compile/defaultfalse8개는 실제 진단0으로 확인했습니다. clean Untitled·Direct3D11·DOTNET1/BEE1·기존 frame cap -1을 확인한 뒤 정상 로비·닉네임·방 생성·Android READY와 host START를 진행했습니다.
 - PC Game 화면과 읽기 전용 동일 epoch의 peers2를 확인했습니다. 이번 Android의 실제 Game 화면·설치 APK/ABI/SHA를 새로 확보한 것으로 확대하지 않습니다. 이후 Android 정상 로비·EXIT/OK·Home은 Root가 화면에서 확인했습니다.
 
 ## 이동과 읽기 전용 사선
