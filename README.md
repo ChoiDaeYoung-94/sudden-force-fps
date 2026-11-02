@@ -1,3 +1,6 @@
+> **2026-11-02 경로 이동·발사 전 IO 중단:** [C12 실제 진단8개·공개 Joystick18지점 이동과 읽기 전용 head query](Docs/validation/2026-11-02/input261-route-and-prefire-io-stop.md)를 확인했습니다. B1은 파일 교환 오류로 발사 전에 중단했고 Fire(true)/피해/킬0입니다.
+> 공개 해제·자기 객체 부재와 동일 native held Exit0을 확인했습니다. 저장 입력 패킷 중립·B1/L2·최신 main Android 통합 수용은 미완료이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
 > **2026-11-02 B1 사전검사 중단·정상 복구:** [첫 회차 결과와 같은 native Exit0·자기4 정리](Docs/validation/2026-11-02/input261-preflight-abort-and-recovery.md)를 기록했습니다. 새 Editor는 열었지만 native 연결120초 보호 조건에서 중단해 명시적 진단8개·Play·B1/L2 입력은0입니다.
 > 종료 전용 계약의 held Exit0·공개3,984개/기존dirty18·P2 설정5개 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지하며, 새 C12의 소스 준비와 실제 실행은 구분합니다.
 
