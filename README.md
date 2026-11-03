@@ -1,3 +1,6 @@
+> **2026-11-03 native 경로 회차05:** [C17 실제 compile4/default4·첫 publisher 경로 통과와 정상 반환](Docs/validation/2026-11-03/input261-native-path-contract.md)을 확인했습니다. 공개3,984개/기존dirty18·P2보호5를 보존했으며 독립 실제 검토도 이 범위만 수용했습니다.
+> C15 미수락·C16 M7 실패/false IR을 보존합니다. 실제 Play·Nav·Queue·LD/ADB·Native 입력0/전체L2미수용이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
 > **2026-11-02 L2 회차02 사전 중단:** [C14 실제 compile4/default4·경로 계약 거부와 정상 반환](Docs/validation/2026-11-02/input261-l2-cohort02-preflight-stop.md)을 기록했습니다. 첫 publisher가 LOCAL_SLASH_PATH로 중단돼 Play·Nav·Queue·LD/ADB·Native 입력은0입니다.
 > M6 후속 Source/Control 승인은 false로 철회하고 원 IR를 보존했습니다. same-held Exit0/tool0/Dispose0·own4 정리·공개3,984개/dirty18·P2보호5 보존은 부분 확인이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
 
