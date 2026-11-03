@@ -1,3 +1,5 @@
+> **2026-11-03 Quad D 고지:** [고정 패키지 LICENSE.md·Git 원문과 앱 고지 대응](Docs/validation/2026-11-03/quad-d-package-license.md)을 기록했습니다. Custom 회사 조건 원문이며 MIT·전체 권리 완료·기존 제공34 포함으로 일반화하지 않습니다.
+
 > **2026-11-03 · #42 코드34 고지와 후속 소스 출처표**
 >
 > 코드34 QA AAB의 고지 TextAsset 725,013B 본문 일치와 실제 내부 release12 제공은 [산출물 기록](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)·[제공 기록](Docs/validation/2026-10-28/play34-internal-delivery.md)을 따릅니다. 아래 코드33 packed 표는 당시 범위로 보존합니다.
