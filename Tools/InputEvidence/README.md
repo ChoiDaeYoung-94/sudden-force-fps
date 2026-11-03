@@ -13,3 +13,7 @@
 양성의 `graphRawPinsVerified:true`도 `semanticAccepted/actualAdmissionVerified/executionAuthorized/nativeBasicAccepted/readyToRun:false`, `runtimeHardblocked:true`를 유지합니다. 실제 admission이나 승인·nonce·lease를 발행하지 않습니다. descriptor의 approvals 값을 실행 권한으로 사용하지 않습니다.
 
 재현 명령은 `python -X utf8 -I -B -m unittest discover -s <이 폴더> -p 'test_*.py' -v`입니다. 테스트가 자기 폴더의 공개 source/schema만 읽습니다. 테스트는 스키마에서 합성20역할 fixture를 메모리에 생성하며 운영 영수증을 발행하지 않습니다. 외부 저자 보고서 재생성기는 저장소에 반입하지 않았습니다. 모든 경로는 이 도구 폴더를 기준으로 읽습니다. 독립 검토 수와 저자 수를 합산하지 않습니다.
+
+## 고정 원본문 의미 대조
+
+[원본문8종 검증](RAW_BODY_VALIDATION.md)은 별도 순수 API로 추가했습니다. 고정 원문6종과 주입된 의존 source3/역사적17원문을 대조하고, config/before2종은 호출자 기대값에 결속합니다. 구조 검사와 자동 연결하지 않으며 실제 producer·실행 권한·게임 수용은 계속 false입니다.
