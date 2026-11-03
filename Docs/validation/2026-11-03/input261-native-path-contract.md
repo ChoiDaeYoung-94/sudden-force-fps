@@ -1,6 +1,6 @@
 # Input261 native 경로 계약 수정과 검증
 
-2026-11-03 C15/cohort03는 첫 컴파일 CLI 미수락을 보존하고 종료했습니다. 별도 C16/cohort04에서는 준비 상태 확인 후 compile4/default4 진단0을 실제 확인했지만 첫 publisher가 `REGISTERED_PUBLISHER_ONLY`로 중단됐습니다. 정상 종료·정리·보존은 두 회차에서 확인했으며, 첫 publisher 통과와 #326 전체 완료는 아직 미완료입니다.
+2026-11-03 C17/cohort05에서 새 native 경로·publisher 자기 경로 계약, 실제 compile4/default4 진단0과 첫 publisher 준비를 확인했습니다. 같은 held native 정상 종료·정리·공개 입력 보존 후 반환했으며 독립 실제 검토도 이 좁은 범위를 수용했습니다. 앞선 C15 미수락과 C16 등록 경로 실패는 보존합니다. 전체 L2/gameplay/timing/packet 수용은 별도 미완료입니다.
 
 [#326](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/326)은 외부 L2 검증 도구의 경로 직렬화 정합 범위입니다. #259/PR261의 실제 Android 입력·L2/timing/packet 수용과 구분합니다. 기존 [C14 사전 중단](../2026-11-02/input261-l2-cohort02-preflight-stop.md)의 M6 false 판정과 실제 실패 자료는 보존합니다.
 
@@ -14,7 +14,7 @@ C15의 native7 JSON에서 projectPath/nativeExe 두 값만 검증을 마친 내�
 
 ## 실행 전 확인
 
-현재 Source IR은 20,909B/SHA `6E7D977A93BFBD5C5AEADACCD41AD6272AF0C283C9D203EB5A302DA0B0B1C21A`, Control IR은 8,980B/SHA `D3E8E797B4D32D18D49DEFE075568416E3893E0DF20A0F2844561F1D9CDD97C3`입니다. 두 원본은 기존 공개 루트의 `l2-family15-gated-independent-review01/`과 `l2-family15-controlled-tests01/`에 CreateNew로 보존했습니다.
+당시 C15 Source IR은 20,909B/SHA `6E7D977A93BFBD5C5AEADACCD41AD6272AF0C283C9D203EB5A302DA0B0B1C21A`, Control IR은 8,980B/SHA `D3E8E797B4D32D18D49DEFE075568416E3893E0DF20A0F2844561F1D9CDD97C3`입니다. 두 원본은 기존 공개 루트의 `l2-family15-gated-independent-review01/`과 `l2-family15-controlled-tests01/`에 CreateNew로 보존했습니다.
 
 Source의 독립435검사와 IR 소비12, Control의 current Source IR 원문 재결속162검사·별도 정적69검사를 구분합니다. 중복·저자·과거 결과를 합산하지 않습니다. 실제 고정 공개 템플릿9를 사용한 native→runtime lease→normal helper/admission→collector history/proof/prefix→whole mapper/config2→Reader snapshot/window의 합성 양성과 단일 stale 핀 거부를 확인했습니다. source/control 수용은 이 통제 범위뿐이며 실제 Unity·SDK·기기 실행 수용이나 Root 권한을 뜻하지 않습니다. 각 하네스의 최초 실패와 fixture 정정도 보존합니다.
 
@@ -71,9 +71,27 @@ publisher는 자기 raw `__file__`를 세 preparation action에 전달했습니�
 
 C17/revision17/cohort05/runtime-area05/phase05/family05는 publisher의 자기 `__file__`만 `Path.as_posix()`와 동등한 slash 투영으로 발행하고, alias는 거부하는 helper를 추가했습니다. 8개 self consumer 위치를 같은 표현으로 연결하며 io.C 상수로 caller를 대체하거나 ops/io 등록 검사를 완화하지 않습니다. namespace와 DAG 외 기능 변경은 이 자기 경로 정합뿐입니다.
 
-source63 manifest SHA는 `D34556EF39BD31E055E6C2D4DF1A6F1C6CCDDFEA83D1394DF84848E462D93F76`, Source IR20,791B/SHA `90FA83658B9805A57FDDF1EB32D1D5256ECABF140462F7ACE273ADFDE71DC507`, Control IR12,020B/SHA `BF2B8DF02CB6AD7BD8D775F24C2B98F37F5131075E8043EC6128D65EC8E624D0`입니다. Windows/mixed 자기 경로의 실제 publisher 함수·공유 snapshot·3 action/config2·whole mapper/Reader/P1과 foreign/alias/stale/partial 거부를 새로 확인했습니다. source/control 범위만 수용하며 실제 enabled CLI·staging·컴파일·publisher·권한·ready·L2 수용은 아직0/false입니다. C16의 POSIX-only 모델 누락과 실제 실패를 보존합니다.
+source63 manifest SHA는 `D34556EF39BD31E055E6C2D4DF1A6F1C6CCDDFEA83D1394DF84848E462D93F76`, Source IR20,791B/SHA `90FA83658B9805A57FDDF1EB32D1D5256ECABF140462F7ACE273ADFDE71DC507`, Control IR12,020B/SHA `BF2B8DF02CB6AD7BD8D775F24C2B98F37F5131075E8043EC6128D65EC8E624D0`입니다. Windows/mixed 자기 경로의 실제 publisher 함수·공유 snapshot·3 action/config2·whole mapper/Reader/P1과 foreign/alias/stale/partial 거부를 새로 확인했습니다. 동결 당시 source/control 범위만 수용했으며 실제 enabled CLI·staging·컴파일·publisher는0, 실제 권한·ready·L2 수용은false였습니다. C16의 POSIX-only 모델 누락과 실제 실패를 보존합니다.
 
-다음 실제 회차는 새 차례·원 기한·현재 관측부터 시작하며 cohort04의 권한·입력·출력을 승계하지 않습니다. 실제 검증 전에는 다른 프로젝트의 사용/복구 반환을 다시 확인합니다.
+이 Source/Control 동결 당시 실제 실행은0이었습니다. 이후 실제 회차는 다른 프로젝트의 전체 복구·반환과 무충돌을 다시 확인하고 새 차례·원 기한·현재 관측부터 시작했습니다. cohort04의 권한·입력·출력을 승계하지 않았습니다.
+
+## C17/cohort05 실제 경로·준비 검증
+
+| 범위 | 실제 결과와 한계 |
+| --- | --- |
+| 자원 창 | 시작03:30:40.2846879Z, 반환03:32:46.6766167Z; 원13분/15분과 더 이른 lease stop03:42:39.8924740Z/return03:44:39.8924740Z 안에서 반환 |
+| 새 native 신원 | PID20556/start03:30:45.3356198Z/ticks639292734453356198, MVID a792595f-ecab-4315-8660-e81ff3ad7e2c; native7 exact7·forward 두 값 |
+| 준비 상태·compile4/default4 | 자연 대기 후 status ready/컴파일false/reloadfalse/stopped와 같은 native/clean Untitled를 확인한 뒤8건 모두 실제 CLI0/innerSuccess true/sourceStable true/diagnosticCount0 |
+| 첫 publisher | prepare-directories 실제 exit0, 정확 새 l2-bridge/l2-pc-reader 두 디렉터리의 empty/non-reparse 확인; 다른 publisher action·config2 실제 실행은0 |
+| normal helper | 현재 epoch/lease에9개 렌더·admission 준비, 실행0 |
+| 종료·정리 | CLI close6/wrapper1 실패 보존, 별도 same-held native Exit0·실제 watcher48913 완료0/Dispose0·own4만 제거·후속3984/dirty18·P2보호5 exact |
+| 미실행·미수용 | Play/Nav/Queue/normal helper 실행/LD/ADB/Native instrumentation0; 전체 L2/timing/packet false |
+
+시각은 UTC입니다. 첫 publisher 원본 `N/input261-l2-cohort05/root-first-publisher-path-check.public.json` SHA는 `94CB380E5B71CE24498E43F015CF19DA962ECCC54369326C81A084F0DE375CFA`이며 새 native 원문 SHA `D59E519DF3BD4C94A33C5EC65304258CE5245E9D12DB6B2C3316D825C13B2BF4`를 현재 runtime lease `8A8585BA216685EAEC17AAED007B788E2EC11C3F2CE5A10659C55B920519C3AF`와 normal receipt/admission에 결속했습니다. collector10parent/mapper/Reader의 전체 전파는 앞선 Source/Control 합성 검증 범위이며 실제 collector 실행으로 확대하지 않습니다.
+
+새 보고 루트의 `cohort05-return-checkpoint.public.json` SHA는 `6B4F6E14BB44FCA8240BF60FA9B73EB68A42D74DD68FFCED3EA7516174AB8463`, Root 실제 tool 관측 `cohort05-root-tool-observations01.public.json` SHA는 `3B700F1BCFBDAA40178339BB8C5124C056A0D322B7360A2F28AA9BAE66272771`입니다. CLI close 실패는 유지하며 held native 정수0과 실제 tool 완료0/Dispose0을 각각 확인했습니다. 강제 종료·종료 중 GUI 조회는0입니다. 다른 프로젝트 설정 복구는 해당 총괄의 보고이고 Root의 독립 재관측이 아닙니다.
+
+독립 실제 검토 `l2-c17-cohort05-actual-independent-review01/verification.public.json`은4,143B/SHA `F01935669186D36C113378C8B7F116399B900424F3332542CFAF09D555B14DBA`입니다. 명명된 공개 JSON43개·Root 준비본3개, 총46입력/61항목의 raw핀·시각·범위를 대조해 #326의 경로·8진단·첫 준비·종료/반환 기준을 수용했습니다. 실제 OS/프로젝트/private/디렉터리의 재관측이 아니며 Root의 실제 tool 관측과 공개 영수증 검토를 구분합니다. 해당 noBlockers=true를 전체 L2·Android·실제 입력·ready·새 실행 권한으로 확대하지 않습니다.
 
 ## 현재 제품과 다음 범위
 
