@@ -1,5 +1,5 @@
-> **2026-11-03 native 경로 계약 준비:** [C15 두 직렬화 필드 수정과 새 회차 검증 초안](Docs/validation/2026-11-03/input261-native-path-contract.md)을 작성했습니다. 정확 Source/Control 통제 검토는 완료했으며 실제 compile/첫 publisher/종료·정리는 아직 미실행입니다.
-> C14 M6·Root 준비 실패 이력을 보존하고 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+> **2026-11-03 native 경로 회차03:** [C15 직렬화 수정·첫 CLI 미수락과 정상 반환, 다음 C16 준비](Docs/validation/2026-11-03/input261-native-path-contract.md)를 기록했습니다. 실제 native7 두 경로는 forward였지만 첫 compile은 EDITOR_NOT_RUNNING으로 미수락됐고 publisher·Play·입력은0입니다.
+> same-held Exit0/tool0/Dispose0·own4 정리·공개3984/dirty18/P2보호5를 부분 확인했습니다. C16은 소스/통제 검토만 완료·실제0이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
 
 > **2026-11-02 L2 회차02 사전 중단:** [C14 실제 compile4/default4·경로 계약 거부와 정상 반환](Docs/validation/2026-11-02/input261-l2-cohort02-preflight-stop.md)을 기록했습니다. 첫 publisher가 LOCAL_SLASH_PATH로 중단돼 Play·Nav·Queue·LD/ADB·Native 입력은0입니다.
 > M6 후속 Source/Control 승인은 false로 철회하고 원 IR를 보존했습니다. same-held Exit0/tool0/Dispose0·own4 정리·공개3,984개/dirty18·P2보호5 보존은 부분 확인이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
