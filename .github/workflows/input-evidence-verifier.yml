@@ -1,0 +1,36 @@
+name: Input evidence offline unit tests
+
+on:
+  pull_request:
+    paths:
+      - 'Tools/InputEvidence/**'
+      - '.github/workflows/input-evidence-verifier.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'Tools/InputEvidence/**'
+      - '.github/workflows/input-evidence-verifier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-unit:
+    runs-on: windows-2025
+    timeout-minutes: 5
+    steps:
+      - name: Checkout offline verifier sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          lfs: false
+          submodules: false
+          sparse-checkout: Tools/InputEvidence
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Run offline verifier unit tests
+        run: python -B -m unittest discover -s Tools/InputEvidence -p 'test_*.py' -v

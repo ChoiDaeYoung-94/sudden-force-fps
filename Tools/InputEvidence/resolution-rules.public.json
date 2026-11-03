@@ -1,0 +1,87 @@
+{
+  "schema": "BASIC_ADMISSION_PROPOSAL02_NORMATIVE_RESOLUTION_RULES_V1",
+  "proposalOnly": true,
+  "rootDescriptor": "Validate frozen proposal01 top17 shape, strict semantic integer types; every summary is recomputed from full resolved receipts and must equal supplied summary.",
+  "summaryProjection": {
+    "native": "nativeBinding.facts.identity",
+    "currentSource2": "currentSourceAudit.facts.source2",
+    "pcActor": "association.facts.pcActor",
+    "beforeCall": "invocation action/scope/common clock; config/source/body hashes rename *BodySha256 to prior *Sha256; start/end Ns exact",
+    "prearm": "preArmHistory original/method/lowerBound; prefixBodySha256=W(prefix)",
+    "android": "androidContext birth/local plus selected record49 focus/game/can and selectedReceiveNs; fixed own2/serial5558",
+    "geometry": "geometry.facts same named fields; omit linkage/capture for old summary projection",
+    "paired": "before/after sample raw pins; Ns from actual raw sample bodies"
+  },
+  "producerTrust": "All proposed receipts require a future independently reviewed role->producer-source mapping in current Basic manifest/IR; the wrapper is not self-authenticating. No mapping/implemented getter means hardblock. None issued here.",
+  "rawResolvers": {
+    "manifest": {
+      "body": {
+        "path": "D:/codex/validation/sudden-force-fps/20261103-work/resume-0210/native-basic-candidate01/revision02/manifest.public.json",
+        "bytes": 6526,
+        "sha256": "DE70FB5A34E66F7B3BC241ED771AF77753A88C23B54C63300CC6D3CF1F9DF41F"
+      },
+      "validator": "fixed raw bytes + declared exact manifest schema + all active3 raw bodies; DRAFT profile never operational approval"
+    },
+    "sourceReview": {
+      "body": {
+        "path": "D:/codex/validation/sudden-force-fps/20261103-work/resume-0210/native-basic-source-independent-review02/verification.public.json",
+        "bytes": 6936,
+        "sha256": "F0EFE71473D425EF355F5DAA2EE03224E4601B0729A620840E91B1FFD8CDE4EB"
+      },
+      "validator": "fixed raw bytes + SFF_NATIVE_BASIC_DRAFT_SOURCE_INDEPENDENT_REVIEW_REVISION02_V1; candidateManifest.sha256=B(manifest); sources match manifest; sourceAccepted/noBlockers exactbool; sourceOnly scope is not actual permission"
+    },
+    "controlReview": {
+      "body": {
+        "path": "D:/codex/validation/sudden-force-fps/20261103-work/resume-0210/native-basic-controlled-review02/verification.public.json",
+        "bytes": 8978,
+        "sha256": "BC3C60EE566CFC9F8F3185F562D7E96774568CD4CAD857A081DCD51D47ED6B16"
+      },
+      "validator": "fixed raw bytes + SFF_NATIVE_BASIC_REVISION02_INDEPENDENT_CONTROLLED_REVIEW_V1; sourceManifestSha256=B(manifest); pins match; controlledTestsAccepted/noBlockers exactbool; no runtime inference"
+    },
+    "source17BaselineMetadata": {
+      "body": {
+        "path": "D:/codex/validation/sudden-force-fps/20261102-work/resume-0452/input261-l2-standalone-candidate01/revision16/sourcepins03.public.json",
+        "bytes": 4310,
+        "sha256": "7AA959BE1B8FA094FCFF4BF8831D819FF5E061A843B8D81C484B2F12E31AE12A"
+      },
+      "validator": "primitive verify_source17 strict metadata V3 plus exact17 source body map reexecution; historical only"
+    },
+    "source07Source": {
+      "body": {
+        "path": "D:/codex/validation/sudden-force-fps/20261102-work/resume-0452/device-preparation-candidate01/revision04/device_preparation07.py",
+        "bytes": 35765,
+        "sha256": "3739547A0B59E3053A4BC29313EBA298E4A1291A0704CC64EFCC6CA81E278571"
+      },
+      "validator": "fixed source bytes; no import/operational execution for checking"
+    },
+    "source07Review": {
+      "body": {
+        "path": "D:/codex/validation/sudden-force-fps/20261102-work/resume-0452/device-preparation-independent-review01/addendum03/verification.public.json",
+        "bytes": 10568,
+        "sha256": "260DEEBFD653082283C4FD579A87EDD12B30AF8CCCD85B927246E5C6BC6799D2"
+      },
+      "validator": "Exact whole raw bytes first, strict JSON; schema SFF_DEVICE_PREPARATION_SOURCE07_PATH_PORT_INDEPENDENT_REVIEW_V1; sourceOnly/proposalOnly true and scope SOURCE07_PATH_PORT_SOURCE_ONLY; sourceAccepted/devicePreparationSourceReviewed/noBlockers exactbool true; candidateSource path/bytes/SHA equals B(source07Source); sourceSha256 and collectorSourceSha256 equal its hash. actual facts/permission not inherited."
+    },
+    "deviceScope": {
+      "validator": "Source07.validate_config exact18; current rootSessionId/resourceScopeId/source/window; allowHelperInstall is False; raw B(config) binds child invocation; no L2 lease input"
+    },
+    "deviceBefore": {
+      "validator": "primitive.verify_device_before exact28 + all nested body and supplied expected facts; B(scope)/B(source), complete installation/foreground, full before raw required; no before-action inference"
+    }
+  },
+  "hashResolution": "Read bounded no-reparse canonical wrapper raw bytes, compare exact descriptor evidence pin; strict decode, exact role/common scope/clock and role branch; parentPins equal descriptor evidence[parent] in path/size/hash; recurse DAG. Read original body and verify B separately; a wrapper SHA is never used where an original manifest/config/source/body SHA is required.",
+  "sourceAudit": "Source2 paths each once; GameData+observer exact registered paths; all4 before/after raw maps equal corresponding sourceFile/raw+LF pins. compiledTypes names each once, MVIDs equal current native. sourceRawSha must originate from a reviewed compile/source-stability provenance producer, not a claimed SDK getter for an IL hash. Missing causal compile proof handler hardblocks.",
+  "nativeAndHeld": "UTC7 ticks equal direct100ns; native PID/birth/exe/project exact current Root expectation. heldReady references W(nativeBinding); acquired<=ready<=capture; owner clock equals descriptor clock; exitObserved/disposed false. Missing live held-handle producer hardblocks.",
+  "beforeInvocation": "source/config/review/before fields equal B respective parent, scope/common clock exact; start<=end inside original13/15; int exit0/no timeout/overflow; each commandReceipt raw is exact SFF_DEVICE_PREP_COMMAND_METADATA_V1 from pinned Source07 command() and has same source/config/known read-only label/monotonic sequence<=96. Such metadata is command outcome, not gesture/game proof.",
+  "productProvenance": "Reexecute pinned Source07 Collector.artifacts raw checks with every declared artifactBundle body and required signed/helper reviews; game historical install/build bodies need fixed whole-byte registered contracts. BuildSourceFiles actual raw/LF must link game APK expected hash to reviewed build commit; missing link handler hardblocks, baseline17 is not a substitute.",
+  "history": "prelaunch: absent observation precedes firstLobby with same subsequent birth; continuous: whole firstLobby->roomCreated->androidReady->anchor, no prior Game/rejoin/other scene/writer/gap/manager replacement. firstMatchStart is later than anchor; PCPlay start is not match start. Required flags alone are insufficient; reviewed history event producer must cover entire sequence and same room/source product. lower UTC/Ns fixed once. No evidence means hardblock.",
+  "prefixContextGeometry": "Reexecute existing strict49 wholeprefix seq1/current masks/context/life; records and rowReceiveNs same lengths, actual receive ordering; last selected row equals selectedSeq/receiveNs/birth/local. Do not synthesize armUTC. Geometry same selected context/birth/life, top-left pixel rect [xmin,ymin,xmax,ymax]; endpoints in same FIRE rect, nonzero/axis<=quarter screen, 0..limit-2; original UTC/mono freshness<10.",
+  "association": "Root external mapping explicitly ties exact Android PID/proc/boot/local IDs/life to PC actor NetworkId/PlayerRef/Runner/instance/life/native in same room. Root-attested association is an external premise, never auto identity from equal numbers or newbool alone; absent reviewed mapping producer hardblocks.",
+  "paired": "Read both raw sample pins, strict decode to observerSample and equal embedded body. Native/MVID/actor/life/clock identical to association+binding/current audit; after.frame>before.frame, after.forwardTick>before.forwardTick, after.receiveNs>before.receiveNs; every Aim/vector/quaternion finite; raw receive timestamps measured by same receiver after complete read, no backfill or origin conversion. Replicated observation never Android local view acceptance.",
+  "clockAndDeadlines": "Every capture/sample clock descriptor equals Root clock including Python API/PID/startUTC7/directticks/session/windowStartReceiveNs; readStart<=readStop, UTC/mono no rollback, all within original window. Original13/15/Source07 return2, prearm+policy2<100, geometry<10 and rev02 child remaining minimum preserved. No timestamps reissued.",
+  "actualAdmissionVerified": false,
+  "sourceAccepted": false,
+  "executionAuthorized": false,
+  "readyToRun": false,
+  "nativeBasicAccepted": false
+}

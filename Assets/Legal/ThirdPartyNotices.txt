@@ -13047,3 +13047,17 @@ The original CC0 notice follows.
 
 	Follow on Twitter for updates:
 	http://twitter.com/KenneyNL
+
+Quad D Intro 0.1.0
+Package: com.quadd.intro
+License: Custom company asset and code terms (SEE LICENSE.md)
+Source: https://github.com/ChoiDaeYoung-94/ChoiDaeYoung-94/blob/55bf9e4aa48c2f95942f3c2c995f1d55414e97c0/unity/com.quadd.intro/LICENSE.md
+
+# Quad D Intro — asset and code use
+
+Copyright (c) 2026 ChoiDaeYoung / Quad D. All rights reserved.
+
+The Quad D owner may use and modify this package across their own games and projects.
+Public availability of this repository does not grant other studios permission to use
+the Quad D name, logo, animation or audio as their own branding.
+No third-party music, sound samples or proprietary fonts are bundled.

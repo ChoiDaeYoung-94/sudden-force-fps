@@ -1,3 +1,9 @@
+> **2026-11-03 후속 Android 관측:** [통합 source f796의 Android target Editor 컴파일·정상 종료·입력 보존](Docs/validation/2026-11-03/input261-main-sync-android-compile.md)을 독립 검토했습니다. 첫 Resolver 서식 불일치와 복원 후4,039개 rawexact를 구분합니다.
+> PR261은 Draft이며 제품 입력2는 main 미병합입니다. Player/AAB·영상 재생/실청·게임 L2·새35 예약/서명/업로드는0이고 제공34/release12를 유지합니다.
+
+> **2026-11-03 PC 체크포인트:** [통합 소스의 Windows 컴파일 관측·정리와 Android 소스 준비](Docs/validation/2026-11-03/pc-work-checkpoint.md)를 기록했습니다. PR261 입력 변경은 Draft이며 main에는 미병합입니다.
+> Android 실행·새35 예약/빌드/서명/업로드0, 전체 Native L2·권리/Android 재생·실기기 검증은 후속입니다. 기존 설정·검증 자료를 보존하고 현재 필요한 사용자 조치·질문은 없습니다.
+
 > **2026-11-03 native 경로 회차05:** [C17 실제 compile4/default4·첫 publisher 경로 통과와 정상 반환](Docs/validation/2026-11-03/input261-native-path-contract.md)을 확인했습니다. 공개3,984개/기존dirty18·P2보호5를 보존했으며 독립 실제 검토도 이 범위만 수용했습니다.
 > C15 미수락·C16 M7 실패/false IR을 보존합니다. 실제 Play·Nav·Queue·LD/ADB·Native 입력0/전체L2미수용이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
 

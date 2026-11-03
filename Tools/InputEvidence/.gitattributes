@@ -1,0 +1,3 @@
+* text eol=lf
+role-resolution.table.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+resolution-rules.public.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
