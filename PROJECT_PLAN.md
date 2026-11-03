@@ -1,3 +1,21 @@
+> **2026-10-31 작은 공개 Joystick 이동:** [새 C9 실제 컴파일·단일 합성 콜백 이동/해제 관측](Docs/validation/2026-10-31/input261-small-public-joystick-navigation.md)에서 계획0.25m에 결과 sample 순XZ0.278931m·후속0.303792m를 확인했습니다. 추가0.024861m·stored poll 미확보를 보존하며 완전 위치고정·native 입력·B1/L2 통과로 확대하지 않습니다.
+> 같은 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
+> **2026-10-31 첫 충돌 진단:** [새 C8 실제 컴파일·정상 두 피어의 읽기 전용 query4개](Docs/validation/2026-10-31/input261-readonly-shot-geometry.md)에서 현재 배치의 Wall_04 첫 충돌을 확인했습니다. 진단 입력/발사0이며 이전 C7 원인 확정·B1/L2·native 조이스틱 이동 통과로 확대하지 않습니다.
+> 같은 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
+> **2026-10-31 B1 실제 실행:** [새 C7 컴파일·정상 두 피어와 발사 전 중단](Docs/validation/2026-10-31/input261-b1-head-preflight-stop.md)을 기록했습니다. Queue1회 뒤 첫 충돌/head 검사에서 중단해 Fire(true)/SeedAim/shot0이며 B1/L2는 미통과입니다.
+> 정상 복귀·동일 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
+> **2026-10-31 단독 검증 코드 실제 컴파일:** [정확한 C4 소스의 기본 비활성·정상 종료·입력 보존 결과](Docs/validation/2026-10-31/input261-standalone-compile-only.md)를 확인했습니다. 새 P11의 진단0·Queue(false) IO0·보유 native Exit0·임시4파일 정리·공개3,984개/기존dirty18 보존 범위입니다.
+> 전체 실행 절차의 남은3결함 수정과 실제 B1/L2·새 수정본 컴파일은 후속입니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34·새35 예약/빌드/서명/업로드0을 유지하며 아래 과거 미실행 기록을 덮어쓰지 않습니다.
+
+> **2026-10-31 단독 B1 준비:** [오프라인 경계 시험·구문 확인과 미실행 범위](Docs/validation/2026-10-31/input261-standalone-readiness.md)를 추가했습니다. guard175개·publisher144개는 통제 시험이며 실제 B1/L2·C# 컴파일·전체 family 실행 준비 통과가 아닙니다.
+> PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34를 유지하며 이 준비의 실제 staging/새 Editor/lease/config/Enable과 새35 예약·빌드·서명·업로드는0입니다. 아래 기록은 각 시점의 범위로 보존합니다.
+
+> **2026-10-31 인트로 후속:** [Windows 전체 표시·기존34 분리·두 Player 경기/복귀/재참가·정상 종료](Docs/validation/2026-10-31/quad-d-intro-windows-regression.md)와 [Android 대상 Editor 컴파일](Docs/validation/2026-10-31/quad-d-intro-android-editor-compile.md)을 확인했습니다. 기존 실패·강제 종료와 새 성공을 구분합니다.
+> 다음 우선순위는 #259 B1 정상 poll/L2 등 남은 입력 경계와 최종 포함 소스 선정 후 새 Android 준비입니다. Android Player·실청·실기기·#154 원인·전체 PR261 수용은 미완료이며 제공34/release12/source612·원장196,2,34를 유지합니다. fresh Console 최대 코드/최종 소스가 결속되기 전 새35 예약·서명·업로드는 진행하지 않습니다. 아래 계획은 작성 날짜의 기록입니다.
+
 > **2026-10-28 #259 부분 관측:** Joystick 동기 probe/복구는 완료했고 pulse는 이동 관측에도 inputAvailable=false로 전체 미통과입니다. [근거·정리·잔여 범위](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 최신 기록으로 읽습니다.
 > 다음은 조회 원인 진단·별도 수명 경계 검증이며 PR261 수용/병합·최신 main Android 통합과 분리합니다. 정상 종료·3984 보존을 게임 수용으로 합산하지 않고35 예약·빌드0 및 과거 기록을 유지합니다.
 

@@ -1,3 +1,62 @@
+> **2026-11-03 native 경로 회차05:** [C17 실제 compile4/default4·첫 publisher 경로 통과와 정상 반환](Docs/validation/2026-11-03/input261-native-path-contract.md)을 확인했습니다. 공개3,984개/기존dirty18·P2보호5를 보존했으며 독립 실제 검토도 이 범위만 수용했습니다.
+> C15 미수락·C16 M7 실패/false IR을 보존합니다. 실제 Play·Nav·Queue·LD/ADB·Native 입력0/전체L2미수용이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
+> **2026-11-02 L2 회차02 사전 중단:** [C14 실제 compile4/default4·경로 계약 거부와 정상 반환](Docs/validation/2026-11-02/input261-l2-cohort02-preflight-stop.md)을 기록했습니다. 첫 publisher가 LOCAL_SLASH_PATH로 중단돼 Play·Nav·Queue·LD/ADB·Native 입력은0입니다.
+> M6 후속 Source/Control 승인은 false로 철회하고 원 IR를 보존했습니다. same-held Exit0/tool0/Dispose0·own4 정리·공개3,984개/dirty18·P2보호5 보존은 부분 확인이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
+> **2026-11-02 L2 준비 실제 컴파일:** [C12 미호출 compile4·기본 false4와 정상 종료·정리](Docs/validation/2026-11-02/input261-l2-compile-readiness.md)를 확인했습니다. 새 허용 목록 수정의 실제 진단0·입력0과 공개3,984개/기존dirty18·P2보호5개 보존 범위입니다.
+> 최초 freshness 중단·CLI 종료 실패·이른 guard false를 보존하며 native held Exit0/tool0/Dispose0과 구분합니다. 실제 L2/timing/packet은 미수용이고 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
+> **2026-11-02 입력 도우미 갱신:** [코드34를 유지한 테스트 도우미1회 설치·관측과 정상 반환](Docs/validation/2026-11-02/input261-native-helper-preparation.md)을 기록했습니다. 기대 도우미 SHA·등록과 게임34 APK 바이트 보존을 독립 실제 검토에서 수용했습니다.
+> 실제 instrumentation0·native L2/timing/packet 미수용, 첫 반환 false와 새 관측 true·테스트 닉네임의 PlayerPrefs 한계를 보존합니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
+> **2026-11-02 B1 정상 경로 사격:** [C14 실제17지점 이동·1회 승인 사격/해제·정상 정리](Docs/validation/2026-11-02/input261-b1-normal-poll-shot.md)를 기록했습니다. 공개 Source를 통한 shot sequence1·탄약1 감소와 해제 후 추가 사격0을 확인했습니다.
+> 상대 HP100·명중/처치0·stored poll 미확보·native L2/timing 미수용과 전체 상태 복원 미주장을 보존합니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0은 그대로입니다.
+
+> **2026-11-02 C13 실제 컴파일·시각 형식 중단:** [실제 진단8개·정상 방/PC Game2피어·입력 전 중단과 정상 정리](Docs/validation/2026-11-02/input261-c13-compile-and-utc-boundary-stop.md)를 기록했습니다. 새15지점은 모델 제안이며 Nav/B1 입력은0입니다.
+> 시각 형식 최소수정·같은 native held Exit0·자기4 정리/공개3,984개·기존dirty18 보존을 구분합니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
+> **2026-11-02 경로 이동·발사 전 IO 중단:** [C12 실제 진단8개·공개 Joystick18지점 이동과 읽기 전용 head query](Docs/validation/2026-11-02/input261-route-and-prefire-io-stop.md)를 확인했습니다. B1은 파일 교환 오류로 발사 전에 중단했고 Fire(true)/피해/킬0입니다.
+> 공개 해제·자기 객체 부재와 동일 native held Exit0을 확인했습니다. 저장 입력 패킷 중립·B1/L2·최신 main Android 통합 수용은 미완료이며 PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지합니다.
+
+> **2026-11-02 B1 사전검사 중단·정상 복구:** [첫 회차 결과와 같은 native Exit0·자기4 정리](Docs/validation/2026-11-02/input261-preflight-abort-and-recovery.md)를 기록했습니다. 새 Editor는 열었지만 native 연결120초 보호 조건에서 중단해 명시적 진단8개·Play·B1/L2 입력은0입니다.
+> 종료 전용 계약의 held Exit0·공개3,984개/기존dirty18·P2 설정5개 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12·새35 예약/빌드/서명/업로드0을 유지하며, 새 C12의 소스 준비와 실제 실행은 구분합니다.
+
+> **2026-10-31 작은 공개 Joystick 이동:** [새 C9 실제 컴파일·단일 합성 콜백 이동/해제 관측](Docs/validation/2026-10-31/input261-small-public-joystick-navigation.md)에서 계획0.25m에 결과 sample 순XZ0.278931m·후속0.303792m를 확인했습니다. 추가0.024861m·stored poll 미확보를 보존하며 완전 위치고정·native 입력·B1/L2 통과로 확대하지 않습니다.
+> 같은 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
+> **2026-10-31 첫 충돌 진단:** [새 C8 실제 컴파일·정상 두 피어의 읽기 전용 query4개](Docs/validation/2026-10-31/input261-readonly-shot-geometry.md)에서 현재 배치의 Wall_04 첫 충돌을 확인했습니다. 진단 입력/발사0이며 이전 C7 원인 확정·B1/L2·native 조이스틱 이동 통과로 확대하지 않습니다.
+> 같은 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
+> **2026-10-31 B1 실제 실행:** [새 C7 컴파일·정상 두 피어와 발사 전 중단](Docs/validation/2026-10-31/input261-b1-head-preflight-stop.md)을 기록했습니다. Queue1회 뒤 첫 충돌/head 검사에서 중단해 Fire(true)/SeedAim/shot0이며 B1/L2는 미통과입니다.
+> 정상 복귀·동일 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
+
+> **2026-10-31 단독 검증 코드 실제 컴파일:** [정확한 C4 소스의 기본 비활성·정상 종료·입력 보존 결과](Docs/validation/2026-10-31/input261-standalone-compile-only.md)를 확인했습니다. 새 P11의 진단0·Queue(false) IO0·보유 native Exit0·임시4파일 정리·공개3,984개/기존dirty18 보존 범위입니다.
+> 전체 실행 절차의 남은3결함 수정과 실제 B1/L2·새 수정본 컴파일은 후속입니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34·새35 예약/빌드/서명/업로드0을 유지하며 아래 과거 미실행 기록을 덮어쓰지 않습니다.
+
+> **2026-10-31 단독 B1 준비:** [오프라인 경계 시험·구문 확인과 미실행 범위](Docs/validation/2026-10-31/input261-standalone-readiness.md)를 추가했습니다. guard175개·publisher144개는 통제 시험이며 실제 B1/L2·C# 컴파일·전체 family 실행 준비 통과가 아닙니다.
+> PR261 Draft/#259 OPEN·제공34/release12/source612 QA·원장196,2,34를 유지하며 이 준비의 실제 staging/새 Editor/lease/config/Enable과 새35 예약·빌드·서명·업로드는0입니다. 아래 기록은 각 시점의 범위로 보존합니다.
+
+> **2026-10-31 Quad D 인트로 PC 검증:** 새 Windows 실행에서 전체 로고·애니메이션과 기존34의 접속 공간 분리, 두 Player의5분 DRAW→로비 복귀→새 방 재참가→양쪽 실제 native ExitCode0을 확인했습니다. [최신 결과와 첫 강제 종료 이력의 구분](Docs/validation/2026-10-31/quad-d-intro-windows-regression.md)을 따릅니다.
+> [Android 대상 Editor 컴파일](Docs/validation/2026-10-31/quad-d-intro-android-editor-compile.md)은 진단0·정상 종료·공개4,018개 복원 범위이며 Player/IL2CPP/Android 실행·실청 수용은 아닙니다. 실제 제공34/release12/source612 QA와 원장196,2,34는 그대로이며 새35 예약·Android 빌드/서명/업로드는0입니다. 아래는 각 날짜의 과거 기록입니다.
+
+> **2026-10-30 Quad D 인트로 준비:** 고정 회사 패키지 설치·Intro 씬/오디오 구성 저장·접속 버전 분리 코드 컴파일까지 확인했습니다. [실제 준비 결과와 남은 재생·전환 검증](Docs/validation/2026-10-30/quad-d-intro-integration.md)을 따릅니다.
+> 현재는 Draft 검증 단계이며 실제 재생/Login 전환·새 두 피어·Android 포함은 미완료입니다. 기존dirty5/다른4,007 입력 보존·native Exit0과 CLI close 실패를 구분하고 제공34·새35 예약/빌드0을 유지합니다.
+
+> **2026-10-30 모바일 버튼 배치:** FIRE를248로 키우고140 크기 보조 버튼을 주변에 배치했습니다. [전후12개 렌더·정확한8속성과 검증 한계](Docs/validation/2026-10-30/mobile-fire-layout.md)를 따릅니다.
+> 공개4,011개 중 씬1개 외4,010개·기존dirty5를 보존하고 native Exit0을 확인했습니다. 실제 휴대전화 입력·코드34 포함·새35 예약/빌드는0이며 PR261 Draft/#259 OPEN을 유지합니다.
+
+> **2026-10-30 Photon 실제 플랜:** 지정 작업용 탭의 SuddenForce는 개발용20 CCU·월60 GB이며 무료100은 미적용입니다. [후속 관측과 공식 무료 범위](Docs/operations/photon-free-scope-20261030.ko.md)를 함께 읽습니다.
+> 사용량 '-'·숫자 없는 그래프를0으로 처리하지 않았고, 계정/플랜/결제·게임/빌드/배포 변경은0입니다. 아래 계정 미확인은 이 후속 조회 전 기록으로 보존합니다.
+
+> **2026-10-30 Photon 무료 범위 조사:** 개발20 CCU와 출시100 CCU·월0.3 TB·스튜디오당1앱 조건을 공식 문서와 대조했습니다. [적용 범위·초과 시 동작과 비용](Docs/operations/photon-free-scope-20261030.ko.md)을 따릅니다.
+> 현재 앱의 실제 플랜·무료100 활성화·트래픽/청구 상태는 미확인이라 #301은 OPEN입니다. 계정·요금제 변경이나 새 빌드·배포는 하지 않았습니다.
+
+> **2026-10-29 L2 보조 코드 준비:** 첫 C# 컴파일 실패를 보존하고 최소 수정 후보의 실제 컴파일·타입·기본 비활성 검사, 새 두 프로세스의 보유 핸들 ExitCode0과 소유4파일 정리·3,984개 보존을 확인했습니다. [실제 결과와 남은 B1/L2 검증](Docs/validation/2026-10-29/l2-bridge-compile-and-disabled.md)을 따릅니다.
+> Play·공개 사격 입력·B1·native held lifecycle은0이며 PR261 Draft/#259 OPEN, 제공34/source612와 새35 예약/빌드0을 유지합니다. 이전 실제06의 native 종료 UNKNOWN은 그대로 보존합니다.
+>
+> **2026-10-29 실제06 Forward 입력:** 정상 두 피어에서 기대 입력과 일치하는13 tick 및 paired 복구를 확인했습니다. 원래 pulse의 complete=false/inputAvailable=false를 보존하며 [실제 수집과 종료 코드 UNKNOWN](Docs/validation/2026-10-29/input-witness-forward-ticks-and-exit-unknown.md)을 따릅니다.
+> 이전04/05의0은 당시 기록입니다. 이번 native ExitCode=null과 공유 자원 반환·별도 소유2파일 정리를 구분하고 전체 workflow·L2 수용/Draft261·#259 완료로 합산하지 않습니다. 제공34/source612와 새35 예약/빌드0을 유지합니다.
 > **2026-10-29 관측 시각·입력 대기:** 새 출력 처리의 실제 관측9개와 설정 발행을 확인했지만, dispatcher는30초 대기 뒤 본문0으로 종료했습니다. [실제04/05의 결과·보존과 남은 단계](Docs/validation/2026-10-29/input-observer-identity-and-dispatch-wait.md)를 따릅니다.
 > pulse·enabled Arm·paired·packet0과 Draft261/#259 OPEN을 유지합니다. 정상 종료·3,984개 보존을 입력 수용으로 합산하지 않고 제공34/source612·새35 예약/게임 빌드0을 구분합니다.
 > **2026-10-29 조이스틱 probe와 바인딩:** 정상 두 피어에서 같은 프레임의 공개 입력 probe·복구6항목과 실제 설정 발행·퇴역, 정상 복귀·종료와3,984개 보존을 확인했습니다. [실제 결과와 남은 수집 단계](Docs/validation/2026-10-29/joystick-probe-binding-partial.md)를 따릅니다.

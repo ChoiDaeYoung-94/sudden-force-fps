@@ -1,3 +1,9 @@
+> **2026-11-03 · #42 코드34 고지와 후속 소스 출처표**
+>
+> 코드34 QA AAB의 고지 TextAsset 725,013B 본문 일치와 실제 내부 release12 제공은 [산출물 기록](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)·[제공 기록](Docs/validation/2026-10-28/play34-internal-delivery.md)을 따릅니다. 아래 코드33 packed 표는 당시 범위로 보존합니다.
+>
+> 후속 main의 QuadD Intro 0.1.0 고정 source·영상/오디오 구성, FIRE의 기존 배치8속성, 현재 고지의 개행 차이와 남은 출처는 [공개 출처표](Docs/validation/2026-11-03/license-source-map.md)에 연결했습니다. 기존 HUD7 제작·세 팩 취득 확인을 유지하며 원 NOTICE/LICENSE·제품·미디어는 바꾸지 않았습니다. 법적 허용·전체 권리·새 빌드·실제 Android 인트로 수용은 판정하지 않고 #42/#302는 OPEN으로 유지합니다. 현재 필요한 사용자 조치나 질문은 없습니다.
+
 # Third-party asset provenance
 
 ## DOTween 1.2.765 모듈·공개 파일의 공식 ZIP 대응 (2026-10-27, #42)

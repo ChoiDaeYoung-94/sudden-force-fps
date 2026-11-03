@@ -58,6 +58,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private const string RoomScenePath = "Assets/Scenes/Room.unity";
     private const string GameScenePath = "Assets/Scenes/Game/DesertHouse.unity";
+    // 네트워크 씬 인덱스가 바뀌면 이 suffix도 갱신합니다.
+    private const string SceneProtocolSuffix = "-intro1";
+    private Fusion.Photon.Realtime.FusionAppSettings _sceneAppSettings;
 
     private void Awake()
     {
@@ -127,6 +130,16 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     #region Functions
+
+    // Global/asset은 바꾸지 않고 첫 Lobby 연결부터 같은 복사본을 사용합니다.
+    private Fusion.Photon.Realtime.FusionAppSettings GetSceneAppSettings()
+    {
+        if (_sceneAppSettings != null) return _sceneAppSettings;
+        var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
+        settings.AppVersion = (settings.AppVersion ?? string.Empty) + SceneProtocolSuffix;
+        _sceneAppSettings = settings;
+        return settings;
+    }
 
     private void Init()
     {
@@ -254,7 +267,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
             }
 
             _networkRunner.ProvideInput = false;
-            var result = await _networkRunner.JoinSessionLobby(SessionLobby.ClientServer, cancellationToken: _connectionToken);
+            var result = await _networkRunner.JoinSessionLobby(SessionLobby.ClientServer,
+                customAppSettings: GetSceneAppSettings(), cancellationToken: _connectionToken);
             if (!CanConnect)
             {
                 return;
@@ -421,6 +435,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
             if (popup != null) popup.PopupLoading();
             var result = await _networkRunner.StartGame(new StartGameArgs {
                 GameMode = mode, SessionName = options.RoomName,
+                CustomPhotonAppSettings = GetSceneAppSettings(),
                 PlayerCount = mode == GameMode.Host ? options.PlayerCount * 2 : (int?)null,
                 SessionProperties = mode == GameMode.Host ? new Dictionary<string, SessionProperty> { ["MapName"] = options.MapName } : null,
                 IsVisible = mode == GameMode.Host ? visible : (bool?)null,
