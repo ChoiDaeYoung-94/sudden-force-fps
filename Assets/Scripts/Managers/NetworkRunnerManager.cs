@@ -58,8 +58,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private const string RoomScenePath = "Assets/Scenes/Room.unity";
     private const string GameScenePath = "Assets/Scenes/Game/DesertHouse.unity";
-    // 네트워크 씬 인덱스가 바뀌면 이 suffix도 갱신합니다.
-    private const string SceneProtocolSuffix = "-intro1";
+    // 씬 인덱스 또는 피격 골격 의미가 바뀌면 기존 클라이언트와 분리합니다.
+    private const string SceneProtocolSuffix = "-intro1-riflepose1";
     private Fusion.Photon.Realtime.FusionAppSettings _sceneAppSettings;
 
     private void Awake()
