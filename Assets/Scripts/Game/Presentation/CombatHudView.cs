@@ -21,7 +21,6 @@ public sealed class CombatHudView : MonoBehaviour
     private int _respawnVersion;
     private bool _matchSuppressed;
     private CombatPresentation _presentation;
-    private float _hitUntil;
     private GameObject _desktopHintPlateObject;
     private UnityEngine.UI.Image _desktopHintPlate;
     public CombatPresentation BoundPresentation => _presentation;
@@ -37,10 +36,10 @@ public sealed class CombatHudView : MonoBehaviour
     private void Bind(CombatPresentation presentation)
     {
         Detach();
+        ClearHit();
         _presentation = presentation;
         if (_presentation == null) { Clear(); return; }
         _presentation.LocalVitalsChanged += ShowVitals;
-        _presentation.ConfirmedHit += ShowHit;
         if (_presentation.TryGetSnapshot(out var snapshot)) ShowVitals(snapshot);
     }
 
@@ -66,27 +65,9 @@ public sealed class CombatHudView : MonoBehaviour
                 ? "EMPTY - RELOAD" : string.Empty;
     }
 
-    private void ShowHit(ConfirmedHitSnapshot hit)
-    {
-        if (_isDead || _matchSuppressed) return;
-        bool head = hit.BodyPart == CombatBodyPart.Head;
-        var color = head ? new Color(1f, .8f, .2f) : Color.white;
-        if (_hitMarker != null) { _hitMarker.color = color; _hitMarker.enabled = true; }
-        if (_hitText != null)
-        {
-            _hitText.color = color;
-            _hitText.text = (hit.Killed ? "ELIMINATED " : head ? "HEADSHOT " : "HIT ") + hit.Damage;
-            _hitText.enabled = true;
-        }
-        _hitUntil = Time.unscaledTime + .22f;
-    }
-
     private void Update()
     {
         ApplyControls();
-        if (Time.unscaledTime < _hitUntil) return;
-        if (_hitMarker != null) _hitMarker.enabled = false;
-        if (_hitText != null) _hitText.enabled = false;
     }
 
     private void ApplyControls()
@@ -190,7 +171,6 @@ public sealed class CombatHudView : MonoBehaviour
 
     private void ClearHit()
     {
-        _hitUntil = 0f;
         if (_hitMarker != null) _hitMarker.enabled = false;
         if (_hitText != null) { _hitText.enabled = false; _hitText.text = string.Empty; }
     }
@@ -209,7 +189,6 @@ public sealed class CombatHudView : MonoBehaviour
         if (!ReferenceEquals(_presentation, null))
         {
             _presentation.LocalVitalsChanged -= ShowVitals;
-            _presentation.ConfirmedHit -= ShowHit;
         }
         _presentation = null;
     }
