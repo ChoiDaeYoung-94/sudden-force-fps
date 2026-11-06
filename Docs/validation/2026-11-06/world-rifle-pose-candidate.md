@@ -27,7 +27,7 @@
 ## 남은 필수 확인
 
 1. 등록된 HitboxRoot에서12 child 매핑·부위별 coverage·broadphase·원복 확인.
-2. 실제 callback/NCC/stance/muzzle 순서, 사망·리스폰·앉기·climb fallback·재enable·fault latch 확인.
+2. 실제 callback/NCC/stance/muzzle 순서, 사망·리스폰·앉기·등반 진입/이탈·실패 fallback·재enable·fault latch 확인.
 3. 두 피어의 표시·capture·실제 사격/피해와 정상 종료. 기존 Windows 종료 조사 전체를 해결한 것으로 확대하지 않습니다.
 4. 실제 SkinnedMeshRenderer 경계·재진입, 새 Android 포함·기기/접촉·실청 검증.
 
