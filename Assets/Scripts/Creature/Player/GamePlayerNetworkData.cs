@@ -49,13 +49,31 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
 
     void IBeforeHitboxRegistration.BeforeHitboxRegistration()
     {
-        if (_spawned && Object != null && Object.IsValid && _crouchGeometry != null)
-            _crouchGeometry.Apply(ReadPresentationCrouch(), !IsDead && Health > 0);
+        if (!_spawned || Object == null || !Object.IsValid || _crouchGeometry == null) return;
+        // State/input authority capture the current simulation stance, including
+        // resimulation. A proxy retains the existing remote presentation stance.
+        bool simulation = Object.HasStateAuthority || Object.HasInputAuthority;
+        bool crouched = simulation ? (bool)IsCrouching : ReadPresentationCrouch();
+        bool climbing = simulation ? _ladderMotor != null && _ladderMotor.IsClimbing : PresentationClimbing;
+        var context = new WorldBodyPoseContext(!IsDead && Health > 0, crouched, climbing, RespawnVersion);
+        _crouchGeometry.Apply(context.Crouched, context.Alive);
+        if (_worldBodyPose != null) _worldBodyPose.ApplyAfterStance(context, WorldBodyPosePass.HitboxCapture);
+    }
+
+    public bool TryGetWorldBodyPoseRenderContext(out WorldBodyPoseContext context)
+    {
+        context = default;
+        if (!_spawned || !isActiveAndEnabled || Object == null || !Object.IsValid
+            || Runner == null || !Runner.IsRunning) return false;
+        context = new WorldBodyPoseContext(!IsDead && Health > 0,
+            ReadPresentationCrouch(), PresentationClimbing, RespawnVersion);
+        return true;
     }
     private ShadowCastingMode[] _originalShadowModes;
     private bool _spawned;
     private CombatPresentation _presentation;
     private PlayerLocomotionPresentation _locomotionPresentation;
+    private PlayerWorldBodyPosePresentation _worldBodyPose;
     private Vector3 _viewModelBasePosition;
     private Quaternion _viewModelBaseRotation;
     public CombatPresentation Presentation => _presentation;
@@ -160,12 +178,19 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
             if (_inputSource == null) _inputSource = gameObject.AddComponent<PlayerInputSource>();
             _inputSource.Bind(this, AimYaw, AimPitch);
         }
+        // Pool/re-entry: CG.Initialize must see original skin bindings, never
+        // the previous visual rig. Do this before CG's source-bone registry read.
+        _worldBodyPose = GetComponent<PlayerWorldBodyPosePresentation>();
+        if (_worldBodyPose != null) _worldBodyPose.Unbind();
         _ladderMotor = GetComponent<PlayerLadderMotor>();
         _crouchReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(IsCrouching));
         _crouchGeometry = GetComponent<PlayerCrouchGeometry>();
         if (_crouchGeometry == null) _crouchGeometry = gameObject.AddComponent<PlayerCrouchGeometry>();
         if (!_crouchGeometry.Initialize(this, _characterController, _cameraRoot))
             Debug.LogError("[Crouch] Public humanoid/12-hitbox stance configuration is incomplete.");
+        if (_worldBodyPose == null) _worldBodyPose = gameObject.AddComponent<PlayerWorldBodyPosePresentation>();
+        if (!_worldBodyPose.Initialize(this, _crouchGeometry, _bodyRenderers, new WorldRifleBodyPoseSettings()))
+            Debug.LogError("[WorldBodyPose] Rifle pose unavailable; original attachments retained.");
         ApplyLocalPresentation();
         _locomotionPresentation = GetComponent<PlayerLocomotionPresentation>();
         _presentation = GetComponent<CombatPresentation>();
@@ -195,6 +220,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     private void ReleaseLocalPresentation()
     {
         _spawned = false;
+        if (_worldBodyPose != null) _worldBodyPose.Unbind();
         if (_presentation != null) _presentation.Unbind();
         if (_inputSource != null) _inputSource.Unbind();
         if (_localCamera != null) _localCamera.enabled = false;
@@ -211,6 +237,10 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         if (_inputSource != null) _inputSource.SynchronizeRespawn();
         ApplyLocalPresentation();
         if (_crouchGeometry != null) _crouchGeometry.Apply(ReadPresentationCrouch(), !IsDead && Health > 0);
+        // Move the existing WorldMuzzle before CombatPresentation captures its
+        // immediate cosmetic muzzle snapshot. Simulation shot origin is unchanged.
+        if (_worldBodyPose != null && TryGetWorldBodyPoseRenderContext(out var bodyPoseContext))
+            _worldBodyPose.ApplyAfterStance(bodyPoseContext, WorldBodyPosePass.Render);
         if (_locomotionPresentation != null) _locomotionPresentation.RenderPresentation(PresentationCrouched, PresentationClimbing);
         if (_cameraRoot != null) _cameraRoot.localRotation = CombatRecoil.ViewRotation(AimPitch, RecoilOffset);
         if (_viewModelRoot != null && Object.HasInputAuthority)
