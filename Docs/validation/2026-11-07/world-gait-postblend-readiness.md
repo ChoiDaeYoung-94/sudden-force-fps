@@ -27,11 +27,25 @@ Boots 704개는 총집합이며 calf 영향 453개는 그 부분집합입니다.
 
 이후 실행 없는 Cecil 메타데이터 관측에서는 helper의 QA 상수 true, 게임의 QA 접속 버전 분기 문자열 1개, 신규 네트워크 속성 4개의 위빙 정보를 확인했습니다. `WorldGaitPhase`, `WorldGaitLocalVelocity`, `WorldGaitEligible`, `WorldPoseClimbing`의 offset/word는 각각 `(1,1)`, `(2,2)`, `(4,1)`, `(5,1)`입니다. 합계 5word 확인을 전체 클래스 위빙 검사·정상 경기나 실제 snapshot 수용으로 확대하지 않습니다.
 
-근거는 `root-resume01/gait03-native02-offline-metadata.public.json` SHA256 `17EBFA2CFEFA6EE42DDC91836783DF2FFB8E237F647CE01EF5C17B4B4A4F6293`입니다. 대상 게임 assembly를 load하거나 제품 메서드를 호출하지 않았습니다. API defines 배열과 응답 파일의 실제 컴파일 정의를 구분하는 후속 검사 소스는 별도 검토·실행 대상입니다.
+근거는 `root-resume01/gait03-native02-offline-metadata.public.json` SHA256 `17EBFA2CFEFA6EE42DDC91836783DF2FFB8E237F647CE01EF5C17B4B4A4F6293`입니다. 대상 게임 assembly를 load하거나 제품 메서드를 호출하지 않았습니다. 당시 API defines 배열과 실제 응답 파일 정의를 구분하는 후속 검사는 미실행이었으며, 아래 C4에서 별도로 관측했습니다.
 
 복구 첫 시도는 EDM 설정의 자동 서식 차이를 만나 중단했습니다. 원본과 생성본을 보존한 뒤 CRLF와 줄 끝 공백만 다름을 확인하고 같은 exclusive 파일 핸들에서 비교·복원했습니다. 두 번째 복구는 전체 4,067개 raw exact·임시 11개 부재·Git clean을 확인했습니다. Editor0·공용 ADB 설정 DWORD1 복귀·기존 서버 동일 세대 보존 후 13:19:25.2548763Z에 실제 반환했습니다. 이 P13 복구와 P2의 기존 dirty5는 구분합니다.
 
 복구 근거는 `D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-editor-window08-return.public.json`, 같은 폴더의 `gait03-native02-edm-format-restore.public.json`과 `D:/codex/validation/sudden-force-fps/20261107-work/root-gait03-stage-restore-candidate02/actual-4e9ffa8f47444f0f87f174596ef17113/restore-02/restore-result.public.json`입니다. 첫 중단 기록은 별도 restore-01에 보존합니다.
+
+## C4의 실제 closed compile 후속
+
+앞선 실패 출력은 그대로 보존하고, 별도 C4 helper와 새 nonce `b5e8577bebb84ddcaad0a30ba71349d4`로 다시 관측했습니다. Native20764는 14:50:49.9095447Z에 시작해 정상 Exit0/forcedfalse/Dispose0으로 끝났고 managed 결과는 `CLOSED_COMPILE_METADATA_OBSERVED`입니다. 실제 tool session95848/chunkbf66aa도 종료0입니다.
+
+Game/Editor API defines의 QA 값은 여전히 false인 관측입니다. C4는 자기 `csc.rsp` 정확30B, 두 compiler 목록의 자기 응답 파일 각1개, parser의 QA=true/errors0, 컴파일된 helper QA 상수 true와 같은 게임 모듈의 정확한 `-localqa1` IL 문자열1개를 결합해 QA 모드를 확인했습니다. 다른 응답 파일 본문은 열지 않았으며 게임 메서드/getter도 호출하지 않았습니다. 이 복합 판정은 완전 CLR IL 검증이나 전체 source-to-IL 등가 증명이 아닙니다.
+
+실제 메타데이터에서 Networked 속성43개·전체75워드와 신규4개/5워드 배치를 확인했습니다. 승인 SHA3개는 빈 문자열이고 Play/Resources/graph/제품 활성화는0입니다. 같은 내용의 게임 DLL은 이전 관측과 동일 SHA/MVID이며, 모든 소스의 cold rebuild를 새로 수행했다고 주장하지 않습니다.
+
+첫 restore는 EDM의 줄바꿈·후행 공백 변경 하나에서 중단됐습니다. 양쪽 바이트 보존과 별도 Root CAS 후 restore02는 전체4,067개/751,146,413B의 원 경로·길이·SHA 행 일치 및 임시11개·폴더 부재를 확인했습니다. Editor0·두 prefs 원래1·공용 서버 동일 세대 확인 후 14:55:08.4161379Z에 원 창 안에서 실제 반납했습니다.
+
+실제 결과/후처리 검토는 `gait03-c4-actual-independent-review01/verification.public.json`, SHA256 `CC0110A32542A010C189B0C0428449E8E18C71A22D7DCAD364EB47DCD7203E6C`입니다. 이 결과 검토자가 C4 소스 작성자라는 점과, 별도 작성자의 source IR `0134107166D70B254A823BE1FFAD08A67147EFD710F33AF944A1324239E2DAEE`를 구분합니다. 최종 반환 근거는 `root-resume01/gait-editor-window09-return.public.json`입니다.
+
+별도 에셋 생성기 자체의 metadata-only compile도 정상0으로 끝났으나 실제45개 파일은 생성하지 않았습니다. 생성 준비 writer01이 고정 manifest의 외부 공개14개 경로를 거절해 설정 쓰기 전에 중단됐습니다. exact 경로 수정02는 독립 검토했지만 원 시간창의 최소 여유 조건을 지나 실제 실행하지 않았고, 기존 창을 늘리지 않았습니다. 다음 시도는 새 원창을 쓰는 별도 revision입니다.
 
 ## 남은 작업
 
