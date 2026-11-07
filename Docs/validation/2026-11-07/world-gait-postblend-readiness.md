@@ -85,6 +85,18 @@ Rest01은 inactive 포함 Boots3 이름 선택이 world/ViewModel 두 renderer�
 
 복원01은 EDM 자동 서식 변경1개를 만나 중단했고 양쪽 바이트와 실패를 보존했습니다. Root는 [EOL/후행 공백 동치와 같은 exclusive handle CAS](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/rest-preview02-edm-format-restore.public.json)를 별도로 기록한 뒤 [Unified04 restore02](D:/codex/validation/sudden-force-fps/20261107-work/root-gait03-unified-preview-stage-candidate04/actual-8934bb21a0ba4902bfd86773e6bf5665/restore-02/restore-result.public.json)에서 공개4,067개 raw exact·own62개와4폴더 부재를 확인했습니다. Rest12개/Preview10개 config bool은 모두 false로 퇴역하고 active 원문 archive를 보존했습니다. [최종 반환](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-rest-preview-window02-return.public.json)1,486B/SHA256 **AA5E791233DF47286462863C8EE8CD71132DACAF7A9E9F905D62026A72928431**은 원 start17:33:59/new17:45:59/full17:48:59Z 안인17:43:24.088668Z에 Editor0·두 prefs1·공유 ADB49852 동일 세대·Root 공유/예약0을 기록합니다. 반환 당시 독립 Preview 검토 pending 표시는 당시 상태를 보존하며, 이 문서 작성자가 OS/Registry/Git/전체 프로젝트를 새 감사한 결과는 아닙니다.
 
+## Preview03의 같은 프레임 행렬 갱신 비교
+
+Preview02의 원본·실패·실제 IR은 그대로 보존하고 별도 Preview03 후보를 만들었습니다. Unity 공식 [forceMatrixRecalculationPerRender](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/skinnedmeshrenderer/forcematrixrecalculationperrender)의 동일 update 다회 수동 렌더 용도를 참고해 검증 clone의 원8 SkinnedMeshRenderer에서 원래 값을 캡처한 뒤 true로 설정하고, 매 렌더 getter8개와 cleanup 원래값 복원을 검사했습니다. Graph·수학·clip·원본 pose·제품 가드는 보존했고 source IR `744B97184AF51E585F66A1C041B3E202140FBFAA287566A7815E94B2C41E829F`는 core13/7종 역변환 범위만 수용했습니다. 이 옵션을 제품 캐릭터나 원본 prefab에 적용한 것은 아닙니다.
+
+새 nonce `48a99d62f8d54acf9d422ea721249e2c`의 Rest Native27388은17:57:18.1857225Z→17:57:34.7759039Z 정상0/forcedfalse/Dispose0, tool69485/chunk6f48e5/0입니다. 새 Rest436,403B/SHA256 `519AEF0E3DDB0350EB30DA37012B301075B358B542C57F266D3D60130666B7F1`과 독립 IR `285EF40663DAFD9D9AF8AE89267674D823A49A87C8315FBD002230C86D56E677`로61×2/source122/renderer44/roundtrip을 다시 대조했습니다. 현재 observer MVID는 `0868bfcd-fbea-45e8-9fb4-3c4e982057a2`, binding은 기존 `54356e39-7aac-447e-a179-71e8b11a5c71`입니다. 이전 nonce의 Rest 결과를 새 실행 성공으로 복사하지 않았습니다.
+
+Preview03 Native46268은18:00:26.1738893Z→18:00:44.4066132Z 정상0/forcedfalse/Dispose0, tool74980/chunk5a8d27/0입니다. 결과106,638B/SHA256 `16B7E371F0EA1217D1DA2E8C94059261CC2E539882F4C54342C31248B4D9039F`의64자세/128 PNG를 실제 재해시했고 모두 서로 달랐습니다. [독립 actual IR](D:/codex/validation/sudden-force-fps/20261107-work/gait03-preview03-actual-independent-review01/verification.public.json)5,439B/SHA256 **000DC5414A0B189374DF2FAA835A95062DB03D38CE4B6456C70162B53A70330A**도 전파일 길이/SHA/CRC·512×768·PNG 바이트·압축 해제 filtered stream128종과 팀×시점별32종을 직접 확인해 `offlineStillPoseVariationAccepted=true`로 판정했습니다. 대표8장과 [Root의16장 비교 화면](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-preview03-forward-phase-comparison.png)에서 걷기/달리기 phase0/.5의 leg/knee 자세 차이를 관측했습니다.
+
+보고 수치64행은 동일 tuple의 Preview02 값과 같으며 평면 상대 fullMinimum +1.00003555~+2.76454538mm·최대 foot 변위46.3492423mm입니다. 전128개 getter count8/원8 skins/D3D11·실행 전후3 MVID 안정성을 확인했지만 실제 hardware skinning 경로·전체 source-to-IL·연속 동작/자연스러움·물리/NCC·두 peer·기기·APK 포함·제품 수용은 모두 false입니다. 이 비교는 같은 프레임 반복 이미지 문제를 해당 fixture에서 해결한 결과이며 실제 게임 보행 구현 완료가 아닙니다.
+
+EDM 서식 변경1개로 막힌 restore01과 양쪽 바이트를 보존한 뒤 EOL/후행공백 동치·exclusive CAS를 별도 기록했습니다. Unified05 restore02는 공개4,067개 raw exact·own62/4폴더 부재를 확인했습니다. 활성 config 원문 archive를 남기고 bool12+10을 false로 회수했습니다. [실제 반환](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-rest-preview-window03-return.public.json)1,502B/SHA256 **C709F9D130DAA687A59269C7E1BB06E71C4891953CF10F78261EF23724DDAB98**은 원17:55:04/new18:07:04/full18:10:04Z 안인18:02:46.980270Z에 Editor0/prefs1/공유49852 원세대·5037/Root공유·예약0을 기록합니다. 독립 검토자는 이 OS 상태를 직접 재조회한 것이 아니라 Root 공개 proof와 결속했습니다.
+
 | 자료 | 관측·수용 범위 |
 | --- | --- |
 | C11 CPU2048 | 고정 표본의1mm 수치 진단; 기존8mm 실패·전체 Native1 유지 |
@@ -92,11 +104,12 @@ Rest01은 inactive 포함 Boots3 이름 선택이 world/ViewModel 두 renderer�
 | Body02 assets | 독립 exact45/바이트·GUID·곡선/JSON 수용; Imported/Resources API는 Body 자기보고 |
 | Owned Rest03 | Blue/Red61×2·upper49/raw-leg12/roundtrip/source 보존 대조; offline Preview 입력만 수용 |
 | Preview02 | 정상 종료·128 PNG 무결성/64수치 집계 수용; 이미지4종×32동일로 보행 시각 변화·자연모션 수용false |
+| Preview03 | 정지자세128종/대표 leg·knee 변화 수용; 같은 프레임 반복 이미지 해결, 연속·자연·게임 보행 수용false |
 | NCC/네트워크/기기/새 APK | 실제 보행·두 peer·life/history와 gait 포함 APK는 미검증/미포함 |
 
 ## 남은 작업
 
-- Rest03의 offline 입력과 Preview02 정지 이미지까지 생성·검토했습니다. 다음은 팀·시점별 이미지 중복의 원인 분리와 실제 Walk/Run·방향·위상 변화의 시각 검증이며, 현재는 미수용입니다.
+- Rest03의 offline 입력과 Preview03의128종 정지 자세 변화를 생성·검토했습니다. 다음은 연속 주기와 전환/실제 게임 이동의 시각 검증이며, 자연보행 수용은 아직 false입니다.
 - Builtin Plane의 실제 identity/topology와 고정 평면 지원 범위 확인. geometry의 owner-origin plane offset은 null/pending이며 0으로 승인하지 않습니다.
 - 원 SkinnedMeshRenderer의 hardware skinning 경로·rifle 후처리·704개 전체 가중치와 post-IK 시간 연속성 검증. 128개 정지 이미지 생성과 별개입니다.
 - 실제 NCC 이동·resimulation·snapshot 보간·새 life·두 peer와 기기에서의 보행 검증.
