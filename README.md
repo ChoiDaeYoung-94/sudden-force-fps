@@ -1,3 +1,6 @@
+> **2026-11-06 명중 HUD:** 사용자 요청에 따라 중앙 명중 표식·피해량 안내를 제거했습니다. [실제 HUD 복제본 검증과 범위](Docs/validation/2026-11-06/hit-feedback-removal.md)를 확인했습니다.
+> 체력·탄약·K/D와 피해 판정은 유지하며 실제 경기·Android 포함은 후속입니다. 제공34에는 미포함이고 새 Android 예약·빌드·서명·업로드는0입니다.
+
 > **2026-11-03 후속 Android 관측:** [통합 source f796의 Android target Editor 컴파일·정상 종료·입력 보존](Docs/validation/2026-11-03/input261-main-sync-android-compile.md)을 독립 검토했습니다. 첫 Resolver 서식 불일치와 복원 후4,039개 rawexact를 구분합니다.
 > PR261은 Draft이며 제품 입력2는 main 미병합입니다. Player/AAB·영상 재생/실청·게임 L2·새35 예약/서명/업로드는0이고 제공34/release12를 유지합니다.
 
