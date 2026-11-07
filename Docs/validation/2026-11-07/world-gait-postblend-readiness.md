@@ -1,6 +1,6 @@
 # 2026-11-07 보행 후처리 진단과 통합 준비
 
-Refs #341. 새 보행은 아직 제품에서 활성화하지 않았습니다. 이 기록은 별도 CPU 진단·Android 대상 컴파일 관측과 진단용 에셋의 실제 생성 기록이며, PR344의 보행 품질 완료나 새 APK 포함을 뜻하지 않습니다. 기존 실패와 미완료 범위는 유지합니다.
+Refs #341. 새 보행은 아직 제품에서 활성화하지 않았습니다. 이 기록은 별도 CPU 진단·Android 대상 컴파일 관측·진단용 에셋 생성·Rest pose 관측과 오프라인 정지 이미지 생성 기록이며, PR344의 보행 품질 완료나 새 APK 포함을 뜻하지 않습니다. 기존 실패와 미완료 범위는 유지합니다.
 
 ## C11의 별도 1mm 진단
 
@@ -71,19 +71,34 @@ Imported Generic/Resources API 성공은 Body의 자기보고이며 해당 API�
 
 근거: [Body01 slice 반환](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-materializer-assets-window02-slice-return.public.json), [Body01 소스 조사](D:/codex/validation/sudden-force-fps/20261107-work/gait-contact03-materializer-candidate02/failure01-source-investigation.public.json), [같은 Native의 호출 전 witness](D:/codex/validation/sudden-force-fps/20261107-work/root-gait-materializer-entry-candidate02/run-actual-484c6a2c363141b8bb8b1673e159dbdf/compile-metadata-before-body.public.json), [Body02 생성 결과](D:/codex/validation/sudden-force-fps/20261107-work/gait-contact03-materializer-candidate02/materialized-actual-484c6a2c363141b8bb8b1673e159dbdf/result.public.json), [snapshot02](D:/codex/validation/sudden-force-fps/20261107-work/gait-materialized-assets-snapshot02/actual-484c6a2c363141b8bb8b1673e159dbdf/snapshot.public.json), [EDM CAS](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/body02-materialization-edm-format-restore.public.json), [restore02](D:/codex/validation/sudden-force-fps/20261107-work/root-gait-materializer-stage-restore-candidate03/actual-484c6a2c363141b8bb8b1673e159dbdf/restore-02/restore-result.public.json), [config 퇴역](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/materializer-body02-configuration-retired.public.json), [최종 반환](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-editor-window10-return.public.json) SHA256 `814CA5590F16EC9E8D72C950C5787A1FFD63EA47E4A7324C6384D3CE70684BBD`.
 
+## Rest03 관측과 Preview02의 정지 이미지 생성
+
+Rest01은 inactive 포함 Boots3 이름 선택이 world/ViewModel 두 renderer와 일치하는 소스 차단이었습니다. 해당 줄 도달시의 반례이며 실제 Rest 실행 실패를 관측한 것은 아닙니다. 뒤이은 Rest02는 staging 계약의 source 길이37438이 실제38113과 달라 적용 전에 차단됐고, 두 후보와 당시 검토 이력은 보존했습니다. Rest03은 월드 renderer 한정과 정확한 중첩 pin을 별도 source IR `68D39050A1F3F675A26FCA8C19D80B302CED935515F3291C4715BABB3239345F`로 검토한 새 후보입니다.
+
+새 nonce `8934bb21a0ba4902bfd86773e6bf5665`에서 Rest Native54748은 17:36:15.3060088Z부터 17:37:08.9215417Z까지 정상 Exit0/forcedfalse/Dispose0, outer tool4455/chunk2deb33/0으로 끝났습니다. 독립 실제 Rest IR은 [rest61-actual01-independent-review.public.json](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/rest61-actual01-independent-review.public.json)10,890B/SHA256 **51D5FC2B4940F90DCE5EB03BE09AE7BE31D4EAFCA89F067ADB89182F36AADF91**입니다. Blue/Red 각61행, upper49×2/raw-leg12×2, JSON roundtrip122행과 source 사전후122행을 대조해 offline Preview 입력으로 수용했습니다. clone renderer 복원은 실제22×2=44행이며 초기15개 요약을 정정했습니다. 전체 C11 post-idle61 pose 동등성·source-to-IL·물리/자연보행/제품 수용은 여전히 false입니다.
+
+이어 Preview02 Native12488은 17:40:43.8609384Z부터 17:41:04.1865596Z까지 정상 Exit0/forcedfalse/Dispose0, outer tool28919/chunk5c66d7/0으로 끝났습니다. 실제 결과는98,830B/SHA256 `6A383CD93B638CEC70D6BAB032F0CB0559067BA8EFB6B3F7F23441AD13FE6CB5`, status `OFFLINE_GPU_IMAGES_CREATED_REVIEW_PENDING`이며64행과128개 PNG를 생성했습니다. D3D11에서 자기 clone의 원8개 skin renderer를 사용하고 CPU 대체 renderer·제품 생성/승인 쓰기는0으로 보고했습니다. observer/game/binding 세 MVID 관측값은 각각 실행 사전후 같았지만 전체 source-to-IL 등가나 hardware skinning 실행 경로를 증명한 것은 아닙니다. 연속 재생이나 Runtime/NCC 실행도 아닙니다.
+
+후속 [Preview02 독립 actual IR](D:/codex/validation/sudden-force-fps/20261107-work/gait03-preview02-actual-independent-review01/verification.public.json)5,030B/SHA256 **8343EAE6EF7DAEDD9DAC5434FE6712207956CC6B1590CB9BA2D7CE6220253896**은 정상 종료의 공개 기록과128 PNG의 실제 길이·SHA·CRC·512×768·IDAT, 보고 수치64행의 재집계를 수용했습니다. 생성 당시 result의 review-pending status는 덮어쓰지 않고 이 후속 IR과 구분합니다. Root의 [128파일 해시 대조](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-preview02-image-uniqueness.public.json) 및 독립 IR 모두 실제 이미지가4종뿐이며 팀×front/side마다32장이 완전히 같은 바이트임을 확인했습니다. [대표4종 contact sheet](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-preview02-four-unique-contactsheet.png)는 정지 화면이며 Walk/Run·방향·위상의 시각 변화와 자연보행 수용은 false입니다. 원인은 미확정입니다.
+
+`fullMinimum`은 이미 평면 상대값입니다. 올바른64행 집계는 +1.00003555~+2.76454538mm, −2mm 미만0행이며 최대 raw→foot 변위46.3492423mm입니다. Blue11,604/Red11,222개 witness는 helper가 원8 renderer에서 보고한 BakeMesh 수치를 재집계한 범위로, 독립 정점 solver 재실행이나 C11의2,048개/전체 위상 수용이 아닙니다. 평면을 두 번 차감해 침투로 해석했던 검토자의 초기 해석은 철회·정정됐고 유효 finding으로 남기지 않습니다. 자세한 범위는 [독립 actual 보고서](D:/codex/validation/sudden-force-fps/20261107-work/gait03-preview02-actual-independent-review01/REPORT.ko.md)에 있습니다. 자기 clone의 skin 행렬 갱신을 분리하는 Preview03은 source-only 후속 후보이며 새 실행이나 원인 확정은 아닙니다.
+
+복원01은 EDM 자동 서식 변경1개를 만나 중단했고 양쪽 바이트와 실패를 보존했습니다. Root는 [EOL/후행 공백 동치와 같은 exclusive handle CAS](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/rest-preview02-edm-format-restore.public.json)를 별도로 기록한 뒤 [Unified04 restore02](D:/codex/validation/sudden-force-fps/20261107-work/root-gait03-unified-preview-stage-candidate04/actual-8934bb21a0ba4902bfd86773e6bf5665/restore-02/restore-result.public.json)에서 공개4,067개 raw exact·own62개와4폴더 부재를 확인했습니다. Rest12개/Preview10개 config bool은 모두 false로 퇴역하고 active 원문 archive를 보존했습니다. [최종 반환](D:/codex/validation/sudden-force-fps/20261107-work/root-resume01/gait-rest-preview-window02-return.public.json)1,486B/SHA256 **AA5E791233DF47286462863C8EE8CD71132DACAF7A9E9F905D62026A72928431**은 원 start17:33:59/new17:45:59/full17:48:59Z 안인17:43:24.088668Z에 Editor0·두 prefs1·공유 ADB49852 동일 세대·Root 공유/예약0을 기록합니다. 반환 당시 독립 Preview 검토 pending 표시는 당시 상태를 보존하며, 이 문서 작성자가 OS/Registry/Git/전체 프로젝트를 새 감사한 결과는 아닙니다.
+
 | 자료 | 관측·수용 범위 |
 | --- | --- |
 | C11 CPU2048 | 고정 표본의1mm 수치 진단; 기존8mm 실패·전체 Native1 유지 |
 | C4 metadata | QA 복합 근거·43속성/75word·신규4/5word; 런타임과 별개 |
 | Body02 assets | 독립 exact45/바이트·GUID·곡선/JSON 수용; Imported/Resources API는 Body 자기보고 |
-| Owned Rest61/GPU preview | 실제 실행 전; 자연모션·704 GPU skin·접지·물리 수용 아님 |
+| Owned Rest03 | Blue/Red61×2·upper49/raw-leg12/roundtrip/source 보존 대조; offline Preview 입력만 수용 |
+| Preview02 | 정상 종료·128 PNG 무결성/64수치 집계 수용; 이미지4종×32동일로 보행 시각 변화·자연모션 수용false |
 | NCC/네트워크/기기/새 APK | 실제 보행·두 peer·life/history와 gait 포함 APK는 미검증/미포함 |
 
 ## 남은 작업
 
-- 독립 수용한 raw9+corrected9/JSON3의45파일 snapshot을 후속 staging/import에서 별도 검증. 제품 Resources 소비·Owned Rest61/post-idle 관측과 실제 GPU preview는 아직 별도 단계입니다. Rest01은 inactive 포함 Boots3 이름 선택이 world/ViewModel 두 renderer와 일치하는 소스 차단으로 수정·독립 IR을 기다리며, 이는 해당 줄 도달시의 소스 반례이고 실제 Rest 실행 실패를 관측한 것은 아닙니다.
+- Rest03의 offline 입력과 Preview02 정지 이미지까지 생성·검토했습니다. 다음은 팀·시점별 이미지 중복의 원인 분리와 실제 Walk/Run·방향·위상 변화의 시각 검증이며, 현재는 미수용입니다.
 - Builtin Plane의 실제 identity/topology와 고정 평면 지원 범위 확인. geometry의 owner-origin plane offset은 null/pending이며 0으로 승인하지 않습니다.
-- 원 SkinnedMeshRenderer를 사용하는 실제 GPU·rifle 후처리·704개 전체 가중치 검증과 post-IK 시간 연속성.
+- 원 SkinnedMeshRenderer의 hardware skinning 경로·rifle 후처리·704개 전체 가중치와 post-IK 시간 연속성 검증. 128개 정지 이미지 생성과 별개입니다.
 - 실제 NCC 이동·resimulation·snapshot 보간·새 life·두 peer와 기기에서의 보행 검증.
 
-제품의 승인 SHA3개는 비어 있고 positive flags는 false라는 기존 source/C4 관측을 유지합니다. 실제45 snapshot으로 현행 제품3개 SHA를 새로 독립 증명한 것은 아니며, 별도로 자산 JSON의12 flags=false를 확인한 범위입니다. 새 로컬 Android QA의 source98에는 input261·main HUD/Intro·rifle345가 포함되며 gait344는 미포함입니다. 제공34/release12와도 구분하며, 현재 자료만으로 PR344를 병합하거나 #341을 닫지 않습니다.
+제품의 승인 SHA3개는 비어 있고 positive flags는 false라는 기존 source/C4 관측을 유지합니다. 실제45 snapshot으로 현행 제품3개 SHA를 새로 독립 증명한 것은 아니며, 별도로 자산 JSON의12 flags=false를 확인한 범위입니다. 새 로컬 Android QA의 source98에는 input261·main HUD/Intro·rifle345가 포함되며 gait344는 미포함입니다. 제공34/release12와도 구분하며, PR344는 Draft, #341은 OPEN을 유지하며 현재 자료만으로 병합하거나 닫지 않습니다.
