@@ -114,6 +114,15 @@ namespace AD
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
                 await GoLobbyScene(attempt, token);
 #elif UNITY_ANDROID
+#if SUDDEN_FORCE_LOCAL_QA
+                // Local QA lobby entry only; no GPGS result, token or account state is fabricated.
+                if (Application.platform == RuntimePlatform.Android
+                    && string.Equals(Application.identifier, "com.AeDeong.SuddenForceFPS.localqa", StringComparison.Ordinal))
+                {
+                    await GoLobbyScene(attempt, token);
+                    return;
+                }
+#endif
                 PlayGamesPlatform.DebugLogEnabled = false;
                 PlayGamesPlatform.Activate();
                 var platform = PlayGamesPlatform.Instance;
