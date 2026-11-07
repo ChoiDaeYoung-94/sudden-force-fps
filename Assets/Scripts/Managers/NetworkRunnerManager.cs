@@ -137,6 +137,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         if (_sceneAppSettings != null) return _sceneAppSettings;
         var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
         settings.AppVersion = (settings.AppVersion ?? string.Empty) + SceneProtocolSuffix;
+#if SUDDEN_FORCE_LOCAL_QA
+        settings.AppVersion += "-localqa1";
+#endif
         _sceneAppSettings = settings;
         return settings;
     }
