@@ -43,6 +43,8 @@ Caller20은53회 중51회 종료0/2회 실패입니다. 첫 휴대전화 시작�
 - Native09 제한 독립 검토: `native09-actual-bounded-independent-review01/verification.public.json` — SHA256 `E514DC68F30EE2D63E976C82E5D4E064647EF7195CAE5C70D3608A2257135A3C`.
 - Native09 표현 정정: `root-resume01/device-case09-view-wording-clarification.public.json` — SHA256 `693F1CC7C79CECA19D242F14AF279DA99CA297CCC936DD5E1503DEAD753ADD5E`. 배경 구성 변화와 실제 좌표 입증을 구분합니다.
 - Native10 Root 관측·반환: `root-resume01/device-case10-root-ui-observation01.public.json`, `device-case10-actual-return01.public.json`.
-- Native10 실제 결과의 별도 독립 검토: 준비 중. 문서 병합 전 완료 자료로 대체합니다.
+- Native10 실제 결과의 별도 독립 검토: `native10-actual-independent-review01/verification.public.json` —5,308B/SHA256 `871373B73C4EED56B0D399DCBA06A8D1305527238921EC322608136CD0C63B12`. 공개549개·허용 helper stdout2개·추가 허용 원문 archive4개의 총555핀, 태그·화면·원본 회수 기록의 제한된 정합성을 수용했습니다. 현재 기기를 다시 조회한 검토는 아닙니다.
+
+검토 중 허용 목록 밖의0바이트 오류 파일에 크기 메타데이터 조회1건이 발생한 사실도 독립 IR에 남겼습니다. 해당 파일의 내용·해시 읽기는0이며, 이후 정확한 허용 목록으로 한정했습니다. 이를 엄격한 조회 범위 준수로 표시하지 않았고, 검토기 자체의 중단·정정 이력과 게임 시험 실패를 구분했습니다.
 
 세 모드의 모든 실행을 한 번에 검증한 것으로 합치지 않습니다. 기본 이동·사격 입력 및 두 해제 순서의 제한된 관측을 확보했고, held-life·사망/부활·상대 명중·실제 캐릭터 보행·총 파지의 근접 시각 검증·실청·장시간 성능은 남아 있습니다. 현재 필요한 사용자 조치·질문은 없습니다.
