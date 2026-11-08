@@ -32,6 +32,17 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     public bool PresentationClimbing => _ladderMotor != null && _ladderMotor.PresentationClimbing;
     private NetworkBehaviour.PropertyReader<NetworkBool> _crouchReader;
     [Networked] public NetworkBool IsCrouching { get; set; }
+    // Protocol v2 only. Authoritative/predicted tick state, never a render clock.
+    [Networked] public float WorldGaitPhase { get; set; }
+    [Networked] public Vector2 WorldGaitLocalVelocity { get; set; }
+    [Networked] public NetworkBool WorldGaitEligible { get; set; }
+    [Networked] public NetworkBool WorldPoseClimbing { get; set; }
+    private const float MaximumWorldGaitPhase = 4096f;
+    private NetworkBehaviour.PropertyReader<float> _gaitPhaseReader;
+    private NetworkBehaviour.PropertyReader<Vector2> _gaitVelocityReader;
+    private NetworkBehaviour.PropertyReader<NetworkBool> _gaitEligibleReader, _poseClimbingReader;
+    private NetworkBehaviour.PropertyReader<int> _poseLifeReader, _poseHealthReader;
+    private NetworkBehaviour.PropertyReader<bool> _poseDeadReader;
     public bool PresentationCrouched => ReadPresentationCrouch();
     public Vector3 SimulationShotOrigin => transform.TransformPoint(
         _crouchGeometry != null && _crouchGeometry.Configured
@@ -39,36 +50,130 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
 
     private bool ReadPresentationCrouch()
     {
-        if (Object == null || !Object.IsValid) return false;
-        // Proxies are displayed/captured on their remote render timeline.
-        if (!Object.HasInputAuthority && !Object.HasStateAuthority
-            && TryGetSnapshotsBuffers(out var from, out var to, out var alpha))
-            return alpha < 1f ? _crouchReader.Read(from) : _crouchReader.Read(to);
-        return IsCrouching;
+        return TryGetWorldBodyPoseRenderContext(out var context) && context.Crouched;
     }
 
     void IBeforeHitboxRegistration.BeforeHitboxRegistration()
     {
         if (!_spawned || Object == null || !Object.IsValid || _crouchGeometry == null) return;
-        // State/input authority capture the current simulation stance, including
-        // resimulation. A proxy retains the existing remote presentation stance.
+        // Preserve the existing authority/current vs proxy/render contract.
         bool simulation = Object.HasStateAuthority || Object.HasInputAuthority;
-        bool crouched = simulation ? (bool)IsCrouching : ReadPresentationCrouch();
-        bool climbing = simulation ? _ladderMotor != null && _ladderMotor.IsClimbing : PresentationClimbing;
-        var context = new WorldBodyPoseContext(!IsDead && Health > 0, crouched, climbing, RespawnVersion);
-        _crouchGeometry.Apply(context.Crouched, context.Alive);
-        if (_worldBodyPose != null) _worldBodyPose.ApplyAfterStance(context, WorldBodyPosePass.HitboxCapture);
+        WorldBodyPoseContext context;
+        bool sampled = simulation ? TryGetCurrentWorldBodyPoseContext(out context)
+            : TryGetWorldBodyPoseRenderContext(out context);
+        if (!sampled)
+        {
+            _worldBodyPose?.ApplySourceFallbackAfterStance(WorldBodyPosePass.HitboxCapture);
+            return;
+        }
+        if (context.SourceLifeAligned) _crouchGeometry.Apply(context.Crouched, context.Alive);
+        _worldBodyPose?.ApplyAfterStance(context, WorldBodyPosePass.HitboxCapture);
+    }
+
+    private bool PoseOwnerValid => _spawned && isActiveAndEnabled && Object != null && Object.IsValid
+        && Runner != null && Runner.IsRunning;
+
+    private bool TryGetCurrentWorldBodyPoseContext(out WorldBodyPoseContext context)
+    {
+        context = default;
+        if (!PoseOwnerValid) return false;
+        bool alive = !IsDead && Health > 0;
+        context = new WorldBodyPoseContext(alive, IsCrouching, WorldPoseClimbing, RespawnVersion,
+            WorldGaitPhase, WorldGaitLocalVelocity,
+            WorldGaitEligible && alive && !IsCrouching && !WorldPoseClimbing,
+            false, Runner.Tick.Raw, Runner.Tick.Raw, 0f);
+        return true;
     }
 
     public bool TryGetWorldBodyPoseRenderContext(out WorldBodyPoseContext context)
     {
         context = default;
-        if (!_spawned || !isActiveAndEnabled || Object == null || !Object.IsValid
-            || Runner == null || !Runner.IsRunning) return false;
-        context = new WorldBodyPoseContext(!IsDead && Health > 0,
-            ReadPresentationCrouch(), PresentationClimbing, RespawnVersion);
+        if (!PoseOwnerValid) return false;
+        // This retains ReadPresentationCrouch's current-state policy for local/
+        // state authority. Exact NCC local interpolation alignment needs measurement.
+        if (Object.HasStateAuthority || Object.HasInputAuthority)
+            return TryGetCurrentWorldBodyPoseContext(out context);
+        if (!TryGetSnapshotsBuffers(out var from, out var to, out var alpha)
+            || !PlayerInputSource.IsFinite(alpha) || alpha < 0f || alpha > 1f) return false;
+        long ticks = (long)to.Tick.Raw - from.Tick.Raw;
+        if (ticks < 0 || ticks > Runner.TickRate) return false; // No extrapolated/large-gap gait.
+        var selected = alpha < 1f ? from : to;
+        int life = _poseLifeReader.Read(selected);
+        bool selectedDead = _poseDeadReader.Read(selected);
+        int selectedHealth = _poseHealthReader.Read(selected);
+        bool alive = !selectedDead && selectedHealth > 0;
+        bool sourceLifeAligned = life == RespawnVersion && selectedDead == IsDead && selectedHealth == Health;
+        bool crouched = _crouchReader.Read(selected), climbing = _poseClimbingReader.Read(selected);
+        bool eligible = _gaitEligibleReader.Read(selected) && alive && !crouched && !climbing;
+        float phase = _gaitPhaseReader.Read(selected);
+        Vector2 velocity = _gaitVelocityReader.Read(selected);
+        bool sameMode = _poseLifeReader.Read(from) == _poseLifeReader.Read(to)
+            && _poseDeadReader.Read(from) == _poseDeadReader.Read(to)
+            && (_poseHealthReader.Read(from) > 0) == (_poseHealthReader.Read(to) > 0)
+            && (bool)_crouchReader.Read(from) == (bool)_crouchReader.Read(to)
+            && (bool)_poseClimbingReader.Read(from) == (bool)_poseClimbingReader.Read(to)
+            && (bool)_gaitEligibleReader.Read(from) == (bool)_gaitEligibleReader.Read(to);
+        float fromPhase = _gaitPhaseReader.Read(from), toPhase = _gaitPhaseReader.Read(to);
+        float seconds = ticks * Runner.DeltaTime;
+        bool validPhasePair = ValidGaitPhase(fromPhase) && ValidGaitPhase(toPhase)
+            && toPhase >= fromPhase && toPhase - fromPhase <= 2.5f * seconds + .02f;
+        if (sameMode && validPhasePair)
+        {
+            phase = Mathf.Lerp(fromPhase, toPhase, alpha);
+            velocity = Vector2.Lerp(_gaitVelocityReader.Read(from), _gaitVelocityReader.Read(to), alpha);
+        }
+        else if (sameMode) eligible = false;
+        eligible &= ValidGaitPhase(phase) && FiniteGaitVelocity(velocity) && velocity.magnitude <= 8f;
+        context = new WorldBodyPoseContext(alive, crouched, climbing, life, phase, velocity,
+            eligible, true, from.Tick.Raw, to.Tick.Raw, alpha, sourceLifeAligned);
         return true;
     }
+
+    private static bool ValidGaitPhase(float value) => PlayerInputSource.IsFinite(value)
+        && value >= 0f && value <= MaximumWorldGaitPhase;
+    private static bool FiniteGaitVelocity(Vector2 value) => PlayerInputSource.IsFinite(value.x)
+        && PlayerInputSource.IsFinite(value.y);
+
+    private void ResetWorldGaitForLife()
+    {
+        WorldGaitPhase = 0f; WorldGaitLocalVelocity = Vector2.zero;
+        WorldGaitEligible = false; WorldPoseClimbing = false;
+    }
+
+    private void DeactivateWorldGait()
+    {
+        WorldGaitEligible = false; WorldGaitLocalVelocity = Vector2.zero;
+        WorldPoseClimbing = !IsDead && Health > 0 && _ladderMotor != null && _ladderMotor.IsClimbing;
+    }
+
+    private void UpdateWorldGaitAfterMovement(Vector3 before, bool ladderConsumedTick)
+    {
+        DeactivateWorldGait();
+        float dt = Runner.DeltaTime;
+        if (!ValidGaitPhase(WorldGaitPhase) || !PlayerInputSource.IsFinite(dt) || dt <= 0f
+            || !NetworkMatchState.AllowsCombatFor(Runner) || IsDead || Health <= 0 || IsCrouching
+            || ladderConsumedTick || WorldPoseClimbing || !_movementController.Grounded) return;
+        Vector3 delta = transform.position - before;
+        Vector3 actualVelocity = _movementController.Velocity;
+        if (!PlayerInputSource.IsFinite(delta.x) || !PlayerInputSource.IsFinite(delta.y)
+            || !PlayerInputSource.IsFinite(delta.z) || !PlayerInputSource.IsFinite(actualVelocity.x)
+            || !PlayerInputSource.IsFinite(actualVelocity.z) || Mathf.Abs(delta.y) > 1.25f) return;
+        Vector2 planar = new Vector2(actualVelocity.x, actualVelocity.z);
+        Vector2 distance = new Vector2(delta.x, delta.z);
+        float speed = planar.magnitude;
+        if (speed > 8f || distance.magnitude > 8f * dt + .001f
+            || (distance - planar * dt).magnitude > .001f) return;
+        Vector3 local = transform.InverseTransformDirection(new Vector3(planar.x, 0f, planar.y));
+        Vector2 localVelocity = new Vector2(local.x, local.z);
+        if (!FiniteGaitVelocity(localVelocity)) return;
+        if (speed <= .15f) localVelocity = Vector2.zero;
+        float run = Mathf.InverseLerp(5.1f, 6.8f, speed);
+        float cycleDistance = Mathf.Lerp(3.3f, 4.2f, run);
+        float nextPhase = WorldGaitPhase + (speed > .15f ? distance.magnitude / cycleDistance : 0f);
+        if (!ValidGaitPhase(nextPhase)) return; // Keep phase; no same-life modulo/reset.
+        WorldGaitPhase = nextPhase; WorldGaitLocalVelocity = localVelocity; WorldGaitEligible = true;
+    }
+
     private ShadowCastingMode[] _originalShadowModes;
     private bool _spawned;
     private CombatPresentation _presentation;
@@ -171,6 +276,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
             RecoilPreviewAmmo = Ammo;
             RecoilShotTimer = default;
             RecoilReloadTimer = default;
+            ResetWorldGaitForLife();
         }
         if (Object.HasInputAuthority)
         {
@@ -184,6 +290,13 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         if (_worldBodyPose != null) _worldBodyPose.Unbind();
         _ladderMotor = GetComponent<PlayerLadderMotor>();
         _crouchReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(IsCrouching));
+        _gaitPhaseReader = GetPropertyReader<float>(typeof(GamePlayerNetworkData), nameof(WorldGaitPhase));
+        _gaitVelocityReader = GetPropertyReader<Vector2>(typeof(GamePlayerNetworkData), nameof(WorldGaitLocalVelocity));
+        _gaitEligibleReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(WorldGaitEligible));
+        _poseClimbingReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(WorldPoseClimbing));
+        _poseLifeReader = GetPropertyReader<int>(typeof(GamePlayerNetworkData), nameof(RespawnVersion));
+        _poseHealthReader = GetPropertyReader<int>(typeof(GamePlayerNetworkData), nameof(Health));
+        _poseDeadReader = GetPropertyReader<bool>(typeof(GamePlayerNetworkData), nameof(IsDead));
         _crouchGeometry = GetComponent<PlayerCrouchGeometry>();
         if (_crouchGeometry == null) _crouchGeometry = gameObject.AddComponent<PlayerCrouchGeometry>();
         if (!_crouchGeometry.Initialize(this, _characterController, _cameraRoot))
@@ -236,11 +349,14 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     {
         if (_inputSource != null) _inputSource.SynchronizeRespawn();
         ApplyLocalPresentation();
-        if (_crouchGeometry != null) _crouchGeometry.Apply(ReadPresentationCrouch(), !IsDead && Health > 0);
-        // Move the existing WorldMuzzle before CombatPresentation captures its
-        // immediate cosmetic muzzle snapshot. Simulation shot origin is unchanged.
-        if (_worldBodyPose != null && TryGetWorldBodyPoseRenderContext(out var bodyPoseContext))
-            _worldBodyPose.ApplyAfterStance(bodyPoseContext, WorldBodyPosePass.Render);
+        // One GameData sample supplies both stance and pose, including proxy life.
+        if (TryGetWorldBodyPoseRenderContext(out var bodyPoseContext))
+        {
+            if (bodyPoseContext.SourceLifeAligned)
+                _crouchGeometry?.Apply(bodyPoseContext.Crouched, bodyPoseContext.Alive);
+            _worldBodyPose?.ApplyAfterStance(bodyPoseContext, WorldBodyPosePass.Render);
+        }
+        else _worldBodyPose?.ApplySourceFallbackAfterStance(WorldBodyPosePass.Render);
         if (_locomotionPresentation != null) _locomotionPresentation.RenderPresentation(PresentationCrouched, PresentationClimbing);
         if (_cameraRoot != null) _cameraRoot.localRotation = CombatRecoil.ViewRotation(AimPitch, RecoilOffset);
         if (_viewModelRoot != null && Object.HasInputAuthority)
@@ -264,7 +380,8 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
 
     public override void FixedUpdateNetwork()
     {
-        if ((!Object.HasStateAuthority && !Object.HasInputAuthority) || !MovementConfigured) return;
+        if (!Object.HasStateAuthority && !Object.HasInputAuthority) return;
+        if (!MovementConfigured) { DeactivateWorldGait(); return; }
         var match = NetworkMatchState.Instance;
         if (Object.HasStateAuthority && match != null && match.IsCurrent && match.Runner == Runner) match.EvaluateBoundary();
         if (!NetworkMatchState.AllowsCombatFor(Runner))
@@ -273,6 +390,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
             _movementController.Velocity = Vector3.zero;
             PreviousButtons = default; ReloadTimer = default; NextShotTimer = default;
             RecoilShotTimer = default; RecoilReloadTimer = default;
+            DeactivateWorldGait();
             return;
         }
         var move = Vector2.zero;
@@ -302,6 +420,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
             _movementController.Velocity = Vector3.zero;
             if (Object.HasStateAuthority) { PreviousButtons = default; ReloadTimer = default; }
             ResetRecoilPreview();
+            DeactivateWorldGait();
             if (Object.HasStateAuthority && IsDead) TryRespawn();
             return;
         }
@@ -319,6 +438,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         else IsCrouching = false;
         transform.rotation = Quaternion.Euler(0f, AimYaw, 0f);
         // Exactly one movement path per owner simulation tick, including resimulation.
+        Vector3 gaitMovementStart = transform.position;
         bool climbingTick = _ladderMotor != null && _ladderMotor.TrySimulate(input, hasInput, IsCrouching);
         if (!climbingTick)
         {
@@ -340,6 +460,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
             _movementController.maxSpeed = (IsCrouching ? PlayerCrouchGeometry.CrouchSpeed : sprint ? 7.5f : 5f) * move.magnitude;
             _movementController.Move(transform.rotation * new Vector3(move.x, 0f, move.y));
         }
+        UpdateWorldGaitAfterMovement(gaitMovementStart, climbingTick);
         if (Object.HasStateAuthority) UpdateCombat(hasInput, input);
         else if (Object.HasInputAuthority) PredictRecoil(hasInput, input);
     }
@@ -435,6 +556,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         if (!Object.HasStateAuthority || !NetworkMatchState.AllowsCombatFor(Runner) || IsDead || Health > 0 || killer == null || killer == this
             || !killer.Object.HasStateAuthority || killer.Runner != Runner) return false;
         IsDead = true; Death++; DeathSequence++; LastKiller = killer.Object.InputAuthority;
+        DeactivateWorldGait();
         killer.Kill++;
         RespawnTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(3f, Runner.TickRate));
         RespawnRetryTimer = default;
@@ -474,6 +596,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         LastShotDirection = Vector3.zero;
         RespawnVersion++; IsDead = false; IsCrouching = false;
         if (_ladderMotor != null) _ladderMotor.ResetSimulation();
+        ResetWorldGaitForLife();
         ApplyLifeCollision();
     }
 
