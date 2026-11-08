@@ -1,3 +1,5 @@
+> **2026-11-09 보행 검증 경계:** [Raw05 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)은 새 Android APK·서명·설치·Play 제공의 근거가 아닙니다. 같은 소스의 QA2 산출물부터 별도 검증하며, 설치 QA1의 보행 미포함과 운영34/원장196,2,34를 유지합니다.
+
 > **2026-11-09 현재 배포 경계:** 운영34/1.0.196/release12·원장196,2,34를 유지합니다. [외부 컴파일02/Host11 실패·복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)은 새 Android 빌드/서명/Play 제공이 아니며, 두 기기에 설치된 QA1에는 보행 후보가 없습니다.
 
 > **2026-10-28 Joystick 검증 범위:** PC 합성 공개 Pointer probe/복구는 완료했지만 짧은 pulse 전체 판정은 false입니다. [실제 결과와 정리](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 따릅니다.
