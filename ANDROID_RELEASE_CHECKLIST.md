@@ -1,3 +1,5 @@
+> **2026-11-09 현재 배포 경계:** 운영34/1.0.196/release12·원장196,2,34를 유지합니다. [외부 컴파일02/Host11 실패·복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)은 새 Android 빌드/서명/Play 제공이 아니며, 두 기기에 설치된 QA1에는 보행 후보가 없습니다.
+
 > **2026-10-28 Joystick 검증 범위:** PC 합성 공개 Pointer probe/복구는 완료했지만 짧은 pulse 전체 판정은 false입니다. [실제 결과와 정리](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 따릅니다.
 > native/죽음·리스폰/route·전체 PR261 수용은 미완료입니다. 제공34/source612와 후속 PR282/287/288/290 미포함을 유지하며 새35 예약·게임APK/AAB 빌드0이고 아래 과거 체크는 보존합니다.
 

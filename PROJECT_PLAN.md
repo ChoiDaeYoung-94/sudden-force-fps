@@ -1,3 +1,5 @@
+> **2026-11-09 다음 우선순위:** [Host11 컴파일 완료 조건 보완](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md) → 새 PC–폰 정상 경기의 읽기 전용 자세·발 접촉 관측 → 보행03의 별도 닫힌 compile/Weaver·평탄 구간 guard 순서입니다. 기존 QA1과 운영34를 보존하며 사용자 조치 없이 가능한 준비를 계속합니다.
+
 > **2026-10-31 작은 공개 Joystick 이동:** [새 C9 실제 컴파일·단일 합성 콜백 이동/해제 관측](Docs/validation/2026-10-31/input261-small-public-joystick-navigation.md)에서 계획0.25m에 결과 sample 순XZ0.278931m·후속0.303792m를 확인했습니다. 추가0.024861m·stored poll 미확보를 보존하며 완전 위치고정·native 입력·B1/L2 통과로 확대하지 않습니다.
 > 같은 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
 
