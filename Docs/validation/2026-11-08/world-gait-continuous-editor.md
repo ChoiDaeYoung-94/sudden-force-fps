@@ -6,7 +6,11 @@
 
 평면상대 fullskin 최소 +0.999745mm, sole 최소 +0.9996928mm, raw 대비 foot 보정 최대67.2569mm입니다. 평면을 다시 빼지 않았습니다. Editor 표본 span16.0916061초와 logical1/30초는 Game FPS가 아닙니다. 저장 수치 검토이며 독립 Unity geometry 재실행은 없습니다.
 
-일반 Stop243의 왼쪽 ball 인접 이동은476.024mm(raw foot323.500mm), steady Run 최대는321.737mm(raw261.646mm)입니다. 최대 quaternion 변화45.813°는 Run161입니다. 고정 clone에서 같은 관절의 인접 표본 간 3D거리이므로 NCC 이동·80mm 보정량과 다릅니다. 원인·새 정지 버그·자연성 통과를 확정하지 않았고 해당243 PNG도 없습니다. Idle0과 Stopped256의 leg12 world 위치/local 회전 및 PNG 바이트는 정확히 같습니다.
+일반 Stop243의 왼쪽 ball 인접 이동은476.024mm(raw foot323.500mm)입니다. Run 내부 최대 ball 이동은Blue194의321.737mm이며, 같은 표본의 raw foot 이동은251.326mm입니다. 원 Run-labelled 인접 표본 집계의 raw 최대261.646mm는 WalkToRun143→Run144 진입 경계로 따로 구분합니다. 최대 quaternion 변화45.813°는 Run161의 왼쪽 calf이며 ball 최대와 같은 표본이 아닙니다. 고정 clone에서 같은 관절의 인접 표본 간 3D거리이므로 NCC 이동·80mm 보정량과 다릅니다. 원인·새 정지 버그·자연성 통과를 확정하지 않았고 해당243 PNG도 없습니다. Idle0과 Stopped256의 leg12 world 위치/local 회전 및 PNG 바이트는 정확히 같습니다.
+
+후속 읽기 분석에서 해당 구간의 visualRoot·hip·양 thigh anchor 위치는 고정이고, Run161과 Stop243은 phase reset이나 modulo seam을 지나지 않았습니다. 원본 Run0.8초/97키와 현재 phase 법칙을 대조하면 speed7.5에서 logical1/30마다 원 clip 시간 약47.619ms(원 재생 대비1.4286배)를 진행하며, Stop242→243은 Walk/Run 가중치가 한 표본에 약0.294 변합니다. 원 회전 키와 혼합 전환으로 큰 연속 변화가 가능한 자료이며, 변위 크기만으로 순간 튐이나 수정 필요를 확정하지 않습니다. 이 산술 대조는 새 Unity 재현이 아닙니다.
+
+raw9개와 corrected9개의 공개 회전 표본은 finite·시작/끝 방향 일치·인접 quaternion 부호 연속을 확인했습니다. 원 clip 생성 규약도 선형 tangent와 quaternion 연속화를 사용합니다. 이 입력/규약에서 C0 불연속의 확정 근거는 없지만 루프 속도·가속도, 혼합·IK 해의 연속성이나 자연성까지 통과한 것은 아닙니다. 다음 분해 관측은 고정 가중치의 phase 변화, 고정 phase의 가중치 변화, 현재 조합을 비교하고 raw/corrected-beforeIK/final 관절·발 방향·solver branch/pole을 함께 남기는 것입니다.
 
 Native25312는 UTC10:44:13.5927515→10:45:01.8891356, exit0/forced=false/Dispose 오류0·outer tool0입니다. 원창10:39:31/new10:51:31/full10:54:31을 유지하고10:50:38.670758에 반납했습니다. Root 공개 proof상 prefs 두 값1, Editor0, 서버760의 현재 연결 peer 확인·ADB payload0입니다. listener 소유권 증명은 아닙니다.
 
