@@ -58,4 +58,4 @@ SDK 자동 변경의 EDM 세 bool과 형식 변화를 전후 보존·분류한 �
 | Native06 제한 독립 검토 | `native06-actual-bounded-independent-review01/verification.public.json` | `2FEFF526B6EEB547570272245B34E63B4787E901A72D70C0BC838C7799C5B96C` |
 | Host07 실패·복원 독립 검토 | `host07-partial-reconciliation-independent-review01/verification.public.json` | `B1A7DE9AECE72F74F3FAEA726E5332390E272E99D778D528B117A8B69DB33164` |
 
-다음은 연결 확인 비용 개선 후 fresh Game/PID의 native 세 모드, PC–휴대전화 실제 Game와 보행 baseline, 후보 애니메이션 통합 순서입니다. 현재 QA1에는 보행 후보가 없고 운영 코드34/release12와 원장196,2,34는 유지합니다. 사운드 실청·권리 전체·16KB 기기·장시간 성능은 통과로 합산하지 않습니다. 현재 필요한 사용자 조치·질문은 없습니다.
+이후 fresh Game/PID에서 수행한 native 세 모드와 별도 해제 순서 보완은 [11월9일 기록](../2026-11-09/native-input-release-orders.md)에 구분했습니다. 다음은 PC–휴대전화 실제 Game와 보행 baseline, 후보 애니메이션 통합 순서입니다. 현재 QA1에는 보행 후보가 없고 운영 코드34/release12와 원장196,2,34는 유지합니다. 사운드 실청·권리 전체·16KB 기기·장시간 성능은 통과로 합산하지 않습니다. 현재 필요한 사용자 조치·질문은 없습니다.

@@ -1,4 +1,4 @@
-> **2026-11-08 QA1 기기 관측:** [휴대전화–LD 5분 기본 경기·양쪽 결과/로비 복귀](Docs/validation/2026-11-08/localqa-phone-ld-game-flow.md)와 [LD 인트로 표본·입력 준비·PC 연동 실패](Docs/validation/2026-11-08/localqa-followup-bounded-results.md)를 기록했습니다.
+> **2026-11-09 QA1 기기 관측:** [휴대전화–LD 5분 기본 경기·양쪽 결과/로비 복귀](Docs/validation/2026-11-08/localqa-phone-ld-game-flow.md), [LD 인트로 표본·입력 준비·PC 연동 실패](Docs/validation/2026-11-08/localqa-followup-bounded-results.md), [두 손가락의 사격·이동 해제 순서](Docs/validation/2026-11-09/native-input-release-orders.md)를 기록했습니다.
 > QA1은 별도 테스트 앱이며 운영34/release12를 대체하지 않습니다. 후속 native 주입은 사전 시간검사로0·전체 입력/보행 후보 수용은 미완료입니다.
 
 > **2026-11-06 명중 HUD:** 사용자 요청에 따라 중앙 명중 표식·피해량 안내를 제거했습니다. [실제 HUD 복제본 검증과 범위](Docs/validation/2026-11-06/hit-feedback-removal.md)를 확인했습니다.
