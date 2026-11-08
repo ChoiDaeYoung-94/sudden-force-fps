@@ -1,3 +1,5 @@
+> **2026-11-09 보행 추적:** [Raw05 Draft353과 Editor 렌더·종료·원복](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)을 #341에 연결합니다. Draft353은 QA 소스이며 실제 Game/Android·제품 수용 전까지 #341과 상위 미완료 범위를 유지합니다.
+
 > **2026-11-09 추적:** [Host11 사전검증 실패·기한 내 복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)을 #347에 추가했습니다. 외부 두 소스 컴파일02만 통과했으며 Host11 두 피어/보행·제품 수용으로 합산하지 않습니다. #347/#341 및 기존 미완료 범위를 유지합니다.
 
 > **2026-10-27 최신 추적:** PR274는 코드34 예약·검증된 빌드/서명·로컬 산출물 기록 범위입니다. 입력 수정 PR261은 실제 Android 입력 수용 전까지 Draft이고 #66/#43/#259 및 기존 미완료 부모는 유지합니다. [완료·보류 경계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 따르며 아래 과거 버전·OPEN 기록은 당시 상태입니다.

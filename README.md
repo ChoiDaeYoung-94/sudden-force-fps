@@ -1,3 +1,5 @@
+> **2026-11-09 보행 QA:** [Draft353 소스 연결과 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)의 630표본·674이미지와 정상 종료·공개4,095개 원복 기록을 대조했습니다. 실제 경기·총기 자세·접지·Android 수용은 후속이며 설치 QA1과 운영34를 유지합니다.
+
 > **2026-11-09 PC 연동 후속:** [외부 컴파일02 통과와 Host11 사전검증 중단·복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)을 구분해 기록했습니다. Host11의 방/경기/보행은0이며 출력 유지 콜백 해석을 보완 중입니다. 운영34와 QA1 보행 미포함 상태를 유지합니다.
 
 > **2026-11-09 QA1 기기 관측:** [휴대전화–LD 5분 기본 경기·양쪽 결과/로비 복귀](Docs/validation/2026-11-08/localqa-phone-ld-game-flow.md), [LD 인트로 표본·입력 준비·PC 연동 실패](Docs/validation/2026-11-08/localqa-followup-bounded-results.md), [두 손가락의 사격·이동 해제 순서](Docs/validation/2026-11-09/native-input-release-orders.md)를 기록했습니다.
