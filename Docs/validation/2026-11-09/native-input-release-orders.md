@@ -1,6 +1,6 @@
 # QA1 두 기기의 사격·이동 터치 해제 관측 — 2026-11-09
 
-관련 #347 / Draft PR348. [앞선 기본 경기](../2026-11-08/localqa-phone-ld-game-flow.md)와 [인트로·실패 기록](../2026-11-08/localqa-followup-bounded-results.md)에 이어, 설치된 LocalQA `1.0.197-qa1`/code1의 제한된 입력 관측을 기록합니다. Samsung SM-N986N과 LD index2가 정상 닉네임·공개 방·READY/START 흐름으로 같은 Game에 들어갔습니다. QA1에는 보행 후보가 없으며 운영 code34/release12·원장196,2,34는 변경하지 않았습니다.
+관련 #347 / 구현 후보 Draft PR348, 이 검증 문서 PR351. [앞선 기본 경기](../2026-11-08/localqa-phone-ld-game-flow.md)와 [인트로·실패 기록](../2026-11-08/localqa-followup-bounded-results.md)에 이어, 설치된 LocalQA `1.0.197-qa1`/code1의 제한된 입력 관측을 기록합니다. Samsung SM-N986N과 LD index2가 정상 닉네임·공개 방·READY/START 흐름으로 같은 Game에 들어갔습니다. QA1에는 보행 후보가 없으며 운영 code34/release12·원장196,2,34는 변경하지 않았습니다.
 
 ## Native09: 세 모드와 기록 한도
 
