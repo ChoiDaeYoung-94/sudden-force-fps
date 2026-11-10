@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 연속 관측:** [보행·사격과 밑창 높이](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)의375 진단 PNG·299개 밑창 표본을 확보했습니다. 좌우/전후 이동·정지와 사격 상태 변화·탄약 복귀는 관측했고 접지·양손 IK·Sprint/두 손가락·제품 수용은 후속입니다. Draft353·운영34를 유지합니다.
+
 > **2026-11-10 QA2 실제 경기:** [Editor–LD2 5분 DRAW와 자세 관측 한계](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)를 확인했습니다. 정상 참가·READY/START·양쪽 Lobby 복귀와 터치 이동/보행 위상 반영은 관측했으나 벽 가림으로 연속 보행·총기 자세 수용은 미완료입니다. Draft353·운영34를 유지합니다.
 
 > **2026-11-10 QA2 실행·로비:** [Case02·03 차단과 로비 확인](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)을 기록했습니다. Windows 보안창은 미조작 후 소유 프로세스를 정리했고, LD1은 정확 APK 설치 뒤 기본/단일 GLES30 모두 흰 화면이었습니다. LD2는 닉네임·방 생성·1명 시작 차단·로비 복귀를 확인했으며 두 피어 Game·gait는 미수용입니다.
