@@ -1,3 +1,5 @@
+> **2026-11-10 #341 helper 후속:** [새 QA2 helper·Case06](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)의 빌드/서명·LD2 갱신·제한된 동시 입력과 원복을 기록했습니다. 정확 해제 타이밍·전체 gait/rifle/L2 수용 전까지 #341/Draft353을 유지합니다.
+
 > **2026-11-10 #341 연속 관측:** [Case05 실제 보행·접지 분포](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)와 두 차례 정상 Game/메뉴 복귀를 기록했습니다. 순간 추가 이격·일부 음수 밑창 정점을 품질 후보로 남기며 #341/Draft353을 유지합니다.
 
 > **2026-11-10 #341 실제 경기 후속:** [QA2 Case04](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)의 정상 경기·복귀와 Native0/공개4095 원복을 기록했습니다. 단일 가시 프레임을 연속 gait/rifle 수용으로 확대하지 않으며 #341/Draft353은 유지합니다.

@@ -1,3 +1,5 @@
+> **2026-11-10 다음 검증:** [QA2 helper로 Sprint/동시 입력 관측](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md) 뒤에는 해제 순서의 패킷/화면 시간 결속·반대 역할·남은 방향/조준·사망/리스폰과 접지/소총 품질을 확인합니다. 새 장시간 실행·성능 측정은 미완료입니다.
+
 > **2026-11-10 QA2 검증 순서:** [Case05 연속 화면·실제 밑창 표본](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md) 뒤에는 입력 도우미의 QA2 버전 결속부터 확인하고 Sprint+이동·두 손가락/조준·생명주기 회귀를 진행합니다. 접지/양손 IK를 전체 통과로 처리하지 않습니다.
 
 > **2026-11-10 QA2 다음 검증:** [Case04 실제 경기와 제한](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md) 뒤에는 벽 안쪽 연속 촬영으로 walk/run·정지 전환·양손/소총을 확인하고 실제 사격·장전·생명주기 회귀를 진행합니다. 정상5분 DRAW·Lobby 복귀와 전체 보행 수용을 구분합니다.

@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 native 후속:** [QA2용 helper 갱신과 Sprint 관측](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)을 확인했습니다. 같은 게임 APK로 동시 입력3개 정상 반환·실제 Sprint/속도약7.41m/s·사격 상태 변화를 관측했고 전체 자세/입력 수용은 후속입니다. Draft353·운영34 유지입니다.
+
 > **2026-11-10 QA2 연속 관측:** [보행·사격과 밑창 높이](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)의375 진단 PNG·299개 밑창 표본을 확보했습니다. 좌우/전후 이동·정지와 사격 상태 변화·탄약 복귀는 관측했고 접지·양손 IK·Sprint/두 손가락·제품 수용은 후속입니다. Draft353·운영34를 유지합니다.
 
 > **2026-11-10 QA2 실제 경기:** [Editor–LD2 5분 DRAW와 자세 관측 한계](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)를 확인했습니다. 정상 참가·READY/START·양쪽 Lobby 복귀와 터치 이동/보행 위상 반영은 관측했으나 벽 가림으로 연속 보행·총기 자세 수용은 미완료입니다. Draft353·운영34를 유지합니다.
