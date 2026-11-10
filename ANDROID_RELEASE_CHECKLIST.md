@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 기동 구분:** [LD1 설치·흰 화면과 LD2 로비 확인](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)을 연결했습니다. 동일 서명 APK의 LD1 전체 readback은 일치했으나 기동은 미수용이며, LD2는 방 생성·1명 시작 차단·정상 복귀까지입니다. 두 피어 Game·gait·휴대전화·16KB 수용과 운영34 배포 상태는 구분합니다.
+
 > **2026-11-10 QA2 서명·설치:** [기존 키 V2 서명·LD Case01](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)의 localqa/code2 APK100,492,368B와 설치본 SHA 일치, code1→2 데이터 보존 갱신·기본 인트로/Lobby 관측을 확인했습니다. 운영 패키지34/원장196,2,34는 유지하며 Play 제공·휴대전화·16KB 기기·Game 수용은 미완료입니다.
 
 > **2026-11-10 QA2 산출물:** [C06/Static07/GPGS02 기록](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)의 localqa/code2 무서명 출력은 운영34와 구분합니다. 실제 서명·설치·Play·16KB 기기 통과는 아직 없으며 원장196,2,34를 유지합니다.

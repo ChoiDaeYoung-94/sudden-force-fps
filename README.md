@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 실행·로비:** [Case02·03 차단과 로비 확인](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)을 기록했습니다. Windows 보안창은 미조작 후 소유 프로세스를 정리했고, LD1은 정확 APK 설치 뒤 기본/단일 GLES30 모두 흰 화면이었습니다. LD2는 닉네임·방 생성·1명 시작 차단·로비 복귀를 확인했으며 두 피어 Game·gait는 미수용입니다.
+
 > **2026-11-10 QA2 서명·LD:** [기존 키 서명·갱신 설치·기본 cold 인트로](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)를 확인했습니다. localqa/code2 서명 APK와 LD 설치본 SHA가 같고, 데이터 초기화 없이 code1→2 갱신 후 QuadD 인트로→닉네임/Lobby를 표본 영상에서 관측했습니다. 실제 Game·보행/소총 수용은 미완료이며 Draft353·운영34를 유지합니다.
 
 > **2026-11-10 QA2 Android:** [무서명 생성·정적 검사와 provider 출력](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)의 실제 C06/ZIP359·Data229/native7·provider leaf1개 제거를 확인했습니다. 서명 사전 요청2개는 SDK·키 접근 전 거절된 상태로 보존하며 설치/게임/제품 수용은 후속입니다.
