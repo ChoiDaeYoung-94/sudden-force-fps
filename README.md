@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 Android:** [무서명 생성·정적 검사와 provider 출력](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)의 실제 C06/ZIP359·Data229/native7·provider leaf1개 제거를 확인했습니다. 서명 사전 요청2개는 SDK·키 접근 전 거절된 상태로 보존하며 설치/게임/제품 수용은 후속입니다.
+
 > **2026-11-10 QA2 Windows:** [새 Player 빌드와 공개 입력 복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)의 Native Exit0·381파일 독립 대조·공개4,095개 원복을 확인했습니다. 실제 Game·보행/소총·Android 수용은 후속이며 Draft353과 운영34/QA1을 유지합니다.
 
 > **2026-11-09 보행 QA:** [Draft353 소스 연결과 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)의 630표본·674이미지와 정상 종료·공개4,095개 원복 기록을 대조했습니다. 실제 경기·총기 자세·접지·Android 수용은 후속이며 설치 QA1과 운영34를 유지합니다.

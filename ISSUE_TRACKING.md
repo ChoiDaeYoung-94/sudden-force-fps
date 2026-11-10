@@ -1,3 +1,5 @@
+> **2026-11-10 #341 후속:** [C06 무서명·Static07·GPGS02 실제 결과](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)를 연결합니다. 정상 SDK 반환과 실제 정적/출력 검토 범위만 수용하고 서명·LD·Game은 별도로 남겨 #341/Draft353을 유지합니다.
+
 > **2026-11-10 #341:** [QA2 Windows 빌드·복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)를 기록했습니다. Native/산출물과 늦은 파일 복구 시각을 분리했고 #341 및 Draft353은 실제 Game/Android 검증 전까지 유지합니다.
 
 > **2026-11-09 보행 추적:** [Raw05 Draft353과 Editor 렌더·종료·원복](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)을 #341에 연결합니다. Draft353은 QA 소스이며 실제 Game/Android·제품 수용 전까지 #341과 상위 미완료 범위를 유지합니다.

@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 산출물:** [C06/Static07/GPGS02 기록](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)의 localqa/code2 무서명 출력은 운영34와 구분합니다. 실제 서명·설치·Play·16KB 기기 통과는 아직 없으며 원장196,2,34를 유지합니다.
+
 > **2026-11-10 검증 경계:** [QA2 Windows 빌드·복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)는 Android APK·서명·설치·Play 제공의 통과 근거가 아닙니다. 운영34/원장196,2,34를 유지하며 새 QA2 Android 산출물부터 별도로 검증합니다.
 
 > **2026-11-09 보행 검증 경계:** [Raw05 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)은 새 Android APK·서명·설치·Play 제공의 근거가 아닙니다. 같은 소스의 QA2 산출물부터 별도 검증하며, 설치 QA1의 보행 미포함과 운영34/원장196,2,34를 유지합니다.
