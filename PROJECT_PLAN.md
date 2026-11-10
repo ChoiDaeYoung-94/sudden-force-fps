@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 다음 단계:** [서명 APK·LD 갱신 설치·기본 cold 인트로](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)까지 확인했습니다. 다음은 같은 QA2 Windows–LD의 실제 연결/경기와 Raw05 보행 분리 모드·소총·접지 관측입니다. 제품 수용과 휴대전화 검증은 완료로 처리하지 않으며 Draft353·운영34/원장196,2,34를 유지합니다.
+
 > **2026-11-10 Android 다음 단계:** [QA2 무서명 산출물과 정적/재포장 출력](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)을 확보했습니다. 독립 소스 검토를 통과한 signer02의 새 입력 재검증 → 기존 키 서명·공식 검증 → LD2 설치·같은 QA2 두 피어 관측 순서입니다.
 
 > **2026-11-10 QA2 준비:** [Windows Player 생성과 공개 입력 복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)를 완료했습니다. 다음은 QA2 Android 정적 검증·서명·LD 설치와 같은 QA2 두 피어 경기입니다. 이번 회차 기기는 LD로 한정하고 휴대전화는 후속으로 남깁니다.
