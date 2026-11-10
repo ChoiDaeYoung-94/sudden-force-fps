@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 실측 범위:** [Case05 연속 이동·사격과 밑창 측정](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)은 별도localqa/code2의 결과입니다. 정상 재참가/메뉴 복귀·공개4095 원복과 전체 제품 수용은 구분하며 운영34/release12·원장196,2,34를 유지합니다. 휴대전화·Play업로드0입니다.
+
 > **2026-11-10 QA2 경기 경계:** [Editor–LD2 Case04](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)에서 같은 서명 QA2의 5분 DRAW·정상 복귀를 확인했습니다. LD1 흰 화면·휴대전화·실제16KB·연속 보행/소총은 미수용이고 운영34/release12·원장196,2,34는 유지합니다.
 
 > **2026-11-10 QA2 기동 구분:** [LD1 설치·흰 화면과 LD2 로비 확인](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)을 연결했습니다. 동일 서명 APK의 LD1 전체 readback은 일치했으나 기동은 미수용이며, LD2는 방 생성·1명 시작 차단·정상 복귀까지입니다. 두 피어 Game·gait·휴대전화·16KB 수용과 운영34 배포 상태는 구분합니다.
