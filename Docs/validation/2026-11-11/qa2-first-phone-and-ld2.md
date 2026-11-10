@@ -2,7 +2,7 @@
 
 첫 휴대전화의 QA2 설치와 콜드 시작을 확인했고, phone–LD2의 첫 경기에서 양쪽 **TIME EXPIRED · DRAW 0:0** 결과와 정상 로비 복귀를 확인했습니다. 이어 휴대전화를 host로 새 방을 만들어 LD2가 참가하는 것과 순서대로 퇴장한 뒤 양쪽 로비로 돌아오는 흐름도 확인했습니다. 자기 작업 범위의 호출·정리·반환은 원래 기한 전에 완료했습니다.
 
-총괄의 직접 화면 검수와 공개 결과 기록을 반영했습니다. 설치·콜드 시작의 독립 실제 검토를 마쳤으며, 경기·복귀의 독립 검토는 아직 진행 중입니다. 이전 중간 기록은 보존했습니다. QA 소스 D7·Draft #353·운영34·Play12의 기존 상태를 유지하며 새 빌드·서명은 수행하지 않았습니다.
+총괄의 직접 화면 검수와 공개 결과 기록을 반영했습니다. 설치·콜드 시작과 경기·복귀의 독립 실제 검토를 마쳤습니다. 이전 중간 기록은 보존했습니다. QA 소스 D7·Draft #353·운영34·Play12의 기존 상태를 유지하며 새 빌드·서명은 수행하지 않았습니다.
 
 | 실제 확인한 항목 | 결과 |
 |---|---|
@@ -37,3 +37,5 @@
 근거: [최종 전체 반환 기록](D:/codex/validation/sudden-force-fps/20261111-work/root-resume01/first-phone-full-return.public.json), [경기 중간 관측 기록](D:/codex/validation/sudden-force-fps/20261111-work/root-resume01/first-phone-game-observations.partial.public.json), [설치 후 qualify summary](D:/codex/validation/sudden-force-fps/20261111-work/phone-coldstart-preparation01/actual-qualify-36e34a06d4154ac5b0dd719f83a345a8/summary.public.json), [콜드 영상 summary](D:/codex/validation/sudden-force-fps/20261111-work/phone-coldstart-preparation01/actual-coldvideo-627d9c1c76d248b39c6c72a064a351ea/summary.public.json). 중간 관측 파일의 당시 미완료 상태는 보존하고, 최종 경기·복귀·반환은 총괄의 후속 화면 검수와 최종 반환 기록으로 갱신했습니다. 전체 파일 해시·시각 메타데이터는 [기존 근거 자료](D:/codex/validation/sudden-force-fps/20261111-work/first-phone-evidence-draft01/evidence-metadata.public.json)에 분리했습니다.
 
 현재 완료한 범위는 첫 휴대전화 설치·콜드 시작의 선택 표본, 첫 경기 종료·양쪽 복귀, 새 방 참가·순차 퇴장과 자기 범위 반환입니다. 현재 필요한 사용자 조치나 질문은 없습니다.
+
+독립 실제 검토: [설치·콜드 시작](D:/codex/validation/sudden-force-fps/20261111-work/first-phone-install-cold-actual-review01/verification.public.json), [경기·복귀·반환](D:/codex/validation/sudden-force-fps/20261111-work/first-phone-game-actual-review01/verification.public.json). 경기 검토는 source101콜·화면51개 바이트 대조/선택23개 시각 검수 범위이며 전체 보행·입력 수용으로 확대하지 않았습니다.
