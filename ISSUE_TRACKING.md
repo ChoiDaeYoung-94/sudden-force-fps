@@ -1,3 +1,5 @@
+> **2026-11-11 #369 후속:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md)에 새 unsigned/native/정적·기존 키 서명·설치본 전체 일치와 제한된 cold 관측을 기록했습니다. #362의 반복 cold·모든 프레임 부재 판정, #341/Draft353의 전체 gait/IK와 QA3 경기는 남아 있습니다. 운영34 배포 변경은 없습니다.
+
 > **2026-11-11 공기계 동시 입력:** [해제 순서의 host 상태와 별도 자세 관측](Docs/validation/2026-11-11/qa2-phone-native-release-and-pose.md)에서 실제 두 손가락3종/저장 상태1,078표본과 별도150 PNG를 확인했습니다. 최종 중립·정상 반환과 전체 gait/IK·raw 입력 지연·제품 수용을 구분하며 Draft353/운영34를 유지합니다.
 
 > **2026-11-11 #341 부분 검증:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md)의 기본 조작·시간 만료·결과/복귀·새 방 참가까지 확인했습니다. Draft353과 전체 gait/IK·입력 경계의 열린 범위를 유지하며, Android 시작 배경은 #362에서 별도로 정리합니다.
