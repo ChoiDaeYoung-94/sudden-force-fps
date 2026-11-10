@@ -45,7 +45,7 @@ C04는 Python 파일 메타데이터·읽기 I/O에 extended-path view를 적용
 
 ## 완료: assemble·정적 검증·기존 키 서명
 
-실제 Native assemble은 Exit0/EOF2/소유 Job 종료·자식0으로 완료됐습니다. 새 native 최종 strip 출력 7개를 APK 생성 전 별도 고정했습니다. 19:11:48에 승인 회수와 원본 공개 4,095개/개인 파일 sparse 제외/Git clean/P2 보호 상태를 확인해 반환했습니다.
+실제 Native assemble은 Exit0/EOF2/소유 Job 종료·자식0으로 완료됐습니다. 새 native 최종 strip 출력 7개를 APK에서 기대값을 만들지 않고 별도 고정했습니다. 19:11:48에 승인 회수와 원본 공개 4,095개/개인 파일 sparse 제외/Git clean/P2 보호 상태를 확인해 반환했습니다.
 
 | 결과 | 실제 근거와 한계 |
 | --- | --- |
