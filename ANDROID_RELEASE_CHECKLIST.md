@@ -1,3 +1,5 @@
+> **2026-11-11 공기계 동시 입력:** [해제 순서의 host 상태와 별도 자세 관측](Docs/validation/2026-11-11/qa2-phone-native-release-and-pose.md)에서 실제 두 손가락3종/저장 상태1,078표본과 별도150 PNG를 확인했습니다. 최종 중립·정상 반환과 전체 gait/IK·raw 입력 지연·제품 수용을 구분하며 Draft353/운영34를 유지합니다.
+
 > **2026-11-11 QA2 기기 기록:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md)에서 공기계와 LD2의 설치본 전체 일치·정상5분 결과·양쪽 복귀/새 방 참가를 확인했습니다. 별도 localqa/code2의 ARM64·4KB 관측으로, 운영34/Play 배포 검사나 실제16KB·전체 보행/입력/음향 수용을 대체하지 않습니다.
 
 > **2026-11-10 helper 갱신 경계:** [Case06](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)에서 helper만 갱신했고 게임 QA2 APK 전체 readback은 동일합니다. 운영34/release12·원장196,2,34·휴대전화/Play업로드0을 유지하며 최종 LD Lobby는 전환 중 정리로 미수용입니다.
