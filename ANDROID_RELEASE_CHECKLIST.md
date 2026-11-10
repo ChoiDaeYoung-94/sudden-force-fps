@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 서명·설치:** [기존 키 V2 서명·LD Case01](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)의 localqa/code2 APK100,492,368B와 설치본 SHA 일치, code1→2 데이터 보존 갱신·기본 인트로/Lobby 관측을 확인했습니다. 운영 패키지34/원장196,2,34는 유지하며 Play 제공·휴대전화·16KB 기기·Game 수용은 미완료입니다.
+
 > **2026-11-10 QA2 산출물:** [C06/Static07/GPGS02 기록](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)의 localqa/code2 무서명 출력은 운영34와 구분합니다. 실제 서명·설치·Play·16KB 기기 통과는 아직 없으며 원장196,2,34를 유지합니다.
 
 > **2026-11-10 검증 경계:** [QA2 Windows 빌드·복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)는 Android APK·서명·설치·Play 제공의 통과 근거가 아닙니다. 운영34/원장196,2,34를 유지하며 새 QA2 Android 산출물부터 별도로 검증합니다.

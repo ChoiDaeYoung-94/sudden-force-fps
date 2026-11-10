@@ -1,3 +1,5 @@
+> **2026-11-10 #341 서명·LD 후속:** [QA2 서명과 LD Case01](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)의 V2 서명·payload 독립 검토와 데이터 보존 갱신 설치 기록을 연결합니다. 기본 cold 인트로는 총괄의 표본 영상 관측이며, 독립 LD 검토는 설치/기록 일관성 범위입니다. Game·보행/소총은 미완료로 #341/Draft353을 유지합니다.
+
 > **2026-11-10 #341 후속:** [C06 무서명·Static07·GPGS02 실제 결과](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)를 연결합니다. 정상 SDK 반환과 실제 정적/출력 검토 범위만 수용하고 서명·LD·Game은 별도로 남겨 #341/Draft353을 유지합니다.
 
 > **2026-11-10 #341:** [QA2 Windows 빌드·복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)를 기록했습니다. Native/산출물과 늦은 파일 복구 시각을 분리했고 #341 및 Draft353은 실제 Game/Android 검증 전까지 유지합니다.
