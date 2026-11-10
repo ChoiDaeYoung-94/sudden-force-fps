@@ -40,4 +40,4 @@ Root의 실제 화면 관측 결속은 `qa3-regression-observations.public.json`
 
 ## 측정 범위
 
-이 기록은 반복 콜드의 제한된 영상 표본과 첫 QA3 경기·복귀 및 새 방 READY/퇴장 화면에 한정합니다. 전체 시작 화면·음향, kill/hit/사망·리스폰 판정, Native instrumentation, 입력 수용 지연·성능, PGS, 전신 gait/IK는 수용하지 않았습니다. 원시 방 토큰·방 이름·기기 serial·비공개 이미지/로그는 포함하지 않습니다. 운영34/Play release12/원장196,2,34는 유지하며 새 AAB·Play 배포0입니다.
+이 기록은 반복 콜드의 제한된 영상 표본과 첫 QA3 경기·복귀 및 새 방 READY/퇴장 화면에 한정합니다. 전체 시작 화면·음향, kill/hit/사망·리스폰 판정, Native instrumentation, 입력 수용 지연·성능, 실제16KB기기, PGS, 전신 gait/IK는 수용하지 않았습니다. 원시 방 토큰·방 이름·기기 serial·비공개 이미지/로그는 포함하지 않습니다. 운영34/Play release12/원장196,2,34는 유지하며 새 AAB·Play 배포0입니다.
