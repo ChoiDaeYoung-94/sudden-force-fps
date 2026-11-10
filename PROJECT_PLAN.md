@@ -1,3 +1,5 @@
+> **2026-11-11 다음 검증:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md) 뒤에는 동시 입력의 해제 중간 상태·보행/소총과 생명주기 회귀를 확인합니다. 첫 공기계의 기본 흐름은 확인했으며, 새 방B의 phone host Game·전체 인트로/실청·16KB는 남았습니다. 시작 배경 #362와 다음 산출물 검증을 구분합니다.
+
 > **2026-11-10 다음 검증:** [QA2 helper로 Sprint/동시 입력 관측](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md) 뒤에는 해제 순서의 패킷/화면 시간 결속·반대 역할·남은 방향/조준·사망/리스폰과 접지/소총 품질을 확인합니다. 새 장시간 실행·성능 측정은 미완료입니다.
 
 > **2026-11-10 QA2 검증 순서:** [Case05 연속 화면·실제 밑창 표본](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md) 뒤에는 입력 도우미의 QA2 버전 결속부터 확인하고 Sprint+이동·두 손가락/조준·생명주기 회귀를 진행합니다. 접지/양손 IK를 전체 통과로 처리하지 않습니다.

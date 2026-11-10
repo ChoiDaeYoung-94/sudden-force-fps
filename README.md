@@ -1,3 +1,5 @@
+> **2026-11-11 실물 QA2:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md)를 확인했습니다. 실제 공기계 설치·QuadD 선택 표본·5분 DRAW0:0·양쪽 로비 복귀와 새 방 재참가를 관측했습니다. 전체 보행/소총·native 입력·16KB 수용과 운영34/release12는 별도입니다.
+
 > **2026-11-10 QA2 native 후속:** [QA2용 helper 갱신과 Sprint 관측](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)을 확인했습니다. 같은 게임 APK로 동시 입력3개 정상 반환·실제 Sprint/속도약7.41m/s·사격 상태 변화를 관측했고 전체 자세/입력 수용은 후속입니다. Draft353·운영34 유지입니다.
 
 > **2026-11-10 QA2 연속 관측:** [보행·사격과 밑창 높이](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)의375 진단 PNG·299개 밑창 표본을 확보했습니다. 좌우/전후 이동·정지와 사격 상태 변화·탄약 복귀는 관측했고 접지·양손 IK·Sprint/두 손가락·제품 수용은 후속입니다. Draft353·운영34를 유지합니다.
