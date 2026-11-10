@@ -1,3 +1,5 @@
+> **2026-11-10 helper 갱신 경계:** [Case06](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)에서 helper만 갱신했고 게임 QA2 APK 전체 readback은 동일합니다. 운영34/release12·원장196,2,34·휴대전화/Play업로드0을 유지하며 최종 LD Lobby는 전환 중 정리로 미수용입니다.
+
 > **2026-11-10 QA2 실측 범위:** [Case05 연속 이동·사격과 밑창 측정](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)은 별도localqa/code2의 결과입니다. 정상 재참가/메뉴 복귀·공개4095 원복과 전체 제품 수용은 구분하며 운영34/release12·원장196,2,34를 유지합니다. 휴대전화·Play업로드0입니다.
 
 > **2026-11-10 QA2 경기 경계:** [Editor–LD2 Case04](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)에서 같은 서명 QA2의 5분 DRAW·정상 복귀를 확인했습니다. LD1 흰 화면·휴대전화·실제16KB·연속 보행/소총은 미수용이고 운영34/release12·원장196,2,34는 유지합니다.
