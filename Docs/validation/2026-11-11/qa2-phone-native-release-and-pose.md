@@ -18,7 +18,7 @@
 
 첫 시험의 모드 문자열은 `two-fire-up-first`지만 오른쪽 좌표를 Sprint 버튼에 둔 명시적 Sprint 시험입니다. 호스트에 Sprint가 켜진22표본과 이동44표본을 기록했습니다. 나머지 두 시험에서 helper의 실제 이벤트 순서와 host 저장 상태를 별도로 대조했습니다. 사격 먼저 해제에서는 Fire=true+이동21표본 뒤 Fire=false+이동10표본이 있었고, 이동 먼저 해제에서는 Fire=true+속도0인6표본에서 탄약14→13·ShotSequence16→17을 관측했습니다. 정지 기준은 평면 속도0.05m/s 이하입니다. 이동 먼저 해제의6표본 사이 actor 위치는 약3.209mm 변했으므로 완전한 위치 고정을 뜻하지 않습니다. 세 기록의 마지막 표본은 저장 버튼 중립·속도0이며, 전부 HP100/같은 생명0·관측 전후 같은 runner tick입니다.
 
-각 state sampler는 최대12초·목표30Hz로 실행했고 총1,078표본을 확보했습니다. 이는 `PreviousButtons`와 보행 속도 등 **호스트에 저장된 상태**이며 raw `GetInput`/MoveX·MoveZ 패킷이나 입력 소비 tick의 기록이 아닙니다. Python 호출 전후 UTC/Stopwatch bracket은 guard·APK/PID 확인·실제 호출·사후 확인까지 포함합니다. 서로 다른 clock의 helper 이벤트/Editor 표본을 정확한 native UP 시각에 결속하거나 입력 지연·FPS로 해석하지 않습니다. 같은 tick이라는 관찰도 원자적 스냅샷 보장은 아닙니다.
+각 state sampler는 최대12초·목표30Hz로 실행했고 총1,078표본을 확보했습니다. 중간 상태의 계수는 그중 각 Python outer bracket에 완전히 포함된97/90/95표본에서 계산했고,1,078은 전체12초 수집 합계입니다. 이는 `PreviousButtons`와 보행 속도 등 **호스트에 저장된 상태**이며 raw `GetInput`/MoveX·MoveZ 패킷이나 입력 소비 tick의 기록이 아닙니다. Python 호출 전후 UTC/perf_counter_ns outer bracket은 guard·APK/PID 확인·실제 호출·사후 확인까지 포함합니다. 서로 다른 clock의 helper 이벤트/Editor 표본을 정확한 native UP 시각에 결속하거나 입력 지연·FPS로 해석하지 않습니다. 같은 tick이라는 관찰도 원자적 스냅샷 보장은 아닙니다.
 
 ## 별도 보행·소총 화면
 
@@ -47,3 +47,11 @@ camera의 원본 claim에는 이전 회차의 `actualNativeTouch=LD2_SEPARATE_RO
 외부 근거 루트는 `D:/codex/validation/sudden-force-fps/20261111-work`입니다. `release07-actual-review01`, `camera03-phone-actual-review01`, `root-resume01/case07-full-return.public.json`, 각 sampler/camera 원본·phone caller/helper/bracket과 native holder/Prefs/원복 결과를 함께 따릅니다. 원시 로그·기기 식별자·private lease·자격정보는 공개하지 않습니다.
 
 다음은 반대 역할의 phone host Game·남은 방향과 조준·생명주기/입력 취소·12 hitbox 및 접지/총기 품질입니다. 시작 배경 #362는 별도 source 수정만 main에 있으며 현재 QA2에 미포함입니다. 새 Android 산출물·실제 cold A/B·음향 청취·16KB·장시간 성능·전체 권리 수용은 후속입니다. 현재 필요한 사용자 조치·질문은 없습니다.
+독립 state 검토는 실제18개 파일을 결속해 위 저장 상태만 수용했고 카메라·자원 반환은 그 검토 범위에서 제외했습니다. 별도 camera 검토는165멤버/PNG150개 전체 bytes·SHA·치수와 선택9장의 시각 표본을 대조했습니다. 전체150장을 모두 시각 판정한 결과나 Root의4,095개/Git/private6 감사를 독립 재현한 결과는 아닙니다.
+
+| 자료(위 외부 루트 기준) | bytes | SHA256 |
+| --- | ---: | --- |
+| `release07-actual-review01/verification.public.json` | 16,215 | `03E7155AF7E13A5ACD4163F8C04930FD1C3008A0A8C985C0EA81BD11AFE5CF45` |
+| `camera03-phone-actual-review01/verification.public.json` | 9,191 | `9F95946AE189AA527CD0DDAFFF6E8CE363D95E1512B4E6F2A78B5D8BD79B5C75` |
+| `root-resume01/case07-full-return.public.json` | 3,129 | `5BD98AB176B84DF4BD5C9FDDE56E99A9DD59A958C0E7A34AEA4B92DC1FF6E679` |
+| `root-resume01/case07-camera-claim-correction.public.json` | 3,409 | `592CD770E3423F7C901DDA8642ED3959E7809FC0BD8EAB8627EBC3867D103AD8` |
