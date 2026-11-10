@@ -1,3 +1,5 @@
+> **2026-11-10 #341 실제 경기 후속:** [QA2 Case04](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)의 정상 경기·복귀와 Native0/공개4095 원복을 기록했습니다. 단일 가시 프레임을 연속 gait/rifle 수용으로 확대하지 않으며 #341/Draft353은 유지합니다.
+
 > **2026-11-10 #341 실행 후속:** [Windows 차단·LD1 시작 문제·LD2 로비 결과](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)를 분리했습니다. 자원 반환을 경기 성공으로 합산하지 않으며, LD2 정상 로비와 프로세스 재시작 후 닉네임 prompt 재등장을 기록합니다. 두 피어 Game·보행/소총 미수용으로 #341/Draft353을 유지합니다.
 
 > **2026-11-10 #341 서명·LD 후속:** [QA2 서명과 LD Case01](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)의 V2 서명·payload 독립 검토와 데이터 보존 갱신 설치 기록을 연결합니다. 기본 cold 인트로는 총괄의 표본 영상 관측이며, 독립 LD 검토는 설치/기록 일관성 범위입니다. Game·보행/소총은 미완료로 #341/Draft353을 유지합니다.

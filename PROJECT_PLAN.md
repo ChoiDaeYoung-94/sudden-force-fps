@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 다음 검증:** [Case04 실제 경기와 제한](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md) 뒤에는 벽 안쪽 연속 촬영으로 walk/run·정지 전환·양손/소총을 확인하고 실제 사격·장전·생명주기 회귀를 진행합니다. 정상5분 DRAW·Lobby 복귀와 전체 보행 수용을 구분합니다.
+
 > **2026-11-10 QA2 후속 순서:** [Case02·03 실행·반환 기록](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)의 Windows 차단과 LD1 흰 화면 원인은 미확정이며 LD2는 로비까지 확인했습니다. 다음 Editor–LD2는 소스 기반 계획으로 새 실행0입니다. 실제 같은 QA2 두 피어 Game·보행/소총 검증을 남기고 운영34·원장196,2,34/Draft353을 유지합니다.
 
 > **2026-11-10 QA2 다음 단계:** [서명 APK·LD 갱신 설치·기본 cold 인트로](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)까지 확인했습니다. 다음은 같은 QA2 Windows–LD의 실제 연결/경기와 Raw05 보행 분리 모드·소총·접지 관측입니다. 제품 수용과 휴대전화 검증은 완료로 처리하지 않으며 Draft353·운영34/원장196,2,34를 유지합니다.
