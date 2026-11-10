@@ -1,3 +1,5 @@
+> **2026-11-10 검증 경계:** [QA2 Windows 빌드·복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)는 Android APK·서명·설치·Play 제공의 통과 근거가 아닙니다. 운영34/원장196,2,34를 유지하며 새 QA2 Android 산출물부터 별도로 검증합니다.
+
 > **2026-11-09 보행 검증 경계:** [Raw05 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)은 새 Android APK·서명·설치·Play 제공의 근거가 아닙니다. 같은 소스의 QA2 산출물부터 별도 검증하며, 설치 QA1의 보행 미포함과 운영34/원장196,2,34를 유지합니다.
 
 > **2026-11-09 현재 배포 경계:** 운영34/1.0.196/release12·원장196,2,34를 유지합니다. [외부 컴파일02/Host11 실패·복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)은 새 Android 빌드/서명/Play 제공이 아니며, 두 기기에 설치된 QA1에는 보행 후보가 없습니다.

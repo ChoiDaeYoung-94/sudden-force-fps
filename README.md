@@ -1,3 +1,5 @@
+> **2026-11-10 QA2 Windows:** [새 Player 빌드와 공개 입력 복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)의 Native Exit0·381파일 독립 대조·공개4,095개 원복을 확인했습니다. 실제 Game·보행/소총·Android 수용은 후속이며 Draft353과 운영34/QA1을 유지합니다.
+
 > **2026-11-09 보행 QA:** [Draft353 소스 연결과 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)의 630표본·674이미지와 정상 종료·공개4,095개 원복 기록을 대조했습니다. 실제 경기·총기 자세·접지·Android 수용은 후속이며 설치 QA1과 운영34를 유지합니다.
 
 > **2026-11-09 PC 연동 후속:** [외부 컴파일02 통과와 Host11 사전검증 중단·복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)을 구분해 기록했습니다. Host11의 방/경기/보행은0이며 출력 유지 콜백 해석을 보완 중입니다. 운영34와 QA1 보행 미포함 상태를 유지합니다.
