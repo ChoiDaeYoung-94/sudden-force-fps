@@ -1,3 +1,5 @@
+> **2026-11-11 QA3 후속 완료:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)에서 같은 QA3 폰host–LDclient의 5분 TIME EXPIRED/DRAW0:0·양쪽 로비 복귀와 LDhost 새 방/폰 READY·퇴장까지 확인했습니다. 두 번째 cold도 재설치 없이 표본 관측했고, cold 뒤 닉네임 재입력과 같은 프로세스의 이름 보존을 구분했습니다. 아래 첫 QA3/QA2 기록과 운영34 제공 상태는 보존합니다.
+
 > **2026-11-11 최신 로컬 APK:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md)의 code3/1.0.197-qa3를 폰·LD2에 설치하고 전체 APK 일치·닉네임 입력 후 로비를 확인했습니다. 각 cold 녹화20표본에서 Quad D를 관측했고 흰 전체 화면/Unity 로고는 미관측입니다. 반복 cold·QA3 경기·저장 닉네임 유지·실청 수용과 구분합니다. 운영34/Play release12/원장196,2,34는 그대로이며 아래 QA2 기록은 당시 검증 범위입니다.
 
 > **2026-11-11 공기계 동시 입력:** [해제 순서의 host 상태와 별도 자세 관측](Docs/validation/2026-11-11/qa2-phone-native-release-and-pose.md)에서 실제 두 손가락3종/저장 상태1,078표본과 별도150 PNG를 확인했습니다. 최종 중립·정상 반환과 전체 gait/IK·raw 입력 지연·제품 수용을 구분하며 Draft353/운영34를 유지합니다.
