@@ -1,3 +1,6 @@
+> **2026-11-11 #43 Play 폰 관측:** [운영 앱 상세 화면·실패와 반환 기록](Docs/validation/2026-11-11/play-phone-observation.md)에서 “항목을 찾을 수 없습니다” 화면과 `UI_XML_MISSING` 실패를 확인했습니다. 자체 HOME 명령 반환과 후속 HOME 화면 확인을 구분하며 테스터 자격·실제 Play 설치는 미확인으로 #43을 열어 둡니다.
+
+
 > **2026-11-11 #373 같은 평면 관측:** [Raw05 실제 밑창299표본](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)에서 이동 전·후 속도0 구간의 밑창−CC 간격은 약0.559cm로 같고 캡슐 높이가 약3cm 달라짐을 확인했습니다. 전체 보행·접지와 물리 원인은 후속입니다.
 
 > **2026-11-11 QA3 후속 완료:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)에서 같은 QA3 폰host–LDclient의 5분 TIME EXPIRED/DRAW0:0·양쪽 로비 복귀와 LDhost 새 방/폰 READY·퇴장까지 확인했습니다. 두 번째 cold도 재설치 없이 표본 관측했고, cold 뒤 닉네임 재입력과 같은 프로세스의 이름 보존을 구분했습니다. 아래 첫 QA3/QA2 기록과 운영34 제공 상태는 보존합니다.

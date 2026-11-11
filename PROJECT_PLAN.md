@@ -1,3 +1,6 @@
+> **2026-11-11 #43 후속:** [저장 Play 화면과 XML 실패·정리 한계](Docs/validation/2026-11-11/play-phone-observation.md)를 보존하고, 새 현재 범위에서 제한된 UI 수집 확인 → 테스터 참여/운영 제공 상태 확인 → 별도 지정 기기의 실제 Play 설치·기본 실행을 검증합니다. 이번 관측만으로 계정·테스터·설치 원인을 확정하지 않습니다.
+
+
 > **2026-11-11 후속 우선순위:** [같은 BG299표본](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)을 바탕으로 실제 사용한 pose.LastContext·authority·NCC 상태를 함께 읽어 높이 변화와 보행 위상을 구분합니다. 물리 파라미터나 일괄 리그 오프셋을 바꾸기 전 원인을 검증합니다.
 
 > **2026-11-11 후속 우선순위:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)의 첫 QA3 경기/복귀·새 방 참가까지 확인했습니다. 다음은 전신 walk/run·발접촉/양손소총·사망/리스폰과 #162의 muzzle/impact 식별 검증입니다. 닉네임 cold 재표시는 static 메모리 소스와 분리 조사하며 영속 저장을 완료로 처리하지 않습니다.
