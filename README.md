@@ -1,3 +1,5 @@
+> **2026-11-11 닉네임 저장:** [제품 수정과 Editor 검증](Docs/validation/2026-11-11/nickname-persistence-editor.md)에서 정상 확인한 이름의 저장·cache 재읽기와 실제 콜백15검사·회수를 확인했습니다. 가짜 저장소54검사와 기기 cold 저장성을 구분하며, 기존 QA3/code3·운영34에는 미포함입니다.
+
 > **2026-11-11 #43 Play 폰 관측:** [운영 앱 상세 화면·실패와 반환 기록](Docs/validation/2026-11-11/play-phone-observation.md)에서 “항목을 찾을 수 없습니다” 화면과 `UI_XML_MISSING` 실패를 확인했습니다. 자체 HOME 명령 반환과 후속 HOME 화면 확인을 구분하며 테스터 자격·실제 Play 설치는 미확인으로 #43을 열어 둡니다.
 
 
