@@ -1,0 +1,68 @@
+{
+  "schema": "FPS_PHONE_PLAY_OBSERVATION_PUBLIC_EVIDENCE_V1",
+  "evidenceDate": "2026-11-11",
+  "issue": 43,
+  "issueRemainsOpen": true,
+  "scope": "Preserved Play05 phone screen observation and failed typed probe; documentation promotion only.",
+  "targetProductionPackage": "com.AeDeong.SuddenForceFPS",
+  "localQaPackage": "com.AeDeong.SuddenForceFPS.localqa",
+  "priorProductionCode34Release12IsHistoricalRecord": true,
+  "currentConsoleTrackOrProductionPhoneVersionVerified": false,
+  "qa3DirectInstallOrGameIsNotPlayInstall": true,
+  "boundedSavedScreenObservationAccepted": true,
+  "screenTextObservation": [
+    "항목을 찾을 수 없습니다.",
+    "다시 시도"
+  ],
+  "typedProbePassed": false,
+  "typedProbeStatus": "FAILED_OR_UNKNOWN",
+  "typedProbeFailure": "UI_XML_MISSING",
+  "typedUiPayloadBytes": 33,
+  "typedUiEnumsRemainUnknown": true,
+  "savedScreenSurroundingExactAllowedPlayFocus": true,
+  "sourceSummaryExactPlayFocusObservedRemainsFalse": true,
+  "sourceSummaryFpsCorrespondenceObservedRemainsFalse": true,
+  "detailsIntentRequests": 1,
+  "detailsIntentReturnedOk": true,
+  "ownedHomeCleanupRequests": 1,
+  "ownedHomeCommandReturnedOk": true,
+  "freshPostHomeFocusOrLauncherScreenObserved": false,
+  "rootFinalFocusIsLastSavedAnnotationNotPostHomeMeasurement": true,
+  "remoteUiReaderFullClosureProven": false,
+  "rootActualReturnUtc": "2026-11-11T10:12:27.692856+00:00",
+  "originalFullReturnUtc": "2026-11-11T10:16:47.049989Z",
+  "rootBeforeOriginalFullAccepted": true,
+  "publicConfigSixFalseDirectlyReviewed": true,
+  "privateLeaseFourFalseFromRootAttestationOnly": true,
+  "currentResourcesQueriedByDocumentAuthor": false,
+  "newInstallOptInAccountLoginConsentAgeGameActions": 0,
+  "productionPackageMetadataRead": false,
+  "testerEligibilityOrInstallationAccepted": false,
+  "causeOfItemNotFoundOrUiXmlMissing": "unknown",
+  "completionCriteria": [
+    "Actual registered tester participation and target production app/provided track confirmed.",
+    "Actual Google Play install or update on the separately designated device, with production package/signature/version and basic launch confirmed.",
+    "Fresh bounded observations and resource return recorded; prior failure preserved."
+  ],
+  "independentReviewPin": {
+    "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/play-phone-observation-independent-review01/verification.public.json",
+    "bytes": 6098,
+    "sha256": "F0CB1592C31E0B500077F3D48DCF8BE660E04B01C3F45131B72DAC9F395A1869"
+  },
+  "focusClaimAddendumPin": {
+    "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/play-phone-observation-independent-review01/focus-claim-addendum.public.json",
+    "bytes": 1566,
+    "sha256": "284AD6953083F9295130C73755FADF1597E95D3E9CB9E3B1D2CEF87C987E7DB9"
+  },
+  "sourceDraftPin": {
+    "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/play-phone-observation-independent-review01/Doc.ko.md.proposed",
+    "bytes": 4992,
+    "sha256": "9F1990587129E6C86EE6314D1E9F281EEA5161D12E8CA3FD6D98A49BA36AE226"
+  },
+  "documentPin": {
+    "path": "Docs/validation/2026-11-11/play-phone-observation.md",
+    "bytes": 4550,
+    "sha256": "C3DA1DEAACB5092B24C28A5F37934D8931FAE0E36B04CD85D5B26105239FCA4B"
+  },
+  "publicPrivateRawPayloadsCopied": false
+}

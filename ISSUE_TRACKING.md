@@ -1,3 +1,6 @@
+> **2026-11-11 #43 미완료:** [Play 폰 상세 관측](Docs/validation/2026-11-11/play-phone-observation.md)은 저장 화면의 항목 없음·typed UI XML 수집 실패와 자체 HOME 반환만 수용합니다. 테스터 참여·현재 트랙·운영 앱 설치와 원인은 미확인이고, 운영34·별도 QA3 경기와 합산하지 않습니다.
+
+
 > **2026-11-11 #373 관측·반환:** [일반 폰 입력의 같은 BG299표본과 원본 복구](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)를 기록했습니다. 실제 pose context·authority·NCC를 결속하는 후속과 #341/Draft353·#43의 남은 범위는 유지합니다.
 
 > **2026-11-11 #371 회귀 근거:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)에 재설치0/cold2·같은 QA3 실제5분 결과/양쪽복귀·역할을 바꾼 새 방 READY/퇴장을 기록했습니다. #369/#362의 전체 cold·#341/Draft353의 gait/IK·사망/리스폰·Play 설치 범위는 별도입니다.
