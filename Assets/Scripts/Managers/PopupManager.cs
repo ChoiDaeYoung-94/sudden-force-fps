@@ -231,11 +231,11 @@ namespace AD
             if (manager != null && !manager.IsRetired)
                 manager.SaveNickName(nickName);
             else
-                Managers.SavedNickName = nickName;
+                Managers.RememberNickName(nickName);
             _popupSetNickName.SetActive(false);
         }
 
-        private static bool IsValidNickName(string value)
+        internal static bool IsValidNickName(string value)
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length > 32) return false;
             for (int i = 0; i < value.Length; i++)
