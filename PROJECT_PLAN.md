@@ -1,3 +1,5 @@
+> **2026-11-11 후속 우선순위:** [같은 BG299표본](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)을 바탕으로 실제 사용한 pose.LastContext·authority·NCC 상태를 함께 읽어 높이 변화와 보행 위상을 구분합니다. 물리 파라미터나 일괄 리그 오프셋을 바꾸기 전 원인을 검증합니다.
+
 > **2026-11-11 후속 우선순위:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)의 첫 QA3 경기/복귀·새 방 참가까지 확인했습니다. 다음은 전신 walk/run·발접촉/양손소총·사망/리스폰과 #162의 muzzle/impact 식별 검증입니다. 닉네임 cold 재표시는 static 메모리 소스와 분리 조사하며 영속 저장을 완료로 처리하지 않습니다.
 
 > **2026-11-11 다음 순서:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md) 이후에는 반복 cold와 갱신 후 닉네임 재표시 원인을 분리하고 같은 QA3의 두 피어 경기·생명주기·걷기/달리기·양손 소총/접지를 확인합니다. QA2의 정상 경기와 입력 관측을 QA3 통과로 합산하지 않습니다. 실청·실제16KB·장기 성능·Play 테스터 설치는 별도 후속입니다.

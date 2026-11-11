@@ -1,0 +1,63 @@
+{
+  "schema": "FPS_RAW05_FOOTCONTACT_PUBLIC_SUMMARY_V1",
+  "proposedOnly": false,
+  "issue": 373,
+  "actualCohorts": 1,
+  "acceptedSamples": 299,
+  "segments": [
+    107,
+    55,
+    137
+  ],
+  "numericalIndependentAnalysisAccepted": true,
+  "preLowerMinusCCcm": 0.5588787609999969,
+  "postLowerMinusCCMedianCm": 0.5588786800000002,
+  "movingLowerWorldMinimumCm": -1.1061102200000001,
+  "negativeLowerSamples": 15,
+  "movingLowerMinusCCRangeCm": [
+    -4.10610736,
+    2.66947821
+  ],
+  "afterZeroRecordedGaitResidualActorDisplacementMm": 8.990790805320183,
+  "rootFullReturnAccepted": true,
+  "actualReturnUtc": "2026-11-11T10:37:55.847536+00:00",
+  "originalFullReturnUtc": "2026-11-11T10:38:03Z",
+  "restorationActualIndependentReviewStatus": "ACCEPTED_BOUNDED_RESOURCE_AND_INPUT_RETURN",
+  "restorationActualIndependentReviewPin": {
+    "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/gait-full-return-actual-independent-review01/verification.public.json",
+    "bytes": 11383,
+    "sha256": "05F226AA7040021BADD6DAC18708F7F3A63DE1B75B9912EC01607BDF0111B73C"
+  },
+  "runtimeContactOrWholeGaitAccepted": false,
+  "fixedRigOffsetOrPhysicalCauseConfirmed": false,
+  "newProductFixApkBuildDeploy": 0,
+  "authorGitProjectEditorSdkDeviceCalls": 0,
+  "publicEvidencePins": [
+    {
+      "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/footcontact-cohort-actual-independent-review01/verification.public.json",
+      "bytes": 3831,
+      "sha256": "6105C4B7B092D60D93D9FD12DEA31F51D694F1D52F10CCC3438661878C5B82C7"
+    },
+    {
+      "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/footcontact-cohort-actual-independent-review01/statistics.public.json",
+      "bytes": 19396,
+      "sha256": "FDCD904453A2051DDF32BFD11609A70E20F35762DDB2BE1D103310F44058366E"
+    },
+    {
+      "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/root-resume01/gait-full-return-52fe779e7a0a40b1b933ef84196688d3/result.public.json",
+      "bytes": 1155,
+      "sha256": "76F6F25006475FF8F15CB7E4AB81996C1A1990C73EC1DAF4F82D4E869EB8D463"
+    },
+    {
+      "path": "D:/codex/validation/sudden-force-fps/20261111-evening-work/gait-phone-normal03/caller-3af0797f0e29476fafab771b22ea8a0c/005-call.public.json",
+      "bytes": 379,
+      "sha256": "85F6EF065EFD6581107CD562E501F5A6F19D7F7E613D8E3967FEAF29E5AB29DB"
+    }
+  ],
+  "document": "Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md",
+  "independentPublic4095ShaAuditExact": true,
+  "privateIndexSAndGitCleanScope": "Root actual EDM06 receipt; independent reviewer did not query Git/index",
+  "productionBuildCode": 34,
+  "playRelease": 12,
+  "draft353StillOpen": true
+}
