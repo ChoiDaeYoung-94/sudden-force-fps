@@ -1,3 +1,5 @@
+> **2026-11-11 #373 관측·반환:** [일반 폰 입력의 같은 BG299표본과 원본 복구](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)를 기록했습니다. 실제 pose context·authority·NCC를 결속하는 후속과 #341/Draft353·#43의 남은 범위는 유지합니다.
+
 > **2026-11-11 #371 회귀 근거:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)에 재설치0/cold2·같은 QA3 실제5분 결과/양쪽복귀·역할을 바꾼 새 방 READY/퇴장을 기록했습니다. #369/#362의 전체 cold·#341/Draft353의 gait/IK·사망/리스폰·Play 설치 범위는 별도입니다.
 
 > **2026-11-11 #369 후속:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md)에 새 unsigned/native/정적·기존 키 서명·설치본 전체 일치와 제한된 cold 관측을 기록했습니다. #362의 반복 cold·모든 프레임 부재 판정, #341/Draft353의 전체 gait/IK와 QA3 경기는 남아 있습니다. 운영34 배포 변경은 없습니다.
