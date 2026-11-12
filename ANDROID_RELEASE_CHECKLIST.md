@@ -1,3 +1,29 @@
+> **2026-11-11 QA3 경기 경계:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)의 localqa/code3 동일 설치본에서 5분 결과·양쪽 복귀·새 방 READY/퇴장을 확인했습니다. 새 방의 Game·kill/hit/리스폰·실청·16KB·PGS/Play 설치·전체 gait/IK는 미수용입니다. 운영34/release12/원장196,2,34·서명 키와 배포는 그대로입니다.
+
+> **2026-11-11 QA3 경계:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md)의 localqa/code3/1.0.197-qa3 signed APK100,492,368B/SHA DD663868…D953698를 폰·LD2에 설치하고 readback exact·기본 로비·cold 선택 표본을 확인했습니다. 새 AAB/Play 배포·PGS 인증·기존 닉네임 유지·16KB 기기·QA3 경기는 통과가 아닙니다. 운영34/release12/원장196,2,34를 유지합니다.
+
+> **2026-11-11 공기계 동시 입력:** [해제 순서의 host 상태와 별도 자세 관측](Docs/validation/2026-11-11/qa2-phone-native-release-and-pose.md)에서 실제 두 손가락3종/저장 상태1,078표본과 별도150 PNG를 확인했습니다. 최종 중립·정상 반환과 전체 gait/IK·raw 입력 지연·제품 수용을 구분하며 Draft353/운영34를 유지합니다.
+
+> **2026-11-11 QA2 기기 기록:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md)에서 공기계와 LD2의 설치본 전체 일치·정상5분 결과·양쪽 복귀/새 방 참가를 확인했습니다. 별도 localqa/code2의 ARM64·4KB 관측으로, 운영34/Play 배포 검사나 실제16KB·전체 보행/입력/음향 수용을 대체하지 않습니다.
+
+> **2026-11-10 helper 갱신 경계:** [Case06](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)에서 helper만 갱신했고 게임 QA2 APK 전체 readback은 동일합니다. 운영34/release12·원장196,2,34·휴대전화/Play업로드0을 유지하며 최종 LD Lobby는 전환 중 정리로 미수용입니다.
+
+> **2026-11-10 QA2 실측 범위:** [Case05 연속 이동·사격과 밑창 측정](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)은 별도localqa/code2의 결과입니다. 정상 재참가/메뉴 복귀·공개4095 원복과 전체 제품 수용은 구분하며 운영34/release12·원장196,2,34를 유지합니다. 휴대전화·Play업로드0입니다.
+
+> **2026-11-10 QA2 경기 경계:** [Editor–LD2 Case04](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)에서 같은 서명 QA2의 5분 DRAW·정상 복귀를 확인했습니다. LD1 흰 화면·휴대전화·실제16KB·연속 보행/소총은 미수용이고 운영34/release12·원장196,2,34는 유지합니다.
+
+> **2026-11-10 QA2 기동 구분:** [LD1 설치·흰 화면과 LD2 로비 확인](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)을 연결했습니다. 동일 서명 APK의 LD1 전체 readback은 일치했으나 기동은 미수용이며, LD2는 방 생성·1명 시작 차단·정상 복귀까지입니다. 두 피어 Game·gait·휴대전화·16KB 수용과 운영34 배포 상태는 구분합니다.
+
+> **2026-11-10 QA2 서명·설치:** [기존 키 V2 서명·LD Case01](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)의 localqa/code2 APK100,492,368B와 설치본 SHA 일치, code1→2 데이터 보존 갱신·기본 인트로/Lobby 관측을 확인했습니다. 운영 패키지34/원장196,2,34는 유지하며 Play 제공·휴대전화·16KB 기기·Game 수용은 미완료입니다.
+
+> **2026-11-10 QA2 산출물:** [C06/Static07/GPGS02 기록](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)의 localqa/code2 무서명 출력은 운영34와 구분합니다. 실제 서명·설치·Play·16KB 기기 통과는 아직 없으며 원장196,2,34를 유지합니다.
+
+> **2026-11-10 검증 경계:** [QA2 Windows 빌드·복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)는 Android APK·서명·설치·Play 제공의 통과 근거가 아닙니다. 운영34/원장196,2,34를 유지하며 새 QA2 Android 산출물부터 별도로 검증합니다.
+
+> **2026-11-09 보행 검증 경계:** [Raw05 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)은 새 Android APK·서명·설치·Play 제공의 근거가 아닙니다. 같은 소스의 QA2 산출물부터 별도 검증하며, 설치 QA1의 보행 미포함과 운영34/원장196,2,34를 유지합니다.
+
+> **2026-11-09 현재 배포 경계:** 운영34/1.0.196/release12·원장196,2,34를 유지합니다. [외부 컴파일02/Host11 실패·복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)은 새 Android 빌드/서명/Play 제공이 아니며, 두 기기에 설치된 QA1에는 보행 후보가 없습니다.
+
 > **2026-10-28 Joystick 검증 범위:** PC 합성 공개 Pointer probe/복구는 완료했지만 짧은 pulse 전체 판정은 false입니다. [실제 결과와 정리](Docs/validation/2026-10-28/joystick-input-runtime-partial.md)를 따릅니다.
 > native/죽음·리스폰/route·전체 PR261 수용은 미완료입니다. 제공34/source612와 후속 PR282/287/288/290 미포함을 유지하며 새35 예약·게임APK/AAB 빌드0이고 아래 과거 체크는 보존합니다.
 

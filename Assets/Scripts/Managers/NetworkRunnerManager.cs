@@ -577,8 +577,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void SaveNickName(string nickName)
     {
+        if (!AD.PopupManager.IsValidNickName(nickName)) return;
         _nickName = nickName;
-        AD.Managers.SavedNickName = nickName ?? string.Empty;
+        AD.Managers.RememberNickName(nickName);
     }
 
     public void ChangeMap(string mapName)

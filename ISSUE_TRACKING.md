@@ -1,3 +1,36 @@
+> **2026-11-11 #376 완료 경계:** [닉네임 소스3개·가짜 저장소54/실제 Editor15검사](Docs/validation/2026-11-11/nickname-persistence-editor.md)와 원상태 회수를 확인했습니다. 새 포함 APK의 cold 저장성·#163 전체 UI·#43 Play 설치는 후속으로 유지합니다. 앞선 AdditiveScene0검사 실패·watch04 overflow와 이번 Preview03 성공을 구분합니다.
+
+> **2026-11-11 #43 미완료:** [Play 폰 상세 관측](Docs/validation/2026-11-11/play-phone-observation.md)은 저장 화면의 항목 없음·typed UI XML 수집 실패와 자체 HOME 반환만 수용합니다. 테스터 참여·현재 트랙·운영 앱 설치와 원인은 미확인이고, 운영34·별도 QA3 경기와 합산하지 않습니다.
+
+
+> **2026-11-11 #373 관측·반환:** [일반 폰 입력의 같은 BG299표본과 원본 복구](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)를 기록했습니다. 실제 pose context·authority·NCC를 결속하는 후속과 #341/Draft353·#43의 남은 범위는 유지합니다.
+
+> **2026-11-11 #371 회귀 근거:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)에 재설치0/cold2·같은 QA3 실제5분 결과/양쪽복귀·역할을 바꾼 새 방 READY/퇴장을 기록했습니다. #369/#362의 전체 cold·#341/Draft353의 gait/IK·사망/리스폰·Play 설치 범위는 별도입니다.
+
+> **2026-11-11 #369 후속:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md)에 새 unsigned/native/정적·기존 키 서명·설치본 전체 일치와 제한된 cold 관측을 기록했습니다. #362의 반복 cold·모든 프레임 부재 판정, #341/Draft353의 전체 gait/IK와 QA3 경기는 남아 있습니다. 운영34 배포 변경은 없습니다.
+
+> **2026-11-11 공기계 동시 입력:** [해제 순서의 host 상태와 별도 자세 관측](Docs/validation/2026-11-11/qa2-phone-native-release-and-pose.md)에서 실제 두 손가락3종/저장 상태1,078표본과 별도150 PNG를 확인했습니다. 최종 중립·정상 반환과 전체 gait/IK·raw 입력 지연·제품 수용을 구분하며 Draft353/운영34를 유지합니다.
+
+> **2026-11-11 #341 부분 검증:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md)의 기본 조작·시간 만료·결과/복귀·새 방 참가까지 확인했습니다. Draft353과 전체 gait/IK·입력 경계의 열린 범위를 유지하며, Android 시작 배경은 #362에서 별도로 정리합니다.
+
+> **2026-11-10 #341 helper 후속:** [새 QA2 helper·Case06](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)의 빌드/서명·LD2 갱신·제한된 동시 입력과 원복을 기록했습니다. 정확 해제 타이밍·전체 gait/rifle/L2 수용 전까지 #341/Draft353을 유지합니다.
+
+> **2026-11-10 #341 연속 관측:** [Case05 실제 보행·접지 분포](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)와 두 차례 정상 Game/메뉴 복귀를 기록했습니다. 순간 추가 이격·일부 음수 밑창 정점을 품질 후보로 남기며 #341/Draft353을 유지합니다.
+
+> **2026-11-10 #341 실제 경기 후속:** [QA2 Case04](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)의 정상 경기·복귀와 Native0/공개4095 원복을 기록했습니다. 단일 가시 프레임을 연속 gait/rifle 수용으로 확대하지 않으며 #341/Draft353은 유지합니다.
+
+> **2026-11-10 #341 실행 후속:** [Windows 차단·LD1 시작 문제·LD2 로비 결과](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)를 분리했습니다. 자원 반환을 경기 성공으로 합산하지 않으며, LD2 정상 로비와 프로세스 재시작 후 닉네임 prompt 재등장을 기록합니다. 두 피어 Game·보행/소총 미수용으로 #341/Draft353을 유지합니다.
+
+> **2026-11-10 #341 서명·LD 후속:** [QA2 서명과 LD Case01](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)의 V2 서명·payload 독립 검토와 데이터 보존 갱신 설치 기록을 연결합니다. 기본 cold 인트로는 총괄의 표본 영상 관측이며, 독립 LD 검토는 설치/기록 일관성 범위입니다. Game·보행/소총은 미완료로 #341/Draft353을 유지합니다.
+
+> **2026-11-10 #341 후속:** [C06 무서명·Static07·GPGS02 실제 결과](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)를 연결합니다. 정상 SDK 반환과 실제 정적/출력 검토 범위만 수용하고 서명·LD·Game은 별도로 남겨 #341/Draft353을 유지합니다.
+
+> **2026-11-10 #341:** [QA2 Windows 빌드·복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)를 기록했습니다. Native/산출물과 늦은 파일 복구 시각을 분리했고 #341 및 Draft353은 실제 Game/Android 검증 전까지 유지합니다.
+
+> **2026-11-09 보행 추적:** [Raw05 Draft353과 Editor 렌더·종료·원복](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)을 #341에 연결합니다. Draft353은 QA 소스이며 실제 Game/Android·제품 수용 전까지 #341과 상위 미완료 범위를 유지합니다.
+
+> **2026-11-09 추적:** [Host11 사전검증 실패·기한 내 복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)을 #347에 추가했습니다. 외부 두 소스 컴파일02만 통과했으며 Host11 두 피어/보행·제품 수용으로 합산하지 않습니다. #347/#341 및 기존 미완료 범위를 유지합니다.
+
 > **2026-10-27 최신 추적:** PR274는 코드34 예약·검증된 빌드/서명·로컬 산출물 기록 범위입니다. 입력 수정 PR261은 실제 Android 입력 수용 전까지 Draft이고 #66/#43/#259 및 기존 미완료 부모는 유지합니다. [완료·보류 경계](Docs/validation/2026-10-27/android34-input-qa-artifacts.md)를 따르며 아래 과거 버전·OPEN 기록은 당시 상태입니다.
 
 > **2026-10-26 저녁 최신 추적 · #262:** 20:40 제품·상위17개에는 #259가 이미 포함됩니다. 별도 중복 Loading #263은 독립 검토한 PR264로 main e19cb55에 좁게 반영해 닫았고 #262는 문서 묶음입니다. Windows05는 Draft261을 제외한 별도 산출물이며 같은 binary 두 Player의 기본 경기·5분 DRAW까지 확인했습니다.
