@@ -1,4 +1,4 @@
-> **2026-11-13 제품39 실행:** [두 GUI Editor 경기·자세·정상 반환](Docs/validation/2026-11-13/core39-two-editor-runtime.md)에서 정확 b84 구성의 두 경기·10초 만료·양측 복귀와 Unbind를 확인했습니다. 창문 full BoxCollider 차단은 별도 #392로 조사하며 실제 피격·사망/crouch 전체 수용과 PR345 Draft는 유지합니다.
+> **2026-11-13 제품39 실행:** [두 GUI Editor 경기·자세·정상 반환](Docs/validation/2026-11-13/core39-two-editor-runtime.md)에서 정확 b84 구성의 두 경기·10초 만료·양측 복귀와 Unbind를 확인했습니다. 창문 full BoxCollider 차단은 별도 #392로 조사하며 실제 피격·사망/crouch는 미수용이며 PR345 Draft를 유지합니다.
 
 > **2026-11-12 모바일 FIRE+LOOK 입력:** [최신 컴파일·실제 입력 수명 경계 기록](Docs/validation/2026-11-12/mobile-fire-look-lifecycle-acceptance.md)을 추가했습니다. 같은 두 입력 blob의 양손·메뉴·사망/리스폰·HOME 복귀와 최신 main 결합 컴파일을 한정 수용하며, 새 P14 Android 전체·보행/소총·Play 제공은 별도입니다. 아래 이전 Draft/미완료 문장은 각 시점의 기록으로 보존합니다.
 
