@@ -86,7 +86,7 @@ Raw9 contract 자체는8,898바이트/SHA `FC4DA351905E1C74452591E6194C26D7C6FEA
 | `20261108-work/gait-product-raw-qa-candidate04/raw-asset-scope.public.json` | 14379 | `D9CAEC8859942E52BB95DFCF9FCA244EBF57FAD6B7457BDBA4E0E733B4AE5732` | clip별 serialized anim/meta/sample 대응 |
 | `20261112-night/rights42-raw9-source-trace01/trace.public.json` | 16811 | `188258EE268AD2E6A64F21ED0A074283328EF83A77C543C7DD53C30D35B2946D` | 이번 로컬 공개 sample SHA·take 연결 추적 |
 
-`Docs/validation/2026-11-09/raw05-source-and-editor-preview.md`는 Draft PR353의 소스 연결과 기존 격리 Editor 하체 preview·종료·원복의 범위를 기록합니다. source provenance, serialized asset 대조, 실제 Editor preview는 각각 별도 근거입니다. 이 문서 작성 과정에서 새 Editor/SDK/기기 실행이나 serialized anim·FBX 본문 재해시는 하지 않았습니다. 현재 실제 Game·폰·순수 proxy·접지·전체 외형 수용은 해당 새 실행의 근거로 판단해야 합니다.
+`Docs/validation/2026-11-09/raw05-source-and-editor-preview.md`는 Draft PR353의 소스 연결과 기존 격리 Editor 하체 preview·종료·원복의 범위를 기록합니다. source provenance, serialized asset 대조, 실제 Editor preview는 각각 별도 근거입니다. 초안을 작성한 보조의 추적에서는 새 Editor/SDK/기기 실행이나 serialized anim·FBX 본문 재해시를 하지 않았습니다. 총괄의 별도 원본 재해시는 아래 절과 구분합니다. 현재 실제 Game·폰·순수 proxy·접지·전체 외형 수용은 해당 새 실행의 근거로 판단해야 합니다.
 
 ## 남은 범위
 
