@@ -276,8 +276,9 @@ public sealed class PlayerCrouchGeometry : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_owner != null && _owner.Object != null && _owner.Object.IsValid)
-            Apply(_owner.PresentationCrouched, !_owner.IsDead && _owner.Health > 0);
+        if (_owner != null && _owner.TryGetWorldBodyPoseRenderContext(out var context)
+            && context.SourceLifeAligned)
+            Apply(context.Crouched, context.Alive);
     }
 }
 
