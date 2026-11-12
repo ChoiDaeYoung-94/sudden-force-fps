@@ -59,7 +59,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     private const string RoomScenePath = "Assets/Scenes/Room.unity";
     private const string GameScenePath = "Assets/Scenes/Game/DesertHouse.unity";
     // 씬 인덱스 또는 피격 골격 의미가 바뀌면 기존 클라이언트와 분리합니다.
-    private const string SceneProtocolSuffix = "-intro1-riflepose1";
+    private const string SceneProtocolSuffix = "-intro1-riflecore2";
     private Fusion.Photon.Realtime.FusionAppSettings _sceneAppSettings;
 
     private void Awake()
@@ -577,8 +577,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void SaveNickName(string nickName)
     {
+        if (!AD.PopupManager.IsValidNickName(nickName)) return;
         _nickName = nickName;
-        AD.Managers.SavedNickName = nickName ?? string.Empty;
+        AD.Managers.RememberNickName(nickName);
     }
 
     public void ChangeMap(string mapName)

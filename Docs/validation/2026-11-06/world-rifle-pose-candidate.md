@@ -34,3 +34,12 @@
 공통 시각 골격은 보존된 Draft344의 구현을 공유합니다. 기본 P2와 기존 dirty5, 기존 보행 Draft와 실패 자료는 보존하며 별도 P14에서 이 후보를 작성했습니다. private6는 no-checkout 단계에서 먼저 제외했고 내용 조회·해시 없이 부재/indexS를 확인했습니다.
 
 현재 제공 APK34/release12와 별개입니다. 새 Android 예약·빌드·서명·업로드는 하지 않았습니다. 이 문서는 preview의 기술 완료를 제품 완료로 표시하지 않습니다.
+
+
+## 2026-11-12 최신 main 재결합 후보
+
+기존 위 검증과 한계는 원문으로 보존합니다. 입력261이 반영된 최신 main을 바탕으로 원 core의 공개 소스10경로만 재결합하고, QA5에서 선택한 Forward .19/Down .06/Inward -.01/yaw-8 네 기본값을 함께 적용했습니다. 기존 입력·닉네임·인트로와 최신 운영 문서는 유지합니다. 기존 PR head와 최신 main을 두 부모로 보존하는 정상 FF 갱신 후보입니다.
+
+새 접속 버전은 `sff-q20261022-ladder-v1-intro1-riflecore2`로 분리합니다. 원 riflepose1이나 raw/pitch를 포함한 QA5와 상호 접속시키지 않습니다. Networked 선언39개 유지라는 정적 사실은 새로운 실제 weave/layout 수용이 아닙니다. raw353/pitch379/HP385, QA 로그인 우회/define·배포 설정·운영 원장은 이 후보에 포함하지 않았습니다.
+
+QA5와 원 core의 팔 solver 본문·선정 settings4는 동일하지만, QA5의 raw gait 선행·AimPitch context는 이 조합에 없습니다. 따라서 과거 QA5의 컴파일/게임/PNG를 새 조합 통과로 소급하지 않습니다. 새 head의 실제 컴파일과 양 팀·서기/앉기·12hitbox callback·피격/사망/리스폰·Unbind 및 파지 외형 검증 전에는 Draft를 유지합니다. 이 절은 후보 준비 기록이며 실제 실행·Android 포함·main 병합 완료가 아닙니다.

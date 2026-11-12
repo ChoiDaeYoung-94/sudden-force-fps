@@ -1,3 +1,36 @@
+> **2026-11-11 #376 후속:** [닉네임 저장·Editor 검증](Docs/validation/2026-11-11/nickname-persistence-editor.md)의 소스3개와 실제15검사·회수를 확인했습니다. 다음 포함 APK에서 정상 확인→완전 종료→cold/갱신 후 이름 유지·이름 교체를 검증합니다. 기존 QA3와 동일 프로세스 cache 재읽기를 기기 저장성 통과로 합산하지 않습니다.
+
+> **2026-11-11 #43 후속:** [저장 Play 화면과 XML 실패·정리 한계](Docs/validation/2026-11-11/play-phone-observation.md)를 보존하고, 새 현재 범위에서 제한된 UI 수집 확인 → 테스터 참여/운영 제공 상태 확인 → 별도 지정 기기의 실제 Play 설치·기본 실행을 검증합니다. 이번 관측만으로 계정·테스터·설치 원인을 확정하지 않습니다.
+
+
+> **2026-11-11 후속 우선순위:** [같은 BG299표본](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)을 바탕으로 실제 사용한 pose.LastContext·authority·NCC 상태를 함께 읽어 높이 변화와 보행 위상을 구분합니다. 물리 파라미터나 일괄 리그 오프셋을 바꾸기 전 원인을 검증합니다.
+
+> **2026-11-11 후속 우선순위:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)의 첫 QA3 경기/복귀·새 방 참가까지 확인했습니다. 다음은 전신 walk/run·발접촉/양손소총·사망/리스폰과 #162의 muzzle/impact 식별 검증입니다. 닉네임 cold 재표시는 static 메모리 소스와 분리 조사하며 영속 저장을 완료로 처리하지 않습니다.
+
+> **2026-11-11 다음 순서:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md) 이후에는 반복 cold와 갱신 후 닉네임 재표시 원인을 분리하고 같은 QA3의 두 피어 경기·생명주기·걷기/달리기·양손 소총/접지를 확인합니다. QA2의 정상 경기와 입력 관측을 QA3 통과로 합산하지 않습니다. 실청·실제16KB·장기 성능·Play 테스터 설치는 별도 후속입니다.
+
+> **2026-11-11 공기계 동시 입력:** [해제 순서의 host 상태와 별도 자세 관측](Docs/validation/2026-11-11/qa2-phone-native-release-and-pose.md)에서 실제 두 손가락3종/저장 상태1,078표본과 별도150 PNG를 확인했습니다. 최종 중립·정상 반환과 전체 gait/IK·raw 입력 지연·제품 수용을 구분하며 Draft353/운영34를 유지합니다.
+
+> **2026-11-11 다음 검증:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md) 뒤에는 동시 입력의 해제 중간 상태·보행/소총과 생명주기 회귀를 확인합니다. 첫 공기계의 기본 흐름은 확인했으며, 새 방B의 phone host Game·전체 인트로/실청·16KB는 남았습니다. 시작 배경 #362와 다음 산출물 검증을 구분합니다.
+
+> **2026-11-10 다음 검증:** [QA2 helper로 Sprint/동시 입력 관측](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md) 뒤에는 해제 순서의 패킷/화면 시간 결속·반대 역할·남은 방향/조준·사망/리스폰과 접지/소총 품질을 확인합니다. 새 장시간 실행·성능 측정은 미완료입니다.
+
+> **2026-11-10 QA2 검증 순서:** [Case05 연속 화면·실제 밑창 표본](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md) 뒤에는 입력 도우미의 QA2 버전 결속부터 확인하고 Sprint+이동·두 손가락/조준·생명주기 회귀를 진행합니다. 접지/양손 IK를 전체 통과로 처리하지 않습니다.
+
+> **2026-11-10 QA2 다음 검증:** [Case04 실제 경기와 제한](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md) 뒤에는 벽 안쪽 연속 촬영으로 walk/run·정지 전환·양손/소총을 확인하고 실제 사격·장전·생명주기 회귀를 진행합니다. 정상5분 DRAW·Lobby 복귀와 전체 보행 수용을 구분합니다.
+
+> **2026-11-10 QA2 후속 순서:** [Case02·03 실행·반환 기록](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)의 Windows 차단과 LD1 흰 화면 원인은 미확정이며 LD2는 로비까지 확인했습니다. 다음 Editor–LD2는 소스 기반 계획으로 새 실행0입니다. 실제 같은 QA2 두 피어 Game·보행/소총 검증을 남기고 운영34·원장196,2,34/Draft353을 유지합니다.
+
+> **2026-11-10 QA2 다음 단계:** [서명 APK·LD 갱신 설치·기본 cold 인트로](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)까지 확인했습니다. 다음은 같은 QA2 Windows–LD의 실제 연결/경기와 Raw05 보행 분리 모드·소총·접지 관측입니다. 제품 수용과 휴대전화 검증은 완료로 처리하지 않으며 Draft353·운영34/원장196,2,34를 유지합니다.
+
+> **2026-11-10 Android 다음 단계:** [QA2 무서명 산출물과 정적/재포장 출력](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)을 확보했습니다. 독립 소스 검토를 통과한 signer02의 새 입력 재검증 → 기존 키 서명·공식 검증 → LD2 설치·같은 QA2 두 피어 관측 순서입니다.
+
+> **2026-11-10 QA2 준비:** [Windows Player 생성과 공개 입력 복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)를 완료했습니다. 다음은 QA2 Android 정적 검증·서명·LD 설치와 같은 QA2 두 피어 경기입니다. 이번 회차 기기는 LD로 한정하고 휴대전화는 후속으로 남깁니다.
+
+> **2026-11-09 보행 후속:** [Raw05 소스와 Editor 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)을 마쳤습니다. 다음은 별도 QA2 Android 산출물·정적 검증, 같은 QA2 두 피어 경기에서 보행/소총·발 접촉 확인입니다. 기존 QA1 및 운영34와 검증 범위를 구분합니다.
+
+> **2026-11-09 다음 우선순위:** [Host11 컴파일 완료 조건 보완](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md) → 새 PC–폰 정상 경기의 읽기 전용 자세·발 접촉 관측 → 보행03의 별도 닫힌 compile/Weaver·평탄 구간 guard 순서입니다. 기존 QA1과 운영34를 보존하며 사용자 조치 없이 가능한 준비를 계속합니다.
+
 > **2026-10-31 작은 공개 Joystick 이동:** [새 C9 실제 컴파일·단일 합성 콜백 이동/해제 관측](Docs/validation/2026-10-31/input261-small-public-joystick-navigation.md)에서 계획0.25m에 결과 sample 순XZ0.278931m·후속0.303792m를 확인했습니다. 추가0.024861m·stored poll 미확보를 보존하며 완전 위치고정·native 입력·B1/L2 통과로 확대하지 않습니다.
 > 같은 native held Exit0·소유4 정리·공개3,984개/기존dirty18 보존을 확인했습니다. PR261 Draft/#259 OPEN·제공34/release12/source612 QA·새35 예약/빌드/서명/업로드0을 유지하며 아래 기록은 당시 범위입니다.
 

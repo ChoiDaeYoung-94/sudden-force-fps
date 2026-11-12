@@ -65,7 +65,11 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
         // 패키지 Start가 CameraNearPlane을 설정하므로 그 뒤 표시 경로만 바꿉니다.
         video.renderMode = VideoRenderMode.APIOnly;
         var texture = video.texture; // VideoPlayer 소유 texture: 해제/파괴하지 않습니다.
-        if (texture == null || texture.width <= 0 || texture.height <= 0) return;
+        if (video.frame < 0 || texture == null || texture.width <= 0 || texture.height <= 0)
+        {
+            image.enabled = false;
+            return;
+        }
         image.texture = texture;
         aspect.aspectRatio = (float)texture.width / texture.height;
         image.enabled = true;

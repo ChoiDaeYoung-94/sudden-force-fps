@@ -1,3 +1,41 @@
+> **2026-11-12 모바일 FIRE+LOOK 입력:** [최신 컴파일·실제 입력 수명 경계 기록](Docs/validation/2026-11-12/mobile-fire-look-lifecycle-acceptance.md)을 추가했습니다. 같은 두 입력 blob의 양손·메뉴·사망/리스폰·HOME 복귀와 최신 main 결합 컴파일을 한정 수용하며, 새 P14 Android 전체·보행/소총·Play 제공은 별도입니다. 아래 이전 Draft/미완료 문장은 각 시점의 기록으로 보존합니다.
+
+> **2026-11-11 닉네임 저장:** [제품 수정과 Editor 검증](Docs/validation/2026-11-11/nickname-persistence-editor.md)에서 정상 확인한 이름의 저장·cache 재읽기와 실제 콜백15검사·회수를 확인했습니다. 가짜 저장소54검사와 기기 cold 저장성을 구분하며, 기존 QA3/code3·운영34에는 미포함입니다.
+
+> **2026-11-11 #43 Play 폰 관측:** [운영 앱 상세 화면·실패와 반환 기록](Docs/validation/2026-11-11/play-phone-observation.md)에서 “항목을 찾을 수 없습니다” 화면과 `UI_XML_MISSING` 실패를 확인했습니다. 자체 HOME 명령 반환과 후속 HOME 화면 확인을 구분하며 테스터 자격·실제 Play 설치는 미확인으로 #43을 열어 둡니다.
+
+
+> **2026-11-11 #373 같은 평면 관측:** [Raw05 실제 밑창299표본](Docs/validation/2026-11-11/raw05-footcontact-bg-cohort.md)에서 이동 전·후 속도0 구간의 밑창−CC 간격은 약0.559cm로 같고 캡슐 높이가 약3cm 달라짐을 확인했습니다. 전체 보행·접지와 물리 원인은 후속입니다.
+
+> **2026-11-11 QA3 후속 완료:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)에서 같은 QA3 폰host–LDclient의 5분 TIME EXPIRED/DRAW0:0·양쪽 로비 복귀와 LDhost 새 방/폰 READY·퇴장까지 확인했습니다. 두 번째 cold도 재설치 없이 표본 관측했고, cold 뒤 닉네임 재입력과 같은 프로세스의 이름 보존을 구분했습니다. 아래 첫 QA3/QA2 기록과 운영34 제공 상태는 보존합니다.
+
+> **2026-11-11 최신 로컬 APK:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md)의 code3/1.0.197-qa3를 폰·LD2에 설치하고 전체 APK 일치·닉네임 입력 후 로비를 확인했습니다. 각 cold 녹화20표본에서 Quad D를 관측했고 흰 전체 화면/Unity 로고는 미관측입니다. 반복 cold·QA3 경기·저장 닉네임 유지·실청 수용과 구분합니다. 운영34/Play release12/원장196,2,34는 그대로이며 아래 QA2 기록은 당시 검증 범위입니다.
+
+> **2026-11-11 공기계 동시 입력:** [해제 순서의 host 상태와 별도 자세 관측](Docs/validation/2026-11-11/qa2-phone-native-release-and-pose.md)에서 실제 두 손가락3종/저장 상태1,078표본과 별도150 PNG를 확인했습니다. 최종 중립·정상 반환과 전체 gait/IK·raw 입력 지연·제품 수용을 구분하며 Draft353/운영34를 유지합니다.
+
+> **2026-11-11 실물 QA2:** [첫 공기계 QA2·LD2 정상 경기와 복귀](Docs/validation/2026-11-11/qa2-first-phone-and-ld2.md)를 확인했습니다. 실제 공기계 설치·QuadD 선택 표본·5분 DRAW0:0·양쪽 로비 복귀와 새 방 재참가를 관측했습니다. 전체 보행/소총·native 입력·16KB 수용과 운영34/release12는 별도입니다.
+
+> **2026-11-10 QA2 native 후속:** [QA2용 helper 갱신과 Sprint 관측](Docs/validation/2026-11-10/qa2-native-helper-and-sprint-observation.md)을 확인했습니다. 같은 게임 APK로 동시 입력3개 정상 반환·실제 Sprint/속도약7.41m/s·사격 상태 변화를 관측했고 전체 자세/입력 수용은 후속입니다. Draft353·운영34 유지입니다.
+
+> **2026-11-10 QA2 연속 관측:** [보행·사격과 밑창 높이](Docs/validation/2026-11-10/qa2-continuous-gait-and-bootsole-observation.md)의375 진단 PNG·299개 밑창 표본을 확보했습니다. 좌우/전후 이동·정지와 사격 상태 변화·탄약 복귀는 관측했고 접지·양손 IK·Sprint/두 손가락·제품 수용은 후속입니다. Draft353·운영34를 유지합니다.
+
+> **2026-11-10 QA2 실제 경기:** [Editor–LD2 5분 DRAW와 자세 관측 한계](Docs/validation/2026-11-10/qa2-editor-ld-game-and-gait-observation.md)를 확인했습니다. 정상 참가·READY/START·양쪽 Lobby 복귀와 터치 이동/보행 위상 반영은 관측했으나 벽 가림으로 연속 보행·총기 자세 수용은 미완료입니다. Draft353·운영34를 유지합니다.
+
+> **2026-11-10 QA2 실행·로비:** [Case02·03 차단과 로비 확인](Docs/validation/2026-11-10/qa2-runtime-blocks-and-lobby-check.md)을 기록했습니다. Windows 보안창은 미조작 후 소유 프로세스를 정리했고, LD1은 정확 APK 설치 뒤 기본/단일 GLES30 모두 흰 화면이었습니다. LD2는 닉네임·방 생성·1명 시작 차단·로비 복귀를 확인했으며 두 피어 Game·gait는 미수용입니다.
+
+> **2026-11-10 QA2 서명·LD:** [기존 키 서명·갱신 설치·기본 cold 인트로](Docs/validation/2026-11-10/qa2-signed-ld-install-and-cold-intro.md)를 확인했습니다. localqa/code2 서명 APK와 LD 설치본 SHA가 같고, 데이터 초기화 없이 code1→2 갱신 후 QuadD 인트로→닉네임/Lobby를 표본 영상에서 관측했습니다. 실제 Game·보행/소총 수용은 미완료이며 Draft353·운영34를 유지합니다.
+
+> **2026-11-10 QA2 Android:** [무서명 생성·정적 검사와 provider 출력](Docs/validation/2026-11-10/qa2-android-unsigned-static-and-provider-output.md)의 실제 C06/ZIP359·Data229/native7·provider leaf1개 제거를 확인했습니다. 서명 사전 요청2개는 SDK·키 접근 전 거절된 상태로 보존하며 설치/게임/제품 수용은 후속입니다.
+
+> **2026-11-10 QA2 Windows:** [새 Player 빌드와 공개 입력 복구](Docs/validation/2026-11-10/qa2-windows-player-and-restoration.md)의 Native Exit0·381파일 독립 대조·공개4,095개 원복을 확인했습니다. 실제 Game·보행/소총·Android 수용은 후속이며 Draft353과 운영34/QA1을 유지합니다.
+
+> **2026-11-09 보행 QA:** [Draft353 소스 연결과 Editor 하체 렌더 검증](Docs/validation/2026-11-09/raw05-source-and-editor-preview.md)의 630표본·674이미지와 정상 종료·공개4,095개 원복 기록을 대조했습니다. 실제 경기·총기 자세·접지·Android 수용은 후속이며 설치 QA1과 운영34를 유지합니다.
+
+> **2026-11-09 PC 연동 후속:** [외부 컴파일02 통과와 Host11 사전검증 중단·복원](Docs/validation/2026-11-09/host11-compilation-outcome-and-restoration.md)을 구분해 기록했습니다. Host11의 방/경기/보행은0이며 출력 유지 콜백 해석을 보완 중입니다. 운영34와 QA1 보행 미포함 상태를 유지합니다.
+
+> **2026-11-09 QA1 기기 관측:** [휴대전화–LD 5분 기본 경기·양쪽 결과/로비 복귀](Docs/validation/2026-11-08/localqa-phone-ld-game-flow.md), [LD 인트로 표본·입력 준비·PC 연동 실패](Docs/validation/2026-11-08/localqa-followup-bounded-results.md), [두 손가락의 사격·이동 해제 순서](Docs/validation/2026-11-09/native-input-release-orders.md)를 기록했습니다.
+> QA1은 별도 테스트 앱이며 운영34/release12를 대체하지 않습니다. 앞선 case06은 사전 시간검사로 주입0이었고, 이후 Native09/10에서 실제 주입·해제 순서를 제한적으로 관측했습니다. 전체 입력·보행 후보 수용은 미완료입니다.
+
 > **2026-11-06 명중 HUD:** 사용자 요청에 따라 중앙 명중 표식·피해량 안내를 제거했습니다. [실제 HUD 복제본 검증과 범위](Docs/validation/2026-11-06/hit-feedback-removal.md)를 확인했습니다.
 > 체력·탄약·K/D와 피해 판정은 유지하며 실제 경기·Android 포함은 후속입니다. 제공34에는 미포함이고 새 Android 예약·빌드·서명·업로드는0입니다.
 
