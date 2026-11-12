@@ -1,3 +1,5 @@
+> **2026-11-13 최신 한계:** [QA6 proxy230행 ROOT_STOP·정상 반환과 LD3 미수용](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)을 기록했습니다. #392는 PR394로 닫았고 #347/#341/#342/#395는 남은 검증 때문에 유지합니다. Draft396은 QA7 소스 준비일 뿐 새 APK/기기 통과가 아닙니다. 기존 A2 874행 종료 실패도 보존합니다.
+
 > **2026-11-11 #376 완료 경계:** [닉네임 소스3개·가짜 저장소54/실제 Editor15검사](Docs/validation/2026-11-11/nickname-persistence-editor.md)와 원상태 회수를 확인했습니다. 새 포함 APK의 cold 저장성·#163 전체 UI·#43 Play 설치는 후속으로 유지합니다. 앞선 AdditiveScene0검사 실패·watch04 overflow와 이번 Preview03 성공을 구분합니다.
 
 > **2026-11-11 #43 미완료:** [Play 폰 상세 관측](Docs/validation/2026-11-11/play-phone-observation.md)은 저장 화면의 항목 없음·typed UI XML 수집 실패와 자체 HOME 반환만 수용합니다. 테스터 참여·현재 트랙·운영 앱 설치와 원인은 미확인이고, 운영34·별도 QA3 경기와 합산하지 않습니다.

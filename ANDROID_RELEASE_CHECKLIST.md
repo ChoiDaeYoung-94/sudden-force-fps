@@ -1,3 +1,5 @@
+> **2026-11-13 로컬 QA6:** [추가 proxy 이동·정상 회수/반환](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)의 source9bee·localqa/code6/1.0.197-qa6 APK100,496,464B/F4442394…는 기존 공기계 설치본입니다. 새 LD3는 설치 완료 UI만 확인했고 readback·Intro/Lobby는 미수용입니다. QA7/Draft396은 준비 소스뿐이며 code7 후보 예약/빌드0, 운영 마지막 제공 확인34/release12·원장196,2,34·Store35 예약/Play 업로드0을 유지합니다.
+
 > **2026-11-11 QA3 경기 경계:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)의 localqa/code3 동일 설치본에서 5분 결과·양쪽 복귀·새 방 READY/퇴장을 확인했습니다. 새 방의 Game·kill/hit/리스폰·실청·16KB·PGS/Play 설치·전체 gait/IK는 미수용입니다. 운영34/release12/원장196,2,34·서명 키와 배포는 그대로입니다.
 
 > **2026-11-11 QA3 경계:** [QA3 인트로·APK·두 기기 검증](Docs/validation/2026-11-11/qa3-intro-build-and-cold.md)의 localqa/code3/1.0.197-qa3 signed APK100,492,368B/SHA DD663868…D953698를 폰·LD2에 설치하고 readback exact·기본 로비·cold 선택 표본을 확인했습니다. 새 AAB/Play 배포·PGS 인증·기존 닉네임 유지·16KB 기기·QA3 경기는 통과가 아닙니다. 운영34/release12/원장196,2,34를 유지합니다.
