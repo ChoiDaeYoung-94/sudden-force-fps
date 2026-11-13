@@ -8,7 +8,7 @@
 - `LeftGripOffset`: `(-.04, .03, 0)` → `(-.04695866, .03, -.04951340)`.
 - QA 세션 suffix에 `-shoulderref1`을 추가합니다. 기대 namespace는 `sff-q20261022-ladder-v1-intro1-riflecore2-gaitraw1-window1-shoulderref1-localqa`입니다. 실제 두 peer의 cached 값 확인은 후속입니다.
 
-기존 yaw -8°의 pitch0에서 총을 actor forward로 5cm 옮기면서 왼손 목표 세계 위치를 유지하도록 grip offset을 보상한 후보입니다. Down/Inward/Euler·오른손 calibration·무기/카메라/피격 판정·43 Networked 선언은 변경하지 않습니다. 창문 prefab 두 개는 부모 QA7 소스에 들어 있는 main의 검증된 blob을 유지합니다.
+기존 yaw -8°의 pitch0에서 총을 actor forward로 5cm 옮기면서 왼손 목표 세계 위치를 유지하도록 grip offset을 보상한 후보입니다. Down/Inward/Euler·오른손 calibration·무기/카메라/피격 판정 코드·hitbox shape metadata·43 Networked 선언은 변경하지 않습니다. 기존12hitbox의 worldpose는 새 팔 자세를 따르므로 실제 사격 회귀는 후속입니다. 창문 prefab 두 개는 부모 QA7 소스에 들어 있는 main의 검증된 blob을 유지합니다.
 
 ## 실제 관측과 제한
 
