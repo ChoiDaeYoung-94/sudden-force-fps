@@ -111,7 +111,7 @@ namespace AD
             try
             {
                 // Windows standalone is used only as a development/QA client.
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || SUDDEN_FORCE_LOCAL_QA
                 await GoLobbyScene(attempt, token);
 #elif UNITY_ANDROID
                 PlayGamesPlatform.DebugLogEnabled = false;
