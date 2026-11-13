@@ -5,12 +5,12 @@ using UnityEngine;
 [Serializable]
 public sealed class WorldRifleBodyPoseSettings
 {
-    public float Forward = .19f;
+    public float Forward = .24f;
     public float Down = .06f;
     public float Inward = -.01f;
     public Vector3 RifleEuler = new Vector3(0f, -8f, 0f);
     public Vector3 RightGripOffset, RightGripEuler;
-    public Vector3 LeftGripOffset = new Vector3(-.04f, .03f, 0f);
+    public Vector3 LeftGripOffset = new Vector3(-.04695866f, .03f, -.04951340f);
     public Vector3 LeftGripEuler;
 
     internal WorldRifleBodyPoseSettings Freeze()
