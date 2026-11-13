@@ -5,14 +5,16 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-// Closed local-QA diagnostic draft. C11 success cannot approve runtime/product use.
+// Product Raw9 candidate playback is independent of QA login/defines.
+// Activation permits execution; actual runtime acceptance belongs to separate evidence.
+// Contact03/Raw18 diagnostics remain closed and unaccepted.
 internal sealed class WorldBodyGaitLayer : IDisposable
 {
-    private enum ExecutionMode { Closed, RawLocomotionQa }
-    // Source-bound and immutable for this run; Root must review any enabled revision.
-    private static readonly ExecutionMode SelectedMode = ExecutionMode.RawLocomotionQa;
+    private enum ExecutionMode { Closed, RawLocomotionProductCandidate }
+    // Source-bound product candidate mode; contract activation is not a runtime acceptance claim.
+    private static readonly ExecutionMode SelectedMode = ExecutionMode.RawLocomotionProductCandidate;
     private static readonly bool Contact03ExecutionEnabled = false;
-    private const string ApprovedRaw9ContractSha256 = "FC4DA351905E1C74452591E6194C26D7C6FEA6387F877D1CA1EE859E68ADF7F7";
+    private const string ProductCandidateRaw9ContractSha256 = "456A133706BAC9536BAC29869F09E0ADDA3649F39BE5DFC07F65CA6229FEB3F6";
     private const string Raw9MaterializationReviewSha256 = "DED75CE3B35FF299536E632A4C2A6C10D96B035D22597A1E26BE7A01E42DE590";
     private const string Raw9AssetSetIdentitySha256 = "9994B206304EFCE9D9B527212B0322149C119AA8D77C6065D3B60B34580D627A";
     private const string ApprovedPostBlend18ContractSha256 = "";
@@ -56,9 +58,9 @@ internal sealed class WorldBodyGaitLayer : IDisposable
         public string schema, mode, materializationReviewSha256, clipAssetSetIdentitySha256;
         public string[] legPaths;
         public RawClipIdentity[] raw;
-        public bool qaOnly, rootRaw9QaActivationApproved, oneManualGraph, existingAnimatorOnly;
+        public bool productCandidateActivation, oneManualGraph, existingAnimatorOnly;
         public bool sameNormalizedPhase, rawSeamCuratedSource, legRotationOnly;
-        public bool contactCorrectionEnabled, runtimeOrProductAccepted;
+        public bool contactCorrectionEnabled, actualRuntimeAccepted;
     }
     [Serializable] private sealed class PostBlendContract
     {
@@ -97,31 +99,27 @@ internal sealed class WorldBodyGaitLayer : IDisposable
 
     internal static bool TryCreate(WorldBodyVisualRigBinding rig, out WorldBodyGaitLayer layer, out string status)
     {
-        layer = null; status = "rifle-only-gait04-closed";
-#if !SUDDEN_FORCE_LOCAL_QA
-        return false;
-#else
-        // No Resources, geometry/cache or graph is touched in the disabled candidate.
-        if (SelectedMode != ExecutionMode.RawLocomotionQa || !IsHex(ApprovedRaw9ContractSha256, 64)) return false;
+        layer = null; status = "rifle-only-product-raw9-closed";
+        // Invalid mode/pin stops before Resources; this Raw9 path does not depend on QA defines.
+        if (SelectedMode != ExecutionMode.RawLocomotionProductCandidate || !IsHex(ProductCandidateRaw9ContractSha256, 64)) return false;
         try
         {
             var asset = Resources.Load<TextAsset>(ResourceRoot + "Raw9Contract");
-            Need(asset != null && Hash(asset.bytes) == ApprovedRaw9ContractSha256, "GAIT04_EXACT_APPROVED_RAW9_CONTRACT");
+            Need(asset != null && Hash(asset.bytes) == ProductCandidateRaw9ContractSha256, "GAIT_PRODUCT_RAW9_EXACT_CANDIDATE_CONTRACT");
             var contract = JsonUtility.FromJson<Raw9Contract>(asset.text);
             ValidateRawContract(contract);
             var raw = LoadRawClips(contract.raw);
             layer = new WorldBodyGaitLayer(rig, raw, raw, null, true);
-            layer.BuildGraph(); status = "qa-gait04-raw9-ready-no-contact-or-product-acceptance"; return true;
+            layer.BuildGraph(); status = "product-candidate-raw9-ready-contact-off"; return true;
         }
         catch (Exception error)
         {
             try { layer?.Dispose(); } finally { layer = null; }
-            status = "rifle-only-gait04-unavailable:" + error.GetType().Name; return false;
+            status = "rifle-only-product-raw9-unavailable:" + error.GetType().Name; return false;
         }
-#endif
     }
 
-    // Frozen03 diagnostic gate retained separately; it is never selected by TryCreate04.
+    // Frozen03 diagnostic gate retained separately; it is never selected by the product Raw9 factory.
     private static bool TryCreateContact03Closed(WorldBodyVisualRigBinding rig, out WorldBodyGaitLayer layer, out string status)
     {
         layer = null;
@@ -164,19 +162,19 @@ internal sealed class WorldBodyGaitLayer : IDisposable
 
     private static void ValidateRawContract(Raw9Contract c)
     {
-        Need(c != null && c.schema == "SFF_GAIT_RAW9_QA_ONLY_CONTRACT_V1" && c.mode == "RawLocomotionQa"
-            && c.qaOnly && c.rootRaw9QaActivationApproved && c.oneManualGraph && c.existingAnimatorOnly
+        Need(c != null && c.schema == "SFF_GAIT_RAW9_PRODUCT_CANDIDATE_CONTRACT_V1" && c.mode == "RawLocomotionProductCandidate"
+            && c.productCandidateActivation && c.oneManualGraph && c.existingAnimatorOnly
             && c.sameNormalizedPhase && c.rawSeamCuratedSource && c.legRotationOnly
-            && !c.contactCorrectionEnabled && !c.runtimeOrProductAccepted
+            && !c.contactCorrectionEnabled && !c.actualRuntimeAccepted
             && c.materializationReviewSha256 == Raw9MaterializationReviewSha256
             && c.clipAssetSetIdentitySha256 == Raw9AssetSetIdentitySha256
-            && c.legPaths != null && c.legPaths.Length == 12, "GAIT04_SEPARATE_RAW_QA_CONTRACT");
-        for (int i = 0; i < 12; i++) Need(c.legPaths[i] == LegPaths[i], "GAIT04_EXACT_LEG_PATHS");
+            && c.legPaths != null && c.legPaths.Length == 12, "GAIT_PRODUCT_RAW9_EXPLICIT_CANDIDATE_CONTRACT");
+        for (int i = 0; i < 12; i++) Need(c.legPaths[i] == LegPaths[i], "GAIT_PRODUCT_RAW9_EXACT_LEG_PATHS");
     }
 
     private static AnimationClip[] LoadRawClips(RawClipIdentity[] rows)
     {
-        Need(rows != null && rows.Length == 9, "GAIT04_EXACT_RAW_NINE");
+        Need(rows != null && rows.Length == 9, "GAIT_PRODUCT_RAW9_EXACT_RAW_NINE");
         var clips = new AnimationClip[9];
         for (int i = 0; i < 9; i++)
         {
@@ -188,11 +186,11 @@ internal sealed class WorldBodyGaitLayer : IDisposable
                 && row.curveInputSampleSha256 == row.sourceSampleSha256
                 && row.rotationCurveCount == 48 && row.otherCurveCount == 0 && row.eventCount == 0
                 && row.curveInputKeyCount > 1 && row.loadedCurveKeysMatchInput,
-                "GAIT04_EXACT_RAW_ASSET_DECLARATION");
+                "GAIT_PRODUCT_RAW9_EXACT_RAW_ASSET_DECLARATION");
             clips[i] = Resources.Load<AnimationClip>(path);
             Need(clips[i] != null && clips[i].name == Names[i] && !clips[i].humanMotion && !clips[i].legacy
                 && clips[i].isLooping && PlayerInputSource.IsFinite(clips[i].length) && clips[i].length > 0f
-                && clips[i].length.Equals(row.duration) && clips[i].events.Length == 0, "GAIT04_EXACT_GENERIC_LOOP_CLIP");
+                && clips[i].length.Equals(row.duration) && clips[i].events.Length == 0, "GAIT_PRODUCT_RAW9_EXACT_GENERIC_LOOP_CLIP");
         }
         // Serialized byte/GUID/curve bindings are audited by Root's staging/import review.
         return clips;
@@ -298,7 +296,7 @@ internal sealed class WorldBodyGaitLayer : IDisposable
 
     private void BuildRawGraph()
     {
-        _graph = PlayableGraph.Create("SFFOwnedWorldBodyGait04Raw9Qa");
+        _graph = PlayableGraph.Create("SFFOwnedWorldBodyGaitProductCandidateRaw9");
         _graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
         _mixer = AnimationMixerPlayable.Create(_graph, 9); _players = new AnimationClipPlayable[9];
         for (int i = 0; i < 9; i++)
@@ -308,7 +306,7 @@ internal sealed class WorldBodyGaitLayer : IDisposable
             _graph.Connect(_players[i], 0, _mixer, i);
         }
         _rig.Animator.applyRootMotion = false; _rig.Animator.enabled = true;
-        _output = AnimationPlayableOutput.Create(_graph, "OwnedRaw9LegsOnlyQa", _rig.Animator);
+        _output = AnimationPlayableOutput.Create(_graph, "OwnedRaw9LegsOnlyProductCandidate", _rig.Animator);
         _output.SetSourcePlayable(_mixer); _graph.Play();
     }
 
@@ -336,7 +334,7 @@ internal sealed class WorldBodyGaitLayer : IDisposable
                 SetWeights(_mixer, blend, run, f, b, l, r);
                 for (int i = 0; i < 9; i++) _players[i].SetTime(phase * _clips[i].length);
                 _graph.Evaluate(0f); VerifyLayerIsolation();
-                status = "qa-gait04-raw9-before-rifle-no-contact-or-product-pass"; return true;
+                status = "product-candidate-raw9-before-rifle-contact-off"; return true;
             }
             SetWeights(_rawMixer, blend, run, f, b, l, r); SetWeights(_mixer, blend, run, f, b, l, r);
             for (int i = 0; i < 9; i++)

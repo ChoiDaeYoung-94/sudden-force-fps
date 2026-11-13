@@ -1,8 +1,7 @@
 {
-  "schema": "SFF_GAIT_RAW9_QA_ONLY_CONTRACT_V1",
-  "mode": "RawLocomotionQa",
-  "qaOnly": true,
-  "rootRaw9QaActivationApproved": true,
+  "schema": "SFF_GAIT_RAW9_PRODUCT_CANDIDATE_CONTRACT_V1",
+  "mode": "RawLocomotionProductCandidate",
+  "productCandidateActivation": true,
   "materializationReviewSha256": "DED75CE3B35FF299536E632A4C2A6C10D96B035D22597A1E26BE7A01E42DE590",
   "clipAssetSetIdentitySha256": "9994B206304EFCE9D9B527212B0322149C119AA8D77C6065D3B60B34580D627A",
   "oneManualGraph": true,
@@ -11,7 +10,7 @@
   "rawSeamCuratedSource": true,
   "legRotationOnly": true,
   "contactCorrectionEnabled": false,
-  "runtimeOrProductAccepted": false,
+  "actualRuntimeAccepted": false,
   "legPaths": [
     "SFF_LOCO_root/SFF_LOCO_pelvis/SFF_LOCO_thigh_l",
     "SFF_LOCO_root/SFF_LOCO_pelvis/SFF_LOCO_thigh_l/SFF_LOCO_calf_l",

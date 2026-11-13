@@ -5,7 +5,7 @@ Assets/Audios/KenneyImpactFootsteps/License.txt whitespace=-blank-at-eol,-blank-
 Assets/Legal/ThirdPartyNotices.txt whitespace=-blank-at-eol,-blank-at-eof
 Assets/ThirdPartyAssets/Objects/LowPolyFPSLite/Scenes/Settings/URP_FPSLite.asset whitespace=-blank-at-eol
 
-# Local QA locomotion resource hashes require exact bytes across checkouts.
+# Locomotion resource hashes require exact bytes across checkouts.
 Assets/Resources/WorldBodyGaitContact03.meta -text whitespace=-blank-at-eol
 Assets/Resources/WorldBodyGaitContact03/** -text
 Assets/Resources/WorldBodyGaitContact03/**/*.meta whitespace=-blank-at-eol
