@@ -17,3 +17,11 @@ Refs #410
 ## 검증 범위
 
 `git diff --check` 및 변경 항·단계·실제 PNG 독립 검토를 수행합니다. 새 QA11 빌드·서명·기기 실행 결과는 후속 기록으로 분리합니다. Play 코드34/릴리스12와 배포 원장은 변경하지 않습니다.
+
+## QA11 산출물과 실제 확인 범위
+
+- QA11 별도 스택 소스는 `02dbbf614e34f09f95f96154af9f7878f2f1c362`이며 제품 변경 파일의 원바이트는 이 PR과 같습니다. Unity export 오류0·경고4, Android Gradle 원 프로세스 Exit0, 기존 인증서/v2, 서명 전후359 payload 일치 및 ARM64 native7 정적 검사를 확인했습니다.
+- 로컬 APK는 `D:/codex/releases/sudden-force-fps/localqa-1.0.197-qa11-20261117/SuddenForceFPS-LocalQA-1.0.197-qa11-ARM64.apk`, 100,500,560B/SHA256 `7A6C5E11548D8C0836EED60F1EE9C65B7C750C1BB0B7F6155DEA075157AC8505`입니다. 외부 업로드하지 않았습니다.
+- 테스트폰 게임/helper11을 데이터 삭제 없이 업데이트하고 양 APK 전체 readback과 UID/최초 설치 시각 보존을 확인했습니다. 두 피어 READY/START→사전 컴파일35초 fixture ARMED→TimeExpired/DRAW→양쪽 Lobby를 확인했으며 정확한 APPLIED tick 표본은 별도로 확보하지 않았습니다.
+- 녹화와 입력의 시작 의존성을 잘못 연결해 gesture는 입력 전 거부됐습니다. 녹화 실패 원본과 Root의 별도 파일 회수·해시 확인·폰 정리는 구분합니다. 새 QA11 발사·재장전 프레이밍과 연속 손 접촉은 미완료이므로 이 PR은 Draft를 유지합니다.
+- Editor 첫 정상 종료 요청의 지연과 두 번째 창의 정리 시간 초과는 [#413](https://github.com/ChoiDaeYoung-94/sudden-force-fps/issues/413)에 분리했습니다. 두 강제 종료를 정상 종료로 계산하지 않았고, 원 full 기한 안에 소스4,136개/비공개6개 제외·Prefs·SDK 반환을 별도 확인했습니다. 실제16KB 기기·PGS/Play·전체 권리·오디오 수용은 이 검증에 포함하지 않습니다.
