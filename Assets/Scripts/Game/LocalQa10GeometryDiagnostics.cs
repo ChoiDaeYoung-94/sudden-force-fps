@@ -6,17 +6,17 @@ using System.Security.Cryptography;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public sealed class LocalQa9GeometryDiagnostics : MonoBehaviour
+public sealed class LocalQa10GeometryDiagnostics : MonoBehaviour
 {
 const string Game="Assets/Scenes/Game/DesertHouse.unity";
 const string Protocol="sff-q20261022-ladder-v1-intro1-riflecore2-gaitprod1-window1-shoulderref1-localqa";
 const BindingFlags Fields=BindingFlags.Instance|BindingFlags.NonPublic;
-static LocalQa9GeometryDiagnostics _self;
+static LocalQa10GeometryDiagnostics _self;
 const bool DiagnosticsEnabled=true;
 const int MaxRows=8,MaxRowBytes=8192,ChunkBytes=384,MaxParts=22,MaxLogBytes=850;
-const string Prefix="[SFF_QA9_GEOMETRY_PART] ";
+const string Prefix="[SFF_QA10_GEOMETRY_PART] ";
 enum ReadyReason{None,OwnInputCount,NamespaceOrPhase,CameraMissing,CameraNotChild,CameraInactive,OwnerCameraCount,CrosshairCount,CanvasOrParent,RootCanvas,CanvasCameraMismatch,ScreenGeometry}
-static bool _code9;
+static bool _code10;
 ReadyReason _lastReadyReason;
 string _run;
 int _wireRows;
@@ -34,26 +34,26 @@ public Vector2 parentAnchorMin,parentAnchorMax,parentOffsetMin,parentOffsetMax;
 public Vector3 centreRayOrigin,centreRayDirection,simulationShotOrigin;
 public bool parentSafeRectFound,cacheAvailable,simulationShotOriginRead;
 }
-static bool AppScope()=>DiagnosticsEnabled&&Application.identifier=="com.AeDeong.SuddenForceFPS.localqa"&&Application.version=="1.0.197-qa9";
-static bool Scope()=>AppScope()&&_code9;
-static bool OwnVersionCode9()
+static bool AppScope()=>DiagnosticsEnabled&&Application.identifier=="com.AeDeong.SuddenForceFPS.localqa"&&Application.version=="1.0.197-qa10";
+static bool Scope()=>AppScope()&&_code10;
+static bool OwnVersionCode10()
 {
 try{
 using(var unity=new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
 using(var activity=unity.GetStatic<AndroidJavaObject>("currentActivity"))
 using(var packages=activity.Call<AndroidJavaObject>("getPackageManager"))
 using(var info=packages.Call<AndroidJavaObject>("getPackageInfo",Application.identifier,0))
-return info.Get<int>("versionCode")==9;
+return info.Get<int>("versionCode")==10;
 }catch(Exception){return false;}
 }
 [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
 static void Begin()
 {
 if(!AppScope()||_self!=null)return;
-_code9=OwnVersionCode9();if(!_code9)return;
-var go=new GameObject("SFF_QA9_GeometryOwned");
+_code10=OwnVersionCode10();if(!_code10)return;
+var go=new GameObject("SFF_QA10_GeometryOwned");
 go.hideFlags=HideFlags.HideAndDontSave;DontDestroyOnLoad(go);
-_self=go.AddComponent<LocalQa9GeometryDiagnostics>();
+_self=go.AddComponent<LocalQa10GeometryDiagnostics>();
 _self._run=Guid.NewGuid().ToString("N");
 _self._owned=true;_self._until=Time.realtimeSinceStartupAsDouble+300;
 Canvas.willRenderCanvases+=_self.Observe;
