@@ -20,7 +20,7 @@ Refs #410
 
 ## QA11 산출물과 실제 확인 범위
 
-- QA11 별도 스택 소스는 `02dbbf614e34f09f95f96154af9f7878f2f1c362`이며 제품 변경 파일의 원바이트는 이 PR과 같습니다. Unity export 오류0·경고4, Android Gradle 원 프로세스 Exit0, 기존 인증서/v2, 서명 전후359 payload 일치 및 ARM64 native7 정적 검사를 확인했습니다.
+- QA11 별도 스택 소스는 `02dbbf614e34f09f95f96154af9f7878f2f1c362`입니다. 이 빌드에는 X 이동량 제거까지 포함됐습니다. Unity export 오류0·경고4, Android Gradle 원 프로세스 Exit0, 기존 인증서/v2, 서명 전후359 payload 일치 및 ARM64 native7 정적 검사를 확인했습니다.
 - 로컬 APK는 `D:/codex/releases/sudden-force-fps/localqa-1.0.197-qa11-20261117/SuddenForceFPS-LocalQA-1.0.197-qa11-ARM64.apk`, 100,500,560B/SHA256 `7A6C5E11548D8C0836EED60F1EE9C65B7C750C1BB0B7F6155DEA075157AC8505`입니다. 외부 업로드하지 않았습니다.
 - 테스트폰 게임/helper11을 데이터 삭제 없이 업데이트하고 양 APK 전체 readback과 UID/최초 설치 시각 보존을 확인했습니다. 두 피어 READY/START→사전 컴파일35초 fixture ARMED→TimeExpired/DRAW→양쪽 Lobby를 확인했으며 정확한 APPLIED tick 표본은 별도로 확보하지 않았습니다.
 - 오전 검수에서는 녹화 시작을 확인하기 전에 gesture를 실행해 실제 입력이 없었습니다. 녹화 실패 기록과 후속 파일 회수·해시 확인·폰 정리를 보존했습니다.
@@ -35,3 +35,12 @@ Refs #410
 - 별도 테스트용 35초 타이머는 경기 시작 전에 준비하고 입력 검수 후 적용했습니다. 적용 tick 5480에서 만료 tick 7720을 설정했고, 실제 시간 만료 0대0 무승부와 양쪽 로비 복귀를 확인했습니다. 로비에서 타이머 객체는 0개였습니다.
 
 실기 증거는 로컬 `D:/codex/validation/sudden-force-fps/20261117-resume/afternoon-qa11/run-30a767f35b7b48dd932457adbbfea4fb/RESULTS.ko.md`에 있습니다. 영상 SHA256은 `BA9AD3E205B9D4F01DE841B2F023BCBB2261D95AB24CFC5BAF95D8FDC4FE49DC`입니다. 동일한 입력의 수정 전 실기 대조, 연속 손 접촉, 피해 판정, 청취와 다른 화면비 검수는 후속입니다.
+
+## 같은 카메라의 12개 재장전 단계 비교
+
+- Blue 모델의 12개 정규화 단계(0.12, 0.14, 0.15, 0.16, 0.20, 0.50, 0.80, 0.84, 0.85, 0.86, 0.88, 0.96)를 1280×592에서 두 번씩 렌더링했습니다. 공통 X 보정 0, 재장전 상승 0.14, 손·탄창 가중치와 롤이 같은 상태에서 좌우 회전각만 -25도에서 -12도로 비교했습니다.
+- 각 장면의 조준점 반경 16px(797개)에서 모델 픽셀 수는 기존 8개 단계에 합계 1,639개, 후보는 12개 단계 모두 0개였습니다. 단계 0.15에서 180→0, 0.85에서 206→0이었습니다. 두 방향 모두 오른손 위치와 왼손 손목의 목표 점 잔차가 1μm 미만이고 계산상 팔 길이 제한 적용은 없었습니다.
+- 제품 코드에 후보의 회전값만 추가 반영했습니다. 기존 Unity 응답 파일로 Windows Editor(QA 끔)와 Android Player(QA 켬)의 관리 코드 컴파일을 실행했고 모두 오류·경고 0건이었습니다. 연속 동작, 손과 탄창 메시 접촉, 화면비별 시각, 달리며 재장전하고 곧바로 발사하는 경우는 최신 빌드로 확인합니다.
+- 렌더러는 QA 비활성 Editor에서 실제 Blue 프리팹 복제본을 사용했습니다. 렌더 전후 공개 입력 4,136개가 동일했고, 비교 도구가 저장된 PNG 24장의 크기·SHA256·고정 카메라와 모델 마스크를 검증했습니다.
+
+로컬 근거는 `D:/codex/validation/sudden-force-fps/20261117-resume/afternoon-qa11/pose-sweep/actual-c025fa7d3f0e4e7db5590c1df4fea989/report.public.json` (SHA256 `15453E0EB59ADE9EF82776537D3140F3040C13E6EBA7945CB7E1F0D8CF5C7C3A`) 및 `D:/codex/validation/sudden-force-fps/20261117-resume/afternoon-qa11/run-c025fa7d3f0e4e7db5590c1df4fea989/sweep-comparison.json`입니다.
