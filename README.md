@@ -1,3 +1,5 @@
+> **2026-11-18 정상36 실제 연결:** [폰 닉네임 입력·일반 Editor 경기 진입·반환](Docs/validation/2026-11-18/normal36-editor-phone-runtime.md)을 확인했습니다. 그래프 actual166행은 idle이므로 달리기·동일 배우 life 검수는 미수용이며, 별도 냉시작은 닉네임 팝업 없는 로비까지 확인했습니다.
+
 > **2026-11-18 일반 Android36:** [1.0.199/code36 로컬 빌드·서명 기록](Docs/validation/2026-11-18/normal36-local-release.md)에 Raw9 통합과 재장전/시작 설정을 포함한 일반 APK/AAB를 정리했습니다. 기존 upload-key 서명·정적 검증 범위이며 Play 제공·PGS 인증·전체 기기 수용과 구분합니다. 아래 이전 버전은 각 시점의 이력입니다.
 
 > **2026-11-13 QA6 후속:** [순수 proxy 이동·조기 Stop과 반환](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)에서 약4초·230행 ROOT_STOP/나중 frame fixture0·Host 퇴장 뒤 새 Lobby Connected와 공개4122 원복을 확인했습니다. context 공백1행·초기 stale buffer·LD3 검은 화면은 미수용 범위로 남깁니다. QA7은 [Draft396](https://github.com/ChoiDaeYoung-94/sudden-force-fps/pull/396)의 준비 소스이며 새 APK는 없고 운영34는 그대로입니다. 아래 기록은 각 시점의 범위입니다.
