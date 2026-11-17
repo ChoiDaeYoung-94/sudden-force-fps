@@ -64,7 +64,7 @@ LD3(API34/1280×720)에도 **동일 정상36 게임/helper APK를 신규 설치*
 
 첫 후속 검증은 ADB 목록이 즉시 controller final과 달라 실패했습니다. 별도 **06:28:23 읽기 전용 후속 검증**에서 설정8개 raw exact·임시 adbDebug 키 부재·NAT 초기값·5561 listener 부재·타3 VM/공유 ADB/SVC 세대·**초기 ADB 목록 동일**을 확인했습니다. 즉시 controller final 목록과의 비교는 false로 유지합니다. 원래 LD3 guest 세션 자체는 재시작됐으며 복원했다고 주장하지 않습니다.
 
-LD 앱 근거는 `D:/codex/validation/sudden-force-fps/20261117-night/normal36-ld-actual01/r03/run-41bc75db7abe45ee8be7c95092c05ff9/`의 admission/install 두 개·cold/after-intro PNG·`return.public.json`입니다. Session 근거는 `ld415-own3-restart01/run-f7a6d3b740854346bd30899e37930c25/`의 `normal36-root-return.public.json`, `normal36-return-stop-off.public.json`, `post-controller-return-fresh02.public.json`입니다. 이 두 상대 경로의 기준은 아래와 같습니다.
+LD 앱 근거는 `D:/codex/validation/sudden-force-fps/20261117-night/normal36-ld-actual01/r03/run-41bc75db7abe45ee8be7c95092c05ff9/`의 admission/install 두 개·cold/after-intro PNG·`return.public.json`입니다. Session 근거는 `20261117-night/ld415-own3-restart01/run-f7a6d3b740854346bd30899e37930c25/`의 `normal36-root-return.public.json`, `normal36-return-stop-off.public.json`, `post-controller-return-fresh02.public.json`입니다. Session 상대 경로의 기준은 아래와 같습니다.
 
 ## 재검토할 공개 근거
 
