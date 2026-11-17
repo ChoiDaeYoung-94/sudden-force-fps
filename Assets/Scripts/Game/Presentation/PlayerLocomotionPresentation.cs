@@ -144,7 +144,7 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
             _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude + .14f * _reloadBlend + .04f * reloadMagazineWeight,
             0f);
         LocalWeaponRotationOffset = Quaternion.Euler(0f,
-            -25f * reloadHandWeight, Mathf.Sin(_phase) * .8f * amplitude - 12f * reloadHandWeight);
+            -12f * reloadHandWeight, Mathf.Sin(_phase) * .8f * amplitude - 12f * reloadHandWeight);
     }
 
     private void PlayStep(bool local, bool crouched, bool running)
