@@ -1,3 +1,5 @@
+> **2026-11-18 일반36 로컬 후보:** [1.0.199/code36 빌드·기존키 서명](Docs/validation/2026-11-18/normal36-local-release.md)을 확인했습니다. ARM64/min25/target36/nondebug·native7/ZIP·ELF16KB 한정 검증과 실제 기기/PGS·Play 수용을 구분합니다. fresh Console 최대값 미확인·업로드0이며 기존 운영34/release12는 과거 제공 기준입니다.
+
 > **2026-11-13 로컬 QA6:** [추가 proxy 이동·정상 회수/반환](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)의 source9bee·localqa/code6/1.0.197-qa6 APK100,496,464B/F4442394…는 기존 공기계 설치본입니다. 새 LD3는 설치 완료 UI만 확인했고 readback·Intro/Lobby는 미수용입니다. QA7/Draft396은 준비 소스뿐이며 code7 후보 예약/빌드0, 운영 마지막 제공 확인34/release12·원장196,2,34·Store35 예약/Play 업로드0을 유지합니다.
 
 > **2026-11-11 QA3 경기 경계:** [QA3 반복 cold·실제 경기·복귀](Docs/validation/2026-11-11/qa3-repeat-cold-and-phone-ld-game.md)의 localqa/code3 동일 설치본에서 5분 결과·양쪽 복귀·새 방 READY/퇴장을 확인했습니다. 새 방의 Game·kill/hit/리스폰·실청·16KB·PGS/Play 설치·전체 gait/IK는 미수용입니다. 운영34/release12/원장196,2,34·서명 키와 배포는 그대로입니다.
