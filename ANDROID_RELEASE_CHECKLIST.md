@@ -1,3 +1,5 @@
+> **2026-11-18 정상36 실제 한정 검수:** [닉네임 입력·방 참가·READY·Game/반환](Docs/validation/2026-11-18/normal36-editor-phone-runtime.md)을 확인했습니다. 새 빌드/서명/업로드0이며 실제 run·전체 life·Play 테스터 설치와 이 결과를 합산하지 않습니다.
+
 > **2026-11-18 일반36 로컬 후보:** [1.0.199/code36 빌드·기존키 서명](Docs/validation/2026-11-18/normal36-local-release.md)을 확인했습니다. ARM64/min25/target36/nondebug·native7/ZIP·ELF16KB 한정 검증과 실제 기기/PGS·Play 수용을 구분합니다. fresh Console 최대값 미확인·업로드0이며 기존 운영34/release12는 과거 제공 기준입니다.
 
 > **2026-11-13 로컬 QA6:** [추가 proxy 이동·정상 회수/반환](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)의 source9bee·localqa/code6/1.0.197-qa6 APK100,496,464B/F4442394…는 기존 공기계 설치본입니다. 새 LD3는 설치 완료 UI만 확인했고 readback·Intro/Lobby는 미수용입니다. QA7/Draft396은 준비 소스뿐이며 code7 후보 예약/빌드0, 운영 마지막 제공 확인34/release12·원장196,2,34·Store35 예약/Play 업로드0을 유지합니다.

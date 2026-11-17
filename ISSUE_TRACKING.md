@@ -1,3 +1,5 @@
+> **2026-11-18 #163/#347/#399:** [정상36 폰·일반 Editor의 한정 실행](Docs/validation/2026-11-18/normal36-editor-phone-runtime.md)을 기록했습니다. 실제 닉네임 입력/두 피어 Game과 run 미수용·회전 감사 실패·별도 최종 반환을 구분하고 상위 미완료 이슈는 유지합니다.
+
 > **2026-11-18 #66/#43 추적:** [정상36 로컬 빌드·서명과 한계](Docs/validation/2026-11-18/normal36-local-release.md)를 추가했습니다. 실제 native 빌드 성공과 원 wrapper 실패·후속 반환을 구분하며, #66 안정화/#43 PGS·Play 설치와 #341/#342/#302/#362 전체는 열어 둡니다.
 
 > **2026-11-13 최신 한계:** [QA6 proxy230행 ROOT_STOP·정상 반환과 LD3 미수용](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)을 기록했습니다. #392는 PR394로 닫았고 #347/#341/#342/#395는 남은 검증 때문에 유지합니다. Draft396은 QA7 소스 준비일 뿐 새 APK/기기 통과가 아닙니다. 기존 A2 874행 종료 실패도 보존합니다.
