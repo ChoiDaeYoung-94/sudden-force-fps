@@ -140,11 +140,11 @@ public sealed class PlayerLocomotionPresentation : MonoBehaviour
             reloadMagazineWeight = FirstPersonArmsPresentation.EvaluateReloadMagazineWeight(reloadPhase);
         }
         float amplitude = _blend * (crouched ? .6f : running ? 1.35f : 1f);
-        LocalWeaponPositionOffset = new Vector3(_sway.x + Mathf.Sin(_phase) * .012f * amplitude - .04f * reloadHandWeight,
+        LocalWeaponPositionOffset = new Vector3(_sway.x + Mathf.Sin(_phase) * .012f * amplitude,
             _sway.y + (Mathf.Cos(_phase * 2f) - 1f) * .009f * amplitude + .14f * _reloadBlend + .04f * reloadMagazineWeight,
             0f);
         LocalWeaponRotationOffset = Quaternion.Euler(0f,
-            -25f * reloadHandWeight, Mathf.Sin(_phase) * .8f * amplitude - 12f * reloadHandWeight);
+            -12f * reloadHandWeight, Mathf.Sin(_phase) * .8f * amplitude - 12f * reloadHandWeight);
     }
 
     private void PlayStep(bool local, bool crouched, bool running)
