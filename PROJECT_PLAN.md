@@ -1,3 +1,5 @@
+> **2026-11-18 다음 순서:** [정상36 APK/AAB와 검증 범위](Docs/validation/2026-11-18/normal36-local-release.md)를 기준으로 실제 기기 시작·PGS·기본 경기를 단계별 판정합니다. Raw9 전체 보행·접촉/연속 run·반복 재장전·실청·실제16KB·Play 테스터 설치는 후속입니다. CI/CD 확장은 보류합니다.
+
 > **2026-11-13 다음 순서:** [QA6 조기 회수·새 LD 한계](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)를 기준으로 QA7 준비 소스4f468/Draft396의 fresh compile → 별도 export/서명·APK/설치본 확인 → 같은 QA7 두 피어의 창문 실제 사격·보행/생명 경계를 검증합니다. QA7 빌드·실행은0이며 기존 QA6 APK에는 main의 창문 수정이 없습니다. CI/CD #44 신규 작업은 보류합니다.
 
 > **2026-11-11 #376 후속:** [닉네임 저장·Editor 검증](Docs/validation/2026-11-11/nickname-persistence-editor.md)의 소스3개와 실제15검사·회수를 확인했습니다. 다음 포함 APK에서 정상 확인→완전 종료→cold/갱신 후 이름 유지·이름 교체를 검증합니다. 기존 QA3와 동일 프로세스 cache 재읽기를 기기 저장성 통과로 합산하지 않습니다.

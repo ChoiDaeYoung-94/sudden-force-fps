@@ -1,3 +1,5 @@
+> **2026-11-18 #66/#43 추적:** [정상36 로컬 빌드·서명과 한계](Docs/validation/2026-11-18/normal36-local-release.md)를 추가했습니다. 실제 native 빌드 성공과 원 wrapper 실패·후속 반환을 구분하며, #66 안정화/#43 PGS·Play 설치와 #341/#342/#302/#362 전체는 열어 둡니다.
+
 > **2026-11-13 최신 한계:** [QA6 proxy230행 ROOT_STOP·정상 반환과 LD3 미수용](Docs/validation/2026-11-13/qa6-proxy-motion-clean-stop-and-return.md)을 기록했습니다. #392는 PR394로 닫았고 #347/#341/#342/#395는 남은 검증 때문에 유지합니다. Draft396은 QA7 소스 준비일 뿐 새 APK/기기 통과가 아닙니다. 기존 A2 874행 종료 실패도 보존합니다.
 
 > **2026-11-11 #376 완료 경계:** [닉네임 소스3개·가짜 저장소54/실제 Editor15검사](Docs/validation/2026-11-11/nickname-persistence-editor.md)와 원상태 회수를 확인했습니다. 새 포함 APK의 cold 저장성·#163 전체 UI·#43 Play 설치는 후속으로 유지합니다. 앞선 AdditiveScene0검사 실패·watch04 overflow와 이번 Preview03 성공을 구분합니다.
