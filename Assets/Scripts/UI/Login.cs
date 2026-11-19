@@ -131,7 +131,7 @@ namespace AD
                     if (status != SignInStatus.Success)
                     {
                         RecoverAttempt(attempt, status == SignInStatus.Canceled
-                            ? "Google sign-in was canceled. Please retry."
+                            ? "Google Play Games sign-in did not finish. Select Retry to sign in."
                             : "Google sign-in failed. Please retry.");
                         return;
                     }
