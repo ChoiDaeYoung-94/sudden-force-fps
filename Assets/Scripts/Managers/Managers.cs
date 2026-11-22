@@ -392,6 +392,44 @@ namespace AD
             Instantiate(_instance._networkRunnerObject);
         }
 
-        public static string SavedNickName { get; set; } = string.Empty;
+        private const string NickNamePreferenceKey = "SFF.Nickname.v1";
+        private static string _savedNickName;
+
+        public static string SavedNickName
+        {
+            get
+            {
+                if (_savedNickName != null) return _savedNickName;
+                try
+                {
+                    string stored = PlayerPrefs.GetString(NickNamePreferenceKey, string.Empty);
+                    _savedNickName = PopupManager.IsValidNickName(stored) ? stored : string.Empty;
+                }
+                catch (Exception exception)
+                {
+                    _savedNickName = string.Empty;
+                    Debug.LogWarning($"[Nickname] Local load failed: {exception.GetType().Name}");
+                }
+                return _savedNickName;
+            }
+            // Session recovery may replace the cached value without committing a preference.
+            set => _savedNickName = value ?? string.Empty;
+        }
+
+        public static void RememberNickName(string nickName)
+        {
+            if (!PopupManager.IsValidNickName(nickName)) return;
+            SavedNickName = nickName;
+            try
+            {
+                PlayerPrefs.SetString(NickNamePreferenceKey, nickName);
+                PlayerPrefs.Save();
+            }
+            catch (Exception exception)
+            {
+                // Keep the valid session name even if local storage is unavailable.
+                Debug.LogWarning($"[Nickname] Local save failed: {exception.GetType().Name}");
+            }
+        }
     }
 }
