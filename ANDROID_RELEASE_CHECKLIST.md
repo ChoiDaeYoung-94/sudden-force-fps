@@ -1,3 +1,11 @@
+## Android 서명 입력 관리 (2026-11-22)
+
+APK와 AAB 릴리스 메뉴는 `SUDDEN_FORCE_KEYSTORE_PATH`에서 키 파일의 절대 경로를 읽습니다. Unity 프로젝트와 Git 작업 트리 밖의 파일을 사용합니다. 환경 변수를 설정한 뒤 새로 실행한 Editor나 배치 프로세스에서 빌드합니다.
+
+- `SUDDEN_FORCE_KEY_ALIAS`에는 사용할 키의 별칭을 지정합니다. 생략하면 기존 빌드의 기본 별칭을 사용합니다.
+- 암호는 기존 Unity 입력란 또는 빌드 프로세스의 `SUDDEN_FORCE_KEYSTORE_PASSWORD`와 `SUDDEN_FORCE_KEYALIAS_PASSWORD`로 제공합니다. 공개 설정이나 명령행 인자에 값을 쓰지 않습니다. 서명 설정은 빌드를 마치거나 예외가 발생하면 이전 값으로 복원합니다.
+- 새 배포 전 Play Console에 등록된 업로드 인증서와 승인된 외부 키를 대조합니다. 로컬 보관 위치와 교체 작업 상태는 프로젝트 관리 문서에서 확인합니다. 아래 과거 배포 기록의 경로는 당시 검증 이력입니다.
+
 > **2026-11-18 정상36 실제 한정 검수:** [닉네임 입력·방 참가·READY·Game/반환](Docs/validation/2026-11-18/normal36-editor-phone-runtime.md)을 확인했습니다. 새 빌드/서명/업로드0이며 실제 run·전체 life·Play 테스터 설치와 이 결과를 합산하지 않습니다.
 
 > **2026-11-18 일반36 로컬 후보:** [1.0.199/code36 빌드·기존키 서명](Docs/validation/2026-11-18/normal36-local-release.md)을 확인했습니다. ARM64/min25/target36/nondebug·native7/ZIP·ELF16KB 한정 검증과 실제 기기/PGS·Play 수용을 구분합니다. fresh Console 최대값 미확인·업로드0이며 기존 운영34/release12는 과거 제공 기준입니다.
