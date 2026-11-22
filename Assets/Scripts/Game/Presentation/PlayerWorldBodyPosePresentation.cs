@@ -8,18 +8,24 @@ public readonly struct WorldBodyPoseContext
 {
     public readonly bool Alive, Crouched, Climbing, GaitEligible, UsesRemoteSnapshots, SourceLifeAligned;
     public readonly int RespawnVersion, FromTick, ToTick;
-    public readonly float UnwrappedPhase, Alpha;
+    public readonly float UnwrappedPhase, Alpha, AimPitch;
     public readonly Vector2 LocalVelocity;
     // Existing rifle fixtures stay rifle-only until given an explicit gait sample.
     public WorldBodyPoseContext(bool alive, bool crouched, bool climbing, int respawnVersion)
         : this(alive, crouched, climbing, respawnVersion, 0f, Vector2.zero, false, false, 0, 0, 0f) { }
+    // Preserve the existing signature: old rifle/gait fixtures explicitly default to pitch zero.
     public WorldBodyPoseContext(bool alive, bool crouched, bool climbing, int respawnVersion,
         float phase, Vector2 velocity, bool eligible, bool remote, int fromTick, int toTick, float alpha, bool sourceLifeAligned = true)
+        : this(alive, crouched, climbing, respawnVersion, phase, velocity, eligible, remote,
+            fromTick, toTick, alpha, sourceLifeAligned, 0f) { }
+    public WorldBodyPoseContext(bool alive, bool crouched, bool climbing, int respawnVersion,
+        float phase, Vector2 velocity, bool eligible, bool remote, int fromTick, int toTick, float alpha,
+        bool sourceLifeAligned, float aimPitch)
     {
         Alive = alive; Crouched = crouched; Climbing = climbing; RespawnVersion = respawnVersion;
         UnwrappedPhase = phase; LocalVelocity = velocity; GaitEligible = eligible;
         UsesRemoteSnapshots = remote; FromTick = fromTick; ToTick = toTick; Alpha = alpha;
-        SourceLifeAligned = sourceLifeAligned;
+        SourceLifeAligned = sourceLifeAligned; AimPitch = aimPitch;
     }
 }
 
@@ -155,6 +161,11 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
                 return true;
             }
 
+            // Pitch is consumed only for the live, source-life-aligned rifle pass.
+            // Dead/life-boundary source-only paths above retain their existing behavior.
+            if (!BodyPoseMath.Finite(context.AimPitch) || context.AimPitch < -85f || context.AimPitch > 85f)
+                throw new InvalidOperationException("BODY_POSE_AIM_PITCH_INVALID");
+
             // Exactly one BeginPose copy. Gait is absolute/manual on this same rig.
             if (_gait != null)
             {
@@ -166,7 +177,8 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
             Vector3 desiredPosition = _attachments.RightUpperArm.position
                 + transform.forward * _settings.Forward - transform.up * _settings.Down
                 - transform.right * _settings.Inward;
-            Quaternion desiredRotation = transform.rotation * Quaternion.Euler(_settings.RifleEuler);
+            Quaternion desiredRotation = transform.rotation * Quaternion.Euler(context.AimPitch, 0f, 0f)
+                * Quaternion.Euler(_settings.RifleEuler);
             ApplyRifleArms(desiredPosition, desiredRotation);
             VerifySourceBonesUnchanged();
             _attachments.Commit(desiredPosition, desiredRotation);

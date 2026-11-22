@@ -38,7 +38,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     [Networked] public NetworkBool WorldGaitEligible { get; set; }
     [Networked] public NetworkBool WorldPoseClimbing { get; set; }
     private const float MaximumWorldGaitPhase = 4096f;
-    private NetworkBehaviour.PropertyReader<float> _gaitPhaseReader;
+    private NetworkBehaviour.PropertyReader<float> _gaitPhaseReader, _poseAimPitchReader;
     private NetworkBehaviour.PropertyReader<Vector2> _gaitVelocityReader;
     private NetworkBehaviour.PropertyReader<NetworkBool> _gaitEligibleReader, _poseClimbingReader;
     private NetworkBehaviour.PropertyReader<int> _poseLifeReader, _poseHealthReader;
@@ -78,10 +78,12 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         context = default;
         if (!PoseOwnerValid) return false;
         bool alive = !IsDead && Health > 0;
+        float aimPitch = AimPitch;
+        if (!ValidWorldPoseAimPitch(aimPitch)) return false;
         context = new WorldBodyPoseContext(alive, IsCrouching, WorldPoseClimbing, RespawnVersion,
             WorldGaitPhase, WorldGaitLocalVelocity,
             WorldGaitEligible && alive && !IsCrouching && !WorldPoseClimbing,
-            false, Runner.Tick.Raw, Runner.Tick.Raw, 0f);
+            false, Runner.Tick.Raw, Runner.Tick.Raw, 0f, true, aimPitch);
         return true;
     }
 
@@ -107,9 +109,21 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         bool eligible = _gaitEligibleReader.Read(selected) && alive && !crouched && !climbing;
         float phase = _gaitPhaseReader.Read(selected);
         Vector2 velocity = _gaitVelocityReader.Read(selected);
-        bool sameMode = _poseLifeReader.Read(from) == _poseLifeReader.Read(to)
+        float aimPitch = _poseAimPitchReader.Read(selected);
+        if (!ValidWorldPoseAimPitch(aimPitch)) return false;
+        bool sameLife = _poseLifeReader.Read(from) == _poseLifeReader.Read(to)
             && _poseDeadReader.Read(from) == _poseDeadReader.Read(to)
-            && (_poseHealthReader.Read(from) > 0) == (_poseHealthReader.Read(to) > 0)
+            && (_poseHealthReader.Read(from) > 0) == (_poseHealthReader.Read(to) > 0);
+        if (sameLife)
+        {
+            float fromPitch = _poseAimPitchReader.Read(from), toPitch = _poseAimPitchReader.Read(to);
+            if (!ValidWorldPoseAimPitch(fromPitch) || !ValidWorldPoseAimPitch(toPitch)) return false;
+            // Same GameData pair/alpha, independent of gait eligibility/phase validity.
+            // Across life/death boundaries retain the existing selected-snapshot policy.
+            aimPitch = Mathf.Lerp(fromPitch, toPitch, alpha);
+        }
+        if (!ValidWorldPoseAimPitch(aimPitch)) return false;
+        bool sameMode = sameLife
             && (bool)_crouchReader.Read(from) == (bool)_crouchReader.Read(to)
             && (bool)_poseClimbingReader.Read(from) == (bool)_poseClimbingReader.Read(to)
             && (bool)_gaitEligibleReader.Read(from) == (bool)_gaitEligibleReader.Read(to);
@@ -125,10 +139,12 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         else if (sameMode) eligible = false;
         eligible &= ValidGaitPhase(phase) && FiniteGaitVelocity(velocity) && velocity.magnitude <= 8f;
         context = new WorldBodyPoseContext(alive, crouched, climbing, life, phase, velocity,
-            eligible, true, from.Tick.Raw, to.Tick.Raw, alpha, sourceLifeAligned);
+            eligible, true, from.Tick.Raw, to.Tick.Raw, alpha, sourceLifeAligned, aimPitch);
         return true;
     }
 
+    private static bool ValidWorldPoseAimPitch(float value) => PlayerInputSource.IsFinite(value)
+        && value >= -85f && value <= 85f;
     private static bool ValidGaitPhase(float value) => PlayerInputSource.IsFinite(value)
         && value >= 0f && value <= MaximumWorldGaitPhase;
     private static bool FiniteGaitVelocity(Vector2 value) => PlayerInputSource.IsFinite(value.x)
@@ -291,6 +307,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         _ladderMotor = GetComponent<PlayerLadderMotor>();
         _crouchReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(IsCrouching));
         _gaitPhaseReader = GetPropertyReader<float>(typeof(GamePlayerNetworkData), nameof(WorldGaitPhase));
+        _poseAimPitchReader = GetPropertyReader<float>(typeof(GamePlayerNetworkData), nameof(AimPitch));
         _gaitVelocityReader = GetPropertyReader<Vector2>(typeof(GamePlayerNetworkData), nameof(WorldGaitLocalVelocity));
         _gaitEligibleReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(WorldGaitEligible));
         _poseClimbingReader = GetPropertyReader<NetworkBool>(typeof(GamePlayerNetworkData), nameof(WorldPoseClimbing));
