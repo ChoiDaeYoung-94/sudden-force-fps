@@ -59,7 +59,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     private const string RoomScenePath = "Assets/Scenes/Room.unity";
     private const string GameScenePath = "Assets/Scenes/Game/DesertHouse.unity";
     // 씬 인덱스 또는 피격 골격 의미가 바뀌면 기존 클라이언트와 분리합니다.
-    private const string SceneProtocolSuffix = "-intro1-riflecore2";
+    // core2/raw gait 후보의 접속 세대입니다. LOCAL_QA suffix는 테스트 분리용이며 인증/출시 버전이 아닙니다.
+    private const string SceneProtocolSuffix = "-intro1-riflecore2-gaitraw1";
     private Fusion.Photon.Realtime.FusionAppSettings _sceneAppSettings;
 
     private void Awake()
@@ -137,6 +138,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         if (_sceneAppSettings != null) return _sceneAppSettings;
         var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
         settings.AppVersion = (settings.AppVersion ?? string.Empty) + SceneProtocolSuffix;
+#if SUDDEN_FORCE_LOCAL_QA
+        settings.AppVersion += "-localqa";
+#endif
         _sceneAppSettings = settings;
         return settings;
     }
