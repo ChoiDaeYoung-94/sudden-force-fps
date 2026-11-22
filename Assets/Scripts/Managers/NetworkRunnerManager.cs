@@ -59,7 +59,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     private const string RoomScenePath = "Assets/Scenes/Room.unity";
     private const string GameScenePath = "Assets/Scenes/Game/DesertHouse.unity";
     // 씬 인덱스 또는 피격 골격 의미가 바뀌면 기존 클라이언트와 분리합니다.
-    private const string SceneProtocolSuffix = "-intro1-riflepose3pitch1-gaitraw04";
+    private const string SceneProtocolSuffix = "-intro1-riflepose4pitch1-gaitraw04";
     private Fusion.Photon.Realtime.FusionAppSettings _sceneAppSettings;
 
     private void Awake()
