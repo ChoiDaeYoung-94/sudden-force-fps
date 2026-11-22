@@ -11,8 +11,7 @@ public static class BuildScript
 {
     private const string ProductName = "SuddenForceFPS";
     private const string Identifier = "com.AeDeong.SuddenForceFPS";
-    private const string KeystorePath = "src/AeDeong.keystore";
-    private const string KeyAlias = "aedeong";
+    private const string DefaultKeyAlias = "aedeong";
     private const string BuildInfoPath = "BuildInfo/buildinfo.txt";
     private const string OutputDirectory = "Build/AOS";
     private const int MaximumVersionCode = 2100000000;
@@ -56,9 +55,13 @@ public static class BuildScript
             "Select Android first, or launch the batch process with -buildTarget Android.");
         Require(PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android) == Identifier,
             "Android package differs from the existing app; confirm it before building.");
-        Require(File.Exists(KeystorePath), "The existing signing keystore is missing.");
-        Require(string.IsNullOrEmpty(PlayerSettings.Android.keyaliasName) || PlayerSettings.Android.keyaliasName == KeyAlias,
-            "The configured signing alias differs from the existing alias.");
+        string keystorePath = ResolveExternalKeystore(
+            Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEYSTORE_PATH"), Directory.GetParent(Application.dataPath).FullName);
+        string externalAlias = Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEY_ALIAS");
+        string keyAlias = externalAlias ?? DefaultKeyAlias;
+        Require(!string.IsNullOrWhiteSpace(keyAlias), "The signing alias is empty.");
+        Require(externalAlias != null || string.IsNullOrEmpty(PlayerSettings.Android.keyaliasName)
+            || PlayerSettings.Android.keyaliasName == keyAlias, "Set SUDDEN_FORCE_KEY_ALIAS for a different signing alias.");
 
         var scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(scene => scene.path).ToArray();
         Require(scenes.Length > 0 && scenes.All(File.Exists), "Enabled build scenes are missing or empty.");
@@ -78,6 +81,9 @@ public static class BuildScript
             versionCode = checked(knownCode + 1);
         }
 
+        bool originalCustomKeystore = PlayerSettings.Android.useCustomKeystore;
+        string originalKeystoreName = PlayerSettings.Android.keystoreName;
+        string originalAliasName = PlayerSettings.Android.keyaliasName;
         string originalStorePassword = PlayerSettings.Android.keystorePass;
         string originalAliasPassword = PlayerSettings.Android.keyaliasPass;
         string storePassword = Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEYSTORE_PASSWORD") ?? originalStorePassword;
@@ -96,14 +102,14 @@ public static class BuildScript
         PlayerSettings.bundleVersion = version;
         PlayerSettings.productName = ProductName;
         PlayerSettings.Android.bundleVersionCode = versionCode;
-        PlayerSettings.Android.useCustomKeystore = true;
-        PlayerSettings.Android.keystoreName = KeystorePath;
-        PlayerSettings.Android.keyaliasName = KeyAlias;
         PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
         EditorUserBuildSettings.buildAppBundle = appBundle;
 
         try
         {
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = keystorePath;
+            PlayerSettings.Android.keyaliasName = keyAlias;
             PlayerSettings.Android.keystorePass = storePassword;
             PlayerSettings.Android.keyaliasPass = aliasPassword;
             var options = new BuildPlayerOptions
@@ -126,9 +132,35 @@ public static class BuildScript
         }
         finally
         {
+            PlayerSettings.Android.keystoreName = originalKeystoreName;
+            PlayerSettings.Android.keyaliasName = originalAliasName;
             PlayerSettings.Android.keystorePass = originalStorePassword;
             PlayerSettings.Android.keyaliasPass = originalAliasPassword;
+            PlayerSettings.Android.useCustomKeystore = originalCustomKeystore;
         }
+    }
+
+    private static string ResolveExternalKeystore(string configuredPath, string projectDirectory)
+    {
+        Require(!string.IsNullOrWhiteSpace(configuredPath) && Path.IsPathFullyQualified(configuredPath),
+            "Set SUDDEN_FORCE_KEYSTORE_PATH to an absolute path outside the project.");
+        var file = new FileInfo(configuredPath);
+        Require(file.Exists, "The external signing keystore is missing.");
+        string project = Path.GetFullPath(projectDirectory);
+        for (FileSystemInfo entry = file; entry != null;
+             entry = entry is FileInfo key ? key.Directory : ((DirectoryInfo)entry).Parent)
+        {
+            Require((entry.Attributes & FileAttributes.ReparsePoint) == 0,
+                "Use the external signing file directly instead of a link.");
+            if (entry is DirectoryInfo directory)
+            {
+                string git = Path.Combine(directory.FullName, ".git");
+                Require(!string.Equals(directory.FullName, project, StringComparison.OrdinalIgnoreCase)
+                    && !File.Exists(git) && !Directory.Exists(git),
+                    "Keep the signing keystore outside project and Git working directories.");
+            }
+        }
+        return file.FullName;
     }
 
     private static void RequireOutputPathAvailable(string outputPath)
