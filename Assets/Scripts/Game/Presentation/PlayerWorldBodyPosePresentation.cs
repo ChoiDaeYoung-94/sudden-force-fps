@@ -3,19 +3,29 @@ using UnityEngine;
 
 public enum WorldBodyPosePass { HitboxCapture, Render, LateRender }
 
-// Values are supplied afresh by GamePlayerNetworkData after its stance pass.
-// This rifle layer has no clock, accumulated phase, velocity, or network fields.
+// One current simulation sample or one shared GameData render-buffer pair.
 public readonly struct WorldBodyPoseContext
 {
-    public readonly bool Alive, Crouched, Climbing;
-    public readonly int RespawnVersion;
+    public readonly bool Alive, Crouched, Climbing, GaitEligible, UsesRemoteSnapshots, SourceLifeAligned;
+    public readonly int RespawnVersion, FromTick, ToTick;
+    public readonly float UnwrappedPhase, Alpha;
+    public readonly Vector2 LocalVelocity;
+    // Existing rifle fixtures stay rifle-only until given an explicit gait sample.
     public WorldBodyPoseContext(bool alive, bool crouched, bool climbing, int respawnVersion)
-    { Alive = alive; Crouched = crouched; Climbing = climbing; RespawnVersion = respawnVersion; }
+        : this(alive, crouched, climbing, respawnVersion, 0f, Vector2.zero, false, false, 0, 0, 0f) { }
+    public WorldBodyPoseContext(bool alive, bool crouched, bool climbing, int respawnVersion,
+        float phase, Vector2 velocity, bool eligible, bool remote, int fromTick, int toTick, float alpha, bool sourceLifeAligned = true)
+    {
+        Alive = alive; Crouched = crouched; Climbing = climbing; RespawnVersion = respawnVersion;
+        UnwrappedPhase = phase; LocalVelocity = velocity; GaitEligible = eligible;
+        UsesRemoteSnapshots = remote; FromTick = fromTick; ToTick = toTick; Alpha = alpha;
+        SourceLifeAligned = sourceLifeAligned;
+    }
 }
 
 // One owner, one visual skeleton. Call only after PlayerCrouchGeometry.Apply.
 // Existing source Animator, skin renderers, 7 gun renderers and simulation root
-// retain their existing ownership. This component changes no network property.
+// retain their existing ownership. Only GameData writes the new protocol-v2 gait state.
 [DisallowMultipleComponent]
 [DefaultExecutionOrder(6000)]
 public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
@@ -26,6 +36,10 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
     private WorldRifleBodyPoseSettings _settings;
     private bool _hasInitialization, _faulted, _restoreIncomplete, _factoryEntered;
     private WorldBodyVisualRigBinding _rig;
+    private WorldBodyGaitLayer _gait;
+    public string GaitStatus { get; private set; }
+    public int GaitFaultCount { get; private set; }
+    public int LifeBoundaryHoldCount { get; private set; }
     private WorldBodyPoseAttachmentBinding _attachments;
     private Transform[] _sourceParents;
     private Vector3[] _sourcePositions, _sourceScales;
@@ -82,9 +96,10 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
         _factoryEntered = true;
         _rig = WorldBodyVisualRigBinding.Create(_owner);
         _factoryEntered = false;
-        // No graph is required for rifle. A later gait layer must be evaluated
-        // manually here between BeginPose and the rifle layer, on this same rig.
         _rig.Animator.enabled = false;
+        // Missing/unapproved clips deliberately retain rifle-only operation.
+        WorldBodyGaitLayer.TryCreate(_rig, out _gait, out var gaitStatus);
+        GaitStatus = gaitStatus;
         _attachments = new WorldBodyPoseAttachmentBinding(_owner, _rig, _bodyRendererCache);
         int count = _rig.SourceBones.Length;
         _sourceParents = new Transform[count]; _sourcePositions = new Vector3[count];
@@ -122,6 +137,15 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
                 throw new InvalidOperationException("BODY_POSE_OWNER_OR_STANCE_LOST");
             LastContext = context; LastPass = pass;
             BeginPose();
+            if (!context.SourceLifeAligned)
+            {
+                // Existing source life Animator stays untouched. This transient
+                // render boundary neither faults/unbinds nor resets gait phase.
+                VerifySourceBonesUnchanged(); LifeBoundaryHoldCount++;
+                GaitStatus = "source-only-life-boundary";
+                LastStatus = "source-only-life-boundary-original-attachments";
+                return true;
+            }
             if (!context.Alive)
             {
                 // Source life Animator owns death. Copy it without rifle IK or
@@ -131,8 +155,14 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
                 return true;
             }
 
-            // Pose layers: future same-owner gait, then rifle arms. No layer may
-            // call CopySourcePose again or construct another rig.
+            // Exactly one BeginPose copy. Gait is absolute/manual on this same rig.
+            if (_gait != null)
+            {
+                bool gaitFault;
+                _gait.EvaluateAfterCopy(context, out var gaitStatus, out gaitFault);
+                GaitStatus = gaitStatus;
+                if (gaitFault) { GaitFaultCount++; _gait = null; }
+            }
             Vector3 desiredPosition = _attachments.RightUpperArm.position
                 + transform.forward * _settings.Forward - transform.up * _settings.Down
                 - transform.right * _settings.Inward;
@@ -240,7 +270,24 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
         if (!Ready) return;
         if (_owner != null && _owner.TryGetWorldBodyPoseRenderContext(out var context))
             ApplyAfterStance(context, WorldBodyPosePass.LateRender);
-        else FailClosed(new InvalidOperationException("BODY_POSE_LATE_OWNER_CONTEXT_LOST"));
+        else ApplySourceFallbackAfterStance(WorldBodyPosePass.LateRender);
+    }
+
+    // Snapshot warm-up/gap is visible and does not permanently fault a live rig.
+    // Restore mapped children and copy current source once; no stale gait commit.
+    public void ApplySourceFallbackAfterStance(WorldBodyPosePass pass)
+    {
+        if (!isActiveAndEnabled || !Ready) return;
+        try
+        {
+            if (_owner == null || _owner.Object == null || !_owner.Object.IsValid
+                || !_owner.isActiveAndEnabled || _owner.Runner == null || !_owner.Runner.IsRunning
+                || _stance == null || !_stance.Configured || !_stance.isActiveAndEnabled)
+                throw new InvalidOperationException("BODY_POSE_OWNER_OR_STANCE_LOST");
+            BeginPose(); VerifySourceBonesUnchanged(); LastPass = pass; LastContext = default;
+            LastStatus = "awaiting-pose-snapshot-original-attachments";
+        }
+        catch (Exception error) { FailClosed(error); }
     }
 
     private void OnEnable()
@@ -277,8 +324,11 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
     private string ReleaseRuntime()
     {
         string failure = null;
-        try { _attachments?.Dispose(); }
+        try { _gait?.Dispose(); }
         catch (Exception error) { failure = error.Message; }
+        finally { _gait = null; }
+        try { _attachments?.Dispose(); }
+        catch (Exception error) { failure = (failure == null ? "" : failure + " | ") + error.Message; }
         finally { _attachments = null; }
         var oldRig = _rig; _rig = null;
         try { oldRig?.Dispose(); }
