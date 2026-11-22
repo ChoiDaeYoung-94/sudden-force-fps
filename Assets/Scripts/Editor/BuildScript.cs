@@ -13,10 +13,7 @@ public class BuildScript : MonoBehaviour, IPostprocessBuildWithReport
     // AOS build시 필요한 data
     private const string PRODUCT_NAME = "SuddenForceFPS";
     private const string IDENTIFIER = "com.AeDeong.SuddenForceFPS";
-    private const string KEYSTORE_NAME = "src/AeDeong.keystore";
-    private const string KEYSTORE_PASS = "";
     private const string KEYALIAS_NAME = "aedeong";
-    private const string KEYALIAS_PASS = "";
     private static string[] DEFINESYMBOLS_APK = { "Debug" };
     private static string[] DEFINESYMBOLS_AAB = { "" };
 
@@ -41,6 +38,35 @@ public class BuildScript : MonoBehaviour, IPostprocessBuildWithReport
     static void BuildAOSAPK() => SetAOS(form: CHECK_AOS_SETTING_APK);
     [MenuItem("Build/AOS/AAB")]
     static void BuildAOSAAB() => SetAOS(form: CHECK_AOS_SETTING_AAB);
+
+    private static string ResolveExternalKeystore(string configuredPath, string projectDirectory)
+    {
+        Require(!string.IsNullOrWhiteSpace(configuredPath) && Path.IsPathFullyQualified(configuredPath),
+            "Set SUDDEN_FORCE_KEYSTORE_PATH to an absolute path outside the project.");
+        var file = new FileInfo(configuredPath);
+        Require(file.Exists, "The external signing keystore is missing.");
+        string project = Path.GetFullPath(projectDirectory);
+        for (FileSystemInfo entry = file; entry != null;
+             entry = entry is FileInfo key ? key.Directory : ((DirectoryInfo)entry).Parent)
+        {
+            Require((entry.Attributes & FileAttributes.ReparsePoint) == 0,
+                "Use the external signing file directly instead of a link.");
+            if (entry is DirectoryInfo directory)
+            {
+                string git = Path.Combine(directory.FullName, ".git");
+                Require(!string.Equals(directory.FullName, project, StringComparison.OrdinalIgnoreCase)
+                    && !File.Exists(git) && !Directory.Exists(git),
+                    "Keep the signing keystore outside project and Git working directories.");
+            }
+        }
+        return file.FullName;
+    }
+
+    private static void Require(bool condition, string message)
+    {
+        if (!condition)
+            throw new InvalidOperationException(message);
+    }
 
     #region AOS
     /// <summary>
@@ -71,6 +97,8 @@ public class BuildScript : MonoBehaviour, IPostprocessBuildWithReport
     /// <param name="isAAB"></param>
     static void BuildAOS(bool isAAB)
     {
+        string signingPath = ResolveExternalKeystore(Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEYSTORE_PATH"),
+            Directory.GetParent(Application.dataPath).FullName);
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
 
         EditorUserBuildSettings.buildAppBundle = isAAB;
@@ -89,10 +117,6 @@ public class BuildScript : MonoBehaviour, IPostprocessBuildWithReport
 
         PlayerSettings.Android.bundleVersionCode = Convert.ToInt32(_str_buildInfo[2]);
 
-        PlayerSettings.Android.keystoreName = KEYSTORE_NAME;
-        PlayerSettings.Android.keystorePass = KEYSTORE_PASS;
-        PlayerSettings.Android.keyaliasName = KEYALIAS_NAME;
-        PlayerSettings.Android.keyaliasPass = KEYALIAS_PASS;
 
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
         PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Android, ApiCompatibilityLevel.NET_4_6);
@@ -119,7 +143,29 @@ public class BuildScript : MonoBehaviour, IPostprocessBuildWithReport
         buildPlayerOptions.target = BuildTarget.Android;
         buildPlayerOptions.targetGroup = BuildTargetGroup.Android;
 
-        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        bool previousCustom = PlayerSettings.Android.useCustomKeystore;
+        string previousPath = PlayerSettings.Android.keystoreName;
+        string previousAlias = PlayerSettings.Android.keyaliasName;
+        string previousStorePassword = PlayerSettings.Android.keystorePass;
+        string previousAliasPassword = PlayerSettings.Android.keyaliasPass;
+        BuildReport report;
+        try
+        {
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = signingPath;
+            PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEY_ALIAS") ?? KEYALIAS_NAME;
+            PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEYSTORE_PASSWORD") ?? previousStorePassword;
+            PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable("SUDDEN_FORCE_KEYALIAS_PASSWORD") ?? previousAliasPassword;
+            report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        }
+        finally
+        {
+            PlayerSettings.Android.keystoreName = previousPath;
+            PlayerSettings.Android.keyaliasName = previousAlias;
+            PlayerSettings.Android.keystorePass = previousStorePassword;
+            PlayerSettings.Android.keyaliasPass = previousAliasPassword;
+            PlayerSettings.Android.useCustomKeystore = previousCustom;
+        }
         BuildSummary summary = report.summary;
 
         if (summary.result == BuildResult.Succeeded)
