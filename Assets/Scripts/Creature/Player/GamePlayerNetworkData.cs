@@ -104,7 +104,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         bool selectedDead = _poseDeadReader.Read(selected);
         int selectedHealth = _poseHealthReader.Read(selected);
         bool alive = !selectedDead && selectedHealth > 0;
-        bool sourceLifeAligned = life == RespawnVersion && selectedDead == IsDead && selectedHealth == Health;
+        bool sourceLifeAligned = life == RespawnVersion && selectedDead == IsDead && (selectedHealth > 0) == (Health > 0);
         bool crouched = _crouchReader.Read(selected), climbing = _poseClimbingReader.Read(selected);
         bool eligible = _gaitEligibleReader.Read(selected) && alive && !crouched && !climbing;
         float phase = _gaitPhaseReader.Read(selected);
