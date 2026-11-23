@@ -13,25 +13,31 @@ include ':launcher', ':unityLibrary'
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
+        def gpgsPath = 'Assets/GeneratedLocalRepo/GooglePlayGames/com.google.play.games/Editor/m2repository'
         **ARTIFACTORYREPOSITORY**
         google()
         mavenCentral()
 // Android Resolver Repos Start
         maven {
-            // Unity builds under Library/Bee; exported projects can supply the source root.
-            def sourceRoot = System.getenv('SUDDEN_FORCE_PROJECT_PATH')
-            def projectRoot = sourceRoot ? new File(sourceRoot) : settingsDir
-            def repositoryPath = 'Assets/GeneratedLocalRepo/GooglePlayGames/com.google.play.games/Editor/m2repository'
-            while (projectRoot != null && !new File(projectRoot, repositoryPath).isDirectory()) {
-                projectRoot = projectRoot.parentFile
-            }
-            if (projectRoot == null) {
-                throw new GradleException('GPGS local repository missing; resolve dependencies or set SUDDEN_FORCE_PROJECT_PATH.')
-            }
-            url new File(projectRoot, repositoryPath).toURI() // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
+            url new File(settingsDir, gpgsPath).toURI() // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
         }
         mavenLocal()
 // Android Resolver Repos End
+        // EDM replaces the block above when it resolves Android dependencies.
+        withType(org.gradle.api.artifacts.repositories.MavenArtifactRepository).each { repo ->
+            if (repo.url.scheme == 'file' && repo.url.path.replaceAll('/+$', '').endsWith('/' + gpgsPath)) {
+                def sourceRoot = System.getenv('SUDDEN_FORCE_PROJECT_PATH')
+                File root = sourceRoot ? new File(sourceRoot) : settingsDir
+                while (!sourceRoot && root != null && !new File(root, gpgsPath).isDirectory()) {
+                    root = root.parentFile
+                }
+                File localRepo = root != null ? new File(root, gpgsPath) : java.nio.file.Paths.get(repo.url).toFile()
+                if (!localRepo.isDirectory()) {
+                    throw new GradleException('GPGS local repository missing; resolve dependencies or set SUDDEN_FORCE_PROJECT_PATH.')
+                }
+                repo.url = localRepo.toURI()
+            }
+        }
         flatDir {
             dirs "${project(':unityLibrary').projectDir}/libs"
         }
