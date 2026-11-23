@@ -603,3 +603,9 @@ Play=false 임시 prefab/deep font 복사본에서 로비 일반 label과 고지
 동봉 OFL은 [공식 JetBrainsMono v2.210 commit40e4dea999d21eb6d5d84f5d754e087ae332f018의 OFL.txt](https://raw.githubusercontent.com/JetBrains/JetBrainsMono/40e4dea999d21eb6d5d84f5d754e087ae332f018/OFL.txt)(4,399B/SHA `B2FE5E8987594E9FFD1D2CA52A2F5D73EB8335243893C5D6254B5AD69269591D`)와 raw exact는 아닙니다. 공백과 FAQ URL 한 곳의 http→https 차이를 정규화하면 전체 어휘가 같습니다. 원문은 변경하지 않았습니다. 해당 commit을 로컬 font의 정확한 배포 판본으로 주장하지 않습니다.
 
 코드34 frozen AAB의 관련 ZIP entry3개를 메모리에서 읽었으며 SHA `91E41873BF601BEB7EA6153B3958A7A052A02FDCD7D2FBA6A583B80FDEC5FFC6`는 전후 같습니다. UnityFS 내부 block/Font object는 미해석이므로 font 원본 동일성·실제 포함/부재·고지 누락·전체 권리 완료로 확대하지 않습니다. 이번 반영은 source/license 매핑1건이며 앱 고지·제품·에셋 변경은 없습니다. 근거는 외부 `20261027-work/asset-rights-next-audit01/`의 보고서·원문 사본·공개 대응 JSON입니다.
+
+## Sudden Force Emoticons
+
+메뉴 글꼴의 두 번째 fallback에 사용하는 80자(U+1F600–U+1F64F)는 Google LLC의 Noto Emoji에서 가져왔습니다. [원본 글꼴과 OFL 1.1](https://github.com/google/fonts/tree/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/notoemoji)
+
+fontTools 4.68.0으로 원본 가변 글꼴의 wght=400 인스턴스를 만들고 해당 범위의 윤곽과 저작권 정보를 보존한 뒤 글꼴 이름을 Sudden Force Emoticons로 변경했습니다. 원본 TTF SHA-256은 DE6C18832938AFC99CAF132B39D6A30A19BAC7F2E812E28DB2535B4608D27551입니다. 게임은 40pt, padding 4, 512×512 SDFAA 정적 아틀라스를 사용합니다. Unity 6000.3.25f1의 TMP에서 다시 생성할 때는 TryAddCharacters의 uint 배열에 각 글자의 UTF-16 상·하위 단위를 순서대로 전달합니다. 생성 후 character table에 실제 Unicode 스칼라 80개가 있는지 확인합니다. 배포 고지 전문은 Assets/Legal/ThirdPartyNotices.txt에 있습니다.
