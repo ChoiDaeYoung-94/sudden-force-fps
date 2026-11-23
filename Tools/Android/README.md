@@ -1,5 +1,15 @@
 # Android 검증 도구
 
+## APK·AAB의 IL2CPP 문자열 확인
+
+Unity 6000.3의 IL2CPP 메타데이터 버전 39에서 APK와 AAB의 메타데이터가 같은지, 지정한 문자열이 완전한 레코드로 들어갔는지 검사합니다. 두 산출물을 만든 뒤 로그인 안내 등 사용자에게 보이는 문구를 확인할 때 사용합니다.
+
+```powershell
+python Tools/Android/verify_packed_literals.py game.apk game.aab --require 'Google Play Games sign-in did not finish. Select Retry to sign in.' --forbid 'Google sign-in was canceled. Please retry.'
+```
+
+`--require`와 `--forbid`는 반복할 수 있습니다. 출력에는 인수 순서대로 일치 개수가 표시되며, 조건을 만족하면 종료 코드 0을 반환합니다. 실제 기기에서 어느 안내가 표시되는지는 해당 로그인 경로를 실행해 확인합니다.
+
 ## ARM64 ELF LOAD·RELRO 정렬 검사
 
 `verify_native_alignment.py`는 Python3.12 이상에서 AAB의 모든 모듈 또는 APK에 들어 있는 `lib/arm64-v8a/*.so`를 추출 없이 읽습니다. LOAD alignment·주소/파일 오프셋 congruence와 GNU_RELRO를 검사합니다. RELRO 끝 주소가16KB 정렬되거나, RELRO가 자체 writable LOAD의 전체 VA/메모리 구간과 일치하고 보호 페이지가 다른 writable LOAD의 페이지와 겹치지 않을 때 통과합니다. 모든 프로그램 헤더를 모은 뒤 판정하므로 헤더 순서에 의존하지 않습니다. 원본과 기존 보고서를 덮어쓰지 않고 Unity·Gradle·서명 도구를 실행하지 않습니다.
