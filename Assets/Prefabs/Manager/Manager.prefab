@@ -1841,8 +1841,8 @@ MonoBehaviour:
   BgmLoginClip: {fileID: 0}
   BgmLobbyClip: {fileID: 0}
   BgmGameClip: {fileID: 0}
-  SFXUIClickClip: {fileID: 0}
-  SFXUIOkClip: {fileID: 0}
+  SFXUIClickClip: {fileID: 8300000, guid: af07487fb8874d2a8d25bef7f4c946f1, type: 3}
+  SFXUIOkClip: {fileID: 8300000, guid: 052c0571d3ef4c708aad80e10b0f7434, type: 3}
 --- !u!82 &5423540460568587340
 AudioSource:
   m_ObjectHideFlags: 0
