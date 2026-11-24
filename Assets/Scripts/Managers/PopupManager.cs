@@ -34,6 +34,7 @@ namespace AD
         private bool _isFlow = false;
         private bool _loadingRequested;
         private bool _sceneLoadingRequested;
+        private float? _timeScaleBeforePopup;
 
         public bool IsLoading => _loadingRequested || _sceneLoadingRequested;
 
@@ -91,6 +92,11 @@ namespace AD
         public void EnablePop(GameObject popup)
         {
             if (popup == null || _popupStack.Contains(popup)) return;
+            if (PausesTime(popup))
+            {
+                _timeScaleBeforePopup ??= Time.timeScale;
+                Time.timeScale = 0f;
+            }
             _popupStack.Push(popup);
             AD.DebugLogger.Log("PopupManager", $"_popupStack.Count: {_popupStack.Count}, 팝업 스택에 푸시됨");
         }
@@ -142,7 +148,11 @@ namespace AD
                 if (current != null && !ReferenceEquals(current, popup)) retained.Push(current);
             }
             while (retained.Count > 0) _popupStack.Push(retained.Pop());
+            if (PausesTime(popup)) ClosePopupSetting();
         }
+
+        private bool PausesTime(GameObject popup) =>
+            popup == _popupLobby || popup == _popupExit || popup == _popupSetting;
 
         internal void PopupLoading()
         {
@@ -188,13 +198,11 @@ namespace AD
 
         public void PopupGoLobby()
         {
-            UnityEngine.Time.timeScale = 0;
             _popupLobby.SetActive(true);
         }
 
         public void PopupExit()
         {
-            UnityEngine.Time.timeScale = 0;
             _popupExit.SetActive(true);
         }
 
@@ -202,8 +210,6 @@ namespace AD
 
         public void PopupSetting()
         {
-            UnityEngine.Time.timeScale = 0;
-
             float bgm = PlayerPrefs.GetFloat("BGM", 1f);
             float sfx = PlayerPrefs.GetFloat("SFX", 1f);
 
@@ -214,7 +220,16 @@ namespace AD
             _popupSetting.SetActive(true);
         }
 
-        public void ClosePopupSetting() => UnityEngine.Time.timeScale = 1;
+        public void ClosePopupSetting()
+        {
+            // Some prefab buttons call this before SetActive(false). OnDisable also
+            // calls it so Back, scene cleanup and the button all resume consistently.
+            if (!_timeScaleBeforePopup.HasValue || IsOpen(_popupLobby) || IsOpen(_popupExit) || IsOpen(_popupSetting)) return;
+            Time.timeScale = _timeScaleBeforePopup.Value;
+            _timeScaleBeforePopup = null;
+        }
+
+        private static bool IsOpen(GameObject popup) => popup != null && popup.activeInHierarchy;
 
         public void PopupSetNickName() => _popupSetNickName.SetActive(true);
         
@@ -253,7 +268,7 @@ namespace AD
 
         public void GoLobby()
         {
-            UnityEngine.Time.timeScale = 1;
+            ClosePopupSetting();
 
             //AD.Managers.GameM.SwitchMainOrGameScene(AD.GameConstants.Scenes.Main);
         }
