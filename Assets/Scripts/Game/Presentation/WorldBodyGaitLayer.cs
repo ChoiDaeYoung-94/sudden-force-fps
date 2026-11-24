@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 // Product Raw9 candidate playback is independent of QA login/defines.
 // Activation permits execution; actual runtime acceptance belongs to separate evidence.
@@ -22,6 +23,8 @@ internal sealed class WorldBodyGaitLayer : IDisposable
     private const string ApprovedDiagnosticEvidenceSha256 = "";
     private const string RequiredC11SourceSha256 = "31789E517B1C94D597C2B84D5AD5742686A5F4629CD4A386012E6311E39A19C3";
     private const string ResourceRoot = "WorldBodyGaitContact03/";
+    private const int WalkRightInput = 4;
+    private const int GroundedWalkRightInput = 9;
     private const float PhysicalMargin = .001f, RawCap = .080f;
     private static readonly string[] Names = { "LegIdle", "WalkForward", "WalkBackward", "WalkLeft", "WalkRight",
         "RunForward", "RunBackward", "RunLeft", "RunRight" };
@@ -109,8 +112,18 @@ internal sealed class WorldBodyGaitLayer : IDisposable
             var contract = JsonUtility.FromJson<Raw9Contract>(asset.text);
             ValidateRawContract(contract);
             var raw = LoadRawClips(contract.raw);
-            layer = new WorldBodyGaitLayer(rig, raw, raw, null, true);
-            layer.BuildGraph(); status = "product-candidate-raw9-ready-contact-off"; return true;
+            var clips = raw;
+            var grounded = Resources.Load<AnimationClip>(ResourceRoot + "WalkRightGrounded");
+            if (grounded != null && !grounded.legacy && !grounded.humanMotion && grounded.isLooping
+                && grounded.length == raw[WalkRightInput].length && grounded.events.Length == 0)
+            {
+                Array.Resize(ref clips, raw.Length + 1);
+                clips[GroundedWalkRightInput] = grounded;
+            }
+            layer = new WorldBodyGaitLayer(rig, raw, clips, null, true);
+            layer.BuildGraph();
+            status = clips == raw ? "product-candidate-raw9-ready-contact-off" : "product-right-walk-baked-ready";
+            return true;
         }
         catch (Exception error)
         {
@@ -298,8 +311,9 @@ internal sealed class WorldBodyGaitLayer : IDisposable
     {
         _graph = PlayableGraph.Create("SFFOwnedWorldBodyGaitProductCandidateRaw9");
         _graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
-        _mixer = AnimationMixerPlayable.Create(_graph, 9); _players = new AnimationClipPlayable[9];
-        for (int i = 0; i < 9; i++)
+        _mixer = AnimationMixerPlayable.Create(_graph, _clips.Length);
+        _players = new AnimationClipPlayable[_clips.Length];
+        for (int i = 0; i < _clips.Length; i++)
         {
             _players[i] = AnimationClipPlayable.Create(_graph, _clips[i]);
             _players[i].SetSpeed(0d); _players[i].SetApplyFootIK(false); _players[i].SetApplyPlayableIK(false);
@@ -332,9 +346,22 @@ internal sealed class WorldBodyGaitLayer : IDisposable
             if (_rawOnly)
             {
                 SetWeights(_mixer, blend, run, f, b, l, r);
-                for (int i = 0; i < 9; i++) _players[i].SetTime(phase * _clips[i].length);
+                if (_clips.Length > GroundedWalkRightInput)
+                {
+                    // Equal-component diagonals retain their authored blend. Fade to the
+                    // baked contact pose as the rightward component becomes dominant.
+                    float walk = _mixer.GetInputWeight(WalkRightInput);
+                    float grounded = walk * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.5f, 1f, r));
+                    if (grounded > 0f)
+                        grounded *= FlatSupportWeight();
+                    _mixer.SetInputWeight(WalkRightInput, walk - grounded);
+                    _mixer.SetInputWeight(GroundedWalkRightInput, grounded);
+                }
+                for (int i = 0; i < _players.Length; i++) _players[i].SetTime(phase * _clips[i].length);
                 _graph.Evaluate(0f); VerifyLayerIsolation();
-                status = "product-candidate-raw9-before-rifle-contact-off"; return true;
+                status = _clips.Length > GroundedWalkRightInput ? "product-right-walk-baked-before-rifle"
+                    : "product-candidate-raw9-before-rifle-contact-off";
+                return true;
             }
             SetWeights(_rawMixer, blend, run, f, b, l, r); SetWeights(_mixer, blend, run, f, b, l, r);
             for (int i = 0; i < 9; i++)
@@ -355,6 +382,21 @@ internal sealed class WorldBodyGaitLayer : IDisposable
             faulted = true; status = "rifle-only-gait-fault:" + error.GetType().Name + ":" + error.Message; return false;
         }
     }
+
+    private float FlatSupportWeight()
+    {
+        // The clip was fitted to the standing capsule on level WorldGeometry.
+        // Query the owner's physics scene so independent Fusion peers use their own floor.
+        var physics = _rootParent.gameObject.scene.GetPhysicsScene();
+        var origin = _rootParent.position + Vector3.up * .15f;
+        if (!physics.IsValid() || !physics.Raycast(origin, Vector3.down, out var floor, .25f, 1 << 8, QueryTriggerInteraction.Ignore))
+            return 0f;
+        // Crossfade over the last few degrees of incline and centimetres of support.
+        float level = Mathf.InverseLerp(.9962f, .9994f, floor.normal.y); // 5 to 2 degrees
+        float near = 1f - Mathf.InverseLerp(.035f, .09f, Mathf.Abs(floor.distance - .15f));
+        return level * near;
+    }
+
     private static void SetWeights(AnimationMixerPlayable m, float blend, float run, float f, float b, float l, float r)
     {
         m.SetInputWeight(0, 1f - blend);
