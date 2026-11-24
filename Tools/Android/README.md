@@ -1,5 +1,11 @@
 # Android 검증 도구
 
+## Google Play Games 권한
+
+인증에는 Google Play Games를 사용하고 온라인 경기는 Photon Cloud에 연결합니다. Google Play Games 설정에서 Nearby Connections 서비스 ID를 비워 두면 플러그인이 생성하는 매니페스트에서 주변 기기 검색 권한이 빠집니다.
+
+릴리스 APK는 `aapt2 dump permissions game.apk`, AAB는 `bundletool dump manifest --module=base --bundle=game.aab`로 확인합니다. 두 매니페스트에 `INTERNET`과 `ACCESS_NETWORK_STATE`가 있고, Nearby용 `BLUETOOTH`, `BLUETOOTH_ADMIN`, `ACCESS_WIFI_STATE`, `CHANGE_WIFI_STATE`, `ACCESS_COARSE_LOCATION` 선언이 없는지 확인합니다. 로그인용 `com.google.android.gms.games.APP_ID`와 `NativeBridgeActivity`는 유지합니다.
+
 ## APK·AAB의 IL2CPP 문자열 확인
 
 Unity 6000.3의 IL2CPP 메타데이터 버전 39에서 APK와 AAB의 메타데이터가 같은지, 지정한 문자열이 완전한 레코드로 들어갔는지 검사합니다. 두 산출물을 만든 뒤 로그인 안내 등 사용자에게 보이는 문구를 확인할 때 사용합니다.
