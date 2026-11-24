@@ -64,9 +64,36 @@ public sealed class NetworkMatchState : NetworkBehaviour
         _presentation.Bind(this);
     }
 
+#if UNITY_EDITOR
+    private const string FinalSecondsMenu = "Tools/Sudden Force/Testing/Skip to Final 10 Seconds";
+    private bool _skipToFinalSeconds;
+
+    private bool CanSkipToFinalSeconds => IsCurrent && Object.HasStateAuthority
+        && Runner.GameMode == GameMode.Host && Phase == MatchPhase.Running
+        && MatchTimer.RemainingTicks(Runner) > CombatShotQuery.DurationTicks(10f, Runner.TickRate);
+
+    [UnityEditor.MenuItem(FinalSecondsMenu, true)]
+    private static bool ValidateFinalSecondsMenu() =>
+        Application.isPlaying && Instance != null && Instance.CanSkipToFinalSeconds;
+
+    [UnityEditor.MenuItem(FinalSecondsMenu)]
+    private static void SkipToFinalSeconds()
+    {
+        if (ValidateFinalSecondsMenu()) Instance._skipToFinalSeconds = true;
+    }
+#endif
+
     public override void FixedUpdateNetwork()
     {
         if (!IsCurrent || !Object.HasStateAuthority || Phase == MatchPhase.Finished) return;
+#if UNITY_EDITOR
+        if (_skipToFinalSeconds)
+        {
+            _skipToFinalSeconds = false;
+            if (CanSkipToFinalSeconds)
+                MatchTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(10f, Runner.TickRate));
+        }
+#endif
         EvaluateBoundary();
         if (Phase != MatchPhase.Waiting) return;
         int red = 0, blue = 0;
@@ -174,6 +201,9 @@ public sealed class NetworkMatchState : NetworkBehaviour
     public void DetachFromSession() => Release();
     private void Release()
     {
+#if UNITY_EDITOR
+        _skipToFinalSeconds = false;
+#endif
         _spawned = false;
         if (_game != null) { _game.KillConfirmed -= OnKillConfirmed; _game.UnbindMatch(this); }
         if (_presentation != null) _presentation.Unbind();
