@@ -557,6 +557,9 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (_returnTask != null) return _returnTask;
         if (!HasLiveOwner) return Task.CompletedTask;
+        bool lostRoomConnection = (_shutdownObserved || _peerDisconnectFrame >= 0)
+            && (SessionPhase == NetworkSessionPhase.Room || SessionPhase == NetworkSessionPhase.LoadingGame
+                || SessionPhase == NetworkSessionPhase.Game);
         IsRetired = true;
         SessionPhase = NetworkSessionPhase.ReturningToLobby;
         CancelConnectionOperations();
@@ -567,7 +570,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.LogError($"[Network] Lobby recovery failed: {LastRoomError}");
             return _returnTask = Task.CompletedTask;
         }
-        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved, _peerDisconnectFrame);
+        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved, _peerDisconnectFrame, lostRoomConnection);
         return _returnTask;
     }
 
