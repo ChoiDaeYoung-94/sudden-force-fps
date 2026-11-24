@@ -317,6 +317,18 @@ Rx.NET은 [고정 역사 리비전의 Source/license.txt](https://raw.githubuser
 
 **배포된 코드12 AAB는 수정하지 않았습니다.** 이 보완은 다음 새 배포 코드13 이상에서 실제 고지 본문 포함과 표시를 확인해야 합니다. 두 구체적 누락을 고친 것이며 과거 문서의 모든 미확인 항목을 새 누락으로 간주하거나 #42 전체를 닫지 않습니다. 근거: `D:/codex/validation/sudden-force-fps/20261016-json-notices-01/`의 원문 사본·`prepare-result.json`·`pager-validation.jsonl`, 코드12 export의 `Assembly-CSharp__2.cpp`/`Assembly-CSharp_CodeGen.c`/`Il2CppCodeRegistration.cpp`입니다.
 
+## Unity Asset Store 원본과 프로젝트 파일 대조 (2026-11-25, #42)
+
+Unity Package Manager의 **My Assets**에서 기존 취득 제품 세 개를 다운로드했습니다. 외부 패키지와 그 안에 동봉된 URP·HDRP 패키지 4개의 GUID, 원본 경로, 파일 본문 SHA-256을 `Assets/ThirdPartyAssets/Objects` 아래 대응 폴더의 파일과 비교했습니다. 폴더 및 `.meta`는 파일 수에서 제외했고 로컬 GUID는 각 `.meta`에서 읽었습니다.
+
+| 공식 패키지와 취득일 | 로컬 폴더 | GUID·본문 일치 | GUID 일치·본문 차이 | 팩에서 미대응 |
+| --- | --- | ---: | ---: | ---: |
+| Survivalist character 1.2 · 2024-11-13 | `Military` | 71 | 31 | 3 |
+| Low Poly FPS Weapons Lite 1.0 · 2024-11-14 | `LowPolyWeapons_LITE` | 6 | 7 | 0 |
+| Low Poly FPS Map Lite 1.0 · 2024-11-14 | `LowPolyFPSLite` | 14 | 23 | 0 |
+
+세 폴더의 FBX 19개와 PNG 72개는 모두 GUID와 원본 바이트가 일치했습니다. GUID가 일치하고 본문 바이트가 다른 파일 61개 중 21개는 줄 끝을 LF로 통일하면 본문도 일치합니다. 이 중 맵의 후처리·URP·Renderer 설정 세 개는 동봉된 URP 패키지에 있습니다. 원본과 대응되지 않은 파일은 캐릭터의 `UpperAvatarMask.mask`와 FPS 프리팹 (5)·(6)입니다. 코드56 일반 Android BuildReport에는 세 폴더의 알려진 경로 94개가 포함됐고, 이 94개 모두 공식 원본 GUID와 연결됐습니다. 별도 플레이어 애니메이션의 출처와 취득 당시 라이선스 조건은 이 대조 범위 밖입니다.
+
 ## 기존 계정의 세 팩 취득 기록 확인 (2026-10-16, #42)
 
 사용자가 지정한 작업용 Chrome의 기존 탭에서 로그인된 공식 Asset Store의 구매 배너와 My Assets 항목을 직접 대조했습니다. 아래는 새 구매가 아니라 기존 취득 기록입니다. 현재 상품의 무료 표시만으로 취득을 추정했던 범위를 보완했습니다.
@@ -571,6 +583,19 @@ AAR 및 메모리 전용 classes.jar의 승인된 LICENSE/NOTICE/COPYING 및 thi
 기존 GPGS 본문 재사용 여부 대조는 기존 Apache 전문 포함 확인에만 사용했습니다. 이번 독립 AndroidX 섹션은 해당 GPGS copyright 본문을 복사하지 않고 지정된 공식 Apache 약관 파일만 복사합니다. 전체 전이 closure, 최종 클래스 생존, 광고 부재 또는 전체 제품 라이선스 완료는 미확정입니다. 원문 공급자 copyright와 추가 의무는 후속 공식 릴리스 근거 확인 범위로 남깁니다.
 
 독립 검토를 통과한 후보를 앱 고지에 적용했습니다. 적용 직전 기존 660,971B prefix와 후보 SHA256을 확인했으며 최종 파일은 675,225B, SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`입니다. 위 183페이지 UI 검증은 적용 전 고지의 결과입니다. 추가된 AndroidX 섹션의 Editor 표시와 최종 Android 빌드 포함 검증은 별도로 진행합니다. 외부 조사·독립 검토 근거는 `D:\meee\git\sudden-force-fps-validation\20261008-androidx-metadata-readonly\`에 보존했습니다.
+
+### Android 릴리스 실행 의존성과 공급자 고지 대조 (2026-11-25)
+
+일반 Android 코드54의 Gradle export에서 `:launcher`와 `:unityLibrary`의 `releaseRuntimeClasspath`를 오프라인으로 각각 해석했습니다. 두 결과의 외부 Maven 모듈 집합은 25개로 같았습니다. AndroidX 18개, Google Play services 6개, 프로젝트의 로컬 Maven 저장소에서 제공하는 GPGS 지원 모듈 1개입니다. 버전 변경 시 export 루트에서 다음 명령으로 선택된 버전을 다시 확인할 수 있습니다.
+
+```text
+gradle :launcher:dependencies --configuration releaseRuntimeClasspath --offline
+gradle :unityLibrary:dependencies --configuration releaseRuntimeClasspath --offline
+```
+
+AndroidX 18개 POM은 Apache License 2.0을 명시합니다. APK의 버전 메타데이터에서 식별한 기존 13개와 실행 의존성에서 추가로 확인한 annotation, core-common, collection, games-frame-pacing, lifecycle-common의 버전·POM을 앱 고지의 AndroidX 절에서 확인할 수 있습니다. 각 모듈의 최종 DEX 클래스 수는 이 검사에서 측정하지 않았습니다.
+
+Google Play services 6개 AAR의 `third_party_licenses.json`에 표시된 바이트 오프셋으로 `third_party_licenses.txt`를 분리했습니다. 104개 항목에서 중복을 제외한 본문 28개의 SHA-256이 기존 앱 고지에 모두 기재되어 있고, 공백을 정규화한 본문도 모두 일치합니다. GPGS 지원 모듈의 로컬 POM에는 라이선스 항목이 없어 Unity 플러그인의 별도 고지와 구분합니다.
 
 ### AndroidX 추가 고지의 Editor 표시 검증 (2026-10-08)
 
