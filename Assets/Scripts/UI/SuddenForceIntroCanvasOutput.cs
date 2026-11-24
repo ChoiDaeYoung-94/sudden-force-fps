@@ -1,3 +1,4 @@
+using System.Collections;
 using QuadD;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,8 @@ using UnityEngine.Video;
 public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
 {
     [SerializeField] private RawImage picture;
+    private const float AndroidPosterSeconds = 1.25f;
+    private bool deferredStart;
     private QuadDIntro intro;
     private VideoPlayer video;
 
@@ -23,6 +26,28 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
         if (PlayerPrefs.GetFloat("BGM", 1f) <= 0f && PlayerPrefs.GetFloat("SFX", 1f) <= 0f)
             intro.Mute = true;
         intro.OnCompleted.AddListener(Complete);
+        if (Application.platform == RuntimePlatform.Android && intro.enabled && picture != null
+            && picture.isActiveAndEnabled && picture.texture != null && picture.canvas != null)
+        {
+            // The first Android frame can take longer than the decoder's entire prepare timeout.
+            deferredStart = true;
+            intro.enabled = false;
+        }
+    }
+
+    private IEnumerator Start()
+    {
+        if (!deferredStart) yield break;
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForSecondsRealtime(AndroidPosterSeconds);
+        StartDeferredIntro();
+    }
+
+    private void StartDeferredIntro()
+    {
+        if (!deferredStart) return;
+        deferredStart = false;
+        if (intro != null) intro.enabled = true;
     }
 
     private void LateUpdate()
@@ -40,6 +65,12 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
     private void Complete()
     {
         OutputCompleted = true;
+        // Keep the poster on screen while Login loads if the decoder never produced a frame.
+        if (HasBoundTexture) HidePicture();
+    }
+
+    private void HidePicture()
+    {
         // A display cleanup error must not interrupt the package's login transition.
         try { if (picture != null) picture.enabled = false; }
         catch (MissingReferenceException) { CleanupFailed = true; }
@@ -47,7 +78,9 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
 
     private void OnDisable()
     {
-        Complete();
+        OutputCompleted = true;
+        HidePicture();
+        StartDeferredIntro();
         if (intro != null) intro.OnCompleted.RemoveListener(Complete);
     }
 }
