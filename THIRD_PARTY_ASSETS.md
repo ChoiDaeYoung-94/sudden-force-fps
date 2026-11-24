@@ -318,15 +318,15 @@ Rx.NET은 [고정 역사 리비전의 Source/license.txt](https://raw.githubuser
 
 ## Unity Asset Store 원본과 프로젝트 파일 대조 (2026-11-25, #42)
 
-Unity Package Manager의 **My Assets**에서 기존 취득 제품 세 개를 다운로드했습니다. 각 `.unitypackage` 안의 GUID, 원본 경로, 파일 본문 SHA-256을 `Assets/ThirdPartyAssets/Objects` 아래 대응 폴더의 파일과 비교했습니다. 폴더 및 `.meta`는 파일 수에서 제외했고 로컬 GUID는 각 `.meta`에서 읽었습니다.
+Unity Package Manager의 **My Assets**에서 기존 취득 제품 세 개를 다운로드했습니다. 외부 패키지와 그 안에 동봉된 URP·HDRP 패키지 4개의 GUID, 원본 경로, 파일 본문 SHA-256을 `Assets/ThirdPartyAssets/Objects` 아래 대응 폴더의 파일과 비교했습니다. 폴더 및 `.meta`는 파일 수에서 제외했고 로컬 GUID는 각 `.meta`에서 읽었습니다.
 
 | 공식 패키지와 취득일 | 로컬 폴더 | GUID·본문 일치 | GUID 일치·본문 차이 | 팩에서 미대응 |
 | --- | --- | ---: | ---: | ---: |
 | Survivalist character 1.2 · 2024-11-13 | `Military` | 71 | 31 | 3 |
 | Low Poly FPS Weapons Lite 1.0 · 2024-11-14 | `LowPolyWeapons_LITE` | 6 | 7 | 0 |
-| Low Poly FPS Map Lite 1.0 · 2024-11-14 | `LowPolyFPSLite` | 14 | 20 | 3 |
+| Low Poly FPS Map Lite 1.0 · 2024-11-14 | `LowPolyFPSLite` | 14 | 23 | 0 |
 
-세 폴더의 FBX 19개와 PNG 72개는 모두 GUID와 원본 바이트가 일치했습니다. GUID만 일치한 파일 58개 중 무기 프리팹 4개와 맵 프리팹 14개는 줄 끝을 LF로 통일하면 본문도 일치합니다. 해당 팩에서 대응되지 않은 파일은 캐릭터의 `UpperAvatarMask.mask`와 FPS 프리팹 (5)·(6), 맵의 후처리·URP·Renderer 설정 세 개입니다. 별도 플레이어 애니메이션의 출처와 취득 당시 라이선스 조건은 이 대조 범위 밖입니다.
+세 폴더의 FBX 19개와 PNG 72개는 모두 GUID와 원본 바이트가 일치했습니다. GUID가 일치하고 본문 바이트가 다른 파일 61개 중 21개는 줄 끝을 LF로 통일하면 본문도 일치합니다. 이 중 맵의 후처리·URP·Renderer 설정 세 개는 동봉된 URP 패키지에 있습니다. 원본과 대응되지 않은 파일은 캐릭터의 `UpperAvatarMask.mask`와 FPS 프리팹 (5)·(6)입니다. 코드56 일반 Android BuildReport에는 세 폴더의 알려진 경로 94개가 포함됐고, 이 94개 모두 공식 원본 GUID와 연결됐습니다. 별도 플레이어 애니메이션의 출처와 취득 당시 라이선스 조건은 이 대조 범위 밖입니다.
 
 ## 기존 계정의 세 팩 취득 기록 확인 (2026-10-16, #42)
 
