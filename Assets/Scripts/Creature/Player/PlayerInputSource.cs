@@ -79,6 +79,12 @@ public sealed class PlayerInputSource : MonoBehaviour
         _touchFirePending = _fire && CanUseTouchInput;
     }
 
+    public void ReleaseTouchFire(bool canceled)
+    {
+        if (canceled) _touchFirePending = false;
+        SetFire(false);
+    }
+
     public void SetFire(bool fire)
     {
         _physicalFireHeld = fire;
