@@ -571,6 +571,19 @@ AAR 및 메모리 전용 classes.jar의 승인된 LICENSE/NOTICE/COPYING 및 thi
 
 독립 검토를 통과한 후보를 앱 고지에 적용했습니다. 적용 직전 기존 660,971B prefix와 후보 SHA256을 확인했으며 최종 파일은 675,225B, SHA256 `a58eb4b964c268847a85773f96449f7f24daaba85ef734f6032b8d30476a15d6`입니다. 위 183페이지 UI 검증은 적용 전 고지의 결과입니다. 추가된 AndroidX 섹션의 Editor 표시와 최종 Android 빌드 포함 검증은 별도로 진행합니다. 외부 조사·독립 검토 근거는 `D:\meee\git\sudden-force-fps-validation\20261008-androidx-metadata-readonly\`에 보존했습니다.
 
+### Android 릴리스 실행 의존성과 공급자 고지 대조 (2026-11-25)
+
+일반 Android 코드54의 Gradle export에서 `:launcher`와 `:unityLibrary`의 `releaseRuntimeClasspath`를 오프라인으로 각각 해석했습니다. 두 결과의 외부 Maven 모듈 집합은 25개로 같았습니다. AndroidX 18개, Google Play services 6개, 프로젝트의 로컬 Maven 저장소에서 제공하는 GPGS 지원 모듈 1개입니다. 버전 변경 시 export 루트에서 다음 명령으로 선택된 버전을 다시 확인할 수 있습니다.
+
+```text
+gradle :launcher:dependencies --configuration releaseRuntimeClasspath --offline
+gradle :unityLibrary:dependencies --configuration releaseRuntimeClasspath --offline
+```
+
+AndroidX 18개 POM은 Apache License 2.0을 명시합니다. APK의 버전 메타데이터에서 식별한 기존 13개와 실행 의존성에서 추가로 확인한 annotation, core-common, collection, games-frame-pacing, lifecycle-common의 버전·POM을 앱 고지의 AndroidX 절에서 확인할 수 있습니다. 각 모듈의 최종 DEX 클래스 수는 이 검사에서 측정하지 않았습니다.
+
+Google Play services 6개 AAR의 `third_party_licenses.json`에 표시된 바이트 오프셋으로 `third_party_licenses.txt`를 분리했습니다. 104개 항목에서 중복을 제외한 본문 28개의 SHA-256이 기존 앱 고지에 모두 기재되어 있고, 공백을 정규화한 본문도 모두 일치합니다. GPGS 지원 모듈의 로컬 POM에는 라이선스 항목이 없어 Unity 플러그인의 별도 고지와 구분합니다.
+
 ### AndroidX 추가 고지의 Editor 표시 검증 (2026-10-08)
 
 적용 후 Unity 6000.3.25f1에서 고지 TextAsset 로딩과 실제 C# pager의 총 187페이지를 확인했습니다. source slices를 UTF-8로 재결합한 bytes는 적용 파일과 정확히 같고, 기존 660,971B prefix 및 1~182페이지 source는 보존됐습니다. 연결 경계인 183페이지부터 마지막 187페이지까지 실제 Button pointer/EventSystem 경로로 이동·왕복·끝 clamp·스크롤·닫기/재열기를 확인했습니다.
