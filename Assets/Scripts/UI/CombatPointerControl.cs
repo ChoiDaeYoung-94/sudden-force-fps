@@ -19,11 +19,8 @@ public sealed class CombatPointerControl : MonoBehaviour, IPointerDownHandler, I
         _source = PlayerInputSource.Instance;
         if (_control == Control.Fire)
         {
-            // A real new Down proves a fresh press. Lifecycle resets never claim
-            // that a finger physically released, so they retain the core gate.
             _source.SynchronizeRespawn();
-            _source.SetFire(false);
-            _source.SetFire(true);
+            _source.PressTouchFire();
             _source.TryCaptureTouchLook(eventData.pointerId);
         }
         else if (_control == Control.Crouch)

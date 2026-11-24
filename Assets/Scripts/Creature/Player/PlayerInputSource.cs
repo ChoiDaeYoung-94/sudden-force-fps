@@ -12,6 +12,7 @@ public sealed class PlayerInputSource : MonoBehaviour
     private bool _sprint;
     private bool _crouch, _physicalCrouchHeld, _crouchReleaseRequired;
     private bool _fire;
+    private bool _touchFirePending;
     private bool _physicalFireHeld;
     private bool _fireReleaseRequired;
     private int _respawnVersion;
@@ -70,6 +71,14 @@ public sealed class PlayerInputSource : MonoBehaviour
         if (!crouch) _crouchReleaseRequired = false;
         _crouch = crouch && !_crouchReleaseRequired && !_menuInputBlocked;
     }
+    public void PressTouchFire()
+    {
+        // A new pointer Down proves a fresh press after a focus or life reset.
+        _fireReleaseRequired = false;
+        SetFire(true);
+        _touchFirePending = _fire && CanUseTouchInput;
+    }
+
     public void SetFire(bool fire)
     {
         _physicalFireHeld = fire;
@@ -109,20 +118,20 @@ public sealed class PlayerInputSource : MonoBehaviour
         _reloadSubmittedFrame = -1;
     }
 
-    private bool CanUseTouchLook => Instance == this && isActiveAndEnabled && _owner != null
+    private bool CanUseTouchInput => Instance == this && isActiveAndEnabled && _owner != null
         && _owner.CanProvideInput && _owner.RespawnVersion == _respawnVersion
         && !_paused && !_menuInputBlocked && Application.isFocused;
 
     public bool TryCaptureTouchLook(int fingerId)
     {
-        if (fingerId < 0 || _lookFinger >= 0 || !CanUseTouchLook) return false;
+        if (fingerId < 0 || _lookFinger >= 0 || !CanUseTouchInput) return false;
         _lookFinger = fingerId;
         return true;
     }
 
     public void ReleaseTouchLook(int fingerId)
     {
-        if (CanUseTouchLook && fingerId >= 0 && _lookFinger == fingerId) _lookFinger = -1;
+        if (CanUseTouchInput && fingerId >= 0 && _lookFinger == fingerId) _lookFinger = -1;
     }
 
     // Degrees; positive Y raises the view. Mobile controls can call this too.
@@ -140,6 +149,7 @@ public sealed class PlayerInputSource : MonoBehaviour
         _crouch = false;
         _crouchReleaseRequired |= _physicalCrouchHeld;
         _fire = false;
+        _touchFirePending = false;
         // Resetting ownership/focus is not evidence of a physical release.
         _fireReleaseRequired |= _physicalFireHeld;
         _reloadRequested = false;
@@ -161,9 +171,12 @@ public sealed class PlayerInputSource : MonoBehaviour
         data.AimPitch = _pitch;
         data.Buttons.Set(PlayerInputButton.Sprint, _sprint);
         data.Buttons.Set(PlayerInputButton.Crouch, _crouch);
-        data.Buttons.Set(PlayerInputButton.Fire, _fire);
+        // Down and Up can both arrive between simulation ticks.
+        bool fire = _fire || _touchFirePending;
+        _touchFirePending = false;
+        data.Buttons.Set(PlayerInputButton.Fire, fire);
         data.Buttons.Set(PlayerInputButton.Reload, _reloadRequested);
-        data.Fire = _fire;
+        data.Fire = fire;
         if (_reloadRequested) _reloadSubmittedFrame = Time.frameCount;
         return data;
     }
@@ -214,7 +227,7 @@ public sealed class PlayerInputSource : MonoBehaviour
 
     private void SampleTouchLook(Touch touch)
     {
-        if (!CanUseTouchLook || touch.fingerId < 0) return;
+        if (!CanUseTouchInput || touch.fingerId < 0) return;
         if (touch.phase == TouchPhase.Began && _lookFinger < 0 && touch.position.x >= Screen.width * 0.5f && !IsPointerOverControl(touch.position))
             TryCaptureTouchLook(touch.fingerId);
         if (touch.fingerId != _lookFinger) return;
