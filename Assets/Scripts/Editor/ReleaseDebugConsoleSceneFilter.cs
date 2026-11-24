@@ -6,8 +6,8 @@ using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>Removes the authored console instance from release build scene copies.</summary>
-public sealed class ReleaseDebugConsoleSceneFilter : IProcessSceneWithReport
+/// <summary>Keeps the in-game debug console and its Android plugin in development builds.</summary>
+public sealed class ReleaseDebugConsoleSceneFilter : BuildPlayerProcessor, IProcessSceneWithReport
 {
     private const string ConsolePrefabGuid = "67117722a812a2e46ab8cb8eafbf5f5e";
     private const string InitializerScriptGuid = "69395e87b254782458bbe108ec22ec29";
