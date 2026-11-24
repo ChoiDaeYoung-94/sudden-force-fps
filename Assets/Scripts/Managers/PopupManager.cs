@@ -85,6 +85,9 @@ namespace AD
                 return;
             }
 
+            // The required nickname dialog can outlive the loading popup that released the exception flag.
+            if (IsOpen(_popupSetNickName)) return;
+
             var manager = NetworkRunnerManager.Instance;
             if (manager != null && (manager.IsRetired || manager.IsRoomOperationPending
                 || manager.SessionPhase != NetworkSessionPhase.Lobby)) return;
