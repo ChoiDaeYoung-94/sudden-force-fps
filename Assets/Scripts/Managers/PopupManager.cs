@@ -54,9 +54,6 @@ namespace AD
         /// </summary>
         public void Init()
         {
-            AD.Managers.UpdateM.OnUpdateEvent -= OnUpdate;
-            AD.Managers.UpdateM.OnUpdateEvent += OnUpdate;
-
             SetPopup();
         }
 
@@ -73,16 +70,12 @@ namespace AD
                 if (popup != null) popup.SetActive(false);
         }
 
-        private void OnUpdate()
+        private void Update()
         {
-            if (IsLoading || MatchHudView.OwnsBackInput) return;
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                if (Input.GetKeyDown(KeyCode.Escape) && !_isFlow)
-                {
-                    DisablePop();
-                }
-            }
+            if (Application.platform != RuntimePlatform.Android || _popupStack.Count == 0
+                || _isFlow || _isException || IsLoading || MatchHudView.OwnsBackInput) return;
+
+            if (Input.GetKeyDown(KeyCode.Escape)) DisablePop();
         }
 
         #region Functions
