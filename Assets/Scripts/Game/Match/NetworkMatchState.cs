@@ -1,3 +1,7 @@
+#if UNITY_EDITOR || (UNITY_ANDROID && SFF_LOCAL_PLAYTEST)
+#define SFF_MATCH_TEST_CLOCK
+#endif
+
 using System;
 using System.Collections.Generic;
 using Fusion;
@@ -71,13 +75,15 @@ public sealed class NetworkMatchState : NetworkBehaviour
         _presentation.Bind(this);
     }
 
-#if UNITY_EDITOR
-    private const string FinalSecondsMenu = "Tools/Sudden Force/Testing/Skip to Final 10 Seconds";
+#if SFF_MATCH_TEST_CLOCK
     private bool _skipToFinalSeconds;
 
     private bool CanSkipToFinalSeconds => IsCurrent && Object.HasStateAuthority
         && Runner.GameMode == GameMode.Host && Phase == MatchPhase.Running
         && MatchTimer.RemainingTicks(Runner) > CombatShotQuery.DurationTicks(10f, Runner.TickRate);
+
+#if UNITY_EDITOR
+    private const string FinalSecondsMenu = "Tools/Sudden Force/Testing/Skip to Final 10 Seconds";
 
     [UnityEditor.MenuItem(FinalSecondsMenu, true)]
     private static bool ValidateFinalSecondsMenu() =>
@@ -88,6 +94,14 @@ public sealed class NetworkMatchState : NetworkBehaviour
     {
         if (ValidateFinalSecondsMenu()) Instance._skipToFinalSeconds = true;
     }
+#else
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F10) && CanSkipToFinalSeconds
+            && Application.identifier == "com.AeDeong.SuddenForceFPS.sessioncheck")
+            _skipToFinalSeconds = true;
+    }
+#endif
 #endif
 
     private void OnApplicationPause(bool paused)
@@ -106,12 +120,17 @@ public sealed class NetworkMatchState : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         if (!IsCurrent || !Object.HasStateAuthority || Phase == MatchPhase.Finished) return;
-#if UNITY_EDITOR
+#if SFF_MATCH_TEST_CLOCK
         if (_skipToFinalSeconds)
         {
             _skipToFinalSeconds = false;
             if (CanSkipToFinalSeconds)
+            {
                 MatchTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(10f, Runner.TickRate));
+#if UNITY_ANDROID && !UNITY_EDITOR
+                Debug.Log("Playtest host skipped to the final 10 seconds.", this);
+#endif
+            }
         }
 #endif
         EvaluateBoundary();
@@ -269,7 +288,7 @@ public sealed class NetworkMatchState : NetworkBehaviour
     public void DetachFromSession() => Release();
     private void Release()
     {
-#if UNITY_EDITOR
+#if SFF_MATCH_TEST_CLOCK
         _skipToFinalSeconds = false;
 #endif
         _spawned = false;
