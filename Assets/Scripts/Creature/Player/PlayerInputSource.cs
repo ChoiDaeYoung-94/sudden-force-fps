@@ -183,7 +183,9 @@ public sealed class PlayerInputSource : MonoBehaviour
         data.Buttons.Set(PlayerInputButton.Fire, fire);
         data.Buttons.Set(PlayerInputButton.Reload, _reloadRequested);
         data.Fire = fire;
-        if (_reloadRequested) _reloadSubmittedFrame = Time.frameCount;
+        // Fusion can poll before Update on consecutive frames. Keep the first
+        // submission so Update can release the button before the next press.
+        if (_reloadRequested && _reloadSubmittedFrame < 0) _reloadSubmittedFrame = Time.frameCount;
         return data;
     }
 
