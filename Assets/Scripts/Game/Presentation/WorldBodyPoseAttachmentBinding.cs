@@ -43,6 +43,7 @@ internal sealed class WorldBodyPoseAttachmentBinding : IDisposable
 
     internal readonly Transform RifleFrame;
     internal readonly WorldRifleFingerPose LeftFingers;
+    internal readonly WorldRifleStockPose Stock;
     internal readonly Transform LeftUpperArm, LeftLowerArm, LeftHand;
     internal readonly Transform RightUpperArm, RightLowerArm, RightHand;
     internal int HitboxCount => _attachments.Length;
@@ -84,6 +85,7 @@ internal sealed class WorldBodyPoseAttachmentBinding : IDisposable
         _muzzlePosition = _muzzle.localPosition; _muzzleRotation = _muzzle.localRotation;
         _muzzleScale = _muzzle.localScale;
         ValidateRenderers(originalBodyRendererCache, map);
+        Stock = WorldRifleStockPose.TryBind(RifleFrame);
 
         var metadata = owner.GetComponentsInChildren<CombatHitbox>(true);
         if (metadata.Length != 12 || owner.GetComponentsInChildren<Hitbox>(true).Length != 12)
@@ -229,6 +231,7 @@ internal sealed class WorldBodyPoseAttachmentBinding : IDisposable
             catch (Exception error) { if (first == null) first = error; }
         try
         {
+            Stock?.Apply(0f);
             if (RifleFrame != null)
             {
                 if (RifleFrame.parent != _rifleParent) throw new InvalidOperationException("BODY_POSE_RESTORE_RIFLE_PARENT_CHANGED");

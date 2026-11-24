@@ -41,6 +41,44 @@ internal static class WorldRifleGripCalibration
     internal static readonly Quaternion LeftRenderRotation = Quaternion.Euler(24f, -11f, 12f);
 }
 
+// Cosmetic fit for the separate rear mesh on the authored third-person rifle.
+internal sealed class WorldRifleStockPose
+{
+    private const float Travel = .11f;
+    private readonly Transform _frame, _parent, _part;
+    private readonly Vector3 _position, _scale, _compressedScale, _frontOffset;
+    internal bool Available => _part != null && _parent != null && _parent.parent == _frame && _part.parent == _parent;
+
+    private WorldRifleStockPose(Transform frame, Transform part, Bounds bounds)
+    {
+        _frame = frame; _part = part; _parent = part.parent;
+        _position = part.localPosition; _scale = part.localScale;
+        // The model X axis points back along the rifle. Keep the front edge
+        // fixed as the rear section shortens, including its original rotation.
+        float ratio = 1f - Travel / (bounds.size.x * part.lossyScale.x);
+        _compressedScale = new Vector3(_scale.x * ratio, _scale.y, _scale.z);
+        _frontOffset = part.localRotation * Vector3.right * (bounds.min.x * (_scale.x - _compressedScale.x));
+    }
+
+    internal static WorldRifleStockPose TryBind(Transform frame)
+    {
+        var part = frame.Find("Model/Weapon_02_7");
+        if (part == null || !part.TryGetComponent<MeshFilter>(out var filter) || filter.sharedMesh == null
+            || Vector3.Dot(part.right, -frame.forward) < .999f) return null;
+        var bounds = filter.sharedMesh.bounds;
+        if (!BodyPoseMath.Finite(bounds.min) || !BodyPoseMath.Finite(bounds.size)
+            || bounds.size.x * part.lossyScale.x <= Travel) return null;
+        return new WorldRifleStockPose(frame, part, bounds);
+    }
+
+    internal void Apply(float weight)
+    {
+        if (!Available) return;
+        _part.localPosition = _position + _frontOffset * weight;
+        _part.localScale = Vector3.Lerp(_scale, _compressedScale, weight);
+    }
+}
+
 internal sealed class WorldRifleFingerPose
 {
     // Group by joint depth so each parent is posed before its children.

@@ -179,9 +179,13 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
                 - transform.right * _settings.Inward;
             Quaternion desiredRotation = transform.rotation * Quaternion.Euler(context.AimPitch, 0f, 0f)
                 * Quaternion.Euler(_settings.RifleEuler);
+            float stockWeight = 0f;
+            if (pass != WorldBodyPosePass.HitboxCapture && _attachments.Stock?.Available == true)
+                stockWeight = FitRenderedShoulder(ref desiredPosition, desiredRotation, context.AimPitch);
             ApplyRifleArms(desiredPosition, desiredRotation, pass);
             VerifySourceBonesUnchanged();
             _attachments.Commit(desiredPosition, desiredRotation);
+            if (stockWeight > 0f) _attachments.Stock.Apply(stockWeight);
             LastStatus = "rifle-and-12-hitboxes-committed";
             return true;
         }
@@ -218,6 +222,60 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
                 || !source.localScale.Equals(_sourceScales[i]))
                 throw new InvalidOperationException("BODY_POSE_LAYER_WROTE_SOURCE_BONE:" + i);
         }
+    }
+
+    private float FitRenderedShoulder(ref Vector3 position, Quaternion rotation, float pitch)
+    {
+        // The measured shoulder fit applies around level aim. Blend continuously
+        // back to the authored high/low poses before either arm reaches its limit.
+        float weight = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(12f, 45f, Mathf.Abs(pitch)));
+        if (weight <= 0f) return 0f;
+        var level = transform.rotation * Quaternion.Euler(_settings.RifleEuler);
+        var rear = new Vector3(0f, .03f, -.212f);
+        var offset = transform.rotation * new Vector3(-.065f, .085f, .045f)
+            + (level * rear - rotation * rear) * .75f;
+        var candidate = position + offset * weight;
+        var right = candidate + rotation * (WorldRifleGripCalibration.RightPosition + _settings.RightGripOffset);
+        var leftGrip = WorldRifleGripCalibration.LeftPosition + _settings.LeftGripOffset;
+        var left = candidate + rotation * leftGrip;
+        var fittedLeft = left + rotation * WorldRifleGripCalibration.LeftRenderOffset;
+        float rightRoom = ArmReachRoom(_attachments.RightUpperArm, _attachments.RightLowerArm, _attachments.RightHand, right);
+        float leftRoom = ArmReachRoom(_attachments.LeftUpperArm, _attachments.LeftLowerArm, _attachments.LeftHand, left);
+        if (_attachments.LeftFingers != null)
+            leftRoom = Mathf.Min(leftRoom, ArmReachRoom(_attachments.LeftUpperArm, _attachments.LeftLowerArm, _attachments.LeftHand, fittedLeft));
+        weight *= Mathf.Clamp01(Mathf.Min(rightRoom, leftRoom) / .006f);
+        if (weight <= 0f) return 0f;
+        var adjusted = position + offset * weight;
+        var finalRight = adjusted + rotation * (WorldRifleGripCalibration.RightPosition + _settings.RightGripOffset);
+        var finalLeft = adjusted + rotation * leftGrip;
+        if (!ArmTargetSolvable(_attachments.RightUpperArm, _attachments.RightLowerArm, _attachments.RightHand, finalRight, transform.right)
+            || !ArmTargetSolvable(_attachments.LeftUpperArm, _attachments.LeftLowerArm, _attachments.LeftHand, finalLeft, -transform.right)
+            || (_attachments.LeftFingers != null && !ArmTargetSolvable(_attachments.LeftUpperArm, _attachments.LeftLowerArm,
+                _attachments.LeftHand, finalLeft + rotation * WorldRifleGripCalibration.LeftRenderOffset, -transform.right)))
+            return 0f;
+        position = adjusted;
+        return weight;
+    }
+
+    private bool ArmTargetSolvable(Transform upper, Transform lower, Transform hand, Vector3 target, Vector3 outward)
+    {
+        var delta = target - upper.position;
+        return WithinArmReach(Vector3.Distance(upper.position, lower.position), Vector3.Distance(lower.position, hand.position),
+            delta.magnitude) && ElbowPole(delta.normalized, outward).sqrMagnitude > .000001f;
+    }
+
+    private Vector3 ElbowPole(Vector3 axis, Vector3 outward)
+    {
+        var hint = outward * .9f - transform.up * .85f - transform.forward * .15f;
+        return hint - axis * Vector3.Dot(hint, axis);
+    }
+
+    private static float ArmReachRoom(Transform upper, Transform lower, Transform hand, Vector3 target)
+    {
+        float a = Vector3.Distance(upper.position, lower.position);
+        float b = Vector3.Distance(lower.position, hand.position);
+        float distance = Vector3.Distance(upper.position, target);
+        return Mathf.Min((a + b) * .95f - distance, distance - Mathf.Abs(a - b) - .0001f);
     }
 
     private void ApplyRifleArms(Vector3 position, Quaternion rotation, WorldBodyPosePass pass)
@@ -271,8 +329,7 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
             throw new InvalidOperationException("RIFLE_ARM_UNREACHABLE_NO_STRETCH");
         reachRatio = distance / (a + b);
         Vector3 axis = delta / distance;
-        Vector3 rawPole = outward * .9f - transform.up * .85f - transform.forward * .15f;
-        Vector3 pole = rawPole - axis * Vector3.Dot(rawPole, axis);
+        Vector3 pole = ElbowPole(axis, outward);
         if (!BodyPoseMath.Finite(pole) || pole.sqrMagnitude <= .000001f)
             throw new InvalidOperationException("RIFLE_ARM_POLE_DEGENERATE");
         pole.Normalize();
