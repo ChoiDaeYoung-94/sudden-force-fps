@@ -7,6 +7,8 @@ using UnityEngine.Video;
 [DisallowMultipleComponent]
 public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
 {
+    [SerializeField] private Texture2D preparationPoster;
+    private double showPosterAt;
     private QuadDIntro intro;
     private VideoPlayer video;
     private GameObject ownedCanvas;
@@ -23,6 +25,7 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
     {
         if (!isActiveAndEnabled || !Application.isPlaying || gameObject.scene.path != "Assets/Scenes/Intro.unity") return;
         completed = false;
+        showPosterAt = Time.realtimeSinceStartupAsDouble + 2d;
         HasBoundTexture = false;
         CleanupFailed = false;
         intro = GetComponent<QuadDIntro>();
@@ -52,7 +55,7 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
             image = picture.GetComponent<UnityEngine.UI.RawImage>();
             image.raycastTarget = false;
             image.color = Color.white;
-            image.enabled = false; // 첫 decoded texture 전에는 검정 배경만 표시합니다.
+            image.enabled = false;
             aspect = picture.GetComponent<UnityEngine.UI.AspectRatioFitter>();
             aspect.aspectMode = UnityEngine.UI.AspectRatioFitter.AspectMode.FitInParent;
             aspect.aspectRatio = 16f / 9f;
@@ -69,13 +72,15 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
         var texture = video.texture; // VideoPlayer 소유 texture: 해제/파괴하지 않습니다.
         if (video.frame < 0 || texture == null || texture.width <= 0 || texture.height <= 0)
         {
-            image.enabled = false;
-            return;
+            // Slow decoders can reach the package timeout without ever producing a frame.
+            texture = !HasBoundTexture && Time.realtimeSinceStartupAsDouble >= showPosterAt ? preparationPoster : null;
         }
+        else HasBoundTexture = true;
+
+        image.enabled = texture != null;
+        if (texture == null) return;
         image.texture = texture;
         aspect.aspectRatio = (float)texture.width / texture.height;
-        image.enabled = true;
-        HasBoundTexture = true; // 실제 픽셀 표시/영상 내용 검증은 아닙니다.
     }
 
     private static void Stretch(RectTransform rect)
