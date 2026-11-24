@@ -23,7 +23,7 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
 
     private void Awake()
     {
-        if (!isActiveAndEnabled || !Application.isPlaying || gameObject.scene.path != "Assets/Scenes/Intro.unity") return;
+        if (!enabled || !Application.isPlaying || gameObject.scene.path != "Assets/Scenes/Intro.unity") return;
         completed = false;
         showPosterAt = Time.realtimeSinceStartupAsDouble + 2d;
         HasBoundTexture = false;
@@ -36,7 +36,7 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
         try
         {
             ownedCanvas = new GameObject("Sudden Force Intro Output", typeof(RectTransform), typeof(Canvas));
-            ownedCanvas.transform.SetParent(transform, false);
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(ownedCanvas, gameObject.scene);
             output = ownedCanvas.GetComponent<Canvas>();
             output.renderMode = RenderMode.ScreenSpaceOverlay;
             output.sortingOrder = 32760;
@@ -68,9 +68,9 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
     {
         if (completed || output == null || video == null) return;
         // 패키지 Start가 CameraNearPlane을 설정하므로 그 뒤 표시 경로만 바꿉니다.
-        video.renderMode = VideoRenderMode.APIOnly;
-        var texture = video.texture; // VideoPlayer 소유 texture: 해제/파괴하지 않습니다.
-        if (video.frame < 0 || texture == null || texture.width <= 0 || texture.height <= 0)
+        if (video.renderMode != VideoRenderMode.APIOnly) video.renderMode = VideoRenderMode.APIOnly;
+        var texture = video.isPrepared && video.isPlaying && video.frame >= 0 ? video.texture : null;
+        if (texture == null || texture.width <= 0 || texture.height <= 0)
         {
             // Slow decoders can reach the package timeout without ever producing a frame.
             texture = !HasBoundTexture && Time.realtimeSinceStartupAsDouble >= showPosterAt ? preparationPoster : null;
@@ -79,6 +79,8 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
 
         image.enabled = texture != null;
         if (texture == null) return;
+        if (texture == preparationPoster && image.texture != texture)
+            Debug.Log("Quad D intro is showing the preparation poster.", this);
         image.texture = texture;
         aspect.aspectRatio = (float)texture.width / texture.height;
     }
