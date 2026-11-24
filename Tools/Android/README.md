@@ -47,6 +47,53 @@ python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' 
 
 **APK ZIP alignment·BundleConfig·서명·기기 실행은 검사하지 않습니다.** ELF 정렬 통과만으로 전체16KB 호환을 확정하지 않습니다. [Android 공식 LOAD·RELRO 조건](https://developer.android.com/guide/practices/page-sizes#relro)과 실제16KB 환경 검증을 함께 적용합니다.
 
+### 16KB Android 에뮬레이터에서 AAB 분할 설치
+
+전용 AVD에 실제 AAB에서 생성한 APK 세트를 설치해 패키지 선택과 실행을 확인합니다. Windows x64에서는 Android 16의 `system-images;android-36;google_apis_ps16k;x86_64` 이미지를 사용할 수 있습니다. Device Manager에서 전용 AVD를 만들고, SDK의 emulator로 설정한 이름을 지정해 스냅샷을 사용하지 않고 실행합니다(예: `emulator -avd Sff16k -no-snapshot`). PowerShell에서 Unity가 사용하는 SDK의 `platform-tools/adb.exe`, OpenJDK의 `bin/java.exe`, bundletool의 실행용 JAR 경로를 지정합니다. 연결 목록에서 전용 AVD의 시리얼을 골라 모든 기기 작업에 사용합니다.
+
+```powershell
+$adb = (Get-Item -LiteralPath (Read-Host 'adb.exe 경로')).FullName
+$java = (Get-Item -LiteralPath (Read-Host 'java.exe 경로')).FullName
+$bundletool = (Get-Item -LiteralPath (Read-Host 'bundletool-all JAR 경로')).FullName
+& $adb devices -l
+$serial = Read-Host '전용 AVD 시리얼'
+& $adb -s $serial emu avd name
+& $adb -s $serial shell getconf PAGE_SIZE
+& $adb -s $serial shell getprop ro.product.cpu.abilist
+& $adb -s $serial shell getprop ro.dalvik.vm.native.bridge
+```
+
+본인이 띄운 전용 AVD 이름과 페이지 크기 `16384`를 확인합니다. ARM64 전용 게임을 x86_64 이미지에서 실행하려면 ABI 목록에 `arm64-v8a`가 있고 ARM 변환기가 제공되어야 합니다. 호환 모드에 의한 통과를 구별하려면 이 AVD의 현재 설정을 기록하고, 아래 두 값을 적용한 뒤 각각 `false`, `true`로 읽히는지 확인합니다. 이 속성은 해당 Android 환경의 다른 앱에도 적용됩니다. 시험이 끝나면 전용 AVD를 스냅샷 저장 없이 종료하고 다음 사용 시 콜드 부팅합니다.
+
+```powershell
+& $adb -s $serial shell getprop bionic.linker.16kb.app_compat.enabled
+& $adb -s $serial shell getprop pm.16kb.app_compat.disabled
+& $adb -s $serial shell setprop bionic.linker.16kb.app_compat.enabled false
+& $adb -s $serial shell setprop pm.16kb.app_compat.disabled true
+& $adb -s $serial shell getprop bionic.linker.16kb.app_compat.enabled
+& $adb -s $serial shell getprop pm.16kb.app_compat.disabled
+```
+
+검증 대상 AAB에서 `bundletool build-apks`의 기본 모드로 만든 서명된 `game.apks`를 준비합니다. 로컬 설치에는 로컬 QA 서명을 사용할 수 있습니다. 새 검증 디렉터리에서 다음 명령을 실행합니다. 서명이 달라 기존 앱을 업데이트할 수 없으면 기존 데이터를 보존하고 새 전용 AVD를 사용합니다.
+
+```powershell
+& $java -jar $bundletool get-device-spec "--adb=$adb" "--device-id=$serial" --output=target.json
+if ($LASTEXITCODE) { throw '기기 사양 수집 실패' }
+& $java -jar $bundletool extract-apks --apks=game.apks --device-spec=target.json --output-dir=parts
+if ($LASTEXITCODE) { throw '기기용 분할 APK 추출 실패' }
+$parts = @(Get-ChildItem -LiteralPath parts -Recurse -Filter '*.apk' -File)
+if ($parts.Count -lt 2) { throw '기본 APK와 기기용 분할 APK를 확인하세요.' }
+$paths = @($parts.FullName)
+& $adb -s $serial install-multiple -r @paths
+if ($LASTEXITCODE) { throw '분할 APK 설치 실패' }
+$package = 'com.AeDeong.SuddenForceFPS'
+& $adb -s $serial shell pm path $package
+& $adb -s $serial shell dumpsys package $package | Select-String 'versionCode=|primaryCpuAbi='
+& $adb -s $serial shell am start -W -n "$package/com.unity3d.player.UnityPlayerActivity"
+```
+
+설치된 버전과 ABI를 확인하고, `pm path`에 나오는 각 APK를 `& $adb -s $serial pull`로 별도 폴더에 복사합니다. 설치본과 추출본의 파일명은 달라질 수 있으므로 양쪽 SHA-256 목록을 정렬해 개수와 값이 일치하는지 비교합니다. 앱이 실제로 인트로를 지나 로그인 화면에 도달하는지 확인하고, 서명·계정 조건에 따라 재시도 안내 또는 로그인 성공을 기록합니다. x86_64 AVD와 ARM64 변환기를 썼다면 결과에 함께 적습니다. 실제 ARM64 16KB 기기와 Play 설치 결과는 각각 따로 기록합니다. [Android 16KB 테스트](https://developer.android.com/guide/practices/page-sizes#test) · [bundletool 기기별 APK 추출](https://developer.android.com/tools/bundletool#extract-device-specific)
+
 ### 독립 LOAD 예외 누락 정정 (2026-10-21, #142)
 
 보고서 schemaVersion2는 각 LOAD의 VA/메모리 크기/flags와 RELRO의 alignmentBasis·ownLoadIndex·overlappingWritableLoadIndices를 기록합니다. 기존 schemaVersion1은 끝 주소의 나머지만 검사해 [공식 문서의 독립 LOAD 예외](https://developer.android.com/guide/practices/page-sizes#relro)를 누락했습니다. 부분 RELRO나 다른 writable LOAD가 같은 보호 페이지를 사용하는 경우에는 이 예외를 허용하지 않습니다. 예외 통과가 LOAD 정렬 실패를 무시하지도 않습니다.
@@ -137,3 +184,13 @@ GUI의 기존 loaded13/previous12·clean 관측을 SaveAssetIfDirty 성공으로
 제품 커밋538b245의 별도 Android 검증 공간을 새 Editor 프로세스로 재시작해13/13·clean/compilationFailed=false·DOTNET1/BEE1·Graphics Null을 확인했습니다. 정상 native handle ExitCode0 뒤에도 대상 파일4730B/SHA8BC37FA549ADD38C68DD189885F301A0A258B3674972668DB4C412627AB80B9F는 raw exact였습니다. GUI의4587B/LF와 체크아웃4730B/CRLF는 LF 정규화 본문이 같습니다. 다른 종료 변화는 DOTweenSettings의 줄바꿈1건뿐이었고 전후 보존 후 닫힌 상태에서 자기 변화만 복원해 fresh 공개3947개 일치를 확인했습니다.
 
 이는 해당 legacy 변환의 반복 제거 표본입니다. 새 Library/clean checkout 전체, 모든 Editor 종료 무변경, 현재 기본 렌더의 시각/성능이나 새 AAB·서명·기기 검증으로 확대하지 않습니다. 근거는 외부 `20261025-work/urp234-*`와 `unity6-serialization-adoption01/`에 보존합니다.
+
+### Android 방장 경기에서 마지막 10초로 이동
+
+별도 수동 플레이 APK를 만들 때 `BuildPlayerOptions.extraScriptingDefines`에 `SFF_LOCAL_PLAYTEST`를 추가합니다. 방장의 `com.AeDeong.SuddenForceFPS.sessioncheck` 앱에서 경기를 시작한 뒤 아래 명령으로 F10을 보냅니다. `DEVICE_SERIAL`은 방장 기기의 ADB 식별자로 바꿉니다.
+
+```powershell
+adb -s DEVICE_SERIAL shell input keyevent KEYCODE_F10
+```
+
+남은 시간이 10초보다 많으면 다음 방장 시뮬레이션 틱에서 10초로 바뀝니다. 참가자 화면에도 같은 타이머가 표시되며 기존 시간 만료 로직이 승패를 결정합니다. Unity Editor 방장은 기존 **Tools → Sudden Force → Testing → Skip to Final 10 Seconds** 메뉴를 사용합니다. 일반 APK·AAB 빌드는 기본 컴파일 심볼을 유지합니다.
