@@ -25,6 +25,9 @@ public sealed class NetworkMatchState : NetworkBehaviour
     private bool _spawned;
     private double? _lastPausedHostTick;
     private bool _hostSimulationInterrupted;
+    private NetworkReachability? _hostNetwork;
+    private int _networkChangeTick;
+    private readonly HashSet<PlayerRef> _peersAwaitingContact = new HashSet<PlayerRef>();
     private bool HostPauseTimedOut => _lastPausedHostTick.HasValue
         && Time.realtimeSinceStartupAsDouble - _lastPausedHostTick.Value >= Runner.Config.Network.ConnectionTimeout;
     public bool IsCurrent => _spawned && Object != null && Object.IsValid && Runner != null && Runner.IsRunning
@@ -114,6 +117,11 @@ public sealed class NetworkMatchState : NetworkBehaviour
         EvaluateBoundary();
         // Android can continue simulating while partially visible. Only count time without a host tick.
         if (_lastPausedHostTick.HasValue) _lastPausedHostTick = Time.realtimeSinceStartupAsDouble;
+        if (Phase == MatchPhase.Running)
+        {
+            ObserveHostNetwork();
+            ConfirmPeerContact();
+        }
         if (Phase != MatchPhase.Waiting) return;
         int red = 0, blue = 0;
         bool allSpawned = true;
@@ -129,6 +137,38 @@ public sealed class NetworkMatchState : NetworkBehaviour
         {
             MatchTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(DurationSeconds, Runner.TickRate));
             Phase = MatchPhase.Running; _game.RespawnsEnabled = true;
+            ObserveHostNetwork();
+        }
+    }
+
+    private void ObserveHostNetwork()
+    {
+        if (Application.platform != RuntimePlatform.Android || Runner.GameMode != GameMode.Host) return;
+        var current = Application.internetReachability;
+        if (_hostNetwork.HasValue && _hostNetwork.Value != current)
+        {
+            _networkChangeTick = Runner.Tick.Raw;
+            _peersAwaitingContact.Clear();
+            for (int i = 0; i < RosterCount; i++)
+            {
+                var entry = Roster[i];
+                if (entry.Connected && entry.Player != Runner.LocalPlayer)
+                    _peersAwaitingContact.Add(entry.Player);
+            }
+        }
+        _hostNetwork = current;
+    }
+
+    private void ConfirmPeerContact()
+    {
+        if (_peersAwaitingContact.Count == 0 || Runner.LagCompensation == null) return;
+        foreach (var peer in Runner.ActivePlayers)
+        {
+            if (!_peersAwaitingContact.Contains(peer)) continue;
+            // A buffered command may target a future tick. Its interpolation snapshot was received from the host.
+            Runner.LagCompensation.GetPlayerTickAndAlpha(peer, out _, out int? snapshotTick, out _);
+            if (snapshotTick.HasValue && snapshotTick.Value > _networkChangeTick)
+                _peersAwaitingContact.Remove(peer);
         }
     }
 
@@ -160,6 +200,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
         EvaluateBoundary();
         if (Phase == MatchPhase.Finished) return;
         int index = Find(player); if (index < 0) return;
+        if (Phase == MatchPhase.Running) ObserveHostNetwork();
+        bool lostDuringNetworkChange = _peersAwaitingContact.Remove(player);
         CopyStats(index);
         var departed = Roster[index]; departed.Connected = false; Roster.Set(index, departed); RosterVersion++;
         int red = 0, blue = 0;
@@ -169,6 +211,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
         if (Phase == MatchPhase.Waiting) Finish(MatchResult.Cancelled, MatchEndReason.MissingTeam);
         else if (Runner.GameMode == GameMode.Host && Application.internetReachability == NetworkReachability.NotReachable)
             Finish(MatchResult.Cancelled, MatchEndReason.HostConnectionLost);
+        else if (lostDuringNetworkChange)
+            Finish(MatchResult.Cancelled, MatchEndReason.HostNetworkChanged);
         else Finish(red == 0 ? MatchResult.BlueWin : MatchResult.RedWin, MatchEndReason.OpponentLeft);
     }
 
@@ -231,6 +275,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
         _spawned = false;
         _lastPausedHostTick = null;
         _hostSimulationInterrupted = false;
+        _hostNetwork = null;
+        _peersAwaitingContact.Clear();
         if (_game != null) { _game.KillConfirmed -= OnKillConfirmed; _game.UnbindMatch(this); }
         if (_presentation != null) _presentation.Unbind();
         if (Instance == this) Instance = null;
