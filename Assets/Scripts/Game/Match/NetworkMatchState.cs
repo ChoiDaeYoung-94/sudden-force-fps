@@ -117,6 +117,19 @@ public sealed class NetworkMatchState : NetworkBehaviour
         }
     }
 
+    private void OnApplicationPause(bool paused)
+    {
+        if (Application.platform != RuntimePlatform.Android || !IsCurrent || !Object.HasStateAuthority
+            || Runner.GameMode != GameMode.Host || Phase != MatchPhase.Running) return;
+        if (paused)
+            _lastPausedHostTick ??= Time.realtimeSinceStartupAsDouble;
+        else
+        {
+            _hostSimulationInterrupted |= HostPauseTimedOut;
+            _lastPausedHostTick = null;
+        }
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (!IsCurrent || !Object.HasStateAuthority || Phase == MatchPhase.Finished) return;
