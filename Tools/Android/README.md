@@ -137,3 +137,13 @@ GUI의 기존 loaded13/previous12·clean 관측을 SaveAssetIfDirty 성공으로
 제품 커밋538b245의 별도 Android 검증 공간을 새 Editor 프로세스로 재시작해13/13·clean/compilationFailed=false·DOTNET1/BEE1·Graphics Null을 확인했습니다. 정상 native handle ExitCode0 뒤에도 대상 파일4730B/SHA8BC37FA549ADD38C68DD189885F301A0A258B3674972668DB4C412627AB80B9F는 raw exact였습니다. GUI의4587B/LF와 체크아웃4730B/CRLF는 LF 정규화 본문이 같습니다. 다른 종료 변화는 DOTweenSettings의 줄바꿈1건뿐이었고 전후 보존 후 닫힌 상태에서 자기 변화만 복원해 fresh 공개3947개 일치를 확인했습니다.
 
 이는 해당 legacy 변환의 반복 제거 표본입니다. 새 Library/clean checkout 전체, 모든 Editor 종료 무변경, 현재 기본 렌더의 시각/성능이나 새 AAB·서명·기기 검증으로 확대하지 않습니다. 근거는 외부 `20261025-work/urp234-*`와 `unity6-serialization-adoption01/`에 보존합니다.
+
+### Android 방장 경기에서 마지막 10초로 이동
+
+별도 수동 플레이 APK를 만들 때 `BuildPlayerOptions.extraScriptingDefines`에 `SFF_LOCAL_PLAYTEST`를 추가합니다. 방장의 `com.AeDeong.SuddenForceFPS.sessioncheck` 앱에서 경기를 시작한 뒤 아래 명령으로 F10을 보냅니다. `DEVICE_SERIAL`은 방장 기기의 ADB 식별자로 바꿉니다.
+
+```powershell
+adb -s DEVICE_SERIAL shell input keyevent KEYCODE_F10
+```
+
+남은 시간이 10초보다 많으면 다음 방장 시뮬레이션 틱에서 10초로 바뀝니다. 참가자 화면에도 같은 타이머가 표시되며 기존 시간 만료 로직이 승패를 결정합니다. Unity Editor 방장은 기존 **Tools → Sudden Force → Testing → Skip to Final 10 Seconds** 메뉴를 사용합니다. 일반 APK·AAB 빌드는 기본 컴파일 심볼을 유지합니다.
