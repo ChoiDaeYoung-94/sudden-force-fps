@@ -49,46 +49,50 @@ python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' 
 
 ### 16KB Android 에뮬레이터에서 AAB 분할 설치
 
-전용 AVD에 실제 AAB에서 생성한 APK 세트를 설치해 패키지 선택과 실행을 확인합니다. Windows x64에서는 Android 16의 `system-images;android-36;google_apis_ps16k;x86_64` 이미지를 사용할 수 있습니다. Device Manager에서 전용 AVD를 만들고, SDK의 emulator로 설정한 이름을 지정해 스냅샷을 사용하지 않고 실행합니다(예: `emulator -avd Sff16k -no-snapshot`). 아래 명령은 PowerShell에서 실행합니다. `adb devices -l`로 시리얼을 확인하고 다른 기기가 함께 연결돼 있어도 모든 명령에 같은 시리얼을 지정합니다.
+전용 AVD에 실제 AAB에서 생성한 APK 세트를 설치해 패키지 선택과 실행을 확인합니다. Windows x64에서는 Android 16의 `system-images;android-36;google_apis_ps16k;x86_64` 이미지를 사용할 수 있습니다. Device Manager에서 전용 AVD를 만들고, SDK의 emulator로 설정한 이름을 지정해 스냅샷을 사용하지 않고 실행합니다(예: `emulator -avd Sff16k -no-snapshot`). PowerShell에서 Unity가 사용하는 SDK의 `platform-tools/adb.exe`, OpenJDK의 `bin/java.exe`, bundletool의 실행용 JAR 경로를 지정합니다. 연결 목록에서 전용 AVD의 시리얼을 골라 모든 기기 작업에 사용합니다.
 
 ```powershell
+$adb = (Get-Item -LiteralPath (Read-Host 'adb.exe 경로')).FullName
+$java = (Get-Item -LiteralPath (Read-Host 'java.exe 경로')).FullName
+$bundletool = (Get-Item -LiteralPath (Read-Host 'bundletool-all JAR 경로')).FullName
+& $adb devices -l
 $serial = Read-Host '전용 AVD 시리얼'
-adb -s $serial emu avd name
-adb -s $serial shell getconf PAGE_SIZE
-adb -s $serial shell getprop ro.product.cpu.abilist
-adb -s $serial shell getprop ro.dalvik.vm.native.bridge
+& $adb -s $serial emu avd name
+& $adb -s $serial shell getconf PAGE_SIZE
+& $adb -s $serial shell getprop ro.product.cpu.abilist
+& $adb -s $serial shell getprop ro.dalvik.vm.native.bridge
 ```
 
 본인이 띄운 전용 AVD 이름과 페이지 크기 `16384`를 확인합니다. ARM64 전용 게임을 x86_64 이미지에서 실행하려면 ABI 목록에 `arm64-v8a`가 있고 ARM 변환기가 제공되어야 합니다. 호환 모드에 의한 통과를 구별하려면 이 AVD의 현재 설정을 기록하고, 아래 두 값을 적용한 뒤 각각 `false`, `true`로 읽히는지 확인합니다. 이 속성은 해당 Android 환경의 다른 앱에도 적용됩니다. 시험이 끝나면 전용 AVD를 스냅샷 저장 없이 종료하고 다음 사용 시 콜드 부팅합니다.
 
 ```powershell
-adb -s $serial shell getprop bionic.linker.16kb.app_compat.enabled
-adb -s $serial shell getprop pm.16kb.app_compat.disabled
-adb -s $serial shell setprop bionic.linker.16kb.app_compat.enabled false
-adb -s $serial shell setprop pm.16kb.app_compat.disabled true
-adb -s $serial shell getprop bionic.linker.16kb.app_compat.enabled
-adb -s $serial shell getprop pm.16kb.app_compat.disabled
+& $adb -s $serial shell getprop bionic.linker.16kb.app_compat.enabled
+& $adb -s $serial shell getprop pm.16kb.app_compat.disabled
+& $adb -s $serial shell setprop bionic.linker.16kb.app_compat.enabled false
+& $adb -s $serial shell setprop pm.16kb.app_compat.disabled true
+& $adb -s $serial shell getprop bionic.linker.16kb.app_compat.enabled
+& $adb -s $serial shell getprop pm.16kb.app_compat.disabled
 ```
 
 검증 대상 AAB에서 `bundletool build-apks`의 기본 모드로 만든 서명된 `game.apks`를 준비합니다. 로컬 설치에는 로컬 QA 서명을 사용할 수 있습니다. 새 검증 디렉터리에서 다음 명령을 실행합니다. 서명이 달라 기존 앱을 업데이트할 수 없으면 기존 데이터를 보존하고 새 전용 AVD를 사용합니다.
 
 ```powershell
-bundletool get-device-spec --device-id=$serial --output=target.json
+& $java -jar $bundletool get-device-spec "--adb=$adb" "--device-id=$serial" --output=target.json
 if ($LASTEXITCODE) { throw '기기 사양 수집 실패' }
-bundletool extract-apks --apks=game.apks --device-spec=target.json --output-dir=parts
+& $java -jar $bundletool extract-apks --apks=game.apks --device-spec=target.json --output-dir=parts
 if ($LASTEXITCODE) { throw '기기용 분할 APK 추출 실패' }
 $parts = @(Get-ChildItem -LiteralPath parts -Recurse -Filter '*.apk' -File)
 if ($parts.Count -lt 2) { throw '기본 APK와 기기용 분할 APK를 확인하세요.' }
 $paths = @($parts.FullName)
-adb -s $serial install-multiple -r @paths
+& $adb -s $serial install-multiple -r @paths
 if ($LASTEXITCODE) { throw '분할 APK 설치 실패' }
 $package = 'com.AeDeong.SuddenForceFPS'
-adb -s $serial shell pm path $package
-adb -s $serial shell dumpsys package $package | Select-String 'versionCode=|primaryCpuAbi='
-adb -s $serial shell am start -W -n "$package/com.unity3d.player.UnityPlayerActivity"
+& $adb -s $serial shell pm path $package
+& $adb -s $serial shell dumpsys package $package | Select-String 'versionCode=|primaryCpuAbi='
+& $adb -s $serial shell am start -W -n "$package/com.unity3d.player.UnityPlayerActivity"
 ```
 
-설치된 버전과 ABI를 확인하고, `pm path`에 나오는 각 APK를 `adb -s $serial pull`로 별도 폴더에 복사합니다. 설치본과 추출본의 파일명은 달라질 수 있으므로 양쪽 SHA-256 목록을 정렬해 개수와 값이 일치하는지 비교합니다. 앱이 실제로 인트로를 지나 로그인 화면에 도달하는지 확인하고, 서명·계정 조건에 따라 재시도 안내 또는 로그인 성공을 기록합니다. x86_64 AVD와 ARM64 변환기를 썼다면 결과에 함께 적습니다. 실제 ARM64 16KB 기기와 Play 설치 결과는 각각 따로 기록합니다. [Android 16KB 테스트](https://developer.android.com/guide/practices/page-sizes#test) · [bundletool 기기별 APK 추출](https://developer.android.com/tools/bundletool#extract-device-specific)
+설치된 버전과 ABI를 확인하고, `pm path`에 나오는 각 APK를 `& $adb -s $serial pull`로 별도 폴더에 복사합니다. 설치본과 추출본의 파일명은 달라질 수 있으므로 양쪽 SHA-256 목록을 정렬해 개수와 값이 일치하는지 비교합니다. 앱이 실제로 인트로를 지나 로그인 화면에 도달하는지 확인하고, 서명·계정 조건에 따라 재시도 안내 또는 로그인 성공을 기록합니다. x86_64 AVD와 ARM64 변환기를 썼다면 결과에 함께 적습니다. 실제 ARM64 16KB 기기와 Play 설치 결과는 각각 따로 기록합니다. [Android 16KB 테스트](https://developer.android.com/guide/practices/page-sizes#test) · [bundletool 기기별 APK 추출](https://developer.android.com/tools/bundletool#extract-device-specific)
 
 ### 독립 LOAD 예외 누락 정정 (2026-10-21, #142)
 
