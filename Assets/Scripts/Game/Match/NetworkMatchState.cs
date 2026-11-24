@@ -1,3 +1,7 @@
+#if UNITY_EDITOR || (UNITY_ANDROID && SFF_LOCAL_PLAYTEST)
+#define SFF_MATCH_TEST_CLOCK
+#endif
+
 using System;
 using System.Collections.Generic;
 using Fusion;
@@ -23,6 +27,13 @@ public sealed class NetworkMatchState : NetworkBehaviour
     private GameManager _game;
     private MatchPresentation _presentation;
     private bool _spawned;
+    private double? _lastPausedHostTick;
+    private bool _hostSimulationInterrupted;
+    private NetworkReachability? _hostNetwork;
+    private int _networkChangeTick;
+    private readonly HashSet<PlayerRef> _peersAwaitingContact = new HashSet<PlayerRef>();
+    private bool HostPauseTimedOut => _lastPausedHostTick.HasValue
+        && Time.realtimeSinceStartupAsDouble - _lastPausedHostTick.Value >= Runner.Config.Network.ConnectionTimeout;
     public bool IsCurrent => _spawned && Object != null && Object.IsValid && Runner != null && Runner.IsRunning
         && NetworkRunnerManager.Instance != null && !NetworkRunnerManager.Instance.IsRetired
         && NetworkRunnerManager.Instance.GetNetworkRunner() == Runner
@@ -64,13 +75,15 @@ public sealed class NetworkMatchState : NetworkBehaviour
         _presentation.Bind(this);
     }
 
-#if UNITY_EDITOR
-    private const string FinalSecondsMenu = "Tools/Sudden Force/Testing/Skip to Final 10 Seconds";
+#if SFF_MATCH_TEST_CLOCK
     private bool _skipToFinalSeconds;
 
     private bool CanSkipToFinalSeconds => IsCurrent && Object.HasStateAuthority
         && Runner.GameMode == GameMode.Host && Phase == MatchPhase.Running
         && MatchTimer.RemainingTicks(Runner) > CombatShotQuery.DurationTicks(10f, Runner.TickRate);
+
+#if UNITY_EDITOR
+    private const string FinalSecondsMenu = "Tools/Sudden Force/Testing/Skip to Final 10 Seconds";
 
     [UnityEditor.MenuItem(FinalSecondsMenu, true)]
     private static bool ValidateFinalSecondsMenu() =>
@@ -81,20 +94,53 @@ public sealed class NetworkMatchState : NetworkBehaviour
     {
         if (ValidateFinalSecondsMenu()) Instance._skipToFinalSeconds = true;
     }
+#else
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F10) && CanSkipToFinalSeconds
+            && Application.identifier == "com.AeDeong.SuddenForceFPS.sessioncheck")
+            _skipToFinalSeconds = true;
+    }
 #endif
+#endif
+
+    private void OnApplicationPause(bool paused)
+    {
+        if (Application.platform != RuntimePlatform.Android || !IsCurrent || !Object.HasStateAuthority
+            || Runner.GameMode != GameMode.Host || Phase != MatchPhase.Running) return;
+        if (paused)
+            _lastPausedHostTick ??= Time.realtimeSinceStartupAsDouble;
+        else
+        {
+            _hostSimulationInterrupted |= HostPauseTimedOut;
+            _lastPausedHostTick = null;
+        }
+    }
 
     public override void FixedUpdateNetwork()
     {
         if (!IsCurrent || !Object.HasStateAuthority || Phase == MatchPhase.Finished) return;
-#if UNITY_EDITOR
+#if SFF_MATCH_TEST_CLOCK
         if (_skipToFinalSeconds)
         {
             _skipToFinalSeconds = false;
             if (CanSkipToFinalSeconds)
+            {
                 MatchTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(10f, Runner.TickRate));
+#if UNITY_ANDROID && !UNITY_EDITOR
+                Debug.Log("Playtest host skipped to the final 10 seconds.", this);
+#endif
+            }
         }
 #endif
         EvaluateBoundary();
+        // Android can continue simulating while partially visible. Only count time without a host tick.
+        if (_lastPausedHostTick.HasValue) _lastPausedHostTick = Time.realtimeSinceStartupAsDouble;
+        if (Phase == MatchPhase.Running)
+        {
+            ObserveHostNetwork();
+            ConfirmPeerContact();
+        }
         if (Phase != MatchPhase.Waiting) return;
         int red = 0, blue = 0;
         bool allSpawned = true;
@@ -110,13 +156,48 @@ public sealed class NetworkMatchState : NetworkBehaviour
         {
             MatchTimer = TickTimer.CreateFromTicks(Runner, CombatShotQuery.DurationTicks(DurationSeconds, Runner.TickRate));
             Phase = MatchPhase.Running; _game.RespawnsEnabled = true;
+            ObserveHostNetwork();
+        }
+    }
+
+    private void ObserveHostNetwork()
+    {
+        if (Application.platform != RuntimePlatform.Android || Runner.GameMode != GameMode.Host) return;
+        var current = Application.internetReachability;
+        if (_hostNetwork.HasValue && _hostNetwork.Value != current)
+        {
+            _networkChangeTick = Runner.Tick.Raw;
+            _peersAwaitingContact.Clear();
+            for (int i = 0; i < RosterCount; i++)
+            {
+                var entry = Roster[i];
+                if (entry.Connected && entry.Player != Runner.LocalPlayer)
+                    _peersAwaitingContact.Add(entry.Player);
+            }
+        }
+        _hostNetwork = current;
+    }
+
+    private void ConfirmPeerContact()
+    {
+        if (_peersAwaitingContact.Count == 0 || Runner.LagCompensation == null) return;
+        foreach (var peer in Runner.ActivePlayers)
+        {
+            if (!_peersAwaitingContact.Contains(peer)) continue;
+            // A buffered command may target a future tick. Its interpolation snapshot was received from the host.
+            Runner.LagCompensation.GetPlayerTickAndAlpha(peer, out _, out int? snapshotTick, out _);
+            if (snapshotTick.HasValue && snapshotTick.Value > _networkChangeTick)
+                _peersAwaitingContact.Remove(peer);
         }
     }
 
     // Called from player simulation as well, so timeout cannot depend on callback order.
     public void EvaluateBoundary()
     {
-        if (IsCurrent && Object.HasStateAuthority && Phase == MatchPhase.Running && MatchTimer.Expired(Runner))
+        if (!IsCurrent || !Object.HasStateAuthority || Phase != MatchPhase.Running) return;
+        if (_hostSimulationInterrupted || HostPauseTimedOut)
+            Finish(MatchResult.Cancelled, MatchEndReason.HostInactive);
+        else if (MatchTimer.Expired(Runner))
             Finish(WinnerByScore(RedScore, BlueScore), MatchEndReason.TimeExpired);
     }
 
@@ -138,6 +219,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
         EvaluateBoundary();
         if (Phase == MatchPhase.Finished) return;
         int index = Find(player); if (index < 0) return;
+        if (Phase == MatchPhase.Running) ObserveHostNetwork();
+        bool lostDuringNetworkChange = _peersAwaitingContact.Remove(player);
         CopyStats(index);
         var departed = Roster[index]; departed.Connected = false; Roster.Set(index, departed); RosterVersion++;
         int red = 0, blue = 0;
@@ -147,6 +230,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
         if (Phase == MatchPhase.Waiting) Finish(MatchResult.Cancelled, MatchEndReason.MissingTeam);
         else if (Runner.GameMode == GameMode.Host && Application.internetReachability == NetworkReachability.NotReachable)
             Finish(MatchResult.Cancelled, MatchEndReason.HostConnectionLost);
+        else if (lostDuringNetworkChange)
+            Finish(MatchResult.Cancelled, MatchEndReason.HostNetworkChanged);
         else Finish(red == 0 ? MatchResult.BlueWin : MatchResult.RedWin, MatchEndReason.OpponentLeft);
     }
 
@@ -203,10 +288,14 @@ public sealed class NetworkMatchState : NetworkBehaviour
     public void DetachFromSession() => Release();
     private void Release()
     {
-#if UNITY_EDITOR
+#if SFF_MATCH_TEST_CLOCK
         _skipToFinalSeconds = false;
 #endif
         _spawned = false;
+        _lastPausedHostTick = null;
+        _hostSimulationInterrupted = false;
+        _hostNetwork = null;
+        _peersAwaitingContact.Clear();
         if (_game != null) { _game.KillConfirmed -= OnKillConfirmed; _game.UnbindMatch(this); }
         if (_presentation != null) _presentation.Unbind();
         if (Instance == this) Instance = null;
