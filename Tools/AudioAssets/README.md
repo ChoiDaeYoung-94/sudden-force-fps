@@ -1,5 +1,9 @@
 # 이동·씬 전환 음향 검증
 
+## 로비 버튼 효과음
+
+`python Tools/AudioAssets/generate_menu_sounds.py`로 클릭(52ms)과 확인(105ms) WAV를 재생성합니다. 외부 샘플 없이 사인파와 감쇠 곡선으로 합성한 mono 22,050Hz PCM16 음원입니다. Manager 프리팹의 SFXUIClickClip·SFXUIOkClip과 기존 SFX 믹서 그룹을 사용합니다.
+
 ## CC0 콘크리트 발소리5종 도입 (2026-10-25, #166/#42)
 
 SoldierBlue/Red의 PlayerLocomotionPresentation._stepClips만 기존 자체4종에서 Kenney 콘크리트5종으로 연결했습니다. 자체4WAV와 원meta·원script·SFX mixer/그룹·보행거리/volume/거리 감쇠는 보존합니다. 모든 바닥을 같은 콘크리트 음원으로 표현하며 지형별 소재나 차폐를 추가한 것은 아닙니다.
