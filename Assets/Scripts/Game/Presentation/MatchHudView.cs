@@ -157,6 +157,7 @@ public sealed class MatchHudView : MonoBehaviour
             case MatchEndReason.OpponentLeft: return "OPPONENT LEFT";
             case MatchEndReason.MissingTeam: return "TEAM UNAVAILABLE";
             case MatchEndReason.HostConnectionLost: return "HOST CONNECTION LOST";
+            case MatchEndReason.HostInactive: return "HOST WAS INACTIVE";
             default: return "MATCH FINISHED";
         }
     }
