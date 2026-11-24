@@ -324,7 +324,7 @@ internal sealed class WorldBodyGaitLayer : IDisposable
         _output.SetSourcePlayable(_mixer); _graph.Play();
     }
 
-    internal bool EvaluateAfterCopy(WorldBodyPoseContext context, out string status, out bool faulted)
+    internal bool EvaluateAfterCopy(WorldBodyPoseContext context, WorldBodyPosePass pass, out string status, out bool faulted)
     {
         faulted = false; status = "source-stance-gait-off";
         if (_disposed) throw new InvalidOperationException("GAIT_DISPOSED_LAYER_REUSED");
@@ -346,12 +346,13 @@ internal sealed class WorldBodyGaitLayer : IDisposable
             if (_rawOnly)
             {
                 SetWeights(_mixer, blend, run, f, b, l, r);
+                bool visualWalk = _clips.Length > GroundedWalkRightInput && pass != WorldBodyPosePass.HitboxCapture;
                 if (_clips.Length > GroundedWalkRightInput)
                 {
                     // Equal-component diagonals retain their authored blend. Fade to the
                     // baked contact pose as the rightward component becomes dominant.
                     float walk = _mixer.GetInputWeight(WalkRightInput);
-                    float grounded = walk * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.5f, 1f, r));
+                    float grounded = visualWalk ? walk * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.5f, 1f, r)) : 0f;
                     if (grounded > 0f)
                         grounded *= FlatSupportWeight();
                     _mixer.SetInputWeight(WalkRightInput, walk - grounded);
@@ -359,7 +360,7 @@ internal sealed class WorldBodyGaitLayer : IDisposable
                 }
                 for (int i = 0; i < _players.Length; i++) _players[i].SetTime(phase * _clips[i].length);
                 _graph.Evaluate(0f); VerifyLayerIsolation();
-                status = _clips.Length > GroundedWalkRightInput ? "product-right-walk-baked-before-rifle"
+                status = visualWalk ? "product-right-walk-baked-before-rifle"
                     : "product-candidate-raw9-before-rifle-contact-off";
                 return true;
             }

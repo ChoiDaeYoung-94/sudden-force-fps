@@ -170,7 +170,7 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
             if (_gait != null)
             {
                 bool gaitFault;
-                _gait.EvaluateAfterCopy(context, out var gaitStatus, out gaitFault);
+                _gait.EvaluateAfterCopy(context, pass, out var gaitStatus, out gaitFault);
                 GaitStatus = gaitStatus;
                 if (gaitFault) { GaitFaultCount++; _gait = null; }
             }
