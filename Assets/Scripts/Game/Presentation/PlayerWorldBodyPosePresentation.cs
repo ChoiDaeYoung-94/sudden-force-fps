@@ -244,8 +244,30 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
         if (_attachments.LeftFingers != null)
             leftRoom = Mathf.Min(leftRoom, ArmReachRoom(_attachments.LeftUpperArm, _attachments.LeftLowerArm, _attachments.LeftHand, fittedLeft));
         weight *= Mathf.Clamp01(Mathf.Min(rightRoom, leftRoom) / .006f);
-        position += offset * weight;
+        if (weight <= 0f) return 0f;
+        var adjusted = position + offset * weight;
+        var finalRight = adjusted + rotation * (WorldRifleGripCalibration.RightPosition + _settings.RightGripOffset);
+        var finalLeft = adjusted + rotation * leftGrip;
+        if (!ArmTargetSolvable(_attachments.RightUpperArm, _attachments.RightLowerArm, _attachments.RightHand, finalRight, transform.right)
+            || !ArmTargetSolvable(_attachments.LeftUpperArm, _attachments.LeftLowerArm, _attachments.LeftHand, finalLeft, -transform.right)
+            || (_attachments.LeftFingers != null && !ArmTargetSolvable(_attachments.LeftUpperArm, _attachments.LeftLowerArm,
+                _attachments.LeftHand, finalLeft + rotation * WorldRifleGripCalibration.LeftRenderOffset, -transform.right)))
+            return 0f;
+        position = adjusted;
         return weight;
+    }
+
+    private bool ArmTargetSolvable(Transform upper, Transform lower, Transform hand, Vector3 target, Vector3 outward)
+    {
+        var delta = target - upper.position;
+        return WithinArmReach(Vector3.Distance(upper.position, lower.position), Vector3.Distance(lower.position, hand.position),
+            delta.magnitude) && ElbowPole(delta.normalized, outward).sqrMagnitude > .000001f;
+    }
+
+    private Vector3 ElbowPole(Vector3 axis, Vector3 outward)
+    {
+        var hint = outward * .9f - transform.up * .85f - transform.forward * .15f;
+        return hint - axis * Vector3.Dot(hint, axis);
     }
 
     private static float ArmReachRoom(Transform upper, Transform lower, Transform hand, Vector3 target)
@@ -307,8 +329,7 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
             throw new InvalidOperationException("RIFLE_ARM_UNREACHABLE_NO_STRETCH");
         reachRatio = distance / (a + b);
         Vector3 axis = delta / distance;
-        Vector3 rawPole = outward * .9f - transform.up * .85f - transform.forward * .15f;
-        Vector3 pole = rawPole - axis * Vector3.Dot(rawPole, axis);
+        Vector3 pole = ElbowPole(axis, outward);
         if (!BodyPoseMath.Finite(pole) || pole.sqrMagnitude <= .000001f)
             throw new InvalidOperationException("RIFLE_ARM_POLE_DEGENERATE");
         pole.Normalize();
