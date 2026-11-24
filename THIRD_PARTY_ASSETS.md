@@ -335,7 +335,7 @@ Unity Package Manager의 **My Assets**에서 기존 취득 제품 세 개를 다
 
 2026년 11월 25일 조회한 상품 페이지 세 곳에는 표준 EULA와 라이선스 유형 `Extension Asset`이 표시됩니다. 무기와 맵 1.0의 표시 출시일은 각각 2023년 2월 3일과 7월 5일입니다. 캐릭터 1.2의 표시 출시일은 2025년 6월 5일로 취득일 이후입니다. 개별 주문 당시 상품 조건과 취득 주체는 별도 확인 대상입니다. [캐릭터](https://assetstore.unity.com/packages/3d/characters/survivalist-character-181470) · [무기](https://assetstore.unity.com/packages/3d/props/guns/low-poly-fps-weapons-lite-245929) · [맵](https://assetstore.unity.com/packages/3d/environments/low-poly-fps-map-lite-258453)
 
-캐릭터 팩의 `StarterAssets/license.txt`는 Unity Companion License를 명시합니다. 해당 하위 폴더의 파일 47개를 코드59 BuildReport의 `Assets/` 경로 중 소스와 메타가 있는 607개 파일과 비교했으며 GUID 또는 본문 SHA-256 일치는 0개였습니다. 생성 설정 JSON 경로 2개와 원본 경로 미분류 36행은 이 대조에서 제외했습니다. 이름과 GUID가 모두 바뀐 수정·파생 파일의 여부는 별도 조사 대상입니다.
+캐릭터 팩의 `StarterAssets/license.txt`는 Unity Companion License를 명시합니다. 해당 하위 폴더의 파일 47개를 코드59 BuildReport의 `Assets/` 경로 중 소스와 메타가 있는 607개 파일과 비교했으며 GUID 또는 본문 SHA-256 일치는 0개였습니다. 생성 설정 JSON 경로 2개와 원본 경로 미분류 36행은 이 대조에서 제외했습니다. GUID와 본문이 모두 달라진 파생 파일은 이름을 유지했더라도 이 대조로 식별할 수 없습니다.
 
 기준 커밋 `e39382e6`에서 세 팩과 바이트가 일치하는 FBX 19개와 PNG 72개를 실제 Git blob으로 확인했습니다. 이 중 72개는 코드59 BuildReport에도 경로가 있습니다. 완성 게임에 내장하는 조건과 별도로 FBX·PNG 원본을 소스 저장소에서 제공할 수 있는 권한을 확인해야 합니다.
 
