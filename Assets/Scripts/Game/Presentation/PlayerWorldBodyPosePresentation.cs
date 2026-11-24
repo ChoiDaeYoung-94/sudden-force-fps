@@ -179,7 +179,7 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
                 - transform.right * _settings.Inward;
             Quaternion desiredRotation = transform.rotation * Quaternion.Euler(context.AimPitch, 0f, 0f)
                 * Quaternion.Euler(_settings.RifleEuler);
-            ApplyRifleArms(desiredPosition, desiredRotation);
+            ApplyRifleArms(desiredPosition, desiredRotation, pass);
             VerifySourceBonesUnchanged();
             _attachments.Commit(desiredPosition, desiredRotation);
             LastStatus = "rifle-and-12-hitboxes-committed";
@@ -220,7 +220,7 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
         }
     }
 
-    private void ApplyRifleArms(Vector3 position, Quaternion rotation)
+    private void ApplyRifleArms(Vector3 position, Quaternion rotation, WorldBodyPosePass pass)
     {
         Vector3 rightTarget = position + rotation * (WorldRifleGripCalibration.RightPosition + _settings.RightGripOffset);
         Vector3 leftTarget = position + rotation * (WorldRifleGripCalibration.LeftPosition + _settings.LeftGripOffset);
@@ -228,15 +228,33 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
             * Quaternion.Euler(_settings.RightGripEuler)).normalized;
         Quaternion leftRotation = (rotation * WorldRifleGripCalibration.LeftRotation
             * Quaternion.Euler(_settings.LeftGripEuler)).normalized;
+        bool fitFingers = pass != WorldBodyPosePass.HitboxCapture && _attachments.LeftFingers != null;
+        if (fitFingers)
+        {
+            var adjusted = leftTarget + rotation * WorldRifleGripCalibration.LeftRenderOffset;
+            var upper = _attachments.LeftUpperArm.position;
+            var elbow = _attachments.LeftLowerArm.position;
+            fitFingers = WithinArmReach(Vector3.Distance(upper, elbow), Vector3.Distance(elbow, _attachments.LeftHand.position),
+                Vector3.Distance(upper, adjusted));
+            if (fitFingers)
+            {
+                leftTarget = adjusted;
+                leftRotation *= WorldRifleGripCalibration.LeftRenderRotation;
+            }
+        }
         // These changes affect only the owned visual rig. No attachment is
         // committed if either arm is unreachable or any residual fails.
         SolveArm(_attachments.RightUpperArm, _attachments.RightLowerArm, _attachments.RightHand,
             rightTarget, rightRotation, transform.right, out float rightReach, out float rightError);
         SolveArm(_attachments.LeftUpperArm, _attachments.LeftLowerArm, _attachments.LeftHand,
             leftTarget, leftRotation, -transform.right, out float leftReach, out float leftError);
+        if (fitFingers) _attachments.LeftFingers.Apply(_attachments.LeftHand.rotation);
         RightReachRatio = rightReach; LeftReachRatio = leftReach;
         RightWristError = rightError; LeftWristError = leftError;
     }
+
+    private static bool WithinArmReach(float upperLength, float lowerLength, float distance) =>
+        distance > Mathf.Abs(upperLength - lowerLength) + .0001f && distance < (upperLength + lowerLength) * .95f;
 
     private void SolveArm(Transform upper, Transform lower, Transform hand, Vector3 target,
         Quaternion targetRotation, Vector3 outward, out float reachRatio, out float wristError)
@@ -248,11 +266,10 @@ public sealed class PlayerWorldBodyPosePresentation : MonoBehaviour
         float a = Vector3.Distance(upper.position, lower.position);
         float b = Vector3.Distance(lower.position, hand.position);
         Vector3 delta = target - upper.position; float distance = delta.magnitude;
-        float maximum = a + b, minimum = Mathf.Abs(a - b);
         if (!BodyPoseMath.Finite(a) || !BodyPoseMath.Finite(b) || !BodyPoseMath.Finite(distance)
-            || a <= .001f || b <= .001f || distance <= minimum + .0001f || distance >= maximum * .95f)
+            || a <= .001f || b <= .001f || !WithinArmReach(a, b, distance))
             throw new InvalidOperationException("RIFLE_ARM_UNREACHABLE_NO_STRETCH");
-        reachRatio = distance / maximum;
+        reachRatio = distance / (a + b);
         Vector3 axis = delta / distance;
         Vector3 rawPole = outward * .9f - transform.up * .85f - transform.forward * .15f;
         Vector3 pole = rawPole - axis * Vector3.Dot(rawPole, axis);
