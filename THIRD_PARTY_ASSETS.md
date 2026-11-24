@@ -334,6 +334,21 @@ Rx.NET은 [고정 역사 리비전의 Source/license.txt](https://raw.githubuser
 
 근거: `D:/codex/validation/sudden-force-fps/20261016-asset-entitlements-01/`의 `asset-entitlements.json`, `local-name-correspondence.json`, 팩별 `*-acquired.png`/`*-package-files.txt`, `loading-deprecated-search.txt`입니다. 개인 계정 화면 원본은 외부 검증 자료에만 보관합니다. 이번에 계정 인증 정보 추출·새 구매/약관 동의·패키지 다운로드/교체·Editor 시작/제품 빌드·서명은 수행하지 않았습니다. #42는 남은 원본/고지 대응 때문에 열림 유지합니다.
 
+### 코드59에 포함된 세 팩의 원본 대조
+
+일반 Android 코드59(빌드 소스 `16fc1f7c`)의 Unity BuildReport에서 세 팩에 속하는 입력 경로 94개를 확인했습니다. 기존에 취득을 확인한 세 상품의 로컬 Unity 패키지와 그 안에 동봉된 URP·HDRP 변형을 읽고, 각 입력의 Unity GUID와 파일 내용을 비교했습니다.
+
+| 상품 ID · 에셋 | 빌드 입력 경로 | GUID·바이트 일치 | GUID·줄바꿈 정규화 후 일치 | GUID 일치·내용 차이 |
+| --- | ---: | ---: | ---: | ---: |
+| 181470 · Survivalist character | 74 | 56 | 0 | 18 |
+| 245929 · Low Poly FPS Weapons Lite | 3 | 2 | 0 | 1 |
+| 258453 · Low Poly FPS Map Lite | 17 | 14 | 1 | 2 |
+| 합계 | 94 | 72 | 1 | 21 |
+
+원본 대응을 재확인할 때는 `.unitypackage`의 GUID 디렉터리에서 `pathname`과 `asset`을 읽고, 동봉된 렌더 파이프라인별 패키지도 같은 방식으로 확인합니다. 프로젝트 입력의 `.meta` GUID와 원본 GUID를 먼저 대조하고, 해당 파일의 SHA-256을 비교합니다. 줄바꿈 정규화는 텍스트 YAML에만 적용했습니다. 내용이 다른 21개는 동일 GUID의 원본 후보까지 확인했습니다. 변경자와 변경 이력은 별도 근거가 필요합니다.
+
+캐릭터 모델 `Military/Basemesh/SK_Military_Survivalist.fbx`는 원본과 GUID·바이트가 모두 일치했습니다. 조사한 캐릭터 폴더에서 원본에 대응하지 않은 마스크 1개와 프리팹 2개는 이 빌드의 경로 목록에 없었습니다. 위 수량은 고유 입력 경로 기준입니다. 취득 당시의 라이선스 조건과 게임 전체의 배포 권리는 별도 확인 항목입니다.
+
 ## 코드12 광고·결제 네임스페이스와 남은 출처 점검 (2026-10-16, #42)
 
 서명 AAB SHA256 `21AD89A76079243D2C53AB7B7F26C29B34019D6CE815D5462FE8A2CF01906E9A`의 DEX1개 전체에서 타입 참조와 클래스 정의3696개를 읽었습니다. [AOSP DEX 형식](https://source.android.com/docs/core/runtime/dex-format)의 헤더·테이블 경계·SHA1/Adler32를 검증했고 Google Mobile Ads·Play Billing·Unity Ads/Purchasing·ironSource 등 지정17개 네임스페이스 참조/정의0을 확인했습니다. GPGS238·Unity bridge36·Unity Player207 클래스 정의를 양성 대조로 확인했습니다. 프로젝트 UPM·제품 스크립트·Android 의존성의 명시적 광고/결제 API·좌표와 실제 manifest의 AD_ID/BILLING도 발견되지 않았습니다. AAB 해시를 보존했고 제품 변경·재빌드는 없습니다.
