@@ -19,6 +19,8 @@ public class CanvasLobby : MonoBehaviour
     [SerializeField] private GameObject[] _navigationIndicators;
 
     private int _panelIndex = 0;    // 0 - Rooms, 1 - Create Room, 2 - JoinPrivateRoom
+    internal bool IsShowingPublicRooms => _panelIndex == 0 && _roomsPanel != null && _roomsPanel.activeInHierarchy;
+
     private string _selectedMapName = string.Empty;
 
     private const string _roomNameMessage = "Please enter the room name...";

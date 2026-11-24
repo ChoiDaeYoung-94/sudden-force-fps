@@ -23,6 +23,10 @@ public sealed class ThirdPartyNoticesView : MonoBehaviour
     private ThirdPartyNoticePager _pager;
     private int _pageIndex;
     private bool _showing;
+    private int _closedFrame = -1;
+
+    // The two Update methods can run in either order on the frame Back closes the notice.
+    internal bool OwnsBackInput => _showing || _closedFrame == Time.frameCount;
 
     private void Awake()
     {
@@ -65,6 +69,7 @@ public sealed class ThirdPartyNoticesView : MonoBehaviour
 
     public void Close()
     {
+        if (_showing) _closedFrame = Time.frameCount;
         _showing = false;
         if (_scroll != null) _scroll.StopMovement();
         if (_modal != null) _modal.SetActive(false);

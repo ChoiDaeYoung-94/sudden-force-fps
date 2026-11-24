@@ -72,10 +72,26 @@ namespace AD
 
         private void Update()
         {
-            if (Application.platform != RuntimePlatform.Android || _popupStack.Count == 0
-                || _isFlow || _isException || IsLoading || MatchHudView.OwnsBackInput) return;
+            if (Application.platform == RuntimePlatform.Android && Input.GetKeyDown(KeyCode.Escape))
+                HandleAndroidBack();
+        }
 
-            if (Input.GetKeyDown(KeyCode.Escape)) DisablePop();
+        private void HandleAndroidBack()
+        {
+            if (_isFlow || _isException || IsLoading || MatchHudView.OwnsBackInput) return;
+            if (_popupStack.Count > 0)
+            {
+                DisablePop();
+                return;
+            }
+
+            var manager = NetworkRunnerManager.Instance;
+            if (manager != null && (manager.IsRetired || manager.IsRoomOperationPending
+                || manager.SessionPhase != NetworkSessionPhase.Lobby)) return;
+            var lobby = FindFirstObjectByType<CanvasLobby>();
+            if (lobby == null || !lobby.IsShowingPublicRooms) return;
+            var notices = FindFirstObjectByType<ThirdPartyNoticesView>();
+            if (notices == null || !notices.OwnsBackInput) PopupExit();
         }
 
         #region Functions
