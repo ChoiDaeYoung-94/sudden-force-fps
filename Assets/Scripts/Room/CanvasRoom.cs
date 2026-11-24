@@ -135,15 +135,24 @@ public class CanvasRoom : NetworkBehaviour
     #endregion
 
     #region ChatManager
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void RpcBroadcastChat(string message, PlayerRef sender, string nickName, RpcInfo info = default)
     {
-        if (NetworkRunnerManager.Instance.GetNetworkRunner().LocalPlayer == sender)
-        {
-            return;
-        }
+        var manager = NetworkRunnerManager.Instance;
+        if (info.IsInvokeLocal || manager == null || manager.IsRetired
+            || manager.SessionPhase != NetworkSessionPhase.Room || manager.GetNetworkRunner() != Runner
+            || !ChatManager.TryNormalizeMessage(message, out var text, out _)) return;
 
-        _chatManager.AddMessage($"<{nickName}> {message}");
+        // Older hosts use the server source. Keep the RPC arguments for existing clients.
+        var author = info.Source == PlayerRef.None ? sender : info.Source;
+        if (author == PlayerRef.None || author == Runner.LocalPlayer) return;
+
+        var player = RoomManager.Instance?.RoomPlayers.Find(p => p != null && p.Object != null
+            && p.Object.IsValid && p.Runner == Runner && p.Object.InputAuthority == author);
+        var name = player != null ? player.NickName : null;
+        // A first chat can arrive before the nickname snapshot.
+        if (!AD.PopupManager.IsValidNickName(name)) name = $"Player {author.PlayerId}";
+        _chatManager.AddMessage($"<{name}> {text}");
     }
     #endregion
 }
