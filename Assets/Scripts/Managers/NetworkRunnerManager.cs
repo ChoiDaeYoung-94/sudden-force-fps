@@ -57,7 +57,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     public event Action<NetworkRunnerManager> RoomOperationChanged;
 
     private const string RoomScenePath = "Assets/Scenes/Room.unity";
-    private const string GameScenePath = "Assets/Scenes/Game/DesertHouse.unity";
+    private const string SupportedMap = "DesertHouse";
+    private const string GameScenePath = "Assets/Scenes/Game/" + SupportedMap + ".unity";
     // 씬 인덱스 또는 피격 골격 의미가 바뀌면 기존 클라이언트와 분리합니다.
     // core2/제품 Raw9의 Networked43 선언에 맞춘 접속 세대입니다.
     private const string SceneProtocolSuffix = "-intro1-riflecore2-gaitprod1-window1-shoulderref1";
@@ -363,7 +364,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
                 throw new ArgumentException("Room settings are incomplete.");
             string name = nameValue?.ToString().Trim();
             string map = mapValue?.ToString();
-            if (string.IsNullOrWhiteSpace(name) || name.Length > 64 || map != "DesertHouse"
+            if (string.IsNullOrWhiteSpace(name) || name.Length > 64 || map != SupportedMap
                 || !int.TryParse(maxValue?.ToString(), out int max) || max < 2 || max > 8 || max % 2 != 0
                 || !bool.TryParse(visibleValue?.ToString(), out bool visible))
                 throw new ArgumentException("Use a room name, DesertHouse, and an even capacity from 2 to 8.");
@@ -388,14 +389,24 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (IsRoomOperationPending) return _roomOperationTask;
         if (!CanConnect || SessionPhase != NetworkSessionPhase.Lobby) return Task.CompletedTask;
-        if (sessionInfo == null || !sessionInfo.IsValid || !sessionInfo.IsOpen || sessionInfo.PlayerCount >= sessionInfo.MaxPlayers
-            || !sessionInfo.Properties.TryGetValue("MapName", out var map) || (string)map != "DesertHouse")
+        var reason = GetRoomJoinBlockReason(sessionInfo);
+        if (reason != null)
         {
-            ReportRoomError("This room is unavailable.");
+            ReportRoomError(reason);
             return Task.CompletedTask;
         }
-        _roomOperationTask = StartRoomAsync(MakeRoomOptions(sessionInfo.Name, (string)map, sessionInfo.MaxPlayers, false), GameMode.Client, true);
+        _roomOperationTask = StartRoomAsync(MakeRoomOptions(sessionInfo.Name, SupportedMap, sessionInfo.MaxPlayers, false), GameMode.Client, true);
         return _roomOperationTask;
+    }
+
+    internal static string GetRoomJoinBlockReason(SessionInfo room)
+    {
+        if (room == null || !room.IsValid) return "Room unavailable";
+        if (!room.IsOpen) return "Room closed";
+        if (room.PlayerCount >= room.MaxPlayers) return "Room full";
+        if (room.Properties == null || !room.Properties.TryGetValue("MapName", out var map)
+            || map == null || !map.IsString || (string)map != SupportedMap) return "Unsupported map";
+        return null;
     }
 
     private static RoomOptions MakeRoomOptions(string name, string map, int max, bool server)
@@ -587,7 +598,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         string originalMap = _roomOptions.MapName;
 
-        if (!CanConnect || SessionPhase != NetworkSessionPhase.Room || mapName != "DesertHouse"
+        if (!CanConnect || SessionPhase != NetworkSessionPhase.Room || mapName != SupportedMap
             || string.Equals(originalMap, mapName) || !_networkRunner.IsServer)
         {
             return;
