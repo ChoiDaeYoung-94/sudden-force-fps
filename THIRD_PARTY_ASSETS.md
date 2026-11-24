@@ -316,6 +316,18 @@ Rx.NET은 [고정 역사 리비전의 Source/license.txt](https://raw.githubuser
 
 **배포된 코드12 AAB는 수정하지 않았습니다.** 이 보완은 다음 새 배포 코드13 이상에서 실제 고지 본문 포함과 표시를 확인해야 합니다. 두 구체적 누락을 고친 것이며 과거 문서의 모든 미확인 항목을 새 누락으로 간주하거나 #42 전체를 닫지 않습니다. 근거: `D:/codex/validation/sudden-force-fps/20261016-json-notices-01/`의 원문 사본·`prepare-result.json`·`pager-validation.jsonl`, 코드12 export의 `Assembly-CSharp__2.cpp`/`Assembly-CSharp_CodeGen.c`/`Il2CppCodeRegistration.cpp`입니다.
 
+## Unity Asset Store 원본과 프로젝트 파일 대조 (2026-11-25, #42)
+
+Unity Package Manager의 **My Assets**에서 기존 취득 제품 세 개를 다운로드했습니다. 각 `.unitypackage` 안의 GUID, 원본 경로, 파일 본문 SHA-256을 `Assets/ThirdPartyAssets/Objects` 아래 대응 폴더의 파일과 비교했습니다. 폴더 및 `.meta`는 파일 수에서 제외했고 로컬 GUID는 각 `.meta`에서 읽었습니다.
+
+| 공식 패키지와 취득일 | 로컬 폴더 | GUID·본문 일치 | GUID 일치·본문 차이 | 팩에서 미대응 |
+| --- | --- | ---: | ---: | ---: |
+| Survivalist character 1.2 · 2024-11-13 | `Military` | 71 | 31 | 3 |
+| Low Poly FPS Weapons Lite 1.0 · 2024-11-14 | `LowPolyWeapons_LITE` | 6 | 7 | 0 |
+| Low Poly FPS Map Lite 1.0 · 2024-11-14 | `LowPolyFPSLite` | 14 | 20 | 3 |
+
+세 폴더의 FBX 19개와 PNG 72개는 모두 GUID와 원본 바이트가 일치했습니다. GUID만 일치한 파일 58개 중 무기 프리팹 4개와 맵 프리팹 14개는 줄 끝을 LF로 통일하면 본문도 일치합니다. 해당 팩에서 대응되지 않은 파일은 캐릭터의 `UpperAvatarMask.mask`와 FPS 프리팹 (5)·(6), 맵의 후처리·URP·Renderer 설정 세 개입니다. 별도 플레이어 애니메이션의 출처와 취득 당시 라이선스 조건은 이 대조 범위 밖입니다.
+
 ## 기존 계정의 세 팩 취득 기록 확인 (2026-10-16, #42)
 
 사용자가 지정한 작업용 Chrome의 기존 탭에서 로그인된 공식 Asset Store의 구매 배너와 My Assets 항목을 직접 대조했습니다. 아래는 새 구매가 아니라 기존 취득 기록입니다. 현재 상품의 무료 표시만으로 취득을 추정했던 범위를 보완했습니다.
