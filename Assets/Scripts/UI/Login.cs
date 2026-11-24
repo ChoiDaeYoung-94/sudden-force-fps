@@ -85,6 +85,19 @@ namespace AD
 
         public void RetryConnection() => TryStartLogin(true);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+        private int _retryShownFrame;
+
+        private void Update()
+        {
+            // A Back press dismissing Google sign-in must not also leave the game.
+            if (_busy || _retry == null || !_retry.activeInHierarchy || !Application.isFocused
+                || Time.frameCount == _retryShownFrame || !Input.GetKeyDown(KeyCode.Escape)) return;
+
+            UnityEngine.Android.AndroidApplication.currentActivity.Call<bool>("moveTaskToBack", false);
+        }
+#endif
+
         private void TryStartLogin(bool manual)
         {
             if (!isActiveAndEnabled || _busy) return;
@@ -237,6 +250,9 @@ namespace AD
 
         private void ShowRetryPanel(string message)
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            _retryShownFrame = Time.frameCount;
+#endif
             if (_loadingText != null) _loadingText.text = message;
             if (_retryMessage != null) _retryMessage.text = message;
             if (_loading != null) _loading.SetActive(false);
