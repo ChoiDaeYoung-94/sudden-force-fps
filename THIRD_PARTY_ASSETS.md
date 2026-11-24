@@ -329,6 +329,16 @@ Unity Package Manager의 **My Assets**에서 기존 취득 제품 세 개를 다
 
 세 폴더의 FBX 19개와 PNG 72개는 모두 GUID와 원본 바이트가 일치했습니다. GUID가 일치하고 본문 바이트가 다른 파일 61개 중 21개는 줄 끝을 LF로 통일하면 본문도 일치합니다. 이 중 맵의 후처리·URP·Renderer 설정 세 개는 동봉된 URP 패키지에 있습니다. 원본과 대응되지 않은 파일은 캐릭터의 `UpperAvatarMask.mask`와 FPS 프리팹 (5)·(6)입니다. 코드56 일반 Android BuildReport에는 세 폴더의 알려진 경로 94개가 포함됐고, 이 94개 모두 공식 원본 GUID와 연결됐습니다. 별도 플레이어 애니메이션의 출처와 취득 당시 라이선스 조건은 이 대조 범위 밖입니다.
 
+### 취득일에 공개됐던 표준 약관과 패키지 안의 별도 고지
+
+세 팩의 My Assets 취득일(2024년 11월 13~14일)은 Unity가 2023년 1월 1일 개정하고 2024년 12월 4일 교체한 약관의 공개 기간에 들어갑니다. 당시 표준 EULA 부록 1의 2.2.1은 비제한 에셋을 상당한 자체 콘텐츠와 결합한 제품에 내장해 배포하고 수익화하는 조건을 설명합니다. 2.2.2는 제한 에셋의 동봉 조건을, 2.3~2.4는 사용 주체와 좌석·외주 사용 조건을 다룹니다. [취득 시점의 공식 보관본](https://unity.com/legal/as-terms-legacy) · [현재 공식 약관](https://unity.com/legal/as-terms)
+
+2026년 11월 25일 조회한 상품 페이지 세 곳에는 표준 EULA와 라이선스 유형 `Extension Asset`이 표시됩니다. 무기와 맵 1.0의 표시 출시일은 각각 2023년 2월 3일과 7월 5일입니다. 캐릭터 1.2의 표시 출시일은 2025년 6월 5일로 취득일 이후입니다. 개별 주문 당시 상품 조건과 취득 주체는 별도 확인 대상입니다. [캐릭터](https://assetstore.unity.com/packages/3d/characters/survivalist-character-181470) · [무기](https://assetstore.unity.com/packages/3d/props/guns/low-poly-fps-weapons-lite-245929) · [맵](https://assetstore.unity.com/packages/3d/environments/low-poly-fps-map-lite-258453)
+
+캐릭터 팩의 `StarterAssets/license.txt`는 Unity Companion License를 명시합니다. 해당 하위 폴더의 파일 47개를 코드59 BuildReport의 `Assets/` 경로 중 소스와 메타가 있는 607개 파일과 비교했으며 GUID 또는 본문 SHA-256 일치는 0개였습니다. 생성 설정 JSON 경로 2개와 원본 경로 미분류 36행은 이 대조에서 제외했습니다. GUID와 본문이 모두 달라진 파생 파일은 이름을 유지했더라도 이 대조로 식별할 수 없습니다.
+
+기준 커밋 `e39382e6`에서 세 팩과 바이트가 일치하는 FBX 19개와 PNG 72개를 실제 Git blob으로 확인했습니다. 이 중 72개는 코드59 BuildReport에도 경로가 있습니다. 완성 게임에 내장하는 조건과 별도로 FBX·PNG 원본을 소스 저장소에서 제공할 수 있는 권한을 확인해야 합니다.
+
 ## 기존 계정의 세 팩 취득 기록 확인 (2026-10-16, #42)
 
 사용자가 지정한 작업용 Chrome의 기존 탭에서 로그인된 공식 Asset Store의 구매 배너와 My Assets 항목을 직접 대조했습니다. 아래는 새 구매가 아니라 기존 취득 기록입니다. 현재 상품의 무료 표시만으로 취득을 추정했던 범위를 보완했습니다.
