@@ -2,7 +2,7 @@ using QuadD;
 using UnityEngine;
 using UnityEngine.Video;
 
-// 프로젝트 소유 표시 adapter입니다. 패키지의 재생/오디오/종료/장면 전환은 그대로 둡니다.
+// 프로젝트의 인트로 화면 출력과 저장된 음소거 설정을 적용합니다.
 [DefaultExecutionOrder(100)]
 [DisallowMultipleComponent]
 public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
@@ -26,6 +26,8 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
         HasBoundTexture = false;
         CleanupFailed = false;
         intro = GetComponent<QuadDIntro>();
+        if (intro != null && PlayerPrefs.GetFloat("BGM", 1f) <= 0f && PlayerPrefs.GetFloat("SFX", 1f) <= 0f)
+            intro.Mute = true;
         video = GetComponent<VideoPlayer>();
         if (intro == null || video == null || GetComponent<Camera>() == null) return;
         try
