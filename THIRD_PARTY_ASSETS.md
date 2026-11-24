@@ -479,6 +479,14 @@ Unity Package Manager의 **My Assets**에서 기존 취득 제품 세 개를 다
 
 UniRx에 포함된 Microsoft 차용 코드의 `Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.` 문구도 앱 고지에서 원문대로 보존합니다. 해당 source header의 원문은 `See License.txt in the project root for license information.`까지이며 저장소의 해당 코드 파일에 남아 있습니다. 로컬에서 그 `License.txt`는 확인하지 못했습니다. 공식 UniRx README는 Rx.NET·mono 코드 차용을 설명하므로, 원본 시대별 라이선스와 저작권 범위가 모두 해소됐다고 판단하지 않습니다.
 
+### Google Play Games Android 지원 라이브러리의 출처
+
+Google Play Games plugin for Unity v2.0.0의 `current-build/GooglePlayGamesPlugin-2.0.0.unitypackage`에 지원 라이브러리와 POM이 들어 있습니다. 프로젝트의 `gpgs-plugin-support-2.0.0.srcaar.meta`에서 GUID를 읽고 Unity 패키지 안의 같은 GUID 디렉터리에서 `pathname`과 `asset`을 확인할 수 있습니다. [Google의 고정 릴리스 파일](https://github.com/playgameservices/play-games-plugin-for-unity/blob/f8d8cfae594733ce62cba2e65242d9f4887e1006/current-build/GooglePlayGamesPlugin-2.0.0.unitypackage)
+
+원본 `.srcaar`와 `Assets/GeneratedLocalRepo`의 `gpgs-plugin-support-2.0.0.aar`는 31,938바이트이며 SHA-256은 `18c5a2d62f31ef082d8cf45124f7d286383a51bad1d0fcef58befc24257d2ddf`입니다. 일반 Android 코드58에서 Gradle이 선택한 AAR도 같은 해시입니다. 생성된 POM의 `packaging`은 `srcaar`에서 `aar`로 바뀌고 나머지 XML 요소와 의존성은 같습니다.
+
+플러그인의 저작권 및 Apache 2.0 전문은 `Assets/Legal/ThirdPartyNotices.txt`의 Google Play Games 섹션에 있습니다. 고정 릴리스의 LICENSE 전체와 공백을 정규화해 대조했습니다. Google Play services 전이 의존성은 각각의 POM과 동봉 고지를 따릅니다. [공급자 LICENSE](https://github.com/playgameservices/play-games-plugin-for-unity/blob/f8d8cfae594733ce62cba2e65242d9f4887e1006/LICENSE)
+
 ### 실제 포함 증거 및 남은 범위
 
 - 대조 APK: `SuddenForceFPS.UploadKeyValidation.apk`, 238,310,918 bytes, SHA256 `d11fada6c8fd2e741a74ab86981bf3d05b16d519694921908a8b167e5e1e5193`.
