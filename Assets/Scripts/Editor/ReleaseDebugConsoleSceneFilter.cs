@@ -12,7 +12,22 @@ public sealed class ReleaseDebugConsoleSceneFilter : BuildPlayerProcessor, IProc
     private const string ConsolePrefabGuid = "67117722a812a2e46ab8cb8eafbf5f5e";
     private const string InitializerScriptGuid = "69395e87b254782458bbe108ec22ec29";
     private const string ConsoleScriptGuid = "6a4f16ed905adcd4ab0d7c8c11f0d72c";
-    public int callbackOrder => 0;
+    private const string AndroidConsolePluginGuid = "bf909fab1c14af446b0a854de42289b2";
+    public override int callbackOrder => 0;
+
+    public override void PrepareForBuild(BuildPlayerContext context)
+    {
+        var options = context.BuildPlayerOptions;
+        if (options.target != BuildTarget.Android) return;
+
+        var path = AssetDatabase.GUIDToAssetPath(AndroidConsolePluginGuid);
+        var plugin = AssetImporter.GetAtPath(path) as PluginImporter;
+        if (plugin == null)
+            throw new BuildFailedException("The Android debug console plugin could not be found.");
+
+        bool include = (options.options & BuildOptions.Development) != 0;
+        plugin.SetIncludeInBuildDelegate(_ => include);
+    }
 
     public void OnProcessScene(Scene scene, BuildReport report)
     {
