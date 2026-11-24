@@ -1,4 +1,5 @@
 > **2026-11-03 Quad D 고지:** [고정 패키지 LICENSE.md·Git 원문과 앱 고지 대응](Docs/validation/2026-11-03/quad-d-package-license.md)을 기록했습니다. Custom 회사 조건 원문이며 MIT·전체 권리 완료·기존 제공34 포함으로 일반화하지 않습니다.
+> **Quad D 인트로 정지 화면** · `Assets/Art/UI/QuadDIntroPoster.png`는 고정 회사 패키지 0.1.0의 `Runtime/Resources/QuadD/QuadDIntro.mp4`에서 2.25초 프레임을 추출한 이미지입니다. 영상 준비가 지연될 때 표시하며 같은 회사 자산 이용 조건을 따릅니다.
 
 > **2026-11-03 · #42 코드34 고지와 후속 소스 출처표**
 >

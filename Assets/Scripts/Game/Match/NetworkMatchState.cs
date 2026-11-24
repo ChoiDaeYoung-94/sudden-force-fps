@@ -23,6 +23,10 @@ public sealed class NetworkMatchState : NetworkBehaviour
     private GameManager _game;
     private MatchPresentation _presentation;
     private bool _spawned;
+    private double? _lastPausedHostTick;
+    private bool _hostSimulationInterrupted;
+    private bool HostPauseTimedOut => _lastPausedHostTick.HasValue
+        && Time.realtimeSinceStartupAsDouble - _lastPausedHostTick.Value >= Runner.Config.Network.ConnectionTimeout;
     public bool IsCurrent => _spawned && Object != null && Object.IsValid && Runner != null && Runner.IsRunning
         && NetworkRunnerManager.Instance != null && !NetworkRunnerManager.Instance.IsRetired
         && NetworkRunnerManager.Instance.GetNetworkRunner() == Runner
@@ -83,6 +87,19 @@ public sealed class NetworkMatchState : NetworkBehaviour
     }
 #endif
 
+    private void OnApplicationPause(bool paused)
+    {
+        if (Application.platform != RuntimePlatform.Android || !IsCurrent || !Object.HasStateAuthority
+            || Runner.GameMode != GameMode.Host || Phase != MatchPhase.Running) return;
+        if (paused)
+            _lastPausedHostTick ??= Time.realtimeSinceStartupAsDouble;
+        else
+        {
+            _hostSimulationInterrupted |= HostPauseTimedOut;
+            _lastPausedHostTick = null;
+        }
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (!IsCurrent || !Object.HasStateAuthority || Phase == MatchPhase.Finished) return;
@@ -95,6 +112,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
         }
 #endif
         EvaluateBoundary();
+        // Android can continue simulating while partially visible. Only count time without a host tick.
+        if (_lastPausedHostTick.HasValue) _lastPausedHostTick = Time.realtimeSinceStartupAsDouble;
         if (Phase != MatchPhase.Waiting) return;
         int red = 0, blue = 0;
         bool allSpawned = true;
@@ -116,7 +135,10 @@ public sealed class NetworkMatchState : NetworkBehaviour
     // Called from player simulation as well, so timeout cannot depend on callback order.
     public void EvaluateBoundary()
     {
-        if (IsCurrent && Object.HasStateAuthority && Phase == MatchPhase.Running && MatchTimer.Expired(Runner))
+        if (!IsCurrent || !Object.HasStateAuthority || Phase != MatchPhase.Running) return;
+        if (_hostSimulationInterrupted || HostPauseTimedOut)
+            Finish(MatchResult.Cancelled, MatchEndReason.HostInactive);
+        else if (MatchTimer.Expired(Runner))
             Finish(WinnerByScore(RedScore, BlueScore), MatchEndReason.TimeExpired);
     }
 
@@ -207,6 +229,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
         _skipToFinalSeconds = false;
 #endif
         _spawned = false;
+        _lastPausedHostTick = null;
+        _hostSimulationInterrupted = false;
         if (_game != null) { _game.KillConfirmed -= OnKillConfirmed; _game.UnbindMatch(this); }
         if (_presentation != null) _presentation.Unbind();
         if (Instance == this) Instance = null;
