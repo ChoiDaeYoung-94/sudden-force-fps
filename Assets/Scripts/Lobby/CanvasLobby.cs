@@ -38,6 +38,12 @@ public class CanvasLobby : MonoBehaviour
                 : _panelIndex == 2 ? "Enter the room name shared by your host." : "Join a room or create your own.";
     }
 
+    internal void ShowRoomConnectionEnded()
+    {
+        if (_panelIndex == 0 && _sectionDescription != null)
+            _sectionDescription.text = "Room connection ended. Choose another room or create one.";
+    }
+
     #region Functions
 
     #region Panel SideMenu

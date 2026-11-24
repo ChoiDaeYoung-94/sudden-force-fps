@@ -553,10 +553,15 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         _ = ReturnToLobbyAsync();
     }
 
-    public Task ReturnToLobbyAsync()
+    public Task ReturnToLobbyAsync() => ReturnToLobbyAsync(connectionEnded: false);
+
+    private Task ReturnToLobbyAsync(bool connectionEnded)
     {
         if (_returnTask != null) return _returnTask;
         if (!HasLiveOwner) return Task.CompletedTask;
+        bool lostRoomConnection = connectionEnded
+            && (SessionPhase == NetworkSessionPhase.Room || SessionPhase == NetworkSessionPhase.LoadingGame
+                || SessionPhase == NetworkSessionPhase.Game);
         IsRetired = true;
         SessionPhase = NetworkSessionPhase.ReturningToLobby;
         CancelConnectionOperations();
@@ -567,7 +572,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.LogError($"[Network] Lobby recovery failed: {LastRoomError}");
             return _returnTask = Task.CompletedTask;
         }
-        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved, _peerDisconnectFrame);
+        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved, _peerDisconnectFrame, lostRoomConnection);
         return _returnTask;
     }
 
@@ -693,7 +698,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log($"[Network] Runner shutdown: {shutdownReason}");
         if (SessionPhase != NetworkSessionPhase.Lobby)
         {
-            if (!IsRetired) _ = ReturnToLobbyAsync();
+            if (!IsRetired) _ = ReturnToLobbyAsync(connectionEnded: true);
             else if (AD.Managers.Instance != null)
                 _ = AD.Managers.Instance.RecoverLobbyAsync(this, runner, automaticShutdown: true, peerDisconnectFrame: _peerDisconnectFrame);
         }
@@ -714,7 +719,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         _sessionList.Clear();
         NotifyLobbyStatusChanged();
         // Status listeners may already have returned or stopped this session.
-        if (CanConnect && SessionPhase != NetworkSessionPhase.Lobby) _ = ReturnToLobbyAsync();
+        if (CanConnect && SessionPhase != NetworkSessionPhase.Lobby) _ = ReturnToLobbyAsync(connectionEnded: true);
     }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
