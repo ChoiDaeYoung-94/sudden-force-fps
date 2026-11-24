@@ -36,7 +36,6 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
         try
         {
             ownedCanvas = new GameObject("Sudden Force Intro Output", typeof(RectTransform), typeof(Canvas));
-            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(ownedCanvas, gameObject.scene);
             output = ownedCanvas.GetComponent<Canvas>();
             output.renderMode = RenderMode.ScreenSpaceOverlay;
             output.sortingOrder = 32760;
