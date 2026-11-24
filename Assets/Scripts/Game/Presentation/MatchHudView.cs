@@ -345,7 +345,7 @@ public sealed class MatchHudView : MonoBehaviour
                 text.margin = Vector4.zero;
                 text.richText = false;
                 text.raycastTarget = false;
-                text.text = "Move: left stick\nLook: drag empty right side\nHold FIRE, CROUCH, SPRINT\nTap RELOAD";
+                text.text = "Move with the left stick\nDrag the empty right side to look\nHold FIRE to shoot, drag it to aim\nHold CROUCH or SPRINT. Tap RELOAD";
             }
             if (_mobileMenuHelpObject.transform.parent != content) return;
             _mobileMenuLayout = new MobileMenuLayout(panel, content, title, resume, leave);
