@@ -26,8 +26,8 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
         if (PlayerPrefs.GetFloat("BGM", 1f) <= 0f && PlayerPrefs.GetFloat("SFX", 1f) <= 0f)
             intro.Mute = true;
         intro.OnCompleted.AddListener(Complete);
-        if (Application.platform == RuntimePlatform.Android && intro.enabled && picture != null
-            && picture.isActiveAndEnabled && picture.texture != null && picture.canvas != null)
+        if (Application.platform == RuntimePlatform.Android && enabled && intro.enabled && picture != null
+            && picture.enabled && picture.gameObject.activeInHierarchy && picture.texture != null)
         {
             // The first Android frame can take longer than the decoder's entire prepare timeout.
             deferredStart = true;
@@ -38,8 +38,12 @@ public sealed class SuddenForceIntroCanvasOutput : MonoBehaviour
     private IEnumerator Start()
     {
         if (!deferredStart) yield break;
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForSecondsRealtime(AndroidPosterSeconds);
+        // UI activation across scene roots has finished by Start.
+        if (picture != null && picture.isActiveAndEnabled && picture.canvas != null)
+        {
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForSecondsRealtime(AndroidPosterSeconds);
+        }
         StartDeferredIntro();
     }
 
