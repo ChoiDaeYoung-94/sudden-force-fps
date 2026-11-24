@@ -16,6 +16,25 @@ python Tools/Android/verify_packed_literals.py game.apk game.aab --require 'Goog
 
 `--require`와 `--forbid`는 반복할 수 있습니다. 출력에는 인수 순서대로 일치 개수가 표시되며, 조건을 만족하면 종료 코드 0을 반환합니다. 실제 기기에서 어느 안내가 표시되는지는 해당 로그인 경로를 실행해 확인합니다.
 
+### 일반판과 수동 플레이 APK 구별
+
+일반 APK와 수동 플레이 APK에는 같은 버전 번호를 사용할 수 있습니다. 먼저 APK와 AAB에서 패키지 이름을 읽습니다.
+
+```powershell
+aapt2 dump badging game.apk | Select-String '^package:'
+bundletool dump manifest --module=base --bundle=game.aab --xpath='/manifest/@package'
+```
+
+일반판은 두 결과 모두 `com.AeDeong.SuddenForceFPS`여야 합니다. 수동 플레이 APK의 `com.AeDeong.SuddenForceFPS.sessioncheck`는 기기에 함께 설치해 닉네임부터 테스트하는 별도 앱입니다. 스토어 제출에는 일반판 AAB를 사용합니다.
+
+일반 APK와 AAB를 한 쌍으로 검사해 Google Play Games 재시도 문구가 들어 있고 수동 플레이용 패키지 문자열이 빠졌는지 확인합니다.
+
+```powershell
+python Tools/Android/verify_packed_literals.py game.apk game.aab --require 'Google Play Games sign-in did not finish. Select Retry to sign in.' --forbid 'com.AeDeong.SuddenForceFPS.sessioncheck'
+```
+
+수동 플레이 APK와 일반 AAB를 섞으면 메타데이터 불일치로 종료 코드 1이 반환됩니다. 통과한 일반판도 업로드 서명과 실제 Google 로그인을 각각 확인합니다.
+
 ## ARM64 ELF LOAD·RELRO 정렬 검사
 
 `verify_native_alignment.py`는 Python3.12 이상에서 AAB의 모든 모듈 또는 APK에 들어 있는 `lib/arm64-v8a/*.so`를 추출 없이 읽습니다. LOAD alignment·주소/파일 오프셋 congruence와 GNU_RELRO를 검사합니다. RELRO 끝 주소가16KB 정렬되거나, RELRO가 자체 writable LOAD의 전체 VA/메모리 구간과 일치하고 보호 페이지가 다른 writable LOAD의 페이지와 겹치지 않을 때 통과합니다. 모든 프로그램 헤더를 모은 뒤 판정하므로 헤더 순서에 의존하지 않습니다. 원본과 기존 보고서를 덮어쓰지 않고 Unity·Gradle·서명 도구를 실행하지 않습니다.
