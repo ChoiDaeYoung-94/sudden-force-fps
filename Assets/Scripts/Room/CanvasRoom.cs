@@ -20,6 +20,7 @@ public class CanvasRoom : NetworkBehaviour
     [SerializeField] private GameObject _mapPanel;
     [SerializeField] private GameObject _readyButton;
     [SerializeField] private Button _startButton;
+    private TMP_Text _readyButtonLabel;
 
     public ChatManager _chatManager;
 
@@ -69,6 +70,7 @@ public class CanvasRoom : NetworkBehaviour
         }
         else
         {
+            _readyButtonLabel = _readyButton.GetComponentInChildren<TMP_Text>(true);
             _startButton.gameObject.SetActive(false);
             _mapChangeButton.SetActive(false);
         }
@@ -109,6 +111,13 @@ public class CanvasRoom : NetworkBehaviour
         var manager = NetworkRunnerManager.Instance;
         if (_startButton != null)
             _startButton.interactable = manager == null || manager.SessionPhase != NetworkSessionPhase.LoadingGame;
+
+        if (_readyButtonLabel != null)
+        {
+            var local = RoomManager.Instance?.LocalPlayerData;
+            bool ready = local != null && local.Object != null && local.Object.IsValid && local.IsReady;
+            _readyButtonLabel.text = ready ? "CANCEL READY" : "READY";
+        }
     }
 
     public void StartButtonClick()
