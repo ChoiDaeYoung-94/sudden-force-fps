@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public enum MatchPhase { Waiting, Running, Finished }
 public enum MatchResult { None, RedWin, BlueWin, Draw, Cancelled }
-public enum MatchEndReason { None, TargetScore, TimeExpired, OpponentLeft, MissingTeam }
+public enum MatchEndReason { None, TargetScore, TimeExpired, OpponentLeft, MissingTeam, HostConnectionLost }
 
 public readonly struct MatchSnapshot
 {

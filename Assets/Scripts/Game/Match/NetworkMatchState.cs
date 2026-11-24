@@ -145,6 +145,8 @@ public sealed class NetworkMatchState : NetworkBehaviour
             if (Roster[i].Connected) { if (Roster[i].Team == 0) red++; else blue++; }
         if (red != 0 && blue != 0) return;
         if (Phase == MatchPhase.Waiting) Finish(MatchResult.Cancelled, MatchEndReason.MissingTeam);
+        else if (Runner.GameMode == GameMode.Host && Application.internetReachability == NetworkReachability.NotReachable)
+            Finish(MatchResult.Cancelled, MatchEndReason.HostConnectionLost);
         else Finish(red == 0 ? MatchResult.BlueWin : MatchResult.RedWin, MatchEndReason.OpponentLeft);
     }
 
