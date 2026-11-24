@@ -42,6 +42,7 @@ internal sealed class WorldBodyPoseAttachmentBinding : IDisposable
     private bool _disposed;
 
     internal readonly Transform RifleFrame;
+    internal readonly WorldRifleFingerPose LeftFingers;
     internal readonly Transform LeftUpperArm, LeftLowerArm, LeftHand;
     internal readonly Transform RightUpperArm, RightLowerArm, RightHand;
     internal int HitboxCount => _attachments.Length;
@@ -56,6 +57,7 @@ internal sealed class WorldBodyPoseAttachmentBinding : IDisposable
             throw new InvalidOperationException("BODY_POSE_SOURCE_OR_ROOT_INVALID");
         var map = new Dictionary<Transform, Transform>();
         for (int i = 0; i < rig.SourceBones.Length; i++) map.Add(rig.SourceBones[i], rig.VisualBones[i]);
+        LeftFingers = WorldRifleFingerPose.TryBind(_sourceAnimator, map);
         _humans = new Transform[RequiredHumans.Length];
         for (int i = 0; i < _humans.Length; i++)
         {

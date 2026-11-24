@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Plain per-owner configuration. No ScriptableObject or prefab serialization.
@@ -35,6 +36,57 @@ internal static class WorldRifleGripCalibration
     internal static readonly Vector3 LeftPosition = new Vector3(-.06785662f, -4.632771E-05f, .280080646f);
     internal static readonly Quaternion RightRotation = new Quaternion(-.334325463f, -.84766686f, -.411030442f, .0272397026f);
     internal static readonly Quaternion LeftRotation = new Quaternion(-.0513451435f, -.9971108f, .0496897921f, -.0257952716f);
+    // Render-only fit of the skinned fingers against the shared world-model mesh.
+    internal static readonly Vector3 LeftRenderOffset = new Vector3(.020f, .010f, -.014f);
+    internal static readonly Quaternion LeftRenderRotation = Quaternion.Euler(24f, -11f, 12f);
+}
+
+internal sealed class WorldRifleFingerPose
+{
+    // Group by joint depth so each parent is posed before its children.
+    private static readonly HumanBodyBones[] Joints = {
+        HumanBodyBones.LeftIndexProximal, HumanBodyBones.LeftMiddleProximal,
+        HumanBodyBones.LeftRingProximal, HumanBodyBones.LeftLittleProximal,
+        HumanBodyBones.LeftIndexIntermediate, HumanBodyBones.LeftMiddleIntermediate,
+        HumanBodyBones.LeftRingIntermediate, HumanBodyBones.LeftLittleIntermediate,
+        HumanBodyBones.LeftIndexDistal, HumanBodyBones.LeftMiddleDistal,
+        HumanBodyBones.LeftRingDistal, HumanBodyBones.LeftLittleDistal,
+        HumanBodyBones.LeftThumbProximal
+    };
+    private readonly Transform[] _joints;
+    private static readonly float[] CurlDegrees = { -8f, -19f, -16f };
+    private static readonly Quaternion InverseRestHand = Quaternion.Inverse(WorldRifleGripCalibration.LeftRotation);
+
+    private WorldRifleFingerPose(Transform[] joints) { _joints = joints; }
+
+    internal static WorldRifleFingerPose TryBind(Animator source, Dictionary<Transform, Transform> visualBones)
+    {
+        var joints = new Transform[Joints.Length];
+        for (int i = 0; i < joints.Length; i++)
+        {
+            var bone = source.GetBoneTransform(Joints[i]);
+            if (bone == null || !visualBones.TryGetValue(bone, out joints[i])) return null;
+        }
+        return new WorldRifleFingerPose(joints);
+    }
+
+    internal void Apply(Quaternion handRotation)
+    {
+        // BeginPose has restored the authored finger rotations for this pass.
+        var basis = handRotation * InverseRestHand;
+        var curlAxis = basis * Vector3.forward;
+        for (int depth = 0; depth < CurlDegrees.Length; depth++)
+        {
+            var curl = Quaternion.AngleAxis(CurlDegrees[depth], curlAxis);
+            for (int finger = 0; finger < 4; finger++)
+            {
+                var joint = _joints[depth * 4 + finger];
+                joint.rotation = curl * joint.rotation;
+            }
+        }
+        var thumb = _joints[Joints.Length - 1];
+        thumb.rotation = Quaternion.AngleAxis(-41f, basis * Vector3.up) * thumb.rotation;
+    }
 }
 
 internal static class BodyPoseMath
