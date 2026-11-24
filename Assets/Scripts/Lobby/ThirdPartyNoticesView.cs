@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,7 +15,8 @@ public sealed class ThirdPartyNoticesView : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button _nextButton;
     [SerializeField] private TMP_Text _pageLabel;
 
-    private readonly Dictionary<UnityEngine.UI.Selectable, bool> _previousInteractable = new();
+    [SerializeField] private CanvasGroup[] _lobbyPanels;
+
     private GameObject _previousSelection;
     private Rect _lastSafeArea;
     private Vector2Int _lastScreenSize;
@@ -43,13 +43,7 @@ public sealed class ThirdPartyNoticesView : MonoBehaviour
     {
         if (_modal == null || _body == null || _scroll == null || _showing) return;
         _previousSelection = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
-        _previousInteractable.Clear();
-        foreach (var selectable in GetComponentsInChildren<UnityEngine.UI.Selectable>(true))
-        {
-            if (selectable.transform.IsChildOf(_modal.transform)) continue;
-            _previousInteractable[selectable] = selectable.interactable;
-            selectable.interactable = false;
-        }
+        SetLobbyInteraction(false);
         _showing = true;
         _modal.SetActive(true);
         UpdateSafeArea();
@@ -75,12 +69,19 @@ public sealed class ThirdPartyNoticesView : MonoBehaviour
         if (_scroll != null) _scroll.StopMovement();
         if (_modal != null) _modal.SetActive(false);
         if (_body != null) _body.text = string.Empty;
-        foreach (var state in _previousInteractable)
-            if (state.Key != null) state.Key.interactable = state.Value;
-        _previousInteractable.Clear();
+        SetLobbyInteraction(true);
         if (EventSystem.current != null && _previousSelection != null && _previousSelection.activeInHierarchy)
             EventSystem.current.SetSelectedGameObject(_previousSelection);
         _previousSelection = null;
+    }
+
+    private void SetLobbyInteraction(bool allowed)
+    {
+        foreach (var panel in _lobbyPanels)
+        {
+            panel.interactable = allowed;
+            panel.blocksRaycasts = allowed;
+        }
     }
 
     private void PreviousPage()

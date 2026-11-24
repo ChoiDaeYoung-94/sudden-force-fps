@@ -6317,6 +6317,9 @@ MonoBehaviour:
   _previousButton: {fileID: 9033943837166427427}
   _nextButton: {fileID: 3787473855256572840}
   _pageLabel: {fileID: 3566069044413443861}
+  _lobbyPanels:
+  - {fileID: 881145700000010001}
+  - {fileID: 881145700000010002}
 --- !u!1 &5515710762980981897
 GameObject:
   m_ObjectHideFlags: 0
@@ -9869,6 +9872,7 @@ GameObject:
   - component: {fileID: 8362245273507459534}
   - component: {fileID: 1506070638189593017}
   - component: {fileID: 161004236988483208}
+  - component: {fileID: 881145700000010001}
   m_Layer: 5
   m_Name: PanelMain
   m_TagString: Untagged
@@ -9876,6 +9880,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!225 &881145700000010001
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8214936058035312143}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!224 &8362245273507459534
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10618,6 +10634,7 @@ GameObject:
   - component: {fileID: 8233658836282977019}
   - component: {fileID: 5643564583516006135}
   - component: {fileID: 1690512230913029901}
+  - component: {fileID: 881145700000010002}
   m_Layer: 5
   m_Name: PanelSideMenus
   m_TagString: Untagged
@@ -10625,6 +10642,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!225 &881145700000010002
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9041309949088223658}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!224 &8233658836282977019
 RectTransform:
   m_ObjectHideFlags: 0
