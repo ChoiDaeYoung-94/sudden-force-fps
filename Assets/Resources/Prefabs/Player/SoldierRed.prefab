@@ -205,6 +205,7 @@ MonoBehaviour:
   _weaponDefinition: {fileID: 11400000, guid: e819c228f601e9e4aa4890be7229b488, type: 2}
   _hitboxRoot: {fileID: 300321543486801481}
   _viewModelRoot: {fileID: 4591078724532576235}
+  _viewModelRenderer: {fileID: 11400000, guid: 707360a9c581a4bd7aa53bfeb1429f71, type: 2}
   _viewMuzzle: {fileID: 3475814133073988336}
   _worldMuzzle: {fileID: 7334530813476782593}
   _IsCrouching:
