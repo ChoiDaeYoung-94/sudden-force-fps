@@ -6,6 +6,16 @@ APK와 AAB 릴리스 메뉴는 `SUDDEN_FORCE_KEYSTORE_PATH`에서 키 파일의 
 - 암호는 기존 Unity 입력란 또는 빌드 프로세스의 `SUDDEN_FORCE_KEYSTORE_PASSWORD`와 `SUDDEN_FORCE_KEYALIAS_PASSWORD`로 제공합니다. 공개 설정이나 명령행 인자에 값을 쓰지 않습니다. 서명 설정은 빌드를 마치거나 예외가 발생하면 이전 값으로 복원합니다.
 - 새 배포 전 Play Console에 등록된 업로드 인증서와 승인된 외부 키를 대조합니다. 로컬 보관 위치와 교체 작업 상태는 프로젝트 관리 문서에서 확인합니다. 아래 과거 배포 기록의 경로는 당시 검증 이력입니다.
 
+### 제출할 AAB의 서명 확인
+
+Play Console의 **앱 무결성 → 업로드 키 인증서**에서 현재 SHA-256을 복사합니다. 업로드 키를 재설정했다면 새 인증서가 활성화된 후 표시되는 값을 사용합니다. 프로젝트 루트에서 Unity의 OpenJDK 17 이상으로 실행합니다.
+
+```powershell
+java Tools/Android/VerifyUploadBundle.java "D:/release/candidate.aab" "<Console의 업로드 키 인증서 SHA-256>"
+```
+
+도구는 AAB의 기본 구성 파일과 모듈 manifest를 확인하고, 각 콘텐츠 파일을 끝까지 읽어 JAR 서명과 서명자 인증서를 대조합니다. 종료 코드 0이면 전달한 지문과 모든 콘텐츠의 서명이 일치합니다. 검사에는 공개 지문과 AAB만 필요합니다. 패키지 이름·버전·번들 구조는 기존 bundletool 검사에서 확인하고, 테스터가 Play로 설치한 APK는 Play 앱 서명 인증서로 확인합니다. [Android 앱 서명 안내](https://developer.android.com/studio/publish/app-signing)
+
 > **2026-11-18 정상36 실제 한정 검수:** [닉네임 입력·방 참가·READY·Game/반환](Docs/validation/2026-11-18/normal36-editor-phone-runtime.md)을 확인했습니다. 새 빌드/서명/업로드0이며 실제 run·전체 life·Play 테스터 설치와 이 결과를 합산하지 않습니다.
 
 > **2026-11-18 일반36 로컬 후보:** [1.0.199/code36 빌드·기존키 서명](Docs/validation/2026-11-18/normal36-local-release.md)을 확인했습니다. ARM64/min25/target36/nondebug·native7/ZIP·ELF16KB 한정 검증과 실제 기기/PGS·Play 수용을 구분합니다. fresh Console 최대값 미확인·업로드0이며 기존 운영34/release12는 과거 제공 기준입니다.
