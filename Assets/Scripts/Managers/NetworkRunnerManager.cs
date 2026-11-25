@@ -735,6 +735,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (!IsCurrentCallback(runner) || !CanConnect) return;
         // A simulation peer timeout does not itself initiate Runner shutdown.
+        if (SessionPhase != NetworkSessionPhase.Lobby)
+            Debug.Log($"[Network] Room connection ended ({SessionPhase}): {reason}");
         _peerDisconnectFrame = Time.frameCount;
         LastLobbyError = reason.ToString();
         if (LobbyStatus != LobbyConnectionStatus.Connecting && LobbyStatus != LobbyConnectionStatus.Failed)
