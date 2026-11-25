@@ -40,7 +40,7 @@ public class CanvasLobby : MonoBehaviour
                 : _panelIndex == 2 ? "Enter the room name shared by your host." : "Join a room or create your own.";
     }
 
-    internal void ShowRoomConnectionEnded() => ShowRoomNotice("Room connection ended. Choose another room or create one.");
+    internal void ShowRoomConnectionEnded() => ShowRoomNotice("Connection to the previous room ended.");
 
     internal void ShowRoomNotice(string message)
     {
