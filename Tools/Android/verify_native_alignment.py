@@ -4,6 +4,7 @@ This does not check APK ZIP alignment, BundleConfig, signatures or runtime behav
 See https://developer.android.com/guide/practices/page-sizes#relro.
 """
 import argparse
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -97,15 +98,22 @@ def inspect_elf(data):
             "relroAbsent": not relros}
 
 
-def native_entry(name, suffix):
+def native_abi(name, suffix):
     parts = name.split("/")
     if suffix == ".aab":
-        return (len(parts) == 4 and bool(parts[0]) and parts[1:3] == ["lib", "arm64-v8a"]
-                and parts[-1].endswith(".so"))
-    return len(parts) == 3 and parts[:2] == ["lib", "arm64-v8a"] and parts[-1].endswith(".so")
+        if len(parts) != 4 or not parts[0]:
+            return None
+        parts = parts[1:]
+    if len(parts) == 3 and parts[0] == "lib" and parts[1] and parts[2].endswith(".so"):
+        return parts[1]
+    return None
 
 
-def inspect_bundle(path):
+def native_entry(name, suffix):
+    return native_abi(name, suffix) == "arm64-v8a"
+
+
+def inspect_bundle(path, *, require_arm64_only=False):
     path = Path(path)
     require(path.suffix.lower() in (".aab", ".apk"), "Expected .aab or .apk")
     libraries = []
@@ -117,8 +125,14 @@ def inspect_bundle(path):
             require(len(names) == len(set(names)), "Duplicate ZIP entry")
             require(all(not n.startswith(("/", "\\")) and ".." not in n.replace("\\", "/").split("/")
                         for n in names), "Unsafe ZIP entry path")
-            selected = [entry for entry in archive.infolist()
-                        if native_entry(entry.filename, path.suffix.lower())]
+            selected = []
+            abi_counts = Counter()
+            for entry in archive.infolist():
+                abi = native_abi(entry.filename, path.suffix.lower())
+                if abi is not None:
+                    abi_counts[abi] += 1
+                    if abi == "arm64-v8a":
+                        selected.append(entry)
             require(0 < len(selected) <= 128, "Expected 1..128 ARM64 shared libraries")
             for entry in selected:
                 require(0 < entry.file_size <= MAX_ELF_BYTES, "Native entry size outside limit")
@@ -134,9 +148,13 @@ def inspect_bundle(path):
         source.seek(0)
         require(hashlib.file_digest(source, "sha256").hexdigest().upper() == digest,
                 "Artifact changed during inspection")
+    abi_matches = not require_arm64_only or set(abi_counts) == {"arm64-v8a"}
     return {"schemaVersion": 2, "artifact": str(path.resolve()), "sha256": digest,
             "pageSize": PAGE_SIZE, "abi": "arm64-v8a",
-            "passed": all(item["passed"] for item in libraries), "libraries": libraries,
+            "packagedLibrariesByAbi": dict(sorted(abi_counts.items())),
+            "requiredAbi": "arm64-v8a" if require_arm64_only else None,
+            "abiRequirementMet": abi_matches,
+            "passed": abi_matches and all(item["passed"] for item in libraries), "libraries": libraries,
             "limits": ["ARM64 ELF program headers only; no library changes or extraction",
                        "Not APK ZIP alignment, BundleConfig, signing or runtime/device verification",
                        "A missing RELRO segment is not an alignment failure; no security hardening verdict"]}
@@ -145,13 +163,15 @@ def inspect_bundle(path):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("artifact", type=Path)
+    parser.add_argument("--require-arm64-only", action="store_true",
+                        help="Fail if the APK or AAB also packages shared libraries for another ABI")
     parser.add_argument("--output", type=Path, help="New JSON report; refuses to overwrite")
     args = parser.parse_args(argv)
     try:
         require(args.output is None or not args.output.exists(), "Output already exists")
         require(args.output is None or args.output.resolve() != args.artifact.resolve(),
                 "Report must not replace the artifact")
-        report = inspect_bundle(args.artifact)
+        report = inspect_bundle(args.artifact, require_arm64_only=args.require_arm64_only)
         code = 0 if report["passed"] else 1
     except (InvalidInput, OSError, UnicodeError, zipfile.BadZipFile, RuntimeError, EOFError,
             NotImplementedError, zlib.error) as error:

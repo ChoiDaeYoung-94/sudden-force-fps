@@ -60,6 +60,8 @@ python Tools/Android/verify_packed_literals.py game.apk game.aab --require 'Goog
 python -B Tools/Android/verify_native_alignment.py '<검사할 AAB 또는 APK>' --output '<새 외부 JSON 보고서>'
 ```
 
+`packagedLibrariesByAbi`에는 APK 또는 AAB 전체 모듈의 표준 `lib/<ABI>/` 경로에 들어 있는 공유 라이브러리 수가 표시됩니다. ELF 정렬 상세 결과는 ARM64에 해당합니다. ARM64 전용으로 준비한 배포 후보는 위 명령에 `--require-arm64-only`를 추가합니다. 다른 ABI의 공유 라이브러리가 함께 있으면 `abiRequirementMet`가 `false`이고 종료 코드는 1입니다. 여러 ABI가 의도된 빌드에서는 기본 명령으로 ARM64 정렬과 전체 ABI 목록을 확인합니다.
+
 종료0은 선택한 ARM64 ELF 검사 통과,1은 잘못된 ELF 또는 정렬 실패,2는 ZIP/입력/보고서 처리 오류입니다. RELRO가 없는 라이브러리는 정렬 실패로 보지 않지만 보안 강화가 됐다는 뜻도 아닙니다. ZIP CRC는 선택한 native entry에 대해 검사하며 전체 ZIP 엔트리 CRC 검사가 아닙니다. ELF64 little-endian ARM64 ET_DYN만 지원하고, 라이브러리128개/각256MiB 한도를 넘으면 실패합니다.
 
 **APK ZIP alignment·BundleConfig·서명·기기 실행은 검사하지 않습니다.** ELF 정렬 통과만으로 전체16KB 호환을 확정하지 않습니다. [Android 공식 LOAD·RELRO 조건](https://developer.android.com/guide/practices/page-sizes#relro)과 실제16KB 환경 검증을 함께 적용합니다.
