@@ -1,5 +1,22 @@
 # Android 검증 도구
 
+## 기존 앱 데이터를 보존하는 설치 경로
+
+기기에 앱이 설치되어 있으면 먼저 패키지 이름, 버전 코드, APK 서명 인증서를 확인합니다. 아래 표는 Sudden Force에서 사용하는 설치 경로입니다.
+
+| 설치하려는 파일 또는 경로 | 패키지 | 기존 데이터가 있는 기기에서 확인할 점 |
+| --- | --- | --- |
+| Google Play 내부 테스트 트랙 | `com.AeDeong.SuddenForceFPS` | Play가 전달하는 APK는 Play 앱 서명 인증서를 사용합니다. 등록 테스터가 참여 링크를 열고 같은 계정의 Play 스토어에서 설치 또는 업데이트합니다. |
+| 일반판 `LocalQA.apk` | `com.AeDeong.SuddenForceFPS` | 로컬 QA 인증서로 서명합니다. 기존 일반판과 패키지가 같으므로 서명과 버전이 호환되는 전용 기기에서 사용합니다. |
+| 수동 플레이용 `Playtest.apk` | `com.AeDeong.SuddenForceFPS.sessioncheck` | 일반판과 함께 설치할 수 있습니다. 기존 수동판을 갱신할 때는 이 패키지의 인증서와 버전을 비교합니다. |
+
+1. Android SDK의 `adb -s <기기> shell pm path <패키지>`에서 `/base.apk`로 끝나는 행을 찾습니다. 분할 APK 설치본은 여러 행을 반환합니다. `package:` 접두어를 뺀 경로를 `adb -s <기기> pull <base.apk 경로> <새 임시 폴더>/installed.apk`에 사용합니다.
+2. 설치본과 후보 APK 각각에 `aapt2 dump badging <파일>`과 `apksigner verify --verbose --print-certs <파일>`을 실행합니다. 패키지, `versionCode`, 서명 검증 성공 및 서명자 SHA-256을 확인합니다. Play가 서명한 전달 APK는 Console의 **앱 서명 인증서**와 비교하고, 업로드하는 AAB는 **업로드 인증서**와 대조합니다. AAB를 로컬 QA 키로 변환한 APK에는 그 QA 인증서가 표시됩니다.
+3. 이 프로젝트의 기존 단일 서명 설치본과 인증서가 다르고 유효한 서명 키 교체 이력도 확인되지 않으면 기존 앱을 보존합니다. 수동 플레이는 별도 패키지를 사용합니다. Play 업데이트 검증은 이전 Play 설치본을 보유한 기기에서 더 높은 버전으로 진행합니다. 새로 설치한 경우에는 신규 설치로 기록합니다.
+4. 테스터 검수에서는 참여 여부, Play에서 설치된 버전, Google Play Games 로그인 성공과 로비 진입을 각각 확인합니다. 기기에 APK 파일을 직접 설치한 시험은 전달 경로에 맞게 별도로 기록합니다.
+
+업로드 키를 재설정해도 Google Play가 사용자에게 배포하는 앱 서명 키는 유지됩니다. [Android 앱 서명](https://developer.android.com/studio/publish/app-signing) · [apksigner](https://developer.android.com/tools/apksigner) · [Google Play 내부 테스트 설정](https://support.google.com/googleplay/android-developer/answer/9845334)
+
 ## Google Play Games 권한
 
 인증에는 Google Play Games를 사용하고 온라인 경기는 Photon Cloud에 연결합니다. Google Play Games 설정에서 Nearby Connections 서비스 ID를 비워 두면 플러그인이 생성하는 매니페스트에서 주변 기기 검색 권한이 빠집니다.
