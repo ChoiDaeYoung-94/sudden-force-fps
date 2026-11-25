@@ -84,3 +84,6 @@ crashlytics-build.properties
 .env.*
 !.env.example
 key.properties
+
+# Shared Android version reservation lock
+/BuildInfo/buildinfo.txt.reserve.lock

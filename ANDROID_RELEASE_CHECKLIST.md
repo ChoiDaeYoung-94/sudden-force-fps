@@ -1093,7 +1093,9 @@ New-Item -ItemType Directory -Force -Path (Join-Path $buildProject 'Build\AOS') 
 
 서명 환경변수 이름은 `SUDDEN_FORCE_KEYSTORE_PASSWORD`, `SUDDEN_FORCE_KEYALIAS_PASSWORD`입니다. 안전한 비밀 관리 경로로 프로세스에 전달하며 문서·명령줄에 값을 적지 않습니다. 환경변수가 없으면 이미 Editor에 입력된 비밀번호를 사용하고, 사용 후 원래 세션 값으로 복원합니다. 기존 key path/alias를 유지하며 누락된 자격 증명, 다른 alias, 다른 package는 preflight 실패입니다.
 
-매 시도 versionCode는 로컬 ledger와 PlayerSettings 중 큰 값보다 1 증가합니다. Play Console에서 더 큰 사용 코드가 확인되면 `SUDDEN_FORCE_VERSION_CODE`에 그보다 큰 새 숫자를 전달합니다. 로컬 기존 값 이하 또는 Play 상한 초과 값은 실패합니다. 실패 빌드에도 예약한 코드가 남을 수 있으며 빈 코드 간격은 허용합니다. legacy finishversionsetting marker는 더 이상 읽거나 생성하지 않습니다.
+Android 메뉴 빌드에서 단일 작업 복사본을 사용하면 `BuildInfo/buildinfo.txt`에 예약합니다. 여러 작업 복사본에서 같은 앱을 빌드할 때는 각 빌드 환경의 `SUDDEN_FORCE_BUILD_LEDGER_PATH`에 기존 공용 원장 파일의 절대 경로를 지정합니다. 공용 원장은 `주차,빌드번호,versionCode` 형식입니다. 링크와 복사본을 피하고 동일한 원본을 가리키도록 설정합니다. 이 옵션을 지원하는 빌드 메뉴가 있는 리비전에서 사용합니다. 빌드 셸이나 Unity Hub를 시작하기 전에 변수를 설정하고, 같은 원장을 쓰는 외부 빌드에서도 예약 중에는 쓰기 핸들을 단독으로 사용합니다. 메뉴는 원장 옆의 빈 `.reserve.lock` 파일을 통해 예약 순서를 조정합니다. 빌드가 끝나면 핸들을 반환하고 파일은 그대로 둡니다.
+
+기본 versionCode는 공용 원장, 현재 작업 복사본의 원장, PlayerSettings 중 가장 큰 코드보다 1 증가합니다. Play Console에 더 큰 코드가 있으면 `SUDDEN_FORCE_VERSION_CODE`에 이를 초과하는 새 숫자를 전달합니다. 공용 경로를 지정한 경우 해당 원장에만 새 예약이 기록됩니다. 이미 존재하는 출력 경로, 잘못된 원장이나 사용 중인 원장으로 예약이 거절되면 입력과 현재 원장을 확인한 뒤 다시 시도합니다. 예약을 마친 뒤 빌드가 실패할 경우 사용한 코드는 건너뜁니다. 별도 검증은 C# 컴파일러에서 `Assets/Scripts/Editor/AndroidBuildVersion.cs`와 `Tools/Android/Tests/AndroidBuildVersionTests.cs`를 같은 콘솔 실행 파일로 컴파일한 뒤 실행합니다. 검사에는 임시 원장만 사용합니다.
 
 실패 시 비밀번호를 출력하지 않는 `[AndroidBuild]` preflight 메시지 또는 예외 종류와 exit1을 기록합니다. 자동 재시도·키 재생성은 하지 않습니다. APK 설치는 승인된 기기가 연결된 다음 bundled adb의 `install -r <APK>`로 수행하고, Play 설치본과 인증서가 다르면 기존 앱 데이터 보존·설치 방식부터 결정합니다.
 

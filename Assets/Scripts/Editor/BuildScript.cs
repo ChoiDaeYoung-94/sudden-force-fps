@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -14,7 +13,6 @@ public static class BuildScript
     private const string DefaultKeyAlias = "aedeong";
     private const string BuildInfoPath = "BuildInfo/buildinfo.txt";
     private const string OutputDirectory = "Build/AOS";
-    private const int MaximumVersionCode = 2100000000;
 
     [MenuItem("Build/AOS/APK")]
     public static void BuildAOSAPK() => Run(false);
@@ -65,22 +63,6 @@ public static class BuildScript
 
         var scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(scene => scene.path).ToArray();
         Require(scenes.Length > 0 && scenes.All(File.Exists), "Enabled build scenes are missing or empty.");
-        var ledger = ReadLedger();
-        int knownCode = Math.Max(ledger[2], PlayerSettings.Android.bundleVersionCode);
-        string requestedCode = Environment.GetEnvironmentVariable("SUDDEN_FORCE_VERSION_CODE");
-        int versionCode;
-        if (!string.IsNullOrEmpty(requestedCode))
-        {
-            Require(int.TryParse(requestedCode, NumberStyles.None, CultureInfo.InvariantCulture, out versionCode)
-                && versionCode > knownCode && versionCode <= MaximumVersionCode,
-                "SUDDEN_FORCE_VERSION_CODE must exceed the local ledger and PlayerSettings code, within Play's limit.");
-        }
-        else
-        {
-            Require(knownCode < MaximumVersionCode, "Android versionCode has reached Play's limit.");
-            versionCode = checked(knownCode + 1);
-        }
-
         bool originalCustomKeystore = PlayerSettings.Android.useCustomKeystore;
         string originalKeystoreName = PlayerSettings.Android.keystoreName;
         string originalAliasName = PlayerSettings.Android.keyaliasName;
@@ -91,17 +73,22 @@ public static class BuildScript
         Require(!string.IsNullOrEmpty(storePassword) && !string.IsNullOrEmpty(aliasPassword),
             "Provide existing signing credentials through the Editor or the two signing environment variables.");
 
-        int week = Math.Max(ledger[0], (int)((DateTime.UtcNow.Date - new DateTime(2023, 1, 21)).TotalDays / 7));
-        int build = week == ledger[0] ? checked(ledger[1] + 1) : 0;
-        string version = "1.0." + week.ToString(CultureInfo.InvariantCulture);
-        string outputPath = Path.Combine(OutputDirectory, version + "." + build + (appBundle ? ".aab" : ".apk"));
-        RequireOutputPathAvailable(outputPath);
-        Directory.CreateDirectory(OutputDirectory);
-        // Reserve a new code before building; failed attempts may leave a harmless gap.
-        File.WriteAllText(BuildInfoPath, string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", week, build, versionCode));
-        PlayerSettings.bundleVersion = version;
+        string sharedLedger = Environment.GetEnvironmentVariable("SUDDEN_FORCE_BUILD_LEDGER_PATH");
+        Require(string.IsNullOrEmpty(sharedLedger) || Path.IsPathFullyQualified(sharedLedger),
+            "SUDDEN_FORCE_BUILD_LEDGER_PATH must be an absolute file path.");
+        int week = (int)((DateTime.UtcNow.Date - new DateTime(2023, 1, 21)).TotalDays / 7);
+        AndroidBuildVersion version;
+        try
+        {
+            version = AndroidBuildVersion.Reserve(BuildInfoPath, sharedLedger, PlayerSettings.Android.bundleVersionCode,
+                Environment.GetEnvironmentVariable("SUDDEN_FORCE_VERSION_CODE"), week, OutputDirectory, appBundle);
+        }
+        catch (InvalidDataException exception) { throw new PreflightException(exception.Message); }
+        catch (IOException) { throw new PreflightException("Could not reserve the Android version. Check the ledger, build output directory and concurrent builds."); }
+
+        PlayerSettings.bundleVersion = version.Name;
         PlayerSettings.productName = ProductName;
-        PlayerSettings.Android.bundleVersionCode = versionCode;
+        PlayerSettings.Android.bundleVersionCode = version.Code;
         PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
         EditorUserBuildSettings.buildAppBundle = appBundle;
 
@@ -117,7 +104,7 @@ public static class BuildScript
                 scenes = scenes,
                 target = BuildTarget.Android,
                 targetGroup = BuildTargetGroup.Android,
-                locationPathName = outputPath,
+                locationPathName = version.OutputPath,
                 // Reprocess release scenes so cached player data cannot bypass scene filters.
                 options = (appBundle ? BuildOptions.CompressWithLz4HC | BuildOptions.CleanBuildCache : BuildOptions.CompressWithLz4 | BuildOptions.Development)
                     | BuildOptions.DetailedBuildReport,
@@ -127,8 +114,8 @@ public static class BuildScript
             BuildReport report = BuildPipeline.BuildPlayer(options);
             if (report == null)
                 throw new BuildFailedException("Android BuildReport did not succeed.");
-            ValidateBuildOutput(report.summary.result, report.summary.totalErrors, outputPath);
-            Debug.Log("[AndroidBuild] Succeeded: " + options.locationPathName + ", versionCode=" + versionCode);
+            ValidateBuildOutput(report.summary.result, report.summary.totalErrors, version.OutputPath);
+            Debug.Log("[AndroidBuild] Succeeded: " + options.locationPathName + ", versionCode=" + version.Code);
         }
         finally
         {
@@ -163,31 +150,12 @@ public static class BuildScript
         return file.FullName;
     }
 
-    private static void RequireOutputPathAvailable(string outputPath)
-    {
-        Require(!File.Exists(outputPath) && !Directory.Exists(outputPath),
-            "The expected Android output path already exists; build cancelled to preserve it.");
-    }
-
     private static void ValidateBuildOutput(BuildResult result, int totalErrors, string outputPath)
     {
         if (result != BuildResult.Succeeded || totalErrors != 0)
             throw new BuildFailedException("Android BuildReport must succeed without errors.");
         if (!File.Exists(outputPath) || new FileInfo(outputPath).Length == 0)
             throw new BuildFailedException("Android build did not produce a nonempty APK or AAB.");
-    }
-
-    private static int[] ReadLedger()
-    {
-        Require(File.Exists(BuildInfoPath), "BuildInfo/buildinfo.txt is missing.");
-        var fields = File.ReadAllText(BuildInfoPath).Trim().Split(',');
-        Require(fields.Length == 3, "Build ledger must contain week,build,versionCode.");
-        var ledger = new int[3];
-        for (int i = 0; i < ledger.Length; i++)
-            Require(int.TryParse(fields[i], NumberStyles.None, CultureInfo.InvariantCulture, out ledger[i]) && ledger[i] >= 0,
-                "Build ledger values must be nonnegative integers.");
-        Require(ledger[2] <= MaximumVersionCode, "Build ledger versionCode exceeds Play's limit.");
-        return ledger;
     }
 
     private static void Require(bool condition, string message)
