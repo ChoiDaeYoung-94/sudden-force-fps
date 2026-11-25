@@ -111,6 +111,18 @@ $package = 'com.AeDeong.SuddenForceFPS'
 
 설치된 버전과 ABI를 확인하고, `pm path`에 나오는 각 APK를 `& $adb -s $serial pull`로 별도 폴더에 복사합니다. 설치본과 추출본의 파일명은 달라질 수 있으므로 양쪽 SHA-256 목록을 정렬해 개수와 값이 일치하는지 비교합니다. 앱이 실제로 인트로를 지나 로그인 화면에 도달하는지 확인하고, 서명·계정 조건에 따라 재시도 안내 또는 로그인 성공을 기록합니다. x86_64 AVD와 ARM64 변환기를 썼다면 결과에 함께 적습니다. 실제 ARM64 16KB 기기와 Play 설치 결과는 각각 따로 기록합니다. [Android 16KB 테스트](https://developer.android.com/guide/practices/page-sizes#test) · [bundletool 기기별 APK 추출](https://developer.android.com/tools/bundletool#extract-device-specific)
 
+### 첫 경기에서 화면이 멈추거나 연결이 끊길 때
+
+같은 APK와 방장 기기로 비교합니다. 첫 경기 전에 설치 상태(신규 설치·업데이트·기존 설치 재실행), 가상 기기의 CPU·메모리, 호스트 PC의 빌드 실행 여부를 기록합니다. 그래픽 가속을 지원하는 PC에서는 전용 AVD를 `-gpu host`로 열어 첫 경기를 확인할 수 있습니다. 실제로 선택된 렌더러는 아래 명령의 `GLES:` 행에서 확인합니다. 소프트웨어 렌더러를 비교할 때는 같은 시스템 이미지와 설정을 가진 별도 시험 AVD를 사용합니다. [Android Emulator 그래픽 가속](https://developer.android.com/studio/run/emulator-acceleration)
+
+```powershell
+& $adb -s $serial shell dumpsys SurfaceFlinger | Select-String 'GLES:'
+```
+
+1. 수동 플레이 APK로 방에 참가해 READY를 누릅니다. 방장의 START부터 양쪽 HP·탄약·경기 시간이 표시될 때까지 관측합니다. 방장의 MENU → QA · LAST 10 SEC를 누른 다음 양쪽 결과와 로비 복귀를 확인하면 5분을 모두 기다릴 필요가 없습니다.
+2. 앱이 사라지면 해당 패키지의 Android 종료 사유를 확인합니다. 앱이 살아 있으면 양쪽 화면과 Photon 종료 사유를 확인합니다. 프레임이 늦은 시각, 게임의 Update 간격, 연결이 끊긴 시각을 각각 남기면 재실행 때 비교할 수 있습니다. [Android 프로세스 종료 사유](https://developer.android.com/reference/android/app/ApplicationExitInfo)
+3. 첫 경기 실패 후 같은 프로세스의 새 방에서 성공하면 두 결과를 따로 기록합니다. 코드64 검증에서는 같은 이미지·가상 CPU 2개·메모리 3GiB에서 첫 경기 중 관측한 최대 표시 프레임 간격이 호스트 GPU에서 0.72초, SwiftShader에서 8.52초였습니다. 두 경기 모두 시간 만료와 로비 복귀를 마쳤습니다. SwiftShader 쪽은 첫 앱 실행이 Android의 LOW_MEMORY로 종료되어 다시 실행한 뒤 첫 경기를 치렀습니다. 이 수치는 해당 PC에서 각 한 번 측정한 값입니다.
+
 ### 독립 LOAD 예외 누락 정정 (2026-10-21, #142)
 
 보고서 schemaVersion2는 각 LOAD의 VA/메모리 크기/flags와 RELRO의 alignmentBasis·ownLoadIndex·overlappingWritableLoadIndices를 기록합니다. 기존 schemaVersion1은 끝 주소의 나머지만 검사해 [공식 문서의 독립 LOAD 예외](https://developer.android.com/guide/practices/page-sizes#relro)를 누락했습니다. 부분 RELRO나 다른 writable LOAD가 같은 보호 페이지를 사용하는 경우에는 이 예외를 허용하지 않습니다. 예외 통과가 LOAD 정렬 실패를 무시하지도 않습니다.
