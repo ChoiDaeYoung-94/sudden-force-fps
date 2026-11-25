@@ -204,7 +204,7 @@ GUI의 기존 loaded13/previous12·clean 관측을 SaveAssetIfDirty 성공으로
 
 ### Android 방장 경기에서 마지막 10초로 이동
 
-별도 수동 플레이 APK를 만들 때 `BuildPlayerOptions.extraScriptingDefines`에 `SFF_LOCAL_PLAYTEST`를 추가합니다. 방장의 `com.AeDeong.SuddenForceFPS.sessioncheck` 앱에서 경기를 시작한 뒤 아래 명령으로 F10을 보냅니다. `DEVICE_SERIAL`은 방장 기기의 ADB 식별자로 바꿉니다.
+별도 수동 플레이 APK를 만들 때 `BuildPlayerOptions.extraScriptingDefines`에 `SFF_LOCAL_PLAYTEST`를 추가합니다. 방장의 `com.AeDeong.SuddenForceFPS.sessioncheck` 앱에서 경기를 시작하고 MENU → QA · LAST 10 SEC를 누르면 경기가 재개됩니다. 참가자 메뉴에는 이 버튼이 없습니다. ADB에서도 아래 명령으로 같은 기능을 사용할 수 있습니다. `DEVICE_SERIAL`은 방장 기기의 ADB 식별자로 바꿉니다.
 
 ```powershell
 adb -s DEVICE_SERIAL shell input keyevent KEYCODE_F10

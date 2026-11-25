@@ -82,6 +82,18 @@ public sealed class NetworkMatchState : NetworkBehaviour
         && Runner.GameMode == GameMode.Host && Phase == MatchPhase.Running
         && MatchTimer.RemainingTicks(Runner) > CombatShotQuery.DurationTicks(10f, Runner.TickRate);
 
+#if UNITY_ANDROID && SFF_LOCAL_PLAYTEST
+    internal bool CanSkipPlaytestClock => Application.identifier == "com.AeDeong.SuddenForceFPS.sessioncheck"
+        && CanSkipToFinalSeconds;
+
+    internal bool RequestPlaytestClockSkip()
+    {
+        if (!CanSkipPlaytestClock) return false;
+        _skipToFinalSeconds = true;
+        return true;
+    }
+#endif
+
 #if UNITY_EDITOR
     private const string FinalSecondsMenu = "Tools/Sudden Force/Testing/Skip to Final 10 Seconds";
 
@@ -97,9 +109,7 @@ public sealed class NetworkMatchState : NetworkBehaviour
 #else
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F10) && CanSkipToFinalSeconds
-            && Application.identifier == "com.AeDeong.SuddenForceFPS.sessioncheck")
-            _skipToFinalSeconds = true;
+        if (Input.GetKeyDown(KeyCode.F10)) RequestPlaytestClockSkip();
     }
 #endif
 #endif
