@@ -167,7 +167,28 @@ class NativeAlignmentTests(unittest.TestCase):
 
     def test_apk_entry_is_selected(self):
         path = self.bundle([("lib/arm64-v8a/native.so", elf())], ".apk")
-        self.assertTrue(tool.inspect_bundle(path)["passed"])
+        result = tool.inspect_bundle(path, require_arm64_only=True)
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["packagedLibrariesByAbi"], {"arm64-v8a": 1})
+
+    def test_mixed_abi_inventory_and_optional_arm64_requirement(self):
+        for suffix, base, other in [(".apk", "", ""), (".aab", "base/", "feature/")]:
+            with self.subTest(suffix=suffix):
+                path = self.bundle([(base + "lib/arm64-v8a/one.so", elf()),
+                                    (other + "lib/armeabi-v7a/two.so", b"uninspected"),
+                                    (base + "assets/lib/x86/ignored.so", b"asset"),
+                                    (base + "lib/x86/ignored.so.sym", b"symbol")], suffix)
+                default = tool.inspect_bundle(path)
+                self.assertTrue(default["passed"])
+                self.assertIsNone(default["requiredAbi"])
+                self.assertEqual(default["packagedLibrariesByAbi"], {"arm64-v8a": 1, "armeabi-v7a": 1})
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output):
+                    self.assertEqual(tool.main([str(path), "--require-arm64-only"]), 1)
+                strict = json.loads(output.getvalue())
+                self.assertFalse(strict["abiRequirementMet"])
+                self.assertFalse(strict["passed"])
+                self.assertEqual(strict["libraries"], default["libraries"])
 
     def test_aab_feature_module_is_also_checked(self):
         path = self.bundle([("base/lib/arm64-v8a/good.so", elf()),
@@ -175,6 +196,15 @@ class NativeAlignmentTests(unittest.TestCase):
         result = tool.inspect_bundle(path)
         self.assertEqual(len(result["libraries"]), 2)
         self.assertFalse(result["passed"])
+
+    def test_aab_container_metadata_is_not_a_module_library(self):
+        path = self.bundle([("base/lib/arm64-v8a/game.so", elf()),
+                            ("META-INF/lib/x86/tool.so", b"container metadata"),
+                            ("BUNDLE-METADATA/lib/arm64-v8a/tool.so", b"container metadata")])
+        result = tool.inspect_bundle(path, require_arm64_only=True)
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["packagedLibrariesByAbi"], {"arm64-v8a": 1})
+        self.assertEqual([lib["entry"] for lib in result["libraries"]], ["base/lib/arm64-v8a/game.so"])
 
     def test_no_libraries_and_duplicate_zip_fail(self):
         path = self.bundle([("other.txt", b"no ELF")])
