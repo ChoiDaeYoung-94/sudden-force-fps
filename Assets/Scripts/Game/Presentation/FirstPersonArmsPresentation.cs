@@ -77,7 +77,8 @@ public sealed class FirstPersonArmsPresentation : MonoBehaviour
 
     private bool CanShow(Camera camera)
     {
-        return _configured && camera == _ownerCamera && _ownerCamera.isActiveAndEnabled
+        return _configured && _ownerCamera.isActiveAndEnabled
+            && camera == (_owner.ViewModelCamera != null ? _owner.ViewModelCamera : _ownerCamera)
             && _owner.Object != null && _owner.Object.IsValid && _owner.Object.HasInputAuthority
             && _owner.ViewModelRoot.gameObject.activeInHierarchy
             && _owner.TryGetCombatSnapshot(out var snapshot) && !snapshot.IsDead;
