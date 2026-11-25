@@ -101,7 +101,7 @@ def inspect_elf(data):
 def native_abi(name, suffix):
     parts = name.split("/")
     if suffix == ".aab":
-        if len(parts) != 4 or not parts[0]:
+        if len(parts) != 4 or parts[0] in ("", "META-INF", "BUNDLE-METADATA"):
             return None
         parts = parts[1:]
     if len(parts) == 3 and parts[0] == "lib" and parts[1] and parts[2].endswith(".so"):

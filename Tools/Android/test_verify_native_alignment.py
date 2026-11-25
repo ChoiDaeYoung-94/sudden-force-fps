@@ -197,6 +197,15 @@ class NativeAlignmentTests(unittest.TestCase):
         self.assertEqual(len(result["libraries"]), 2)
         self.assertFalse(result["passed"])
 
+    def test_aab_container_metadata_is_not_a_module_library(self):
+        path = self.bundle([("base/lib/arm64-v8a/game.so", elf()),
+                            ("META-INF/lib/x86/tool.so", b"container metadata"),
+                            ("BUNDLE-METADATA/lib/arm64-v8a/tool.so", b"container metadata")])
+        result = tool.inspect_bundle(path, require_arm64_only=True)
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["packagedLibrariesByAbi"], {"arm64-v8a": 1})
+        self.assertEqual([lib["entry"] for lib in result["libraries"]], ["base/lib/arm64-v8a/game.so"])
+
     def test_no_libraries_and_duplicate_zip_fail(self):
         path = self.bundle([("other.txt", b"no ELF")])
         with self.assertRaises(tool.InvalidInput):
