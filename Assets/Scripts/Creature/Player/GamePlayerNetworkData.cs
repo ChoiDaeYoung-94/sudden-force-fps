@@ -14,6 +14,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     [SerializeField] private WeaponDefinition _weaponDefinition;
     [SerializeField] private HitboxRoot _hitboxRoot;
     [SerializeField] private Transform _viewModelRoot;
+    [SerializeField] private ScriptableRendererData _viewModelRenderer;
     [SerializeField] private Transform _viewMuzzle;
     [SerializeField] private Transform _worldMuzzle;
     public Transform CameraRoot => _cameraRoot;
@@ -340,7 +341,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     private void PrepareViewModelCamera()
     {
         if (ViewModelCamera != null || _localCamera == null || _viewModelRoot == null
-            || !(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
+            || !(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
             || !_localCamera.TryGetComponent<UniversalAdditionalCameraData>(out var baseData)) return;
 
         int mask = LayerMask.GetMask("ViewModel");
@@ -358,6 +359,15 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         overlay.renderType = CameraRenderType.Overlay;
         overlay.requiresColorTexture = false;
         overlay.requiresDepthTexture = false;
+        // Avoid running the world renderer's screen-space effects again for the arms and weapon.
+        var renderers = pipeline.rendererDataList;
+        for (int i = 0; _viewModelRenderer != null && i < renderers.Length; i++)
+        {
+            if (renderers[i] != _viewModelRenderer) continue;
+            overlay.SetRenderer(i);
+            overlay.renderShadows = false;
+            break;
+        }
         stack.Add(view);
         _localCamera.cullingMask &= ~mask;
         ViewModelCamera = view;
