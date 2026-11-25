@@ -120,6 +120,10 @@ public sealed class LobbyConnectionStatusView : MonoBehaviour
             return "Not connected. Select FIND MATCH to reconnect.";
         }
 
+        if ((_manager.LobbyStatus == LobbyConnectionStatus.Failed || _manager.LobbyStatus == LobbyConnectionStatus.Disconnected)
+            && _manager.IsLobbyAtCapacity)
+            return NetworkRunnerManager.ServerFullMessage;
+
         switch (_manager.LobbyStatus)
         {
             case LobbyConnectionStatus.Connecting:
