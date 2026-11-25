@@ -22,6 +22,9 @@ public sealed class MatchHudView : MonoBehaviour
     [SerializeField] private bool _previewTouchControls;
     [SerializeField] private GameObject _menuButton, _menuRoot, _menuContent, _confirmContent;
     [SerializeField] private UnityEngine.UI.Button _resumeButton, _cancelLeaveButton;
+#if UNITY_ANDROID && SFF_LOCAL_PLAYTEST
+    private UnityEngine.UI.Button _playtestClockButton;
+#endif
     [SerializeField] private TMP_Text _returningText;
     private MatchPresentation _presentation;
     private PlayerInputSource _blockedInput;
@@ -301,6 +304,33 @@ public sealed class MatchHudView : MonoBehaviour
         if (target != null && target.activeSelf != visible) target.SetActive(visible);
     }
 
+#if UNITY_ANDROID && SFF_LOCAL_PLAYTEST
+    private void UpdatePlaytestClockButton(bool menuOpen)
+    {
+        var match = NetworkMatchState.Instance;
+        bool available = menuOpen && match != null && match.CanSkipPlaytestClock;
+        if (available && _playtestClockButton == null && _resumeButton != null && _menuRoot != null)
+        {
+            _playtestClockButton = Instantiate(_resumeButton, _menuRoot.transform, false);
+            _playtestClockButton.name = "PlaytestClockButton";
+            _playtestClockButton.onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
+            _playtestClockButton.onClick.AddListener(SkipPlaytestClock);
+            _playtestClockButton.GetComponentInChildren<TMP_Text>().text = "QA  ·  LAST 10 SEC";
+            var rect = (RectTransform)_playtestClockButton.transform;
+            rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one;
+            rect.anchoredPosition = new Vector2(-32f, -28f);
+            rect.sizeDelta = new Vector2(360f, 76f);
+        }
+        if (_playtestClockButton != null) Show(_playtestClockButton.gameObject, available);
+    }
+
+    private void SkipPlaytestClock()
+    {
+        var match = NetworkMatchState.Instance;
+        if (_menuState == MenuState.Menu && match != null && match.RequestPlaytestClockSkip()) ResumeMatch();
+    }
+#endif
+
     private void UpdateMobileMenuHelp(bool visible)
     {
         if (!visible || !isActiveAndEnabled || _menuRoot == null || !_menuRoot.activeInHierarchy
@@ -415,6 +445,9 @@ public sealed class MatchHudView : MonoBehaviour
         Show(_menuContent, _menuState == MenuState.Menu);
         Show(_confirmContent, _menuState == MenuState.Confirm);
         UpdateMobileMenuHelp(TouchMode && _menuState == MenuState.Menu);
+#if UNITY_ANDROID && SFF_LOCAL_PLAYTEST
+        UpdatePlaytestClockButton(_menuState == MenuState.Menu);
+#endif
         Show(_menuButton, _hasSnapshot && !finished && !_returning && !menu && !scoreboard);
         Show(_killFeedRoot, _hasSnapshot && !waiting && !finished && !_returning && !scoreboard && !menu);
         Show(_mobileScoreButton, TouchMode && _hasSnapshot && !waiting && !finished && !_returning && !scoreboard && !menu);
