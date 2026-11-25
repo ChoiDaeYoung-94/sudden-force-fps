@@ -1,6 +1,7 @@
 using Fusion;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
 {
@@ -19,6 +20,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     public WeaponDefinition WeaponDefinition => _weaponDefinition;
     public HitboxRoot HitboxRoot => _hitboxRoot;
     public Transform ViewModelRoot => _viewModelRoot;
+    public Camera ViewModelCamera { get; private set; }
     public Transform ViewMuzzle => _viewMuzzle;
     public Transform WorldMuzzle => _worldMuzzle;
     public bool CombatConfigured => _weaponDefinition != null && _hitboxRoot != null && _weaponDefinition.TryValidate(out _);
@@ -296,6 +298,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         }
         if (Object.HasInputAuthority)
         {
+            PrepareViewModelCamera();
             _inputSource = GetComponent<PlayerInputSource>();
             if (_inputSource == null) _inputSource = gameObject.AddComponent<PlayerInputSource>();
             _inputSource.Bind(this, AimYaw, AimPitch);
@@ -333,12 +336,40 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         ReleaseLocalPresentation();
     }
 
+    // The local arms and weapon share a depth buffer, independent of walls in the base camera.
+    private void PrepareViewModelCamera()
+    {
+        if (ViewModelCamera != null || _localCamera == null || _viewModelRoot == null
+            || !(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset)
+            || !_localCamera.TryGetComponent<UniversalAdditionalCameraData>(out var baseData)) return;
+
+        int mask = LayerMask.GetMask("ViewModel");
+        var stack = baseData.cameraStack;
+        if (stack == null || (mask & _localCamera.cullingMask) == 0) return;
+
+        var view = new GameObject("ViewModel Camera").AddComponent<Camera>();
+        view.CopyFrom(_localCamera);
+        view.transform.SetParent(_localCamera.transform, false);
+        view.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        view.enabled = false;
+        view.cullingMask = mask;
+        view.useOcclusionCulling = false;
+        var overlay = view.GetUniversalAdditionalCameraData();
+        overlay.renderType = CameraRenderType.Overlay;
+        overlay.requiresColorTexture = false;
+        overlay.requiresDepthTexture = false;
+        stack.Add(view);
+        _localCamera.cullingMask &= ~mask;
+        ViewModelCamera = view;
+    }
+
     private void ApplyLocalPresentation()
     {
         bool local = _spawned && Object != null && Object.IsValid && Object.HasInputAuthority;
         if (_localCamera != null) _localCamera.enabled = local;
         if (_localAudioListener != null) _localAudioListener.enabled = local;
         bool showWeapon = local && !IsDead;
+        if (ViewModelCamera != null) ViewModelCamera.enabled = showWeapon;
         if (_viewModelRoot != null && _viewModelRoot.gameObject.activeSelf != showWeapon) _viewModelRoot.gameObject.SetActive(showWeapon);
         ApplyLifeCollision();
         if (_bodyRenderers == null || _originalShadowModes == null) return;
@@ -354,6 +385,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
         if (_presentation != null) _presentation.Unbind();
         if (_inputSource != null) _inputSource.Unbind();
         if (_localCamera != null) _localCamera.enabled = false;
+        if (ViewModelCamera != null) ViewModelCamera.enabled = false;
         if (_localAudioListener != null) _localAudioListener.enabled = false;
         if (_viewModelRoot != null) _viewModelRoot.gameObject.SetActive(false);
         if (_bodyRenderers != null && _originalShadowModes != null)

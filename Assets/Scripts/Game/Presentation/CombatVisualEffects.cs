@@ -65,6 +65,11 @@ public sealed class CombatVisualEffects : MonoBehaviour
             _muzzle = Instantiate(_muzzlePrefab);
             _muzzle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
+        if (_muzzle != null)
+        {
+            bool useViewLayer = _owner.Object.HasInputAuthority && _owner.ViewModelCamera != null;
+            _muzzle.gameObject.layer = useViewLayer ? _owner.ViewModelRoot.gameObject.layer : _muzzlePrefab.gameObject.layer;
+        }
         if (_impact == null && _impactPrefab != null)
         {
             _impact = Instantiate(_impactPrefab);
