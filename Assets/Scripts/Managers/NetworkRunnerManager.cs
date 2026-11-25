@@ -21,10 +21,16 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private const string _roomNameMessage = "This room already exists...";
 
+    internal const string ServerFullMessage = "The servers are full. Please try again later.";
+
+    private string _roomEntryMessage;
+    internal string RoomEntryMessage => _roomEntryMessage ?? "Unable to join the room. Choose another room or try again.";
+
     public string _nickName { get; set; }
 
     public LobbyConnectionStatus LobbyStatus { get; private set; } = LobbyConnectionStatus.Disconnected;
     public ShutdownReason? LastLobbyShutdownReason { get; private set; }
+    internal bool IsLobbyAtCapacity { get; private set; }
     public StartGameResult LastLobbyResult { get; private set; }
     public string LastLobbyError { get; private set; } = string.Empty;
     public bool HasReceivedSessionList { get; private set; }
@@ -249,6 +255,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         var popupManager = AD.Managers.Instance != null ? AD.Managers.PopupM : null;
         try
         {
+            IsLobbyAtCapacity = false;
             LastLobbyResult = null;
             LastLobbyShutdownReason = null;
             LastLobbyError = string.Empty;
@@ -276,6 +283,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
                 return;
             }
 
+            IsLobbyAtCapacity = !result.Ok && (IsLobbyAtCapacity || result.ShutdownReason == ShutdownReason.MaxCcuReached);
             LastLobbyResult = result;
             LastLobbyShutdownReason = result.ShutdownReason;
             LobbyStatus = result.Ok ? LobbyConnectionStatus.Connected : LobbyConnectionStatus.Failed;
@@ -432,6 +440,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
             if (!CanConnect) return;
             LastRoomError = string.Empty;
             LastRoomShutdownReason = null;
+            _roomEntryMessage = null;
             await JoinSessionLobbyAsync();
             if (!CanConnect) return;
             if (LobbyStatus != LobbyConnectionStatus.Connected)
@@ -453,12 +462,14 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
                 IsVisible = mode == GameMode.Host ? visible : (bool?)null,
                 Scene = scene, SceneManager = _networkSceneM, StartGameCancellationToken = _connectionToken
             });
+            // Fusion may finish StartGame after its shutdown callback has already begun recovery.
+            if (!result.Ok) _roomEntryMessage ??= GetRoomFailureMessage(result.ShutdownReason);
             if (!CanConnect) return;
             LastRoomShutdownReason = result.ShutdownReason;
             if (!result.Ok)
             {
                 failed = true;
-                ReportRoomError($"Unable to join the room: {result.ShutdownReason}");
+                ReportRoomError(_roomEntryMessage ?? $"Unable to join the room: {result.ShutdownReason}");
             }
             else
             {
@@ -479,6 +490,18 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         // A failed StartGame can terminate its Runner. Always recover with a new one.
         if (failed && CanConnect && SessionPhase != NetworkSessionPhase.Lobby)
             await ReturnToLobbyAsync();
+    }
+
+    internal static string GetRoomFailureMessage(ShutdownReason reason)
+    {
+        switch (reason)
+        {
+            case ShutdownReason.MaxCcuReached: return ServerFullMessage;
+            case ShutdownReason.GameIsFull: return "This room is full. Choose another room.";
+            case ShutdownReason.GameClosed:
+            case ShutdownReason.GameNotFound: return "This room is no longer available. Choose another room.";
+            default: return null;
+        }
     }
 
     private void ReportRoomError(string message)
@@ -562,6 +585,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         bool lostRoomConnection = connectionEnded
             && (SessionPhase == NetworkSessionPhase.Room || SessionPhase == NetworkSessionPhase.LoadingGame
                 || SessionPhase == NetworkSessionPhase.Game);
+        bool failedRoomEntry = SessionPhase == NetworkSessionPhase.JoiningRoom && (connectionEnded || _roomEntryMessage != null);
         IsRetired = true;
         SessionPhase = NetworkSessionPhase.ReturningToLobby;
         CancelConnectionOperations();
@@ -572,7 +596,7 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.LogError($"[Network] Lobby recovery failed: {LastRoomError}");
             return _returnTask = Task.CompletedTask;
         }
-        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved, _peerDisconnectFrame, lostRoomConnection);
+        _returnTask = AD.Managers.Instance.RecoverLobbyAsync(this, _networkRunner, _shutdownObserved, _peerDisconnectFrame, lostRoomConnection, failedRoomEntry);
         return _returnTask;
     }
 
@@ -686,6 +710,8 @@ public class NetworkRunnerManager : MonoBehaviour, INetworkRunnerCallbacks
         // Normal retired-runner shutdown remains logged during lobby recovery.
         if (!IsCurrentCallback(runner)) return;
         _shutdownObserved = true;
+        if (SessionPhase == NetworkSessionPhase.Lobby && shutdownReason == ShutdownReason.MaxCcuReached) IsLobbyAtCapacity = true;
+        _roomEntryMessage ??= GetRoomFailureMessage(shutdownReason);
         LastLobbyShutdownReason = shutdownReason;
         if (LobbyStatus != LobbyConnectionStatus.Connecting && LobbyStatus != LobbyConnectionStatus.Failed)
         {

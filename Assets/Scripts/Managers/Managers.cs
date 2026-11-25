@@ -70,6 +70,7 @@ namespace AD
             public long Generation;
             public bool AutomaticShutdown;
             public bool LostRoomConnection;
+            public bool FailedRoomEntry;
             public bool ShutdownIssued;
             public bool AllowRunnerCreation;
             public bool FailureMessageShown;
@@ -156,7 +157,7 @@ namespace AD
             return true;
         }
 
-        internal Task RecoverLobbyAsync(NetworkRunnerManager owner, NetworkRunner runner, bool automaticShutdown, int peerDisconnectFrame = -1, bool lostRoomConnection = false)
+        internal Task RecoverLobbyAsync(NetworkRunnerManager owner, NetworkRunner runner, bool automaticShutdown, int peerDisconnectFrame = -1, bool lostRoomConnection = false, bool failedRoomEntry = false)
         {
             if (!HasApplicationLifetime || !ReferenceEquals(_registeredRunner, owner)) return Task.CompletedTask;
             if (_recovery != null)
@@ -175,7 +176,7 @@ namespace AD
             var context = new RecoveryContext {
                 Owner = owner, Runner = runner, Generation = _sessionGeneration,
                 AutomaticShutdown = automaticShutdown, PeerDisconnectFrame = peerDisconnectFrame,
-                LostRoomConnection = lostRoomConnection
+                LostRoomConnection = lostRoomConnection, FailedRoomEntry = failedRoomEntry
             };
             _recovery = context;
             LastRecoveryError = string.Empty;
@@ -316,7 +317,9 @@ namespace AD
                 if (!HasApplicationLifetime) return;
                 if (!replacementCreated) throw new InvalidOperationException("The replacement lobby Runner was not registered.");
                 SetRecoveryStage("Completed");
-                if (context.LostRoomConnection)
+                if (context.FailedRoomEntry)
+                    FindFirstObjectByType<CanvasLobby>()?.ShowRoomNotice(context.Owner.RoomEntryMessage);
+                else if (context.LostRoomConnection)
                     FindFirstObjectByType<CanvasLobby>()?.ShowRoomConnectionEnded();
             }
             catch (OperationCanceledException) when (_applicationToken.IsCancellationRequested) { }
