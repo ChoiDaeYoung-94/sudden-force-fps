@@ -11,6 +11,7 @@ public sealed class MatchHudView : MonoBehaviour
     [SerializeField] private CombatHudView _combatHud;
     [SerializeField] private TMP_Text _redScore, _blueScore, _clockText;
     [SerializeField] private GameObject _waitingRoot, _scoreboardRoot, _resultsRoot, _returningRoot;
+    [SerializeField] private GameObject _entryBackdrop;
     [SerializeField] private Transform _rosterTable, _scoreboardTableSlot, _resultsTableSlot;
     [SerializeField] private TMP_Text[] _rosterNames, _rosterStats, _rosterStatus;
     [SerializeField] private TMP_Text _resultTitle, _resultReason, _resultScore;
@@ -30,6 +31,7 @@ public sealed class MatchHudView : MonoBehaviour
     private PlayerInputSource _blockedInput;
     private MatchSnapshot _snapshot, _finalSnapshot;
     private bool _hasSnapshot, _hasFinal, _mobileScoreOpen, _returning;
+    private bool _enteredMatch;
     private int _localTeam = -1;
     private float _gapUntil;
     private MenuState _menuState;
@@ -81,10 +83,32 @@ public sealed class MatchHudView : MonoBehaviour
     {
         _backOwner = this;
         _lifecycleVersion++;
+        UnityEngine.Rendering.RenderPipelineManager.endCameraRendering += OnPipelineCameraRendered;
+        Camera.onPostRender += OnCameraRendered;
         MatchPresentation.Bound += Bind;
         MatchPresentation.Unbound += Unbind;
         Bind(MatchPresentation.Instance);
         RefreshPanels();
+    }
+
+    private void OnPipelineCameraRendered(UnityEngine.Rendering.ScriptableRenderContext context, Camera camera)
+        => OnCameraRendered(camera);
+
+    private void OnCameraRendered(Camera camera)
+    {
+        // Match state can arrive before this client has rendered its first world frame.
+        var local = CombatPresentation.LocalInstance;
+        if (!_hasSnapshot || _presentation == null || _presentation.Owner == null || local == null
+            || local.Owner == null || camera != local.Owner.ViewCamera || local.Owner.Runner != _presentation.Owner.Runner
+            || !local.TryGetSnapshot(out _)) return;
+        _enteredMatch = true;
+        StopWatchingCamera();
+    }
+
+    private void StopWatchingCamera()
+    {
+        UnityEngine.Rendering.RenderPipelineManager.endCameraRendering -= OnPipelineCameraRendered;
+        Camera.onPostRender -= OnCameraRendered;
     }
 
     private void Bind(MatchPresentation presentation)
@@ -424,11 +448,13 @@ public sealed class MatchHudView : MonoBehaviour
         }
         bool finished = _hasSnapshot && _snapshot.Phase == MatchPhase.Finished;
         bool waiting = _hasSnapshot && _snapshot.Phase == MatchPhase.Waiting;
+        bool awaitingLocalView = owner != null && !_enteredMatch;
+        bool entering = awaitingLocalView && !finished && !_returning;
         if (finished || _returning) _menuState = MenuState.Closed;
         bool menu = _menuState != MenuState.Closed;
-        bool scoreboard = _hasSnapshot && !finished && !waiting && !_returning
+        bool scoreboard = _hasSnapshot && !entering && !finished && !waiting && !_returning
             && !menu && !_scoreboardDismissed && (TouchMode ? _mobileScoreOpen : Input.GetKey(KeyCode.Tab));
-        bool blocked = !_hasSnapshot || waiting || finished || _returning || scoreboard || menu;
+        bool blocked = entering || waiting || finished || _returning || scoreboard || menu || !_hasSnapshot;
         if (_combatHud != null) _combatHud.SetMatchSuppressed(blocked);
         var input = PlayerInputSource.Instance;
         if (_blockedInput != input)
@@ -437,7 +463,11 @@ public sealed class MatchHudView : MonoBehaviour
             _blockedInput = input;
         }
         if (_blockedInput != null) _blockedInput.SetMenuInputBlocked(blocked);
-        Show(_waitingRoot, waiting && !_returning && !menu);
+        // Also cover the margins outside the safe area until the local world can render.
+        Show(_entryBackdrop, awaitingLocalView);
+        bool showWaiting = (waiting || entering) && !_returning && !finished && !menu;
+        bool raiseWaiting = showWaiting && _waitingRoot != null && !_waitingRoot.activeSelf;
+        Show(_waitingRoot, showWaiting);
         Show(_scoreboardRoot, scoreboard);
         Show(_resultsRoot, finished && !_returning);
         RefreshReturningOverlay();
@@ -463,7 +493,11 @@ public sealed class MatchHudView : MonoBehaviour
         else if (_resultsRoot != null && finished) _resultsRoot.transform.SetAsLastSibling();
         else if (_menuRoot != null && menu) _menuRoot.transform.SetAsLastSibling();
         else if (_scoreboardRoot != null && scoreboard) _scoreboardRoot.transform.SetAsLastSibling();
-        else if (_waitingRoot != null && waiting) _waitingRoot.transform.SetAsLastSibling();
+        else if (raiseWaiting)
+        {
+            _waitingRoot.transform.SetAsLastSibling();
+            if (_menuButton != null) _menuButton.transform.SetAsLastSibling();
+        }
     }
 
     public void ToggleScoreboard()
@@ -549,6 +583,7 @@ public sealed class MatchHudView : MonoBehaviour
 
     private void OnDisable()
     {
+        StopWatchingCamera();
         if (ReferenceEquals(_backOwner, this)) _backOwner = null;
         _lifecycleVersion++;
         _menuState = MenuState.Closed;
@@ -558,6 +593,8 @@ public sealed class MatchHudView : MonoBehaviour
         _hasSnapshot = _hasFinal = _mobileScoreOpen = false;
         ClearDisplay();
         Show(_returningRoot, false);
+        Show(_entryBackdrop, false);
+        _enteredMatch = false;
         _returning = _returnFailed = false;
         if (_blockedInput != null) _blockedInput.SetMenuInputBlocked(false);
         _blockedInput = null;
