@@ -18,6 +18,7 @@ public class GamePlayerNetworkData : NetworkBehaviour, IBeforeHitboxRegistration
     [SerializeField] private Transform _viewMuzzle;
     [SerializeField] private Transform _worldMuzzle;
     public Transform CameraRoot => _cameraRoot;
+    internal Camera ViewCamera => _localCamera;
     public WeaponDefinition WeaponDefinition => _weaponDefinition;
     public HitboxRoot HitboxRoot => _hitboxRoot;
     public Transform ViewModelRoot => _viewModelRoot;
